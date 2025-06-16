@@ -31,11 +31,60 @@ export default function ProjectsSection() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '80px 20px'
+      padding: '80px 20px',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Grid Background Pattern */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        opacity: 1,
+        backgroundImage: `
+          linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '25px 25px',
+        pointerEvents: 'none'
+      }}></div>
+      
+      {/* Major Grid Crosses every 4 squares */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        opacity: 1,
+        pointerEvents: 'none'
+      }}>
+        <svg style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute'
+        }}>
+          <defs>
+            <pattern id="crosses-projects" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+                <line x1="50" y1="44" x2="50" y2="56" />
+                <line x1="44" y1="50" x2="56" y2="50" />
+              </g>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#crosses-projects)" />
+        </svg>
+      </div>
+
       <div style={{
         maxWidth: '1200px',
-        width: '100%'
+        width: '100%',
+        position: 'relative',
+        zIndex: 10
       }}>
         <div style={{
           textAlign: 'center',

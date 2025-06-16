@@ -26,12 +26,61 @@ export default function AboutSection() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '80px 20px'
+      padding: '80px 20px',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Grid Background Pattern */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        opacity: 1,
+        backgroundImage: `
+          linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)
+        `,
+        backgroundSize: '25px 25px',
+        pointerEvents: 'none'
+      }}></div>
+      
+      {/* Major Grid Crosses every 4 squares */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+        opacity: 1,
+        pointerEvents: 'none'
+      }}>
+        <svg style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute'
+        }}>
+          <defs>
+            <pattern id="crosses" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+                <line x1="50" y1="44" x2="50" y2="56" />
+                <line x1="44" y1="50" x2="56" y2="50" />
+              </g>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#crosses)" />
+        </svg>
+      </div>
+      
       <div style={{
         maxWidth: '800px',
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        position: 'relative',
+        zIndex: 10
       }}>
         {/* Typing Name */}
         <div style={{
@@ -136,19 +185,65 @@ export default function AboutSection() {
               📄 Download CV
             </a>
             
-            <button style={{
-              padding: '12px 24px',
-              backgroundColor: 'transparent',
-              color: '#3b82f6',
-              border: '2px solid #3b82f6',
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: '#f8fafc',
+              border: '2px solid #e2e8f0',
               borderRadius: '8px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              fontSize: '16px'
+              overflow: 'hidden',
+              maxWidth: '350px'
             }}>
-              Get in Touch
-            </button>
+              <input
+                type="text"
+                value="kevingamez.kg@gmail.com"
+                readOnly
+                style={{
+                  padding: '12px 16px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  fontSize: '14px',
+                  color: '#475569',
+                  outline: 'none',
+                  width: '240px',
+                  cursor: 'default'
+                }}
+              />
+              <button
+                onClick={(e) => {
+                  navigator.clipboard.writeText('kevingamez.kg@gmail.com')
+                  // Simple feedback - you could enhance this with a toast notification
+                  const btn = e.currentTarget as HTMLButtonElement;
+                  const originalText = btn.innerHTML;
+                  btn.innerHTML = '✓';
+                  btn.style.backgroundColor = '#10b981';
+                  setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.backgroundColor = '#3b82f6';
+                  }, 2000);
+                }}
+                style={{
+                  padding: '12px 16px',
+                  backgroundColor: '#3b82f6',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  transition: 'all 0.2s',
+                  minWidth: '60px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#2563eb'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#3b82f6'
+                }}
+                title="Copy email to clipboard"
+              >
+                📋 Copy
+              </button>
+            </div>
           </div>
           
           {/* Social Media Links */}
