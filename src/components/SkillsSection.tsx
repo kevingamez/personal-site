@@ -1,23 +1,8 @@
-import { useState, useEffect } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { useI18n } from '../store/i18nStore'
 
 export default function SkillsSection() {
   const { t } = useI18n()
-  const [isMobile, setIsMobile] = useState(false)
-  
-  // Handle responsive behavior
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1000)
-    }
-    
-    // Initial check
-    checkMobile()
-    
-    // Listen for resize
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
   
   const skillCategories = [
     {
