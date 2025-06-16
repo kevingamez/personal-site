@@ -1,49 +1,61 @@
 import { useState } from 'preact/hooks'
+import { useI18n } from '../store/i18nStore'
 
 export default function ExperienceSection() {
+  const { t } = useI18n()
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
 
   /* ── Professional experience ── */
   const experiences = [
     {
+        company: 'Enttor',
+        position: 'Software Engineer',
+        period: 'Jun 2025 – Present',
+        description:
+          'Leads backend, data-pipeline and AI-infrastructure initiatives while collaborating daily with the NYC engineering team.',
+        tech: [
+          'Next.js 14',
+          'Node.js',
+          'Express',
+          'PostgreSQL / pgvector',
+          'Google Cloud Run',
+          'Docker',
+          'LLMs',
+        ],
+        details: {
+          achievements: [
+            'Joined in June 2025 — achievements to follow as projects launch',
+          ],
+          responsibilities: [
+            'Owns and scales enterprise marketing-data pipelines for accurate, reliable metrics',
+            'Designs and deploys micro-services that process large volumes of social-media data',
+            'Builds multi-platform posting systems with safeguards against frequent API changes',
+            'Implements AI-powered content generation using LLMs and vector embeddings',
+            'Develops real-time analytics dashboards with clean, cross-platform interfaces',
+            'Maintains historical-data ingestion and validation with robust error handling',
+          ],
+        },
+      },
+    {
       company: 'Samsam',
-      position: 'Product Engineer',
-      period: 'Feb 2024 – Mar 2025',
-      description:
-        'Built and shipped shopper- and merchant-facing features while refactoring core backend services for a high-growth e-commerce startup.',
+      position: t('experience.experiences.samsam.position'),
+      period: t('experience.experiences.samsam.period'),
+      description: t('experience.experiences.samsam.description'),
       tech: ['TypeScript', 'React Native', 'Next.js', 'Prisma', 'PostgreSQL', 'AWS'],
       details: {
-        achievements: [
-          'Released a new checkout flow that increased conversion 12 %',
-          'Refactored legacy Node micro-services, cutting P95 latency 40 %',
-          'Introduced CI/CD with GitHub Actions — deployments 60 % faster',
-        ],
-        responsibilities: [
-          'Cross-platform feature development (web & mobile)',
-          'Scalable architecture & technical decision making',
-          'Code reviews, mentoring and agile ceremonies',
-          'Product-design collaboration for roadmap planning',
-        ],
+        achievements: t('experience.experiences.samsam.achievements') as unknown as string[],
+        responsibilities: t('experience.experiences.samsam.responsibilities') as unknown as string[],
       },
     },
     {
-      company: 'Universidad de los Andes',
-      position: 'Graduate Teaching Assistant',
-      period: 'Jan 2024 – Feb 2025',
-      description:
-        'Designed lab material and supported students across advanced CS courses while handling course operations.',
+      company: t('experience.universityName'),
+      position: t('experience.experiences.uniandes.position'),
+      period: t('experience.experiences.uniandes.period'),
+      description: t('experience.experiences.uniandes.description'),
       tech: ['Python', 'Linux', 'Git', 'Education'],
       details: {
-        achievements: [
-          'Co-authored eight lab guides used by 100 + students',
-          'Streamlined autograding workflow, saving 30 % TA time',
-        ],
-        responsibilities: [
-          'Prepared & delivered weekly lab sessions',
-          'Managed course repositories and CI for autograding',
-          'One-on-one mentoring and office hours',
-          'Curriculum updates alongside professors',
-        ],
+        achievements: t('experience.experiences.uniandes.achievements') as unknown as string[],
+        responsibilities: t('experience.experiences.uniandes.responsibilities') as unknown as string[],
       },
     },
   ]
@@ -51,25 +63,33 @@ export default function ExperienceSection() {
      /* ── Education (from résumé) ── */
    const education = [
      {
-       degree: 'MSc in Information Engineering',
-       school: 'Universidad de los Andes',
-       date: 'Expected May 2025',
+       degree: t('experience.degrees.msc'),
+       school: t('experience.universityName'),
+       date: t('experience.dates.expectedMay2025'),
      },
      {
-       degree: 'BSc in Systems & Computer Engineering',
-       school: 'Universidad de los Andes',
-       date: 'Dec 2023',
+       degree: t('experience.degrees.bsc'),
+       school: t('experience.universityName'),
+       date: t('experience.dates.dec2023'),
      },
-     { degree: 'Minor in Mathematics', school: 'Universidad de los Andes', date: 'Dec 2023' },
-     { degree: 'Minor in Management', school: 'Universidad de los Andes', date: 'Dec 2022' },
+     { 
+       degree: t('experience.degrees.minorMath'), 
+       school: t('experience.universityName'), 
+       date: t('experience.dates.dec2023') 
+     },
+     { 
+       degree: t('experience.degrees.minorMgmt'), 
+       school: t('experience.universityName'), 
+       date: t('experience.dates.dec2022') 
+     },
    ]
 
    /* ── Awards & Distinctions ── */
    const awards = [
      {
-       title: 'Andrés Bello Distinction - National Category',
-       issuer: 'Ministerio de Educación Nacional de Colombia',
-       date: 'Dec 2018',
+       title: t('experience.awardsData.bello.title'),
+       issuer: t('experience.awardsData.bello.issuer'),
+       date: t('experience.awardsData.bello.date'),
      },
    ]
 
@@ -132,7 +152,7 @@ export default function ExperienceSection() {
               fontFamily: 'Inter, sans-serif',
             }}
           >
-            Experience
+            {t('experience.title')}
           </h2>
           <p
             style={{
@@ -290,16 +310,16 @@ export default function ExperienceSection() {
                         }}
                       >
                         <DetailsList
-                          title="🏆 Key Achievements"
+                          title={t('experience.achievements')}
                           items={exp.details.achievements}
-                          bullet="✓"
+                          bullet="✨"
                           bulletColor="#10b981"
                         />
                         <DetailsList
-                          title="📋 Responsibilities"
+                          title={t('experience.responsibilities')}
                           items={exp.details.responsibilities}
-                          bullet="•"
-                          bulletColor="#3b82f6"
+                          bullet="📌"
+                          bulletColor="#6366f1"
                         />
                       </div>
                     </div>
@@ -332,7 +352,7 @@ export default function ExperienceSection() {
                fontFamily: 'Inter, sans-serif',
              }}
            >
-             Education
+             {t('experience.education')}
            </h3>
            
            <div style={{ 
@@ -350,7 +370,7 @@ export default function ExperienceSection() {
                  fontFamily: 'Inter, sans-serif',
                }}
              >
-               Universidad de los Andes
+               {t('experience.universityName')}
              </p>
              
              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -402,7 +422,7 @@ export default function ExperienceSection() {
                fontFamily: 'Inter, sans-serif',
              }}
            >
-             Awards & Distinctions
+             {t('experience.awards')}
            </h3>
            
            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

@@ -3,12 +3,114 @@
     "home": "Inicio",
     "about": "Sobre mí",
     "projects": "Proyectos",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "experience": "Experiencia",
+    "skills": "Habilidades",
+    "portfolio": "Portafolio"
   },
   "hero": {
     "name": "KEVIN GAMEZ",
     "title": "Desarrollador de Software",
-    "subtitle": "Creando experiencias digitales"
+    "subtitle": "Creando experiencias digitales",
+    "scrollToExplore": "Desplázate para explorar"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "subtitle": "Desarrollador de Software",
+    "description": {
+      "paragraph1": "¡Hola! Soy Kevin, graduado en Ingeniería de Sistemas y Computación de la Universidad de los Andes. Me encanta construir cosas con código y resolver problemas a través del desarrollo de software, ingeniería de datos e IA.",
+      "paragraph2": "Disfruto aprender nuevas tecnologías y trabajar en proyectos que marquen la diferencia. Actualmente cursando mi maestría mientras exploro desarrollo web moderno y sistemas de datos.",
+      "paragraph3": "Cuando no estoy programando, me encontrarás corriendo, nadando o probando las últimas herramientas y frameworks."
+    },
+    "downloadCV": "📄 Descargar CV",
+    "copyEmail": "📋 Copiar",
+    "emailCopied": "✓"
+  },
+  "experience": {
+    "title": "Experiencia Profesional",
+    "education": "Educación",
+    "awards": "Premios y Distinciones",
+    "achievements": "Logros",
+    "responsibilities": "Responsabilidades",
+    "techUsed": "Tecnologías utilizadas",
+    "universityName": "Universidad de los Andes",
+    "degrees": {
+      "msc": "MSc en Ingeniería de Información",
+      "bsc": "BSc en Ingeniería de Sistemas y Computación",
+      "minorMath": "Minor en Matemáticas",
+      "minorMgmt": "Minor en Gestión"
+    },
+    "dates": {
+      "expectedMay2025": "Esperado Mayo 2025",
+      "dec2023": "Dic 2023",
+      "dec2022": "Dic 2022"
+    },
+    "experiences": {
+      "samsam": {
+        "company": "Samsam",
+        "position": "Ingeniero de Producto",
+        "period": "Feb 2024 – Mar 2025",
+        "description": "Construí y lancé funcionalidades para compradores y comerciantes mientras refactorizaba servicios backend principales para una startup de e-commerce de alto crecimiento.",
+        "achievements": [
+          "Lancé un nuevo flujo de checkout que aumentó la conversión 12%",
+          "Refactoricé micro-servicios Node legacy, reduciendo latencia P95 40%",
+          "Introduje CI/CD con GitHub Actions — despliegues 60% más rápidos"
+        ],
+        "responsibilities": [
+          "Desarrollo de funcionalidades multiplataforma (web y móvil)",
+          "Arquitectura escalable y toma de decisiones técnicas",
+          "Revisiones de código, mentoría y ceremonias ágiles",
+          "Colaboración producto-diseño para planificación de roadmap"
+        ]
+      },
+      "uniandes": {
+        "company": "Universidad de los Andes",
+        "position": "Asistente de Cátedra de Posgrado",
+        "period": "Ene 2024 – Feb 2025",
+        "description": "Diseñé material de laboratorio y apoyé estudiantes en cursos avanzados de CS mientras manejaba operaciones del curso.",
+        "achievements": [
+          "Co-autoré ocho guías de laboratorio usadas por más de 100 estudiantes",
+          "Optimicé flujo de calificación automática, ahorrando 30% del tiempo de TAs"
+        ],
+        "responsibilities": [
+          "Preparé y dicté sesiones de laboratorio semanales",
+          "Gestioné repositorios del curso y CI para calificación automática",
+          "Mentoría uno-a-uno y horas de oficina",
+          "Actualizaciones curriculares junto con profesores"
+        ]
+      }
+    },
+    "awardsData": {
+      "bello": {
+        "title": "Distinción Andrés Bello - Categoría Nacional",
+        "issuer": "Ministerio de Educación Nacional de Colombia",
+        "date": "Dic 2018"
+      }
+    }
+  },
+  "projects": {
+    "title": "Proyectos Destacados",
+    "subtitle": "Una colección de trabajos que demuestran mi pasión por resolver problemas complejos",
+    "viewProject": "Ver Proyecto",
+    "viewCode": "Ver Código",
+    "techStack": "Stack Tecnológico",
+    "achievements": "Logros",
+    "challenges": "Desafíos"
+  },
+  "skills": {
+    "title": "Habilidades y Tecnologías",
+    "subtitle": "Herramientas y tecnologías que uso para construir experiencias digitales excepcionales",
+    "categories": {
+      "frontend": "Desarrollo Frontend",
+      "backend": "Backend y Datos",
+      "ai": "IA y Machine Learning",
+      "devops": "DevOps y Herramientas"
+    }
+  },
+  "contact": {
+    "title": "Mantengámonos en Contacto",
+    "footer": "© 2024 Kevin Gamez. Construido con pasión y mucho café ☕",
+    "tech": "Hecho con Astro, TypeScript y el Juego de la Vida de Conway"
   },
   "gameOfLife": {
     "stats": {

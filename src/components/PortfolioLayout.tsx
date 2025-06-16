@@ -3,7 +3,6 @@ import AboutSection from './AboutSection'
 import SkillsSection from './SkillsSection'
 import ProjectsSection from './ProjectsSection'
 import ExperienceSection from './ExperienceSection'
-import ContactSection from './ContactSection'
 
 export default function PortfolioLayout() {
   return (
@@ -19,7 +18,6 @@ export default function PortfolioLayout() {
       <ExperienceSection />
       <ProjectsSection />
       <SkillsSection />
-      <ContactSection />
     </div>
   )
 } 
