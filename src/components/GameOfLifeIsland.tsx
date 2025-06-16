@@ -1,236 +1,360 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+// GameOfLifeIsland.tsx
+import { useEffect, useRef } from 'preact/hooks'
+import DockDemo from './DockDemo'
+import LanguageToggle from './LanguageToggle'
+import { useGameStore } from '../store/gameStore'
+import { useI18n } from '../store/i18nStore'
 
-/* ── Parameters you might tweak ─────────────────────────── */
-const CELL_SIZE   = 16;          // size of one logical square (px)
-const FPS         = 7;           // Life generations per second
-const SEED_PERIOD = 10_000;      // ms between random pattern drops
-const ROT_X = 50;                // deg  tilt toward "horizon"
-const ROT_Z = 20;                // deg  diamond twist
-/* -------------------------------------------------------- */
+const CELL_SIZE   = 25
+const MAX_FPS     = 10
+const FADE_STEPS  = 2
+const SEED_PERIOD = 5_000
+const PLAY_DELAY  = 1_000
+const ALIVE       = -1  
+type Cell = number
+type Grid = Int8Array
 
-type Grid = Uint8Array;
-
-/* 5×7 bitmap font (only needed glyphs) */
-const FONT = {
-  A:['01110','10001','10001','11111','10001','10001','10001'],
-  E:['11111','10000','10000','11110','10000','10000','11111'],
-  G:['01110','10001','10000','10111','10001','10001','01110'],
-  I:['11111','00100','00100','00100','00100','00100','11111'],
-  K:['10001','10010','10100','11000','10100','10010','10001'],
-  M:['10001','11011','10101','10101','10001','10001','10001'],
-  N:['10001','11001','10101','10011','10001','10001','10001'],
-  V:['10001','10001','10001','10001','10001','01010','00100'],
-  Z:['11111','00001','00010','00100','01000','10000','11111'],
-  ' ':['000','000','000','000','000','000','000'],
-} as Record<string,string[]>;
-
-/* classic seed patterns */
 const PATTERNS: Record<string,[number,number][]> = {
-  GUN:  [ [24,0],[22,1],[24,1],[12,2],[13,2],[20,2],[21,2],[34,2],[35,2],
-          [11,3],[15,3],[20,3],[21,3],[34,3],[35,3],
-          [0,4],[1,4],[10,4],[16,4],[20,4],[21,4],
-          [0,5],[1,5],[10,5],[14,5],[16,5],[17,5],[22,5],[24,5],
-          [10,6],[16,6],[24,6],[11,7],[15,7],[12,8],[13,8] ],
-  ACORN:[ [0,0],[1,0],[1,2],[3,1],[4,0],[5,0],[6,0] ],
-  R:    [ [1,0],[2,0],[0,1],[1,1],[1,2] ],
-};
+  // Gosper Glider Gun
+  GUN:[[24,0],[22,1],[24,1],[12,2],[13,2],[20,2],[21,2],[34,2],[35,2],
+    [11,3],[15,3],[20,3],[21,3],[34,3],[35,3],
+    [0,4],[1,4],[10,4],[16,4],[20,4],[21,4],
+    [0,5],[1,5],[10,5],[14,5],[16,5],[17,5],[22,5],[24,5],
+       [10,6],[16,6],[24,6],[11,7],[15,7],[12,8],[13,8]],
+  
+  // Classic patterns
+//   GLIDER:[[1,0],[2,1],[0,2],[1,2],[2,2]],
+//   ACORN:[[0,0],[1,0],[1,2],[3,1],[4,0],[5,0],[6,0]],
+//   R:[[1,0],[2,0],[0,1],[1,1],[1,2]],
+  
+  // Oscillators
+//   PULSAR:[[2,0],[3,0],[4,0],[8,0],[9,0],[10,0],
+//            [0,2],[5,2],[7,2],[12,2],[0,3],[5,3],[7,3],[12,3],
+//            [0,4],[5,4],[7,4],[12,4],[2,5],[3,5],[4,5],[8,5],[9,5],[10,5],
+//            [2,7],[3,7],[4,7],[8,7],[9,7],[10,7],[0,8],[5,8],[7,8],[12,8],
+//            [0,9],[5,9],[7,9],[12,9],[0,10],[5,10],[7,10],[12,10],
+//            [2,12],[3,12],[4,12],[8,12],[9,12],[10,12]],
+//   PENTADECATHLON:[[2,0],[3,0],[1,1],[4,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
+//                   [1,8],[4,8],[2,9],[3,9]],
+//   BEACON:[[0,0],[1,0],[0,1],[3,2],[2,3],[3,3]],
+//   TOAD:[[1,0],[2,0],[3,0],[0,1],[1,1],[2,1]],
+//   BLINKER:[[0,0],[1,0],[2,0]],
+  
+  // Spaceships
+  LWSS:[[0,0],[3,0],[4,1],[0,2],[4,2],[1,3],[2,3],[3,3],[4,3]],
+  MWSS:[[0,0],[4,0],[5,1],[0,2],[5,2],[1,3],[2,3],[3,3],[4,3],[5,3]],
+  HWSS:[[0,0],[5,0],[6,1],[0,2],[6,2],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3]],
+  
+  // Methuselahs
+  DIEHARD:[[6,0],[0,1],[1,1],[1,2],[5,2],[6,2],[7,2]],
+  
+  // Still lifes
+//   BLOCK:[[0,0],[1,0],[0,1],[1,1]],
+//   BEEHIVE:[[1,0],[2,0],[0,1],[3,1],[1,2],[2,2]],
+//   LOAF:[[1,0],[2,0],[0,1],[3,1],[1,2],[3,2],[2,3]],
+//   BOAT:[[0,0],[1,0],[0,1],[2,1],[1,2]],
+//   TUB:[[1,0],[0,1],[2,1],[1,2]],
+}
 
-/* widths of logo lines */
-const widthOf = (txt:string,gap=2)=>
-  [...txt].reduce((w,ch,i,a)=>w+FONT[ch][0].length+(i===a.length-1?0:gap),0);
-
-/* logo cell list */
-function logoCells(w:number,h:number,gap=2,vGap=2){
-  const l1='KEVIN',l2='GAMEZ',gh=FONT['A'].length;
-  const sy=Math.floor((h-(gh*2+vGap))/2);
-  const sx1=Math.floor((w-widthOf(l1,gap))/2);
-  const sx2=Math.floor((w-widthOf(l2,gap))/2);
-  const out:[number,number][]= [];
-  [l1,l2].forEach((ln,row)=>{
-    let cx=row?sx2:sx1;
-    [...ln].forEach((ch,i,a)=>{
-      FONT[ch].forEach((bits,gy)=>
-        [...bits].forEach((b,gx)=>{
-          if(b==='1') out.push([cx+gx, sy+gy + row*(gh+vGap)]);
-        }));
-      cx += FONT[ch][0].length + (i===a.length-1?0:gap);
-    });
-  });
-  return out;
+const fadeGrey = (v:number,isDark:boolean)=>{
+  if(isDark){
+    // In dark mode: fade from light grey (187) to background dark (26)
+    const g=Math.round(187-(187-26)*(1-v/FADE_STEPS))
+    return `rgb(${g},${g},${g})`
+  } else {
+    // In light mode: fade from dark to lighter
+    const g=Math.round(68+(255-68)*(1-v/FADE_STEPS))
+    return `rgb(${g},${g},${g})`
+  }
 }
 
 export default function GameOfLifeIsland(){
-  const [playing,setPlaying]=useState(false);
-  const playRef=useRef(false);
-  const seedId =useRef<number>();
-  const invMat =useRef<DOMMatrix>();
-  const [hoverCell, setHoverCell] = useState<{x: number, y: number} | null>(null);
+  const gameState = useGameStore()
+  const { 
+    playing, 
+    stats, 
+    time, 
+    isDarkMode, 
+    setPlaying, 
+    setStats, 
+    setTime, 
+    toggleTheme,
+    reset: resetStore
+  } = gameState
+  
+  const { t } = useI18n()
 
-  const canvasRef=useRef<HTMLCanvasElement>(null);
-  const gridRef =useRef<Grid>();   const nextRef=useRef<Grid>();
-  const W=useRef(0); const H=useRef(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const bgRef     = useRef<HTMLCanvasElement>()
+  const gridRef   = useRef<Grid>()
+  const nextRef   = useRef<Grid>()
+  const wRef      = useRef(0)
+  const hRef      = useRef(0)
+  const isDarkModeRef = useRef(false)
 
-  /* place centred logo */
-  const logo = ()=>{gridRef.current?.fill(0);
-    logoCells(W.current,H.current).forEach(([x,y])=>{
-      gridRef.current![y*W.current+x]=1;});};
+  const playTimer = useRef<number>()
+  const seedTimer = useRef<number>()
+  const rampTimer = useRef<number>()
+  const fpsRef    = useRef(0)
+  const running   = useRef(false)
 
-  /* random pattern drop */
-  const seed =()=>{
-    const pat=PATTERNS[ Object.keys(PATTERNS)[Math.random()*3|0] ];
-    const maxX=W.current-Math.max(...pat.map(([x])=>x))-1;
-    const maxY=H.current-Math.max(...pat.map(([,y])=>y))-1;
-    if(maxX<1||maxY<1) return;   // tiny screens: skip
-    const ox=Math.random()*maxX|0, oy=Math.random()*maxY|0;
-    pat.forEach(([x,y])=>gridRef.current![ (oy+y)*W.current+ox+x ]=1);
-  };
-  const startSeeds=()=>{clearInterval(seedId.current);
-    seedId.current = window.setInterval(seed,SEED_PERIOD);};
-  const stopSeeds =()=>clearInterval(seedId.current);
+  /* logo mask rect (cell coordinates) */
+  const logoRect = useRef({l:0,r:0,t:0,b:0})
+  const inLogo   = (x:number,y:number)=>{
+    const r=logoRect.current
+    return y>=r.t && y<=r.b && x>=r.l && x<=r.r
+  }
 
-  /* main canvas life-cycle */
+  const updateStats=()=>{
+    const alive=gridRef.current?.reduce((s,v)=>s+(v===ALIVE?1:0),0)??0
+    const total=wRef.current*hRef.current
+    setStats({alive,dead:total-alive})
+  }
+
+  const seedPattern=()=>{
+    const keys=Object.keys(PATTERNS)
+    const pat =PATTERNS[keys[Math.floor(Math.random()*keys.length)]]
+    const maxX=wRef.current-Math.max(...pat.map(([x])=>x))-1
+    const maxY=hRef.current-Math.max(...pat.map(([,y])=>y))-1
+    const ox=Math.floor(Math.random()*maxX)
+    const oy=Math.floor(Math.random()*maxY)
+    pat.forEach(([x,y])=>{
+      gridRef.current![(oy+y)*wRef.current+(ox+x)]=ALIVE
+    })
+  }
+
+  const startTimers=()=>{
+    clearInterval(seedTimer.current);seedPattern()
+    seedTimer.current=window.setInterval(seedPattern,SEED_PERIOD)
+    clearInterval(rampTimer.current);fpsRef.current=1
+    rampTimer.current=window.setInterval(()=>{
+      if(fpsRef.current<MAX_FPS)fpsRef.current+=1
+      else clearInterval(rampTimer.current)
+    },1_000)
+  }
+  const stopTimers=()=>{clearInterval(seedTimer.current);clearInterval(rampTimer.current)}
+
+  const drawBG=(wp:number,hp:number,c:number,r:number)=>{
+    bgRef.current ??=document.createElement('canvas')
+    const bg=bgRef.current;bg.width=wp;bg.height=hp
+    const g=bg.getContext('2d')!
+    const dark = isDarkModeRef.current
+    // Background color based on theme
+    g.fillStyle=dark?'#1a1a1a':'#fff';g.fillRect(0,0,wp,hp)
+    // Grid lines based on theme  
+    g.beginPath();g.strokeStyle=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.03)';g.lineWidth=1
+    for(let x=0;x<=c;x++){const px=x*CELL_SIZE+0.5;g.moveTo(px,0);g.lineTo(px,hp)}
+    for(let y=0;y<=r;y++){const py=y*CELL_SIZE+0.5;g.moveTo(0,py);g.lineTo(wp,py)}
+    g.stroke()
+    // Major grid lines based on theme
+    g.strokeStyle=dark?'rgba(255,255,255,0.15)':'rgba(0,0,0,0.12)';g.lineWidth=1.2
+    for(let by=0;by<=r;by+=4)
+      for(let bx=0;bx<=c;bx+=4){
+        const cx=bx*CELL_SIZE,cy=by*CELL_SIZE
+        g.beginPath();g.moveTo(cx-6,cy);g.lineTo(cx+6,cy)
+        g.moveTo(cx,cy-6);g.lineTo(cx,cy+6);g.stroke()
+      }
+  }
+
+  // Update Colombia time every second
   useEffect(()=>{
-    const canvas = canvasRef.current!, ctx = canvas.getContext('2d')!;
+    const updateTime=()=>{
+      const now=new Date()
+      const colombiaTime=new Intl.DateTimeFormat('es-CO',{
+        timeZone:'America/Bogota',
+        hour:'2-digit',
+        minute:'2-digit',
+        second:'2-digit',
+        hour12:false
+      }).format(now)
+      setTime(colombiaTime)
+    }
+    updateTime()
+    const interval=setInterval(updateTime,1000)
+    return()=>clearInterval(interval)
+  },[])
 
-    const resize =()=>{
-      canvas.width = innerWidth;
-      canvas.height= innerHeight;
-      W.current=Math.ceil(canvas.width /CELL_SIZE);
-      H.current=Math.ceil(canvas.height/CELL_SIZE);
-      gridRef.current = new Uint8Array(W.current*H.current);
-      nextRef.current = new Uint8Array(W.current*H.current);
-      logo(); draw();
+  useEffect(()=>{
+    const canvas=canvasRef.current!;const ctx=canvas.getContext('2d')!
 
-      /* capture inverse CSS matrix for pointer correction - with delay to ensure styles are applied */
-      setTimeout(() => {
-        invMat.current = new DOMMatrix(getComputedStyle(canvas).transform).invertSelf();
-      }, 0);
-    };
-
-    const draw =()=>{
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle='#111';
-      for(let y=0;y<H.current;y++)
-        for(let x=0;x<W.current;x++)
-          if(gridRef.current![y*W.current+x])
-            ctx.fillRect(x*CELL_SIZE,y*CELL_SIZE,CELL_SIZE,CELL_SIZE);
-      
-      // Draw hover cell highlight
-      if(hoverCell && hoverCell.x >= 0 && hoverCell.x < W.current && hoverCell.y >= 0 && hoverCell.y < H.current) {
-        ctx.strokeStyle = '#666';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(hoverCell.x * CELL_SIZE, hoverCell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    const calcLogoRect=()=>{
+      const fontSize=Math.min(innerWidth*0.18,160)
+      const text='KEVIN GAMEZ'
+      const m=document.createElement('canvas').getContext('2d')!
+      m.font=`${fontSize}px monospace`
+      const tw=m.measureText(text).width+120
+      const th=fontSize
+      const left=(canvas.width-tw)/2
+      const top =(canvas.height-th)/2
+      logoRect.current={
+        l:Math.floor(left/CELL_SIZE),
+        r:Math.ceil((left+tw)/CELL_SIZE)-1,
+        t:Math.floor(top/CELL_SIZE),
+        b:Math.ceil((top+th)/CELL_SIZE)-1
       }
-    };
+    }
 
-    const step =()=>{
-      const w=W.current,h=H.current,g=gridRef.current!,n=nextRef.current!;
+    const resize=()=>{
+      canvas.width=innerWidth;canvas.height=innerHeight
+      wRef.current=Math.ceil(canvas.width /CELL_SIZE)
+      hRef.current=Math.ceil(canvas.height/CELL_SIZE)
+      gridRef.current=new Int8Array(wRef.current*hRef.current)
+      nextRef.current=new Int8Array(wRef.current*hRef.current)
+      calcLogoRect()
+      drawBG(canvas.width,canvas.height,wRef.current,hRef.current)
+      updateStats();render()
+    }
+
+    const render=()=>{
+      ctx.drawImage(bgRef.current!,0,0)
+      const dark = isDarkModeRef.current
+      for(let y=0;y<hRef.current;y++)
+        for(let x=0;x<wRef.current;x++){
+          if(inLogo(x,y)) continue
+          const v=gridRef.current![y*wRef.current+x] as Cell
+          if(v===ALIVE) ctx.fillStyle=dark?'#bbbbbb':'#444'
+          else if(v>0)  ctx.fillStyle=fadeGrey(v,dark)
+          else continue
+          ctx.fillRect(x*CELL_SIZE,y*CELL_SIZE,CELL_SIZE,CELL_SIZE)
+        }
+    }
+
+    const step=()=>{
+      const w=wRef.current,h=hRef.current,g=gridRef.current!,n=nextRef.current!
       for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-        const i=y*w+x;
-        let s=0;
+        const idx=y*w+x,v=g[idx] as Cell
+        let s=0
         for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)
-          if(dx||dy) s+=g[((y+dy+h)%h)*w + ((x+dx+w)%w)];
-        n[i]=(s===3||s===2&&g[i])?1:0;
+          if(dx||dy)s+=g[((y+dy+h)%h)*w+((x+dx+w)%w)]===ALIVE?1:0
+        if(v===ALIVE) n[idx]=(s===2||s===3)?ALIVE:FADE_STEPS
+        else if(s===3) n[idx]=ALIVE
+        else if(v>0)   n[idx]=v-1
+        else           n[idx]=0
       }
-      gridRef.current = n.slice();
-    };
+      gridRef.current=new Int8Array(n);updateStats()
+    }
 
-    let last=0; const loop=(t:number)=>{
-      if(playRef.current && t-last>1000/FPS){step();draw();last=t;}
-      requestAnimationFrame(loop);
-    };
+    let last=0
+    const loop=(t:number)=>{
+      const fps=fpsRef.current||1
+      if(running.current&&t-last>1000/fps){step();render();last=t}
+      requestAnimationFrame(loop)
+    }
 
-    const paint =(e:PointerEvent)=>{
-      // Recalculate inverse matrix if needed (for better accuracy)
-      if(!invMat.current) {
-        invMat.current = new DOMMatrix(getComputedStyle(canvas).transform).invertSelf();
+    const paint=(e:PointerEvent)=>{
+      const r=canvas.getBoundingClientRect()
+      const x=Math.floor((e.clientX-r.left)/CELL_SIZE)
+      const y=Math.floor((e.clientY-r.top )/CELL_SIZE)
+      if(x>=0&&x<wRef.current&&y>=0&&y<hRef.current&&!inLogo(x,y)){
+        gridRef.current![y*wRef.current+x]=ALIVE;updateStats();render()
       }
-      
-      const rect = canvas.getBoundingClientRect();
-      
-      // More precise coordinate calculation
-      const canvasX = e.clientX - rect.left;
-      const canvasY = e.clientY - rect.top;
-      
-      // Apply inverse transform
-      const p = new DOMPoint(canvasX, canvasY).matrixTransform(invMat.current);
-      
-      // Calculate grid coordinates with bounds checking
-      const cx = Math.floor(p.x / CELL_SIZE);
-      const cy = Math.floor(p.y / CELL_SIZE);
-      
-      // More strict bounds checking
-      if(cx >= 0 && cx < W.current && cy >= 0 && cy < H.current){
-        gridRef.current![cy * W.current + cx] = 1; 
-        draw();
-      }
-    };
+    }
 
-    const trackHover = (e: PointerEvent) => {
-      // Recalculate inverse matrix if needed (for better accuracy)
-      if(!invMat.current) {
-        invMat.current = new DOMMatrix(getComputedStyle(canvas).transform).invertSelf();
-      }
-      
-      const rect = canvas.getBoundingClientRect();
-      
-      // More precise coordinate calculation
-      const canvasX = e.clientX - rect.left;
-      const canvasY = e.clientY - rect.top;
-      
-      // Apply inverse transform
-      const p = new DOMPoint(canvasX, canvasY).matrixTransform(invMat.current);
-      
-      // Calculate grid coordinates with bounds checking
-      const cx = Math.floor(p.x / CELL_SIZE);
-      const cy = Math.floor(p.y / CELL_SIZE);
-      
-      // Update hover state and redraw
-      if(cx >= 0 && cx < W.current && cy >= 0 && cy < H.current){
-        setHoverCell({x: cx, y: cy});
-      } else {
-        setHoverCell(null);
-      }
-      draw();
-    };
+    resize();requestAnimationFrame(loop)
+    addEventListener('resize',resize)
+    canvas.addEventListener('pointermove',paint)
+    canvas.addEventListener('pointerenter',()=>{
+      if(running.current) return
+      running.current=true;setPlaying(true);startTimers()
+    })
+    canvas.addEventListener('pointerleave',()=>{
+      if(!running.current) clearTimeout(playTimer.current)
+    })
 
-    resize(); requestAnimationFrame(loop);
-    addEventListener('resize',resize);
-    canvas.addEventListener('pointermove',trackHover);
-    canvas.addEventListener('pointerdown',paint);
-    canvas.addEventListener('pointerenter',()=>{playRef.current=true;setPlaying(true);startSeeds();});
-    canvas.addEventListener('pointerleave',()=>{playRef.current=false;setPlaying(false);stopSeeds();setHoverCell(null);});
-    return ()=>{removeEventListener('resize',resize);
-      canvas.removeEventListener('pointermove',trackHover); 
-      canvas.removeEventListener('pointerdown',paint); 
-      stopSeeds();};
-  },[]);
+    return()=>{removeEventListener('resize',resize)
+      canvas.removeEventListener('pointermove',paint)
+      clearTimeout(playTimer.current);stopTimers()}
+  },[])
 
-  /* UI handlers */
-  const toggle=()=>{playRef.current=!playRef.current;
-    setPlaying(playRef.current);
-    playRef.current?startSeeds():stopSeeds();};
-  const reset =()=>{playRef.current=false;setPlaying(false);
-    stopSeeds(); gridRef.current?.fill(0); logo();};
+  // Update theme reference and redraw background when theme changes
+  useEffect(()=>{
+    isDarkModeRef.current = isDarkMode
+    if(canvasRef.current && wRef.current && hRef.current){
+      drawBG(canvasRef.current.width, canvasRef.current.height, wRef.current, hRef.current)
+    }
+  },[isDarkMode])
 
-  /* render */
+  const togglePlay=()=>{running.current=!running.current;setPlaying(running.current)
+    running.current?startTimers():stopTimers()}
+  const reset=()=>{running.current=false;setPlaying(false);stopTimers();fpsRef.current=0
+    gridRef.current?.fill(0);updateStats();resetStore()}
+
   return(
-    <div style={{height:'100vh',width:'100vw',overflow:'hidden'}}>
+    <div style={{
+      height:'100vh',
+      width:'100vw',
+      position:'fixed',
+      top:0,
+      left:0,
+      overflow:'hidden',
+      maxHeight:'100vh',
+      maxWidth:'100vw'
+    }}>
       <canvas ref={canvasRef} style={{
-        display:'block',
-        cursor:'crosshair',
-        transform:`rotateX(${ROT_X}deg) rotateZ(${ROT_Z}deg)`,
-        transformOrigin:'top left',
-        boxShadow:'0 10px 28px rgba(0,0,0,.25)'
+        position:'absolute',
+        inset:0,
+        zIndex:0,
+        overflow:'hidden',
+        maxHeight:'100vh',
+        maxWidth:'100vw'
       }}/>
+      
+      {/* Fade overlay for edges */}
       <div style={{
-        position:'fixed',bottom:14,left:'50%',transform:'translateX(-50%)',
-        background:'rgba(255,255,255,.8)',padding:'4px 10px',
-        borderRadius:6,fontSize:14,
-        boxShadow:'0 4px 12px rgba(0,0,0,.15)',userSelect:'none'}}>
-        <button onClick={toggle}>{playing?'Pause':'Play'}</button>
-        <button onClick={reset } style={{marginLeft:6}}>Reset</button>
+        position:'absolute',inset:0,zIndex:5,pointerEvents:'none',
+        background: isDarkMode 
+          ? `radial-gradient(ellipse at center, transparent 60%, transparent 75%, rgba(26,26,26,0.2) 85%, rgba(26,26,26,0.6) 95%, rgba(26,26,26,0.9) 100%)`
+          : `radial-gradient(ellipse at center, transparent 60%, transparent 75%, rgba(255,255,255,0.2) 85%, rgba(255,255,255,0.6) 95%, rgba(255,255,255,0.9) 100%)`
+      }}/>
+      
+      <div style={{
+        position:'absolute',inset:0,zIndex:10,display:'flex',justifyContent:'center',
+        alignItems:'center',fontFamily:'Inter, sans-serif',fontWeight:500,
+        fontSize:'min(18vw,160px)',letterSpacing:'0.08em',
+        color: isDarkMode ? '#E5E7EB' : '#243B55',pointerEvents:'none'
+      }}>
+        KEVIN GAMEZ
+      </div>
+      
+      {/* Colombia time in top right corner */}
+      <div style={{
+        position:'fixed',top:14,right:14,zIndex:20,
+        background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
+        padding:'8px 12px',borderRadius:6,
+        fontSize:14,fontFamily:'Inter, sans-serif',fontWeight:500,
+        color: isDarkMode ? '#E5E7EB' : '#243B55',
+        boxShadow:'0 4px 12px rgba(0,0,0,.15)',
+        letterSpacing:'0.5px'
+      }}>
+        {time} COL
+      </div>
+      
+      <DockDemo 
+        isPlaying={playing} 
+        onPlay={togglePlay} 
+        onReset={reset}
+        isDarkMode={isDarkMode}
+        onToggleTheme={toggleTheme}
+      />
+      
+      {/* Stats overlay */}
+      <div style={{
+        position:'fixed',bottom:14,left:14,zIndex:20,
+        background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
+        padding:'8px 12px',borderRadius:6,
+        fontSize:12,fontFamily:'Inter, sans-serif',
+        color: isDarkMode ? '#E5E7EB' : '#243B55',
+        boxShadow:'0 4px 12px rgba(0,0,0,.15)'
+      }}>
+        {t('gameOfLife.stats.alive')}: {stats.alive} | {t('gameOfLife.stats.dead')}: {stats.dead}
+      </div>
+      
+      {/* Language Toggle */}
+      <div style={{
+        position:'fixed',top:14,left:14,zIndex:20
+      }}>
+        <LanguageToggle />
       </div>
     </div>
-  );
+  )
 }

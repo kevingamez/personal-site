@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "name": "KEVIN GAMEZ",
+    "title": "Desarrollador de Software",
+    "subtitle": "Creando experiencias digitales"
+  },
+  "gameOfLife": {
+    "stats": {
+      "alive": "Vivas",
+      "dead": "Muertas",
+      "generation": "Gen",
+      "fps": "FPS"
+    },
+    "controls": {
+      "play": "Reproducir",
+      "pause": "Pausar",
+      "reset": "Reiniciar"
+    }
+  },
+  "time": {
+    "timezone": "COL",
+    "colombiaTime": "Hora de Colombia"
+  },
+  "theme": {
+    "light": "Modo Claro",
+    "dark": "Modo Oscuro",
+    "toggle": "Cambiar Tema"
+  }
+} 
