@@ -1,0 +1,27 @@
+---
+// Set language in the page
+import Layout from '../../layouts/Layout.astro'
+import GameOfLifeIsland from '../../components/GameOfLifeIsland.tsx'
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Kevin Gamez - Desarrollador de Software</title>
+  <meta name="description" content="Desarrollador de Software creando experiencias digitales" />
+</head>
+<body>
+  <GameOfLifeIsland client:load />
+  
+  <script>
+    // Set initial language to Spanish
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferred-language', 'es')
+    }
+  </script>
+</body>
+</html> 
