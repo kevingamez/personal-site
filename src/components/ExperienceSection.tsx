@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks'
 export default function ExperienceSection() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
 
-  /* ───── real-world experience from résumé ───── */
+  /* ── Professional experience ── */
   const experiences = [
     {
       company: 'Samsam',
@@ -48,6 +48,31 @@ export default function ExperienceSection() {
     },
   ]
 
+     /* ── Education (from résumé) ── */
+   const education = [
+     {
+       degree: 'MSc in Information Engineering',
+       school: 'Universidad de los Andes',
+       date: 'Expected May 2025',
+     },
+     {
+       degree: 'BSc in Systems & Computer Engineering',
+       school: 'Universidad de los Andes',
+       date: 'Dec 2023',
+     },
+     { degree: 'Minor in Mathematics', school: 'Universidad de los Andes', date: 'Dec 2023' },
+     { degree: 'Minor in Management', school: 'Universidad de los Andes', date: 'Dec 2022' },
+   ]
+
+   /* ── Awards & Distinctions ── */
+   const awards = [
+     {
+       title: 'Andrés Bello Distinction - National Category',
+       issuer: 'Ministerio de Educación Nacional de Colombia',
+       date: 'Dec 2018',
+     },
+   ]
+
   return (
     <section
       id="experience"
@@ -59,17 +84,51 @@ export default function ExperienceSection() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '80px 20px',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: '800px', width: '100%' }}>
-        {/* heading */}
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+      {/* fine-grid background */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          backgroundImage:
+            'linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)',
+          backgroundSize: '25px 25px',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* crosses */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
+        <svg style={{ width: '100%', height: '100%' }}>
+          <defs>
+            <pattern
+              id="crosses-exp"
+              width="100"
+              height="100"
+              patternUnits="userSpaceOnUse"
+            >
+              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+                <line x1="50" y1="44" x2="50" y2="56" />
+                <line x1="44" y1="50" x2="56" y2="50" />
+              </g>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#crosses-exp)" />
+        </svg>
+      </div>
+
+      <div style={{ maxWidth: 800, width: '100%', position: 'relative', zIndex: 10 }}>
+        {/* header */}
+        <div style={{ textAlign: 'center', marginBottom: 60 }}>
           <h2
             style={{
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontSize: 'clamp(2rem,5vw,3.5rem)',
               fontWeight: 700,
               color: '#0f172a',
-              marginBottom: '16px',
+              marginBottom: 16,
               fontFamily: 'Inter, sans-serif',
             }}
           >
@@ -87,9 +146,9 @@ export default function ExperienceSection() {
             My professional journey and key milestones
           </p>
         </div>
+
         {/* timeline */}
         <div style={{ position: 'relative' }}>
-          {/* vertical line */}
           <div
             style={{
               position: 'absolute',
@@ -123,7 +182,7 @@ export default function ExperienceSection() {
                     borderRadius: '50%',
                     border: '4px solid #fff',
                     boxShadow: `0 0 0 2px ${isExpanded ? '#3b82f6' : '#e2e8f0'}`,
-                    transition: 'all 0.3s ease',
+                    transition: 'all .3s ease',
                     transform: isExpanded ? 'scale(1.2)' : 'scale(1)',
                   }}
                 />
@@ -136,25 +195,14 @@ export default function ExperienceSection() {
                     borderRadius: 12,
                     border: `2px solid ${isExpanded ? '#3b82f6' : '#e2e8f0'}`,
                     cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all .3s cubic-bezier(.4,0,.2,1)',
                     transform: isExpanded ? 'translateY(-4px)' : 'translateY(0)',
                     boxShadow: isExpanded
-                      ? '0 20px 40px rgba(59,130,246,0.15)'
-                      : '0 4px 6px rgba(0,0,0,0.05)',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isExpanded) {
-                      e.currentTarget.style.transform = 'translateY(-2px)'
-                      e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.1)'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isExpanded) {
-                      e.currentTarget.style.transform = 'translateY(0)'
-                      e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)'
-                    }
+                      ? '0 20px 40px rgba(59,130,246,.15)'
+                      : '0 4px 6px rgba(0,0,0,.05)',
                   }}
                 >
+                  {/* heading */}
                   <div style={{ marginBottom: 16 }}>
                     <h3
                       style={{
@@ -187,7 +235,7 @@ export default function ExperienceSection() {
                       <span style={{ color: '#64748b', fontSize: 14 }}>{exp.period}</span>
                     </div>
                   </div>
-
+                  {/* summary */}
                   <p
                     style={{
                       color: '#475569',
@@ -198,7 +246,7 @@ export default function ExperienceSection() {
                   >
                     {exp.description}
                   </p>
-
+                  {/* tech chips */}
                   <div
                     style={{
                       display: 'flex',
@@ -207,9 +255,9 @@ export default function ExperienceSection() {
                       marginBottom: isExpanded ? 24 : 0,
                     }}
                   >
-                    {exp.tech.map((tech, techIndex) => (
+                    {exp.tech.map((tech) => (
                       <span
-                        key={techIndex}
+                        key={tech}
                         style={{
                           backgroundColor: '#dbeafe',
                           color: '#3b82f6',
@@ -225,13 +273,13 @@ export default function ExperienceSection() {
                     ))}
                   </div>
 
-                  {/* expandable details */}
+                  {/* details */}
                   {isExpanded && (
                     <div
                       style={{
                         paddingTop: 24,
                         borderTop: '1px solid #e2e8f0',
-                        animation: 'slideDown 0.3s ease-out',
+                        animation: 'slideDown .3s ease-out',
                       }}
                     >
                       <div
@@ -241,84 +289,18 @@ export default function ExperienceSection() {
                           gap: 24,
                         }}
                       >
-                        {/* achievements */}
-                        <div>
-                          <h4
-                            style={{
-                              fontSize: 16,
-                              fontWeight: 600,
-                              color: '#1e293b',
-                              marginBottom: 12,
-                              fontFamily: 'Inter, sans-serif',
-                            }}
-                          >
-                            🏆 Key Achievements
-                          </h4>
-                          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                            {exp.details.achievements.map((a, i) => (
-                              <li
-                                key={i}
-                                style={{
-                                  fontSize: 14,
-                                  color: '#475569',
-                                  marginBottom: 8,
-                                  paddingLeft: 16,
-                                  position: 'relative',
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    position: 'absolute',
-                                    left: 0,
-                                    color: '#10b981',
-                                  }}
-                                >
-                                  ✓
-                                </span>
-                                {a}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        {/* responsibilities */}
-                        <div>
-                          <h4
-                            style={{
-                              fontSize: 16,
-                              fontWeight: 600,
-                              color: '#1e293b',
-                              marginBottom: 12,
-                              fontFamily: 'Inter, sans-serif',
-                            }}
-                          >
-                            📋 Responsibilities
-                          </h4>
-                          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                            {exp.details.responsibilities.map((r, i) => (
-                              <li
-                                key={i}
-                                style={{
-                                  fontSize: 14,
-                                  color: '#475569',
-                                  marginBottom: 8,
-                                  paddingLeft: 16,
-                                  position: 'relative',
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    position: 'absolute',
-                                    left: 0,
-                                    color: '#3b82f6',
-                                  }}
-                                >
-                                  •
-                                </span>
-                                {r}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                        <DetailsList
+                          title="🏆 Key Achievements"
+                          items={exp.details.achievements}
+                          bullet="✓"
+                          bulletColor="#10b981"
+                        />
+                        <DetailsList
+                          title="📋 Responsibilities"
+                          items={exp.details.responsibilities}
+                          bullet="•"
+                          bulletColor="#3b82f6"
+                        />
                       </div>
                     </div>
                   )}
@@ -338,9 +320,135 @@ export default function ExperienceSection() {
             )
           })}
         </div>
+
+                 {/* education section - compressed */}
+         <div style={{ marginTop: 80 }}>
+           <h3
+             style={{
+               fontSize: 22,
+               fontWeight: 600,
+               color: '#475569',
+               marginBottom: 12,
+               fontFamily: 'Inter, sans-serif',
+             }}
+           >
+             Education
+           </h3>
+           
+           <div style={{ 
+             backgroundColor: '#f8fafc', 
+             padding: '20px', 
+             borderRadius: 8,
+             border: '1px solid #e2e8f0'
+           }}>
+             <p
+               style={{
+                 margin: '0 0 16px 0',
+                 color: '#3b82f6',
+                 fontSize: 15,
+                 fontWeight: 600,
+                 fontFamily: 'Inter, sans-serif',
+               }}
+             >
+               Universidad de los Andes
+             </p>
+             
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+               {education.map((edu) => (
+                 <div
+                   key={edu.degree}
+                   style={{
+                     display: 'flex',
+                     justifyContent: 'space-between',
+                     alignItems: 'center',
+                     gap: 12,
+                     padding: '6px 0',
+                   }}
+                 >
+                   <span
+                     style={{
+                       color: '#1e293b',
+                       fontSize: 14,
+                       fontWeight: 500,
+                       flex: 1,
+                     }}
+                   >
+                     {edu.degree}
+                   </span>
+                   <span
+                     style={{
+                       color: '#94a3b8',
+                       fontSize: 13,
+                       fontWeight: 500,
+                       whiteSpace: 'nowrap',
+                     }}
+                   >
+                     {edu.date}
+                   </span>
+                 </div>
+               ))}
+             </div>
+           </div>
+         </div>
+
+         {/* awards section */}
+         <div style={{ marginTop: 60 }}>
+           <h3
+             style={{
+               fontSize: 22,
+               fontWeight: 600,
+               color: '#475569',
+               marginBottom: 24,
+               fontFamily: 'Inter, sans-serif',
+             }}
+           >
+             Awards & Distinctions
+           </h3>
+           
+           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+             {awards.map((award) => (
+               <div
+                 key={award.title}
+                 style={{
+                   padding: '16px 20px',
+                   backgroundColor: '#fefce8',
+                   border: '1px solid #fde047',
+                   borderRadius: 8,
+                   borderLeft: '4px solid #eab308',
+                 }}
+               >
+                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                   <span style={{ fontSize: 16, marginTop: 2 }}>🏆</span>
+                   <div style={{ flex: 1 }}>
+                     <p
+                       style={{
+                         fontWeight: 600,
+                         margin: 0,
+                         color: '#713f12',
+                         fontSize: 15,
+                         lineHeight: 1.3,
+                       }}
+                     >
+                       {award.title}
+                     </p>
+                     <p
+                       style={{
+                         margin: 0,
+                         color: '#a16207',
+                         fontSize: 13,
+                         marginTop: 4,
+                       }}
+                     >
+                       Issued by {award.issuer} · {award.date}
+                     </p>
+                   </div>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
       </div>
 
-      {/* animation */}
       <style jsx>{`
         @keyframes slideDown {
           from {
@@ -356,5 +464,50 @@ export default function ExperienceSection() {
         }
       `}</style>
     </section>
+  )
+}
+
+function DetailsList({
+  title,
+  items,
+  bullet,
+  bulletColor,
+}: {
+  title: string
+  items: string[]
+  bullet: string
+  bulletColor: string
+}) {
+  return (
+    <div>
+      <h4
+        style={{
+          fontSize: 16,
+          fontWeight: 600,
+          color: '#1e293b',
+          marginBottom: 12,
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        {title}
+      </h4>
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {items.map((txt) => (
+          <li
+            key={txt}
+            style={{
+              fontSize: 14,
+              color: '#475569',
+              marginBottom: 8,
+              paddingLeft: 16,
+              position: 'relative',
+            }}
+          >
+            <span style={{ position: 'absolute', left: 0, color: bulletColor }}>{bullet}</span>
+            {txt}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
