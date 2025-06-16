@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'preact/hooks'
+import { useI18n } from '../store/i18nStore'
 
 interface NavigationDockProps {
   isPlaying?: boolean
@@ -15,6 +16,7 @@ export default function NavigationDock({
   isDarkMode, 
   onToggleTheme 
 }: NavigationDockProps) {
+  const { t } = useI18n()
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -29,30 +31,31 @@ export default function NavigationDock({
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
   const navigationItems = [
-    { id: 'hero', label: '🏠', title: 'Home' },
-    { id: 'about', label: '👋', title: 'About' },
-    { id: 'experience', label: '🎯', title: 'Experience' },
-    { id: 'projects', label: '💼', title: 'Portfolio' },
-    { id: 'skills', label: '🛠️', title: 'Skills' },
-    { id: 'contact', label: '📞', title: 'Contact' }
+    { id: 'hero', label: '🏠', title: t('nav.home') },
+    { id: 'about', label: '👋', title: t('nav.about') },
+    { id: 'experience', label: '🎯', title: t('nav.experience') },
+    { id: 'projects', label: '💼', title: t('nav.portfolio') },
+    { id: 'skills', label: '🛠️', title: t('nav.skills') },
+    { id: 'contact', label: '📞', title: t('nav.contact') }
   ]
 
   const gameControls = [
     { 
       action: onPlay, 
       label: isPlaying ? '⏸️' : '▶️', 
-      title: isPlaying ? 'Pause' : 'Play' 
+      title: isPlaying ? t('gameOfLife.controls.pause') : t('gameOfLife.controls.play')
     },
     { 
       action: onReset, 
       label: '🔄', 
-      title: 'Reset' 
+      title: t('gameOfLife.controls.reset')
     },
     { 
       action: onToggleTheme, 
       label: isDarkMode ? '☀️' : '🌙', 
-      title: isDarkMode ? 'Light Mode' : 'Dark Mode' 
+      title: isDarkMode ? t('theme.light') : t('theme.dark')
     }
   ]
 

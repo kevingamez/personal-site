@@ -1,6 +1,9 @@
 import GameOfLifeIsland from './GameOfLifeIsland'
+import { useI18n } from '../store/i18nStore'
 
 export default function HeroSection() {
+  const { t } = useI18n()
+
   return (
     <section id="hero" style={{
       height: '100vh',
@@ -27,7 +30,7 @@ export default function HeroSection() {
         opacity: 0.8,
         animation: 'bounce 2s infinite'
       }}>
-        <span>Scroll to explore</span>
+        <span>{t('hero.scrollToExplore')}</span>
         <div style={{
           width: '20px',
           height: '30px',
