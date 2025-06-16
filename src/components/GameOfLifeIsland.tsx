@@ -1,11 +1,11 @@
 // GameOfLifeIsland.tsx
-import { useEffect, useRef } from 'preact/hooks'
-import DockDemo from './DockDemo'
+import { useEffect, useRef, useState } from 'preact/hooks'
+import NavigationDock from './NavigationDock'
 import LanguageToggle from './LanguageToggle'
 import { useGameStore } from '../store/gameStore'
 import { useI18n } from '../store/i18nStore'
 
-const CELL_SIZE   = 25
+const getCellSize = () => window.innerWidth < 1000 ? 35 : 25  // Larger cells on mobile
 const MAX_FPS     = 10
 const FADE_STEPS  = 2
 const SEED_PERIOD = 5_000
@@ -83,6 +83,7 @@ export default function GameOfLifeIsland(){
   } = gameState
   
   const { t } = useI18n()
+  const [isMobile, setIsMobile] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const bgRef     = useRef<HTMLCanvasElement>()
@@ -90,6 +91,7 @@ export default function GameOfLifeIsland(){
   const nextRef   = useRef<Grid>()
   const wRef      = useRef(0)
   const hRef      = useRef(0)
+  const cellSizeRef = useRef(25)
   const isDarkModeRef = useRef(false)
 
   const playTimer = useRef<number>()
@@ -143,14 +145,14 @@ export default function GameOfLifeIsland(){
     g.fillStyle=dark?'#1a1a1a':'#fff';g.fillRect(0,0,wp,hp)
     // Grid lines based on theme  
     g.beginPath();g.strokeStyle=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.03)';g.lineWidth=1
-    for(let x=0;x<=c;x++){const px=x*CELL_SIZE+0.5;g.moveTo(px,0);g.lineTo(px,hp)}
-    for(let y=0;y<=r;y++){const py=y*CELL_SIZE+0.5;g.moveTo(0,py);g.lineTo(wp,py)}
+    for(let x=0;x<=c;x++){const px=x*cellSizeRef.current+0.5;g.moveTo(px,0);g.lineTo(px,hp)}
+    for(let y=0;y<=r;y++){const py=y*cellSizeRef.current+0.5;g.moveTo(0,py);g.lineTo(wp,py)}
     g.stroke()
     // Major grid lines based on theme
     g.strokeStyle=dark?'rgba(255,255,255,0.15)':'rgba(0,0,0,0.12)';g.lineWidth=1.2
     for(let by=0;by<=r;by+=4)
       for(let bx=0;bx<=c;bx+=4){
-        const cx=bx*CELL_SIZE,cy=by*CELL_SIZE
+        const cx=bx*cellSizeRef.current,cy=by*cellSizeRef.current
         g.beginPath();g.moveTo(cx-6,cy);g.lineTo(cx+6,cy)
         g.moveTo(cx,cy-6);g.lineTo(cx,cy+6);g.stroke()
       }
@@ -177,29 +179,55 @@ export default function GameOfLifeIsland(){
   useEffect(()=>{
     const canvas=canvasRef.current!;const ctx=canvas.getContext('2d')!
 
-    const calcLogoRect=()=>{
-      const fontSize=Math.min(innerWidth*0.18,160)
-      const text='KEVIN GAMEZ'
-      const m=document.createElement('canvas').getContext('2d')!
-      m.font=`${fontSize}px monospace`
-      const tw=m.measureText(text).width+120
-      const th=fontSize
-      const left=(canvas.width-tw)/2
-      const top =(canvas.height-th)/2
-      logoRect.current={
-        l:Math.floor(left/CELL_SIZE),
-        r:Math.ceil((left+tw)/CELL_SIZE)-1,
-        t:Math.floor(top/CELL_SIZE),
-        b:Math.ceil((top+th)/CELL_SIZE)-1
+        const calcLogoRect=()=>{
+      const isMobile = innerWidth < 1000
+      
+      if (isMobile) {
+        // On mobile, create a much larger protected area in the center
+        const centerX = Math.floor(wRef.current / 2)
+        const centerY = Math.floor(hRef.current / 2)
+        
+        // Create a large rectangle around the center (about 80% of screen width, 40% of height)
+        const protectedWidth = Math.floor(wRef.current * 0.8)
+        const protectedHeight = Math.floor(hRef.current * 0.4)
+        
+        logoRect.current = {
+          l: centerX - Math.floor(protectedWidth / 2),
+          r: centerX + Math.floor(protectedWidth / 2),
+          t: centerY - Math.floor(protectedHeight / 2),
+          b: centerY + Math.floor(protectedHeight / 2)
+        }
+      } else {
+        // Desktop calculation (original logic but more conservative)
+        const fontSize = Math.min(innerWidth * 0.18, 160)
+        const charWidthEstimate = fontSize * 0.6
+        const letterSpacingTotal = fontSize * 0.08 * 10
+        const estimatedWidth = (11 * charWidthEstimate) + letterSpacingTotal
+        
+        const padding = 160
+        const tw = estimatedWidth + padding
+        const th = fontSize * 1.4
+        
+        const left = (canvas.width - tw) / 2
+        const top = (canvas.height - th) / 2
+        
+        logoRect.current = {
+          l: Math.floor(left / cellSizeRef.current) - 1,
+          r: Math.ceil((left + tw) / cellSizeRef.current),
+          t: Math.floor(top / cellSizeRef.current) - 1,
+          b: Math.ceil((top + th) / cellSizeRef.current)
+        }
       }
     }
 
     const resize=()=>{
       canvas.width=innerWidth;canvas.height=innerHeight
-      wRef.current=Math.ceil(canvas.width /CELL_SIZE)
-      hRef.current=Math.ceil(canvas.height/CELL_SIZE)
+      cellSizeRef.current = getCellSize()  // Update cell size based on screen
+      wRef.current=Math.ceil(canvas.width /cellSizeRef.current)
+      hRef.current=Math.ceil(canvas.height/cellSizeRef.current)
       gridRef.current=new Int8Array(wRef.current*hRef.current)
       nextRef.current=new Int8Array(wRef.current*hRef.current)
+      setIsMobile(innerWidth < 1000)  // Update mobile state
       calcLogoRect()
       drawBG(canvas.width,canvas.height,wRef.current,hRef.current)
       updateStats();render()
@@ -215,7 +243,7 @@ export default function GameOfLifeIsland(){
           if(v===ALIVE) ctx.fillStyle=dark?'#bbbbbb':'#444'
           else if(v>0)  ctx.fillStyle=fadeGrey(v,dark)
           else continue
-          ctx.fillRect(x*CELL_SIZE,y*CELL_SIZE,CELL_SIZE,CELL_SIZE)
+          ctx.fillRect(x*cellSizeRef.current,y*cellSizeRef.current,cellSizeRef.current,cellSizeRef.current)
         }
     }
 
@@ -243,13 +271,15 @@ export default function GameOfLifeIsland(){
 
     const paint=(e:PointerEvent)=>{
       const r=canvas.getBoundingClientRect()
-      const x=Math.floor((e.clientX-r.left)/CELL_SIZE)
-      const y=Math.floor((e.clientY-r.top )/CELL_SIZE)
+      const x=Math.floor((e.clientX-r.left)/cellSizeRef.current)
+      const y=Math.floor((e.clientY-r.top )/cellSizeRef.current)
       if(x>=0&&x<wRef.current&&y>=0&&y<hRef.current&&!inLogo(x,y)){
         gridRef.current![y*wRef.current+x]=ALIVE;updateStats();render()
       }
     }
 
+    // Initialize mobile state
+    setIsMobile(innerWidth < 1000)
     resize();requestAnimationFrame(loop)
     addEventListener('resize',resize)
     canvas.addEventListener('pointermove',paint)
@@ -281,22 +311,18 @@ export default function GameOfLifeIsland(){
 
   return(
     <div style={{
-      height:'100vh',
-      width:'100vw',
-      position:'fixed',
+      height:'100%',
+      width:'100%',
+      position:'absolute',
       top:0,
       left:0,
-      overflow:'hidden',
-      maxHeight:'100vh',
-      maxWidth:'100vw'
+      overflow:'hidden'
     }}>
       <canvas ref={canvasRef} style={{
         position:'absolute',
         inset:0,
         zIndex:0,
-        overflow:'hidden',
-        maxHeight:'100vh',
-        maxWidth:'100vw'
+        overflow:'hidden'
       }}/>
       
       {/* Fade overlay for edges */}
@@ -308,12 +334,31 @@ export default function GameOfLifeIsland(){
       }}/>
       
       <div style={{
-        position:'absolute',inset:0,zIndex:10,display:'flex',justifyContent:'center',
-        alignItems:'center',fontFamily:'Inter, sans-serif',fontWeight:500,
-        fontSize:'min(18vw,160px)',letterSpacing:'0.08em',
-        color: isDarkMode ? '#E5E7EB' : '#243B55',pointerEvents:'none'
+        position:'absolute',
+        top:0,
+        left:0,
+        width:'100%',
+        height:'100%',
+        zIndex:10,
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center',
+        fontFamily:'Inter, sans-serif',
+        fontWeight:500,
+        fontSize: isMobile ? 'min(28vw,160px)' : 'min(18vw,160px)',
+        letterSpacing:'0.08em',
+        color: isDarkMode ? '#E5E7EB' : '#243B55',
+        pointerEvents:'none',
+        textAlign:'center',
+        lineHeight:1
       }}>
-        KEVIN GAMEZ
+        <span style={{
+          display:'block',
+          width:'100%',
+          textAlign:'center'
+        }}>
+          KEVIN GAMEZ
+        </span>
       </div>
       
       {/* Colombia time in top right corner */}
@@ -329,7 +374,7 @@ export default function GameOfLifeIsland(){
         {time} COL
       </div>
       
-      <DockDemo 
+      <NavigationDock 
         isPlaying={playing} 
         onPlay={togglePlay} 
         onReset={reset}

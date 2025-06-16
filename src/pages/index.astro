@@ -1,5 +1,49 @@
 ---
-import GameOfLifeIsland from '../components/GameOfLifeIsland.tsx';
+import PortfolioLayout from '../components/PortfolioLayout.tsx';
 ---
 
-<GameOfLifeIsland client:load />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kevin Gamez - Full Stack Developer</title>
+  <meta name="description" content="Kevin Gamez - Full Stack Developer passionate about creating interactive experiences and solving complex problems through code." />
+  
+  <!-- Smooth scroll CSS -->
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <PortfolioLayout client:load />
+</body>
+</html>
