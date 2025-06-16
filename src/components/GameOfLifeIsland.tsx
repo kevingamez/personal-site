@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import NavigationDock from './NavigationDock'
 import LanguageToggle from './LanguageToggle'
 import { useGameStore } from '../store/gameStore'
-import { useI18n } from '../store/i18nStore'
+import { useI18n, i18nStore } from '../store/i18nStore'
 
 const getCellSize = () => window.innerWidth < 1000 ? 35 : 25  // Larger cells on mobile
 const MAX_FPS     = 10
@@ -162,7 +162,10 @@ export default function GameOfLifeIsland(){
   useEffect(()=>{
     const updateTime=()=>{
       const now=new Date()
-      const colombiaTime=new Intl.DateTimeFormat('es-CO',{
+      // Use the current locale for date formatting
+      const locale = i18nStore.getState().locale
+      const localeCode = locale === 'es' ? 'es-CO' : 'en-US'
+      const colombiaTime=new Intl.DateTimeFormat(localeCode,{
         timeZone:'America/Bogota',
         hour:'2-digit',
         minute:'2-digit',
@@ -384,7 +387,7 @@ export default function GameOfLifeIsland(){
       
       {/* Stats overlay */}
       <div style={{
-        position:'fixed',bottom:14,left:14,zIndex:20,
+        position:'absolute',bottom:14,left:14,zIndex:20,
         background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
         padding:'8px 12px',borderRadius:6,
         fontSize:12,fontFamily:'Inter, sans-serif',
