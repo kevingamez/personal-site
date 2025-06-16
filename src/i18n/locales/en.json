@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "name": "KEVIN GAMEZ",
+    "title": "Software Developer",
+    "subtitle": "Creating digital experiences"
+  },
+  "gameOfLife": {
+    "stats": {
+      "alive": "Alive",
+      "dead": "Dead",
+      "generation": "Gen",
+      "fps": "FPS"
+    },
+    "controls": {
+      "play": "Play",
+      "pause": "Pause",
+      "reset": "Reset"
+    }
+  },
+  "time": {
+    "timezone": "COL",
+    "colombiaTime": "Colombia Time"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "toggle": "Toggle Theme"
+  }
+} 

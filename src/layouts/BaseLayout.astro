@@ -1,0 +1,16 @@
+---
+import '../styles/main.css';
+import '../styles/globals.css';
+const { title = 'Keivn Gamez', children } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
