@@ -10,37 +10,7 @@ export default function ProjectsSection() {
     /* 1 ─ Conway visualiser (this website's hero) */
   
 
-    /* 2 ─ Personal website (the site you're on) */
-    {
-      title: 'Portfolio Website',
-      description: 'This very website! Modern portfolio built with Astro, featuring Game of Life background, smooth animations, and bilingual support.',
-      tech: ['Astro', 'TypeScript', 'Preact', 'Zustand'],
-      github: 'https://github.com/kevingamez/personal-site',
-      demo: 'https://kevingamez.co',
-      details: {
-        features: [
-          'Interactive Conway\'s Game of Life background',
-          'SSG with island hydration (Preact components)',
-          'English/Spanish i18n with persistent store',
-          'Expandable experience & portfolio cards',
-          'Typing animation with intersection observers',
-          'Responsive grid patterns throughout',
-          'Magnetic dock-style navigation'
-        ],
-        challenges: [
-          'Integrating Preact islands with Astro SSG',
-          'Optimizing canvas performance for Game of Life',
-          'Creating consistent grid backgrounds across sections',
-          'Managing multilingual state without hydration issues',
-          'Building interactive cards with smooth animations',
-          'Implementing typing effects triggered by scroll'
-        ]
-      }
-    },
-
-    /* 3 ─ Real-time task manager demo */
-    
-    /* 3 ─ Undergraduate capstone thesis */
+    /* 2 ─ Undergraduate capstone thesis */
     {
       title: 'Deep Learning in Agriculture',
       description: 'Undergraduate thesis on oil-palm crop mapping in Colombia using Sentinel-1/2 satellite imagery and DeepLab V3+ architecture.',
@@ -64,7 +34,7 @@ export default function ProjectsSection() {
       }
     },
 
-    /* 4 ─ CodeFest Ad Astra 2023 */
+    /* 3 ─ CodeFest Ad Astra 2023 */
     {
       title: 'AD ASTRA – Aerial Object Detection',
       description: 'Open-source library for detecting and classifying Amazon-deforestation events from aircraft footage.',
@@ -125,7 +95,7 @@ export default function ProjectsSection() {
         </svg>
       </div>
 
-      <div style={{maxWidth:'1200px',width:'100%',position:'relative',zIndex:10}}>
+      <div style={{maxWidth:'1600px',width:'100%',position:'relative',zIndex:10}}>
         {/* heading */}
         <div style={{textAlign:'center',marginBottom:'60px'}}>
           <h2 style={{
@@ -146,8 +116,9 @@ export default function ProjectsSection() {
         {/* cards grid */}
         <div style={{
           display:'grid',
-          gridTemplateColumns:'repeat(auto-fit,minmax(350px,1fr))',
-          gap:'32px'
+          gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))',
+          gap:'32px',
+          maxWidth:'100%'
         }}>
           {projects.map((project,index)=>{
             const isExpanded = expandedCard===index
