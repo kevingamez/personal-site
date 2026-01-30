@@ -4,6 +4,7 @@ import NavigationDock from './NavigationDock'
 import LanguageToggle from './LanguageToggle'
 import { useGameStore } from '../store/gameStore'
 import { useI18n, i18nStore } from '../store/i18nStore'
+import gsap from 'gsap'
 
 const getCellSize = () => window.innerWidth < 1000 ? 35 : 25  // Larger cells on mobile
 const MAX_FPS     = 10
@@ -86,6 +87,7 @@ export default function GameOfLifeIsland(){
   const [isMobile, setIsMobile] = useState(false)
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const titleRef  = useRef<HTMLDivElement>(null)
   const bgRef     = useRef<HTMLCanvasElement>()
   const gridRef   = useRef<Grid>()
   const nextRef   = useRef<Grid>()
@@ -157,6 +159,17 @@ export default function GameOfLifeIsland(){
         g.moveTo(cx,cy-6);g.lineTo(cx,cy+6);g.stroke()
       }
   }
+
+  // Animate title on mount
+  useEffect(() => {
+    if (titleRef.current) {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: 30, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out', delay: 0.3 }
+      )
+    }
+  }, [])
 
   // Update Colombia time every second
   useEffect(()=>{
@@ -336,25 +349,29 @@ export default function GameOfLifeIsland(){
           : `radial-gradient(ellipse at center, transparent 60%, transparent 75%, rgba(255,255,255,0.2) 85%, rgba(255,255,255,0.6) 95%, rgba(255,255,255,0.9) 100%)`
       }}/>
       
-      <div style={{
-        position:'absolute',
-        top:0,
-        left:0,
-        width:'100%',
-        height:'100%',
-        zIndex:10,
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
-        fontFamily:'Inter, sans-serif',
-        fontWeight:500,
-        fontSize: isMobile ? 'min(28vw,160px)' : 'min(18vw,160px)',
-        letterSpacing:'0.08em',
-        color: isDarkMode ? '#E5E7EB' : '#243B55',
-        pointerEvents:'none',
-        textAlign:'center',
-        lineHeight:1
-      }}>
+      <div
+        ref={titleRef}
+        style={{
+          position:'absolute',
+          top:0,
+          left:0,
+          width:'100%',
+          height:'100%',
+          zIndex:10,
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
+          fontFamily:'Inter, sans-serif',
+          fontWeight:600,
+          fontSize: isMobile ? 'min(28vw,160px)' : 'min(18vw,160px)',
+          letterSpacing:'0.08em',
+          color: isDarkMode ? '#E5E7EB' : '#1e293b',
+          pointerEvents:'none',
+          textAlign:'center',
+          lineHeight:1,
+          opacity: 0
+        }}
+      >
         <span style={{
           display:'block',
           width:'100%',

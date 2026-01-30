@@ -1,9 +1,20 @@
 import { useState } from 'preact/hooks'
 import { useI18n } from '../store/i18nStore'
+import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function ExperienceSection() {
   const { t } = useI18n()
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  // Animation refs
+  const headerRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
+  const timelineRef = useStaggerAnimation<HTMLDivElement>({
+    animation: 'fadeUp',
+    stagger: 0.2,
+    childSelector: ':scope > div'
+  })
+  const educationRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', delay: 0.1 })
+  const awardsRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', delay: 0.2 })
 
   /* ── Professional experience ── */
   const experiences = [
@@ -142,7 +153,7 @@ export default function ExperienceSection() {
 
       <div style={{ maxWidth: 800, width: '100%', position: 'relative', zIndex: 10 }}>
         {/* header */}
-        <div style={{ textAlign: 'center', marginBottom: 60 }}>
+        <div ref={headerRef} style={{ textAlign: 'center', marginBottom: 60 }}>
           <h2
             style={{
               fontSize: 'clamp(2rem,5vw,3.5rem)',
@@ -168,7 +179,7 @@ export default function ExperienceSection() {
         </div>
 
         {/* timeline */}
-        <div style={{ position: 'relative' }}>
+        <div ref={timelineRef} style={{ position: 'relative' }}>
           <div
             style={{
               position: 'absolute',
@@ -354,9 +365,27 @@ export default function ExperienceSection() {
                       marginTop: 16,
                       fontSize: 12,
                       color: '#94a3b8',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 6
                     }}
                   >
-                    {isExpanded ? 'Click to collapse' : 'Click to see more details'}
+                    <span>{isExpanded ? t('experience.collapse') : t('experience.expand')}</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      style={{
+                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -365,7 +394,7 @@ export default function ExperienceSection() {
         </div>
 
                  {/* education section - compressed */}
-         <div style={{ marginTop: 80 }}>
+         <div ref={educationRef} style={{ marginTop: 80 }}>
            <h3
              style={{
                fontSize: 22,
@@ -435,7 +464,7 @@ export default function ExperienceSection() {
          </div>
 
          {/* awards section */}
-         <div style={{ marginTop: 60 }}>
+         <div ref={awardsRef} style={{ marginTop: 60 }}>
            <h3
              style={{
                fontSize: 22,

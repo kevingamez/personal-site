@@ -1,5 +1,6 @@
 import { useI18n } from '../store/i18nStore'
 import { useState, useEffect, useRef } from 'preact/hooks'
+import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function AboutSection() {
   const { t } = useI18n()
@@ -8,6 +9,11 @@ export default function AboutSection() {
   const [hasAnimated, setHasAnimated] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const fullName = 'Kevin Gamez'
+
+  // Animation refs
+  const titleRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
+  const contentRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', delay: 0.2, duration: 0.8 })
+  const ctaRef = useStaggerAnimation<HTMLDivElement>({ animation: 'fadeUp', delay: 0.4, stagger: 0.15 })
 
   /* intersection observer to trigger animation when section is visible */
   useEffect(() => {
@@ -86,7 +92,7 @@ export default function AboutSection() {
 
       <div style={{ maxWidth: 800, width: '100%', textAlign: 'center', position: 'relative', zIndex: 10 }}>
         {/* name */}
-        <div style={{ marginBottom: 48 }}>
+        <div ref={titleRef} style={{ marginBottom: 48 }}>
           <h1
             style={{
               fontSize: 'clamp(2.5rem,6vw,4rem)',
@@ -115,7 +121,7 @@ export default function AboutSection() {
         </div>
 
         {/* about text */}
-        <div style={{ color: '#334155', fontFamily: 'Inter, sans-serif' }}>
+        <div ref={contentRef} style={{ color: '#334155', fontFamily: 'Inter, sans-serif' }}>
           <h2
             style={{
               fontSize: 'clamp(2rem,5vw,3.5rem)',
@@ -140,6 +146,7 @@ export default function AboutSection() {
 
           {/* CTA buttons */}
           <div
+            ref={ctaRef}
             style={{
               display: 'flex',
               gap: 16,
@@ -159,16 +166,26 @@ export default function AboutSection() {
                 fontWeight: 500,
                 textDecoration: 'none',
                 transition: 'all .2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#2563eb'
-                e.currentTarget.style.transform = 'translateY(-1px)'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(59,130,246,0.4)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = '#3b82f6'
                 e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = 'none'
               }}
             >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
               {t('about.downloadCV')}
             </a>
 
@@ -204,15 +221,29 @@ function EmailCopyPill() {
   const email = 'kevingamez.kg@gmail.com'
   const [copied, setCopied] = useState(false)
 
+  const CopyIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+  )
+
+  const CheckIcon = (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  )
+
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
         backgroundColor: '#f8fafc',
-        border: '2px solid #e2e8f0',
+        border: '1px solid #e2e8f0',
         borderRadius: 8,
         overflow: 'hidden',
+        transition: 'all .2s',
       }}
     >
       <input
@@ -224,8 +255,9 @@ function EmailCopyPill() {
           border: 'none',
           background: 'transparent',
           fontSize: 14,
-          width: 240,
+          width: 200,
           color: '#475569',
+          fontFamily: 'Inter, sans-serif',
         }}
       />
       <button
@@ -236,17 +268,33 @@ function EmailCopyPill() {
         }}
         style={{
           padding: '12px 16px',
-          backgroundColor: copied ? '#10b981' : '#3b82f6',
-          color: '#fff',
+          backgroundColor: copied ? '#10b981' : '#f1f5f9',
+          color: copied ? '#fff' : '#64748b',
           border: 'none',
+          borderLeft: '1px solid #e2e8f0',
           cursor: 'pointer',
           fontSize: 14,
           fontWeight: 500,
-          minWidth: 60,
+          minWidth: 90,
           transition: 'all .2s',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
+        }}
+        onMouseEnter={(e) => {
+          if (!copied) {
+            e.currentTarget.style.backgroundColor = '#e2e8f0'
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!copied) {
+            e.currentTarget.style.backgroundColor = '#f1f5f9'
+          }
         }}
         title="Copy email to clipboard"
       >
+        {copied ? CheckIcon : CopyIcon}
         {copied ? t('about.emailCopied') : t('about.copyEmail')}
       </button>
     </div>
@@ -254,7 +302,6 @@ function EmailCopyPill() {
 }
 
 function SocialLinks() {
-  const { t } = useI18n()
   const links = [
     {
       href: 'https://www.linkedin.com/in/kevin-gamez/',

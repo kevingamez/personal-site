@@ -1,8 +1,22 @@
+import { useEffect, useRef } from 'preact/hooks'
 import GameOfLifeIsland from './GameOfLifeIsland'
 import { useI18n } from '../store/i18nStore'
+import gsap from 'gsap'
 
 export default function HeroSection() {
   const { t } = useI18n()
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (scrollIndicatorRef.current) {
+      // Fade in the scroll indicator after a delay
+      gsap.fromTo(
+        scrollIndicatorRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 0.8, y: 0, duration: 1, ease: 'power2.out', delay: 1.5 }
+      )
+    }
+  }, [])
 
   return (
     <section id="hero" style={{
@@ -12,59 +26,54 @@ export default function HeroSection() {
       overflow: 'hidden'
     }}>
       <GameOfLifeIsland />
-      
+
       {/* Scroll indicator */}
-      <div style={{
-        position: 'absolute',
-        bottom: '30px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 30,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px',
-        color: '#fff',
-        fontSize: '14px',
-        fontFamily: 'Inter, sans-serif',
-        opacity: 0.8,
-        animation: 'bounce 2s infinite'
-      }}>
+      <div
+        ref={scrollIndicatorRef}
+        style={{
+          position: 'absolute',
+          bottom: '30px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 30,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '8px',
+          color: 'rgba(100, 116, 139, 0.8)',
+          fontSize: '13px',
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 500,
+          letterSpacing: '0.5px',
+          opacity: 0
+        }}
+      >
         <span>{t('hero.scrollToExplore')}</span>
-        <div style={{
-          width: '20px',
-          height: '30px',
-          border: '2px solid #fff',
-          borderRadius: '20px',
-          position: 'relative'
-        }}>
-          <div style={{
-            width: '4px',
-            height: '8px',
-            backgroundColor: '#fff',
-            borderRadius: '2px',
-            position: 'absolute',
-            top: '6px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            animation: 'scroll-indicator 2s infinite'
-          }}></div>
-        </div>
+        <svg
+          width="20"
+          height="28"
+          viewBox="0 0 20 28"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          style={{ animation: 'bounce 2s infinite ease-in-out' }}
+        >
+          <rect x="1" y="1" width="18" height="26" rx="9" />
+          <circle cx="10" cy="8" r="2" fill="currentColor" style={{ animation: 'scroll-dot 2s infinite ease-in-out' }} />
+        </svg>
       </div>
-      
+
       <style jsx>{`
         @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-          40% { transform: translateX(-50%) translateY(-10px); }
-          60% { transform: translateX(-50%) translateY(-5px); }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(4px); }
         }
-        
-        @keyframes scroll-indicator {
-          0% { opacity: 1; top: 6px; }
-          50% { opacity: 0.5; top: 12px; }
-          100% { opacity: 1; top: 6px; }
+
+        @keyframes scroll-dot {
+          0%, 100% { cy: 8; opacity: 1; }
+          50% { cy: 16; opacity: 0.5; }
         }
       `}</style>
     </section>
   )
-} 
+}

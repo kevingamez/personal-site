@@ -22,9 +22,9 @@
       "paragraph2": "Disfruto aprender nuevas tecnologías y trabajar en proyectos que marquen la diferencia. Actualmente cursando mi maestría mientras exploro desarrollo web moderno y sistemas de datos.",
       "paragraph3": "Cuando no estoy programando, me encontrarás corriendo, nadando o probando las últimas herramientas y frameworks."
     },
-    "downloadCV": "📄 Descargar CV",
-    "copyEmail": "📋 Copiar",
-    "emailCopied": "✓"
+    "downloadCV": "Descargar CV",
+    "copyEmail": "Copiar",
+    "emailCopied": "¡Copiado!"
   },
   "experience": {
     "title": "Experiencia Profesional",
@@ -86,7 +86,9 @@
         "issuer": "Ministerio de Educación Nacional de Colombia",
         "date": "Dic 2018"
       }
-    }
+    },
+    "expand": "Ver detalles",
+    "collapse": "Ver menos"
   },
   "projects": {
     "title": "Proyectos Destacados",
@@ -95,7 +97,9 @@
     "viewCode": "Ver Código",
     "techStack": "Stack Tecnológico",
     "achievements": "Logros",
-    "challenges": "Desafíos"
+    "challenges": "Desafíos",
+    "expand": "Ver detalles",
+    "collapse": "Ver menos"
   },
   "skills": {
     "title": "Habilidades y Tecnologías",
