@@ -9,7 +9,7 @@ export default function ExperienceSection() {
   const experiences = [
     {
         company: 'Enttor',
-        position: 'Software Engineer',
+        position: 'Founding Engineer',
         period: 'Jun 2025 – Present',
         description:
           'Leads backend, data-pipeline and AI-infrastructure initiatives while collaborating daily with the NYC engineering team.',
@@ -243,15 +243,38 @@ export default function ExperienceSection() {
                         flexWrap: 'wrap',
                       }}
                     >
-                      <span
-                        style={{
-                          color: '#3b82f6',
-                          fontWeight: 500,
-                          fontSize: 16,
-                        }}
-                      >
-                        {exp.company}
-                      </span>
+                      {exp.company === 'Enttor' ? (
+                        <a
+                          href="https://www.enttor.ai/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            color: '#3b82f6',
+                            fontWeight: 500,
+                            fontSize: 16,
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.textDecoration = 'underline'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.textDecoration = 'none'
+                          }}
+                        >
+                          {exp.company}
+                        </a>
+                      ) : (
+                        <span
+                          style={{
+                            color: '#3b82f6',
+                            fontWeight: 500,
+                            fontSize: 16,
+                          }}
+                        >
+                          {exp.company}
+                        </span>
+                      )}
                       <span style={{ color: '#64748b', fontSize: 14 }}>{exp.period}</span>
                     </div>
                   </div>
