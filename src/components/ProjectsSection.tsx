@@ -1,9 +1,18 @@
 import { useState } from 'preact/hooks'
 import { useI18n } from '../store/i18nStore'
+import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function ProjectsSection() {
   const { t } = useI18n()
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  // Animation refs
+  const headerRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
+  const gridRef = useStaggerAnimation<HTMLDivElement>({
+    animation: 'fadeUp',
+    stagger: 0.15,
+    childSelector: ':scope > div'
+  })
 
   /* ───── portfolio projects ───── */
   const projects = [
@@ -127,7 +136,7 @@ export default function ProjectsSection() {
 
       <div style={{maxWidth:'1200px',width:'100%',position:'relative',zIndex:10}}>
         {/* heading */}
-        <div style={{textAlign:'center',marginBottom:'60px'}}>
+        <div ref={headerRef} style={{textAlign:'center',marginBottom:'60px'}}>
           <h2 style={{
             fontSize:'clamp(2rem, 5vw, 3.5rem)',
             fontWeight:700,color:'#0f172a',marginBottom:'16px',
@@ -144,7 +153,7 @@ export default function ProjectsSection() {
         </div>
 
         {/* cards grid */}
-        <div style={{
+        <div ref={gridRef} style={{
           display:'grid',
           gridTemplateColumns:'repeat(auto-fit,minmax(350px,1fr))',
           gap:'32px'
@@ -282,9 +291,24 @@ export default function ProjectsSection() {
 
                   <div style={{
                     textAlign:'center',marginTop:16,
-                    fontSize:12,color:'#94a3b8'
+                    fontSize:12,color:'#94a3b8',
+                    display:'flex',alignItems:'center',justifyContent:'center',gap:6
                   }}>
-                    {isExpanded?'Click to collapse':'Click for details'}
+                    <span>{isExpanded ? t('projects.collapse') : t('projects.expand')}</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      style={{
+                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
                   </div>
                 </div>
               </div>
