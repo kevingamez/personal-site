@@ -12,7 +12,31 @@ import GameOfLifeIsland from '../../components/GameOfLifeIsland.tsx'
   <meta name="viewport" content="width=device-width" />
   <meta name="generator" content={Astro.generator} />
   <title>Kevin Gamez - Desarrollador de Software</title>
-  <meta name="description" content="Desarrollador de Software creando experiencias digitales" />
+  <meta name="description" content="Desarrollador de Software apasionado por crear experiencias interactivas y resolver problemas complejos con codigo." />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kevingamez.com/es/" />
+  <meta property="og:title" content="Kevin Gamez - Desarrollador de Software" />
+  <meta property="og:description" content="Desarrollador de Software apasionado por crear experiencias interactivas y resolver problemas complejos con codigo." />
+  <meta property="og:image" content="https://kevingamez.com/og-image.png" />
+  <meta property="og:locale" content="es_CO" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://kevingamez.com/es/" />
+  <meta name="twitter:title" content="Kevin Gamez - Desarrollador de Software" />
+  <meta name="twitter:description" content="Desarrollador de Software apasionado por crear experiencias interactivas y resolver problemas complejos con codigo." />
+  <meta name="twitter:image" content="https://kevingamez.com/og-image.png" />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EK3T4PNNY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2EK3T4PNNY');
+  </script>
 </head>
 <body>
   <GameOfLifeIsland client:load />
