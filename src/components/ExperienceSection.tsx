@@ -174,7 +174,7 @@ export default function ExperienceSection() {
               lineHeight: 1.6,
             }}
           >
-            My professional journey and key milestones
+            {t('experience.subtitle')}
           </p>
         </div>
 
@@ -346,13 +346,13 @@ export default function ExperienceSection() {
                         <DetailsList
                           title={t('experience.achievements')}
                           items={exp.details.achievements}
-                          bullet="✨"
+                          bullet="•"
                           bulletColor="#10b981"
                         />
                         <DetailsList
                           title={t('experience.responsibilities')}
                           items={exp.details.responsibilities}
-                          bullet="📌"
+                          bullet="•"
                           bulletColor="#6366f1"
                         />
                       </div>
@@ -490,7 +490,6 @@ export default function ExperienceSection() {
                  }}
                >
                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                   <span style={{ fontSize: 16, marginTop: 2 }}>🏆</span>
                    <div style={{ flex: 1 }}>
                      <p
                        style={{
@@ -511,7 +510,7 @@ export default function ExperienceSection() {
                          marginTop: 4,
                        }}
                      >
-                       Issued by {award.issuer} · {award.date}
+                       {t('experience.issuedBy')} {award.issuer} · {award.date}
                      </p>
                    </div>
                  </div>

@@ -28,11 +28,13 @@
   },
   "experience": {
     "title": "Experiencia Profesional",
+    "subtitle": "Mi trayectoria profesional e hitos clave",
     "education": "Educación",
     "awards": "Premios y Distinciones",
     "achievements": "Logros",
     "responsibilities": "Responsabilidades",
     "techUsed": "Tecnologías utilizadas",
+    "issuedBy": "Otorgado por",
     "universityName": "Universidad de los Andes",
     "degrees": {
       "msc": "MSc en Ingeniería de Información",
@@ -113,7 +115,7 @@
   },
   "contact": {
     "title": "Mantengámonos en Contacto",
-    "footer": "© 2024 Kevin Gamez. Construido con pasión y mucho café ☕",
+    "footer": "© 2024 Kevin Gamez. Construido con pasión y mucho café",
     "tech": "Hecho con Astro, TypeScript y el Juego de la Vida de Conway"
   },
   "gameOfLife": {

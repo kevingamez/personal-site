@@ -274,13 +274,13 @@ export default function ProjectsSection() {
                         gap:24
                       }}>
                         <DetailsList
-                          title={`✨ ${t('projects.achievements')}`}
+                          title={t('projects.achievements')}
                           items={project.details.features}
                           bullet="•"
                           bulletColor="#10b981"
                         />
                         <DetailsList
-                          title={`🚀 ${t('projects.challenges')}`}
+                          title={t('projects.challenges')}
                           items={project.details.challenges}
                           bullet="•"
                           bulletColor="#f59e0b"

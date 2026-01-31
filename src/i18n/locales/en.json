@@ -28,11 +28,13 @@
   },
   "experience": {
     "title": "Professional Experience",
+    "subtitle": "My professional journey and key milestones",
     "education": "Education",
     "awards": "Awards & Distinctions",
     "achievements": "Achievements",
     "responsibilities": "Responsibilities",
     "techUsed": "Tech Used",
+    "issuedBy": "Issued by",
     "universityName": "Universidad de los Andes",
     "degrees": {
       "msc": "MSc in Information Engineering",
@@ -113,7 +115,7 @@
   },
   "contact": {
     "title": "Let's Stay Connected",
-    "footer": "© 2024 Kevin Gamez. Built with passion and lots of coffee ☕",
+    "footer": "© 2024 Kevin Gamez. Built with passion and lots of coffee",
     "tech": "Made with Astro, TypeScript, and Conway's Game of Life"
   },
   "gameOfLife": {
