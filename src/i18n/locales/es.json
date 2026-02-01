@@ -10,18 +10,33 @@
   },
   "hero": {
     "name": "KEVIN GAMEZ",
-    "title": "Desarrollador de Software",
+    "title": "Founding Engineer en Enttor",
     "subtitle": "Creando experiencias digitales",
     "scrollToExplore": "Desplázate para explorar"
   },
   "about": {
     "title": "Sobre Mí",
-    "subtitle": "Desarrollador de Software",
+    "subtitle": "Founding Engineer en Enttor",
     "description": {
-      "paragraph1": "¡Hola! Soy Kevin, graduado en Ingeniería de Sistemas y Computación de la Universidad de los Andes. Me encanta construir cosas con código y resolver problemas a través del desarrollo de software, ingeniería de datos e IA.",
-      "paragraph2": "Disfruto aprender nuevas tecnologías y trabajar en proyectos que marquen la diferencia. Actualmente cursando mi maestría mientras exploro desarrollo web moderno y sistemas de datos.",
-      "paragraph3": "Cuando no estoy programando, me encontrarás corriendo, nadando o probando las últimas herramientas y frameworks."
+      "paragraph1": "¡Hola! Soy Kevin Gámez, Founding Engineer en Enttor, la única plataforma de mensajería outbound que las startups necesitan.",
+      "paragraph2": "En Enttor, arquitecté la aplicación full-stack desde cero, construyendo sistemas de automatización de navegador e integrando pipelines de IA que potencian el alcance personalizado a escala.",
+      "paragraph3": "Tengo pregrado y maestría en Ingeniería de Información de Uniandes con especialización en deep learning."
     },
+    "engineeringWork": "Mi trabajo de ingeniería:",
+    "workItems": [
+      {
+        "title": "IA outbound, automatización de navegador",
+        "description": "Construí el motor de IA outbound de Enttor y flujos de automatización basados en navegador para múltiples plataformas, automatizando prospección, DMs y calificación de leads."
+      },
+      {
+        "title": "Sistemas de analítica de datos",
+        "description": "Diseñé modelos SQL complejos y pipelines de analítica, usé Power BI para reportes ejecutivos en RRHH, riesgo y operaciones en múltiples entornos corporativos."
+      },
+      {
+        "title": "Deep learning y visión por computador",
+        "description": "Entrené modelos con imágenes satelitales para detectar cultivos y riesgo ambiental."
+      }
+    ],
     "downloadCV": "Descargar CV",
     "copyEmail": "Copiar",
     "emailCopied": "¡Copiado!"

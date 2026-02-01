@@ -28,7 +28,7 @@ export default function LanguageToggle({ className }: LanguageToggleProps) {
         color: 'inherit',
         cursor: 'pointer',
         fontSize: '14px',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Geist Sans, sans-serif',
         fontWeight: 500,
         transition: 'background-color 0.2s ease'
       }}
