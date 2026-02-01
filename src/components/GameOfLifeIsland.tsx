@@ -72,13 +72,15 @@ const fadeGrey = (v:number,isDark:boolean)=>{
 export default function GameOfLifeIsland(){
   const gameState = useGameStore()
   const { 
-    playing, 
-    stats, 
-    time, 
-    isDarkMode, 
-    setPlaying, 
-    setStats, 
-    setTime, 
+    playing,
+    stats,
+    time,
+    timeDiff,
+    isDarkMode,
+    setPlaying,
+    setStats,
+    setTime,
+    setTimeDiff,
     toggleTheme,
     reset: resetStore
   } = gameState
@@ -173,6 +175,27 @@ export default function GameOfLifeIsland(){
 
   // Update Colombia time every second
   useEffect(()=>{
+    // Calculate time difference once (doesn't change during session)
+    const calcTimeDiff = () => {
+      const now = new Date()
+      // Get Colombia time offset (UTC-5)
+      const colombiaOffset = -5
+      // Get visitor's local offset in hours (getTimezoneOffset returns minutes, positive for west)
+      const localOffset = -now.getTimezoneOffset() / 60
+      // Difference: how many hours ahead/behind Colombia is from visitor
+      const diff = colombiaOffset - localOffset
+
+      const locale = i18nStore.getState().locale
+      if (diff === 0) {
+        setTimeDiff(locale === 'es' ? 'misma hora' : 'same time')
+      } else if (diff > 0) {
+        setTimeDiff(locale === 'es' ? `${diff}h despues` : `${diff}h behind`)
+      } else {
+        setTimeDiff(locale === 'es' ? `${Math.abs(diff)}h antes` : `${Math.abs(diff)}h ahead`)
+      }
+    }
+    calcTimeDiff()
+
     const updateTime=()=>{
       const now=new Date()
       // Use the current locale for date formatting
@@ -361,7 +384,7 @@ export default function GameOfLifeIsland(){
           display:'flex',
           justifyContent:'center',
           alignItems:'center',
-          fontFamily:'Inter, sans-serif',
+          fontFamily:'Geist Sans, sans-serif',
           fontWeight:600,
           fontSize: isMobile ? 'min(28vw,160px)' : 'min(18vw,160px)',
           letterSpacing:'0.08em',
@@ -386,12 +409,12 @@ export default function GameOfLifeIsland(){
         position:'fixed',top:14,right:14,zIndex:20,
         background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
         padding:'8px 12px',borderRadius:6,
-        fontSize:14,fontFamily:'Inter, sans-serif',fontWeight:500,
+        fontSize:14,fontFamily:'Geist Sans, sans-serif',fontWeight:500,
         color: isDarkMode ? '#E5E7EB' : '#243B55',
         boxShadow:'0 4px 12px rgba(0,0,0,.15)',
         letterSpacing:'0.5px'
       }}>
-        {time} COL
+        {time} COL {timeDiff && <span style={{ opacity: 0.7, fontSize: 12 }}>({timeDiff})</span>}
       </div>
       
       <NavigationDock 
@@ -407,7 +430,7 @@ export default function GameOfLifeIsland(){
         position:'absolute',bottom:14,left:14,zIndex:20,
         background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
         padding:'8px 12px',borderRadius:6,
-        fontSize:12,fontFamily:'Inter, sans-serif',
+        fontSize:12,fontFamily:'Geist Sans, sans-serif',
         color: isDarkMode ? '#E5E7EB' : '#243B55',
         boxShadow:'0 4px 12px rgba(0,0,0,.15)'
       }}>

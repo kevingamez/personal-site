@@ -1,10 +1,29 @@
 import { useState } from 'preact/hooks'
 import { useI18n } from '../store/i18nStore'
+import { useGameStore } from '../store/gameStore'
 import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function ExperienceSection() {
   const { t } = useI18n()
+  const { isDarkMode } = useGameStore()
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  // Theme colors
+  const colors = {
+    bg: isDarkMode ? '#0f172a' : '#fff',
+    text: isDarkMode ? '#e2e8f0' : '#475569',
+    textMuted: isDarkMode ? '#94a3b8' : '#64748b',
+    heading: isDarkMode ? '#f1f5f9' : '#0f172a',
+    subheading: isDarkMode ? '#cbd5e1' : '#475569',
+    card: isDarkMode ? '#1e293b' : '#f8fafc',
+    cardHover: isDarkMode ? '#334155' : '#fff',
+    cardBorder: isDarkMode ? '#334155' : '#e2e8f0',
+    accent: '#3b82f6',
+    accentLight: isDarkMode ? '#1e3a5f' : '#dbeafe',
+    timeline: isDarkMode ? '#334155' : '#e2e8f0',
+    gridLine: isDarkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+    crossStroke: isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+  }
 
   // Animation refs
   const headerRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
@@ -20,6 +39,7 @@ export default function ExperienceSection() {
   const experiences = [
     {
         company: 'Enttor',
+        logo: '/logos/enttor.png',
         position: 'Founding Engineer',
         period: 'Jun 2025 – Present',
         description:
@@ -49,6 +69,7 @@ export default function ExperienceSection() {
       },
     {
       company: 'Samsam',
+      logo: '/logos/samsam.png',
       position: t('experience.experiences.samsam.position'),
       period: t('experience.experiences.samsam.period'),
       description: t('experience.experiences.samsam.description'),
@@ -60,6 +81,7 @@ export default function ExperienceSection() {
     },
     {
       company: t('experience.universityName'),
+      logo: '/logos/uniandes.svg',
       position: t('experience.experiences.uniandes.position'),
       period: t('experience.experiences.uniandes.period'),
       description: t('experience.experiences.uniandes.description'),
@@ -110,13 +132,14 @@ export default function ExperienceSection() {
       style={{
         minHeight: '100vh',
         width: '100%',
-        backgroundColor: '#fff',
+        backgroundColor: colors.bg,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '80px 20px',
         position: 'relative',
         overflow: 'hidden',
+        transition: 'background-color 0.3s ease',
       }}
     >
       {/* fine-grid background */}
@@ -126,7 +149,7 @@ export default function ExperienceSection() {
           inset: 0,
           zIndex: 1,
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)',
+            `linear-gradient(${colors.gridLine} 1px, transparent 1px), linear-gradient(90deg, ${colors.gridLine} 1px, transparent 1px)`,
           backgroundSize: '25px 25px',
           pointerEvents: 'none',
         }}
@@ -141,7 +164,7 @@ export default function ExperienceSection() {
               height="100"
               patternUnits="userSpaceOnUse"
             >
-              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+              <g stroke={colors.crossStroke} strokeWidth="1" fill="none">
                 <line x1="50" y1="44" x2="50" y2="56" />
                 <line x1="44" y1="50" x2="56" y2="50" />
               </g>
@@ -158,9 +181,9 @@ export default function ExperienceSection() {
             style={{
               fontSize: 'clamp(2rem,5vw,3.5rem)',
               fontWeight: 700,
-              color: '#0f172a',
+              color: colors.heading,
               marginBottom: 16,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'Geist Sans, sans-serif',
             }}
           >
             {t('experience.title')}
@@ -168,7 +191,7 @@ export default function ExperienceSection() {
           <p
             style={{
               fontSize: 18,
-              color: '#64748b',
+              color: colors.textMuted,
               maxWidth: 600,
               margin: '0 auto',
               lineHeight: 1.6,
@@ -187,7 +210,7 @@ export default function ExperienceSection() {
               top: 0,
               bottom: 0,
               width: 2,
-              backgroundColor: '#e2e8f0',
+              backgroundColor: colors.timeline,
             }}
           />
           {experiences.map((exp, index) => {
@@ -209,10 +232,10 @@ export default function ExperienceSection() {
                     top: 8,
                     width: 16,
                     height: 16,
-                    backgroundColor: isExpanded ? '#3b82f6' : '#64748b',
+                    backgroundColor: isExpanded ? colors.accent : colors.textMuted,
                     borderRadius: '50%',
-                    border: '4px solid #fff',
-                    boxShadow: `0 0 0 2px ${isExpanded ? '#3b82f6' : '#e2e8f0'}`,
+                    border: `4px solid ${colors.bg}`,
+                    boxShadow: `0 0 0 2px ${isExpanded ? colors.accent : colors.timeline}`,
                     transition: 'all .3s ease',
                     transform: isExpanded ? 'scale(1.2)' : 'scale(1)',
                   }}
@@ -221,16 +244,16 @@ export default function ExperienceSection() {
                 <div
                   onClick={() => setExpandedCard(isExpanded ? null : index)}
                   style={{
-                    backgroundColor: isExpanded ? '#fff' : '#f8fafc',
+                    backgroundColor: isExpanded ? colors.cardHover : colors.card,
                     padding: 24,
                     borderRadius: 12,
-                    border: `2px solid ${isExpanded ? '#3b82f6' : '#e2e8f0'}`,
+                    border: `2px solid ${isExpanded ? colors.accent : colors.cardBorder}`,
                     cursor: 'pointer',
                     transition: 'all .3s cubic-bezier(.4,0,.2,1)',
                     transform: isExpanded ? 'translateY(-4px)' : 'translateY(0)',
                     boxShadow: isExpanded
                       ? '0 20px 40px rgba(59,130,246,.15)'
-                      : '0 4px 6px rgba(0,0,0,.05)',
+                      : isDarkMode ? '0 4px 6px rgba(0,0,0,.3)' : '0 4px 6px rgba(0,0,0,.05)',
                   }}
                 >
                   {/* heading */}
@@ -239,9 +262,9 @@ export default function ExperienceSection() {
                       style={{
                         fontSize: 20,
                         fontWeight: 600,
-                        color: '#1e293b',
+                        color: colors.heading,
                         marginBottom: 4,
-                        fontFamily: 'Inter, sans-serif',
+                        fontFamily: 'Geist Sans, sans-serif',
                       }}
                     >
                       {exp.position}
@@ -254,6 +277,17 @@ export default function ExperienceSection() {
                         flexWrap: 'wrap',
                       }}
                     >
+                      {exp.logo && (
+                        <img
+                          src={exp.logo}
+                          alt={`${exp.company} logo`}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            objectFit: 'contain',
+                          }}
+                        />
+                      )}
                       {exp.company === 'Enttor' ? (
                         <a
                           href="https://www.enttor.ai/"
@@ -286,13 +320,13 @@ export default function ExperienceSection() {
                           {exp.company}
                         </span>
                       )}
-                      <span style={{ color: '#64748b', fontSize: 14 }}>{exp.period}</span>
+                      <span style={{ color: colors.textMuted, fontSize: 14 }}>{exp.period}</span>
                     </div>
                   </div>
                   {/* summary */}
                   <p
                     style={{
-                      color: '#475569',
+                      color: colors.text,
                       lineHeight: 1.6,
                       marginBottom: 16,
                       fontSize: 15,
@@ -313,13 +347,13 @@ export default function ExperienceSection() {
                       <span
                         key={tech}
                         style={{
-                          backgroundColor: '#dbeafe',
-                          color: '#3b82f6',
+                          backgroundColor: colors.accentLight,
+                          color: colors.accent,
                           padding: '4px 12px',
                           borderRadius: 12,
                           fontSize: 12,
                           fontWeight: 500,
-                          fontFamily: 'Inter, sans-serif',
+                          fontFamily: 'Geist Sans, sans-serif',
                         }}
                       >
                         {tech}
@@ -332,7 +366,7 @@ export default function ExperienceSection() {
                     <div
                       style={{
                         paddingTop: 24,
-                        borderTop: '1px solid #e2e8f0',
+                        borderTop: `1px solid ${colors.cardBorder}`,
                         animation: 'slideDown .3s ease-out',
                       }}
                     >
@@ -364,7 +398,7 @@ export default function ExperienceSection() {
                       textAlign: 'center',
                       marginTop: 16,
                       fontSize: 12,
-                      color: '#94a3b8',
+                      color: colors.textMuted,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -393,131 +427,144 @@ export default function ExperienceSection() {
           })}
         </div>
 
-                 {/* education section - compressed */}
-         <div ref={educationRef} style={{ marginTop: 80 }}>
-           <h3
-             style={{
-               fontSize: 22,
-               fontWeight: 600,
-               color: '#475569',
-               marginBottom: 12,
-               fontFamily: 'Inter, sans-serif',
-             }}
-           >
-             {t('experience.education')}
-           </h3>
-           
-           <div style={{ 
-             backgroundColor: '#f8fafc', 
-             padding: '20px', 
-             borderRadius: 8,
-             border: '1px solid #e2e8f0'
-           }}>
-             <p
-               style={{
-                 margin: '0 0 16px 0',
-                 color: '#3b82f6',
-                 fontSize: 15,
-                 fontWeight: 600,
-                 fontFamily: 'Inter, sans-serif',
-               }}
-             >
-               {t('experience.universityName')}
-             </p>
-             
-             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-               {education.map((edu) => (
-                 <div
-                   key={edu.degree}
-                   style={{
-                     display: 'flex',
-                     justifyContent: 'space-between',
-                     alignItems: 'center',
-                     gap: 12,
-                     padding: '6px 0',
-                   }}
-                 >
-                   <span
-                     style={{
-                       color: '#1e293b',
-                       fontSize: 14,
-                       fontWeight: 500,
-                       flex: 1,
-                     }}
-                   >
-                     {edu.degree}
-                   </span>
-                   <span
-                     style={{
-                       color: '#94a3b8',
-                       fontSize: 13,
-                       fontWeight: 500,
-                       whiteSpace: 'nowrap',
-                     }}
-                   >
-                     {edu.date}
-                   </span>
-                 </div>
-               ))}
-             </div>
-           </div>
-         </div>
+        {/* education section */}
+        <div ref={educationRef} style={{ marginTop: 80 }}>
+          <h3
+            style={{
+              fontSize: 22,
+              fontWeight: 600,
+              color: colors.subheading,
+              marginBottom: 12,
+              fontFamily: 'Geist Sans, sans-serif',
+            }}
+          >
+            {t('experience.education')}
+          </h3>
 
-         {/* awards section */}
-         <div ref={awardsRef} style={{ marginTop: 60 }}>
-           <h3
-             style={{
-               fontSize: 22,
-               fontWeight: 600,
-               color: '#475569',
-               marginBottom: 24,
-               fontFamily: 'Inter, sans-serif',
-             }}
-           >
-             {t('experience.awards')}
-           </h3>
-           
-           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-             {awards.map((award) => (
-               <div
-                 key={award.title}
-                 style={{
-                   padding: '16px 20px',
-                   backgroundColor: '#fefce8',
-                   border: '1px solid #fde047',
-                   borderRadius: 8,
-                   borderLeft: '4px solid #eab308',
-                 }}
-               >
-                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                   <div style={{ flex: 1 }}>
-                     <p
-                       style={{
-                         fontWeight: 600,
-                         margin: 0,
-                         color: '#713f12',
-                         fontSize: 15,
-                         lineHeight: 1.3,
-                       }}
-                     >
-                       {award.title}
-                     </p>
-                     <p
-                       style={{
-                         margin: 0,
-                         color: '#a16207',
-                         fontSize: 13,
-                         marginTop: 4,
-                       }}
-                     >
-                       {t('experience.issuedBy')} {award.issuer} · {award.date}
-                     </p>
-                   </div>
-                 </div>
-               </div>
-             ))}
-           </div>
-         </div>
+          <div style={{
+            backgroundColor: colors.card,
+            padding: '20px',
+            borderRadius: 8,
+            border: `1px solid ${colors.cardBorder}`
+          }}>
+            <div
+              style={{
+                margin: '0 0 16px 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+              }}
+            >
+              <img
+                src="/logos/uniandes.svg"
+                alt="Universidad de los Andes logo"
+                style={{ width: 24, height: 24, objectFit: 'contain' }}
+              />
+              <span
+                style={{
+                  color: '#3b82f6',
+                  fontSize: 15,
+                  fontWeight: 600,
+                  fontFamily: 'Geist Sans, sans-serif',
+                }}
+              >
+                {t('experience.universityName')}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {education.map((edu) => (
+                <div
+                  key={edu.degree}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '6px 0',
+                  }}
+                >
+                  <span
+                    style={{
+                      color: colors.heading,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      flex: 1,
+                    }}
+                  >
+                    {edu.degree}
+                  </span>
+                  <span
+                    style={{
+                      color: colors.textMuted,
+                      fontSize: 13,
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {edu.date}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* awards section */}
+        <div ref={awardsRef} style={{ marginTop: 60 }}>
+          <h3
+            style={{
+              fontSize: 22,
+              fontWeight: 600,
+              color: colors.subheading,
+              marginBottom: 24,
+              fontFamily: 'Geist Sans, sans-serif',
+            }}
+          >
+            {t('experience.awards')}
+          </h3>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {awards.map((award) => (
+              <div
+                key={award.title}
+                style={{
+                  padding: '16px 20px',
+                  backgroundColor: isDarkMode ? '#422006' : '#fefce8',
+                  border: `1px solid ${isDarkMode ? '#854d0e' : '#fde047'}`,
+                  borderRadius: 8,
+                  borderLeft: '4px solid #eab308',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                  <div style={{ flex: 1 }}>
+                    <p
+                      style={{
+                        fontWeight: 600,
+                        margin: 0,
+                        color: isDarkMode ? '#fef08a' : '#713f12',
+                        fontSize: 15,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {award.title}
+                    </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        color: isDarkMode ? '#fde047' : '#a16207',
+                        fontSize: 13,
+                        marginTop: 4,
+                      }}
+                    >
+                      {t('experience.issuedBy')} {award.issuer} · {award.date}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -549,15 +596,16 @@ function DetailsList({
   bullet: string
   bulletColor: string
 }) {
+  const { isDarkMode } = useGameStore()
   return (
     <div>
       <h4
         style={{
           fontSize: 16,
           fontWeight: 600,
-          color: '#1e293b',
+          color: isDarkMode ? '#f1f5f9' : '#1e293b',
           marginBottom: 12,
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: 'Geist Sans, sans-serif',
         }}
       >
         {title}
@@ -568,7 +616,7 @@ function DetailsList({
             key={txt}
             style={{
               fontSize: 14,
-              color: '#475569',
+              color: isDarkMode ? '#cbd5e1' : '#475569',
               marginBottom: 8,
               paddingLeft: 16,
               position: 'relative',

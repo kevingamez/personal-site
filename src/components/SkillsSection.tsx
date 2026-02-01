@@ -1,8 +1,24 @@
 import { useI18n } from '../store/i18nStore'
+import { useGameStore } from '../store/gameStore'
 import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function SkillsSection() {
   const { t } = useI18n()
+  const { isDarkMode } = useGameStore()
+
+  // Theme colors
+  const colors = {
+    bg: isDarkMode ? '#0f172a' : '#fff',
+    text: isDarkMode ? '#e2e8f0' : '#475569',
+    textMuted: isDarkMode ? '#94a3b8' : '#64748b',
+    heading: isDarkMode ? '#f1f5f9' : '#0f172a',
+    card: isDarkMode ? '#1e293b' : '#f8fafc',
+    cardBorder: isDarkMode ? '#334155' : '#e2e8f0',
+    accent: '#3b82f6',
+    accentLight: isDarkMode ? '#1e3a5f' : '#dbeafe',
+    gridLine: isDarkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+    crossStroke: isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+  }
 
   // Animation refs
   const headerRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
@@ -61,13 +77,14 @@ export default function SkillsSection() {
     <section id="skills" style={{
       minHeight: '100vh',
       width: '100%',
-      backgroundColor: '#fff',
+      backgroundColor: colors.bg,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '80px 20px',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      transition: 'background-color 0.3s ease'
     }}>
       {/* Grid Background Pattern */}
       <div style={{
@@ -75,8 +92,8 @@ export default function SkillsSection() {
         inset: 0,
         zIndex: 1,
         backgroundImage: `
-          linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)
+          linear-gradient(${colors.gridLine} 1px, transparent 1px),
+          linear-gradient(90deg, ${colors.gridLine} 1px, transparent 1px)
         `,
         backgroundSize: '25px 25px',
         pointerEvents: 'none'
@@ -87,7 +104,7 @@ export default function SkillsSection() {
         <svg style={{ width: '100%', height: '100%' }}>
           <defs>
             <pattern id="crosses-skills" width="100" height="100" patternUnits="userSpaceOnUse">
-              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+              <g stroke={colors.crossStroke} strokeWidth="1" fill="none">
                 <line x1="50" y1="44" x2="50" y2="56" />
                 <line x1="44" y1="50" x2="56" y2="50" />
               </g>
@@ -111,15 +128,15 @@ export default function SkillsSection() {
           <h2 style={{
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             fontWeight: 700,
-            color: '#0f172a',
+            color: colors.heading,
             marginBottom: 16,
-            fontFamily: 'Inter, sans-serif'
+            fontFamily: 'Geist Sans, sans-serif'
           }}>
             {t('skills.title')}
           </h2>
           <p style={{
             fontSize: 18,
-            color: '#64748b',
+            color: colors.textMuted,
             maxWidth: 600,
             margin: '0 auto',
             lineHeight: 1.6
@@ -138,21 +155,19 @@ export default function SkillsSection() {
             <div
               key={categoryIndex}
               style={{
-                backgroundColor: '#fafafa',
+                backgroundColor: colors.card,
                 padding: '28px',
                 borderRadius: '12px',
-                border: '1px solid #e5e7eb',
+                border: `1px solid ${colors.cardBorder}`,
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#fff'
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'
-                e.currentTarget.style.borderColor = '#d1d5db'
+                e.currentTarget.style.backgroundColor = isDarkMode ? '#334155' : '#fff'
+                e.currentTarget.style.boxShadow = isDarkMode ? '0 8px 24px rgba(0,0,0,0.3)' : '0 8px 24px rgba(0,0,0,0.08)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#fafafa'
+                e.currentTarget.style.backgroundColor = isDarkMode ? '#1e293b' : '#f8fafc'
                 e.currentTarget.style.boxShadow = 'none'
-                e.currentTarget.style.borderColor = '#e5e7eb'
               }}
             >
               {/* Category Header */}
@@ -169,16 +184,16 @@ export default function SkillsSection() {
                   width: '36px',
                   height: '36px',
                   borderRadius: '8px',
-                  backgroundColor: '#f1f5f9',
-                  color: '#475569',
+                  backgroundColor: colors.accentLight,
+                  color: colors.accent,
                 }}>
                   {category.icon}
                 </div>
                 <h3 style={{
                   fontSize: '16px',
                   fontWeight: 600,
-                  color: '#1e293b',
-                  fontFamily: 'Inter, sans-serif',
+                  color: colors.heading,
+                  fontFamily: 'Geist Sans, sans-serif',
                   margin: 0,
                   letterSpacing: '-0.01em'
                 }}>
@@ -197,24 +212,24 @@ export default function SkillsSection() {
                     key={skillIndex}
                     style={{
                       padding: '6px 12px',
-                      backgroundColor: '#fff',
-                      color: '#374151',
+                      backgroundColor: isDarkMode ? '#334155' : '#fff',
+                      color: colors.text,
                       borderRadius: '6px',
                       fontSize: '13px',
                       fontWeight: 500,
-                      fontFamily: 'Inter, sans-serif',
-                      border: '1px solid #e5e7eb',
+                      fontFamily: 'Geist Sans, sans-serif',
+                      border: `1px solid ${colors.cardBorder}`,
                       transition: 'all 0.15s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#1e293b'
+                      e.currentTarget.style.backgroundColor = colors.accent
                       e.currentTarget.style.color = '#fff'
-                      e.currentTarget.style.borderColor = '#1e293b'
+                      e.currentTarget.style.borderColor = colors.accent
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#fff'
-                      e.currentTarget.style.color = '#374151'
-                      e.currentTarget.style.borderColor = '#e5e7eb'
+                      e.currentTarget.style.backgroundColor = isDarkMode ? '#334155' : '#fff'
+                      e.currentTarget.style.color = isDarkMode ? '#e2e8f0' : '#374151'
+                      e.currentTarget.style.borderColor = isDarkMode ? '#334155' : '#e5e7eb'
                     }}
                   >
                     {skill}

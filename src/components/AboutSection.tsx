@@ -1,9 +1,24 @@
 import { useI18n } from '../store/i18nStore'
+import { useGameStore } from '../store/gameStore'
 import { useState, useEffect, useRef } from 'preact/hooks'
 import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function AboutSection() {
   const { t } = useI18n()
+  const { isDarkMode } = useGameStore()
+
+  // Theme colors
+  const colors = {
+    bg: isDarkMode ? '#0f172a' : '#f8fafc',
+    text: isDarkMode ? '#e2e8f0' : '#334155',
+    textMuted: isDarkMode ? '#94a3b8' : '#64748b',
+    heading: isDarkMode ? '#f1f5f9' : '#0f172a',
+    card: isDarkMode ? '#1e293b' : '#f8fafc',
+    cardBorder: isDarkMode ? '#334155' : '#e2e8f0',
+    accent: '#3b82f6',
+    gridLine: isDarkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+    crossStroke: isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+  }
   const [displayedText, setDisplayedText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
@@ -54,13 +69,14 @@ export default function AboutSection() {
       style={{
         minHeight: '100vh',
         width: '100%',
-        backgroundColor: '#f8fafc',
+        backgroundColor: colors.bg,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '80px 20px',
         position: 'relative',
         overflow: 'hidden',
+        transition: 'background-color 0.3s ease',
       }}
     >
       {/* fine grid */}
@@ -70,7 +86,7 @@ export default function AboutSection() {
           inset: 0,
           zIndex: 1,
           backgroundImage:
-            'linear-gradient(rgba(0,0,0,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.015) 1px,transparent 1px)',
+            `linear-gradient(${colors.gridLine} 1px,transparent 1px),linear-gradient(90deg,${colors.gridLine} 1px,transparent 1px)`,
           backgroundSize: '25px 25px',
           pointerEvents: 'none',
         }}
@@ -79,14 +95,14 @@ export default function AboutSection() {
       <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }}>
         <svg style={{ width: '100%', height: '100%' }}>
           <defs>
-            <pattern id="crosses" width="100" height="100" patternUnits="userSpaceOnUse">
-              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+            <pattern id="crosses-about" width="100" height="100" patternUnits="userSpaceOnUse">
+              <g stroke={colors.crossStroke} strokeWidth="1" fill="none">
                 <line x1="50" y1="44" x2="50" y2="56" />
                 <line x1="44" y1="50" x2="56" y2="50" />
               </g>
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#crosses)" />
+          <rect width="100%" height="100%" fill="url(#crosses-about)" />
         </svg>
       </div>
 
@@ -97,9 +113,9 @@ export default function AboutSection() {
             style={{
               fontSize: 'clamp(2.5rem,6vw,4rem)',
               fontWeight: 700,
-              color: '#0f172a',
+              color: colors.heading,
               marginBottom: 16,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'Geist Sans, sans-serif',
               minHeight: '1.2em',
               display: 'flex',
               justifyContent: 'center',
@@ -111,37 +127,76 @@ export default function AboutSection() {
               style={{
                 opacity: currentIndex < fullName.length ? 1 : 0,
                 animation: 'blink 1s infinite',
-                color: '#3b82f6',
+                color: colors.accent,
               }}
             >
               |
             </span>
           </h1>
-          <p style={{ fontSize: 20, color: '#64748b', fontWeight: 500 }}>{t('about.subtitle')}</p>
+          <p style={{ fontSize: 20, color: colors.textMuted, fontWeight: 500 }}>{t('about.subtitle')}</p>
         </div>
 
         {/* about text */}
-        <div ref={contentRef} style={{ color: '#334155', fontFamily: 'Inter, sans-serif' }}>
+        <div ref={contentRef} style={{ color: colors.text, fontFamily: 'Geist Sans, sans-serif' }}>
           <h2
             style={{
               fontSize: 'clamp(2rem,5vw,3.5rem)',
               fontWeight: 700,
               marginBottom: 24,
-              color: '#0f172a',
+              color: colors.heading,
             }}
           >
             {t('about.title')}
           </h2>
-          <div style={{ fontSize: 18, lineHeight: 1.7, marginBottom: 32, color: '#475569', textAlign: 'left' }}>
+          <div style={{ fontSize: 18, lineHeight: 1.7, marginBottom: 32, color: colors.text, textAlign: 'left' }}>
             <p style={{ marginBottom: 24 }}>
               {t('about.description.paragraph1')}
             </p>
             <p style={{ marginBottom: 24 }}>
               {t('about.description.paragraph2')}
             </p>
-            <p>
+            <p style={{ marginBottom: 32 }}>
               {t('about.description.paragraph3')}
             </p>
+
+            {/* Engineering work */}
+            <h3 style={{
+              fontSize: 20,
+              fontWeight: 600,
+              color: colors.heading,
+              marginBottom: 16,
+            }}>
+              {t('about.engineeringWork')}
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {(t('about.workItems') as unknown as Array<{title: string, description: string}>).map((item, index) => (
+                <div key={index} style={{
+                  padding: '16px 20px',
+                  backgroundColor: colors.card,
+                  border: `1px solid ${colors.cardBorder}`,
+                  borderRadius: 8,
+                  borderLeft: `3px solid ${colors.accent}`,
+                }}>
+                  <p style={{
+                    fontWeight: 600,
+                    margin: 0,
+                    color: colors.heading,
+                    fontSize: 16,
+                    marginBottom: 6,
+                  }}>
+                    {item.title}
+                  </p>
+                  <p style={{
+                    margin: 0,
+                    color: colors.textMuted,
+                    fontSize: 15,
+                    lineHeight: 1.5,
+                  }}>
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* CTA buttons */}
@@ -158,6 +213,14 @@ export default function AboutSection() {
             <a
               href="/docs/Kevin-Gamez-CV.pdf"
               download
+              onClick={() => {
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                  (window as any).gtag('event', 'download_cv', {
+                    event_category: 'engagement',
+                    event_label: 'CV Download',
+                  })
+                }
+              }}
               style={{
                 padding: '12px 24px',
                 backgroundColor: '#3b82f6',
@@ -217,87 +280,42 @@ export default function AboutSection() {
 /* sub-components */
 
 function EmailCopyPill() {
-  const { t } = useI18n()
+  const { isDarkMode } = useGameStore()
   const email = 'kevingamez.kg@gmail.com'
-  const [copied, setCopied] = useState(false)
 
-  const CopyIcon = (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-    </svg>
-  )
-
-  const CheckIcon = (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
-  )
+  const colors = {
+    bg: isDarkMode ? '#1e293b' : '#f8fafc',
+    border: isDarkMode ? '#334155' : '#e2e8f0',
+    text: isDarkMode ? '#e2e8f0' : '#475569',
+  }
 
   return (
-    <div
+    <a
+      href="mailto:kevingamez.kg@gmail.com"
+      target="_self"
+      rel="noopener"
       style={{
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
-        backgroundColor: '#f8fafc',
-        border: '1px solid #e2e8f0',
+        gap: 10,
+        padding: '12px 20px',
+        backgroundColor: colors.bg,
+        border: `1px solid ${colors.border}`,
         borderRadius: 8,
-        overflow: 'hidden',
-        transition: 'all .2s',
+        color: colors.text,
+        fontSize: 14,
+        fontWeight: 500,
+        fontFamily: 'Geist Sans, sans-serif',
+        textDecoration: 'none',
+        cursor: 'pointer',
       }}
     >
-      <input
-        type="text"
-        value={email}
-        readOnly
-        style={{
-          padding: '12px 16px',
-          border: 'none',
-          background: 'transparent',
-          fontSize: 14,
-          width: 200,
-          color: '#475569',
-          fontFamily: 'Inter, sans-serif',
-        }}
-      />
-      <button
-        onClick={() => {
-          navigator.clipboard.writeText(email)
-          setCopied(true)
-          setTimeout(() => setCopied(false), 2000)
-        }}
-        style={{
-          padding: '12px 16px',
-          backgroundColor: copied ? '#10b981' : '#f1f5f9',
-          color: copied ? '#fff' : '#64748b',
-          border: 'none',
-          borderLeft: '1px solid #e2e8f0',
-          cursor: 'pointer',
-          fontSize: 14,
-          fontWeight: 500,
-          minWidth: 90,
-          transition: 'all .2s',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 6,
-        }}
-        onMouseEnter={(e) => {
-          if (!copied) {
-            e.currentTarget.style.backgroundColor = '#e2e8f0'
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!copied) {
-            e.currentTarget.style.backgroundColor = '#f1f5f9'
-          }
-        }}
-        title="Copy email to clipboard"
-      >
-        {copied ? CheckIcon : CopyIcon}
-        {copied ? t('about.emailCopied') : t('about.copyEmail')}
-      </button>
-    </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+      {email}
+    </a>
   )
 }
 

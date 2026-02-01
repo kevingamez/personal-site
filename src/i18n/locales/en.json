@@ -10,18 +10,33 @@
   },
   "hero": {
     "name": "KEVIN GAMEZ",
-    "title": "Software Developer",
+    "title": "Founding Engineer at Enttor",
     "subtitle": "Creating digital experiences",
     "scrollToExplore": "Scroll to explore"
   },
   "about": {
     "title": "About Me",
-    "subtitle": "Software Developer",
+    "subtitle": "Founding Engineer at Enttor",
     "description": {
-      "paragraph1": "Hi! I'm Kevin, a Systems & Computer Engineering graduate from Universidad de los Andes. I love building things with code and solving problems through software development, data engineering, and AI.",
-      "paragraph2": "I enjoy learning new technologies and working on projects that make a difference. Currently pursuing my Master's degree while exploring modern web development and data systems.",
-      "paragraph3": "When I'm not coding, you'll find me running, swimming, or trying out the latest tools and frameworks."
+      "paragraph1": "Hi! I'm Kevin Gamez, the Founding Engineer at Enttor, the only outbound messaging platform startups need.",
+      "paragraph2": "At Enttor, I architected the full-stack application from the ground up, building browser automation systems, and integrating AI pipelines that power personalized outreach at scale.",
+      "paragraph3": "I have a Bachelor's and Master's in Information Engineering from Uniandes with a specialization in deep learning."
     },
+    "engineeringWork": "My engineering work:",
+    "workItems": [
+      {
+        "title": "AI outbound, browser automation",
+        "description": "Built Enttor's AI outbound engine and browser based automation flows for multi platform, automating prospecting, DMs and lead qualification."
+      },
+      {
+        "title": "Data analytics systems",
+        "description": "Designed complex SQL models and analytics pipelines used Power BI to drive executive reporting in HR, risk, and operations across multiple corporate environments."
+      },
+      {
+        "title": "Deep learning and computer vision",
+        "description": "Trained models on satellite imagery to detect croplands and environmental risk."
+      }
+    ],
     "downloadCV": "Download CV",
     "copyEmail": "Copy",
     "emailCopied": "Copied!"
@@ -43,7 +58,7 @@
       "minorMgmt": "Minor in Management"
     },
     "dates": {
-      "expectedMay2025": "Expected May 2025",
+      "expectedMay2025": "May 2025",
       "dec2023": "Dec 2023",
       "dec2022": "Dec 2022"
     },

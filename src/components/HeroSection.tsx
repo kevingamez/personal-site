@@ -42,7 +42,7 @@ export default function HeroSection() {
           gap: '8px',
           color: 'rgba(100, 116, 139, 0.8)',
           fontSize: '13px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: 'Geist Sans, sans-serif',
           fontWeight: 500,
           letterSpacing: '0.5px',
           opacity: 0

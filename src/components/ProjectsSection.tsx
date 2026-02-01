@@ -1,10 +1,26 @@
 import { useState } from 'preact/hooks'
 import { useI18n } from '../store/i18nStore'
+import { useGameStore } from '../store/gameStore'
 import { useScrollAnimation, useStaggerAnimation } from '../hooks/useScrollAnimation'
 
 export default function ProjectsSection() {
   const { t } = useI18n()
+  const { isDarkMode } = useGameStore()
   const [expandedCard, setExpandedCard] = useState<number | null>(null)
+
+  // Theme colors
+  const colors = {
+    bg: isDarkMode ? '#0f172a' : '#f8fafc',
+    text: isDarkMode ? '#e2e8f0' : '#475569',
+    textMuted: isDarkMode ? '#94a3b8' : '#64748b',
+    heading: isDarkMode ? '#f1f5f9' : '#0f172a',
+    card: isDarkMode ? '#1e293b' : '#fff',
+    cardBorder: isDarkMode ? '#334155' : '#e2e8f0',
+    accent: '#3b82f6',
+    accentLight: isDarkMode ? '#1e3a5f' : '#dbeafe',
+    gridLine: isDarkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+    crossStroke: isDarkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+  }
 
   // Animation refs
   const headerRef = useScrollAnimation<HTMLDivElement>({ animation: 'fadeUp', duration: 0.8 })
@@ -102,20 +118,21 @@ export default function ProjectsSection() {
     <section id="projects" style={{
       minHeight:'100vh',
       width:'100%',
-      backgroundColor:'#f8fafc',
+      backgroundColor:colors.bg,
       display:'flex',
       alignItems:'center',
       justifyContent:'center',
       padding:'80px 20px',
       position:'relative',
-      overflow:'hidden'
+      overflow:'hidden',
+      transition:'background-color 0.3s ease'
     }}>
       {/* subtle grid */}
       <div style={{
         position:'absolute',inset:0,zIndex:1,opacity:1,
         backgroundImage:`
-          linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)
+          linear-gradient(${colors.gridLine} 1px, transparent 1px),
+          linear-gradient(90deg, ${colors.gridLine} 1px, transparent 1px)
         `,
         backgroundSize:'25px 25px',pointerEvents:'none'
       }}/>
@@ -124,7 +141,7 @@ export default function ProjectsSection() {
         <svg style={{width:'100%',height:'100%',position:'absolute'}}>
           <defs>
             <pattern id="crosses-projects" width="100" height="100" patternUnits="userSpaceOnUse">
-              <g stroke="rgba(0,0,0,0.03)" strokeWidth="1" fill="none">
+              <g stroke={colors.crossStroke} strokeWidth="1" fill="none">
                 <line x1="50" y1="44" x2="50" y2="56"/>
                 <line x1="44" y1="50" x2="56" y2="50"/>
               </g>
@@ -139,13 +156,13 @@ export default function ProjectsSection() {
         <div ref={headerRef} style={{textAlign:'center',marginBottom:'60px'}}>
           <h2 style={{
             fontSize:'clamp(2rem, 5vw, 3.5rem)',
-            fontWeight:700,color:'#0f172a',marginBottom:'16px',
-            fontFamily:'Inter, sans-serif'
+            fontWeight:700,color:colors.heading,marginBottom:'16px',
+            fontFamily:'Geist Sans, sans-serif'
           }}>
             {t('projects.title')}
           </h2>
           <p style={{
-            fontSize:18,color:'#64748b',maxWidth:600,
+            fontSize:18,color:colors.textMuted,maxWidth:600,
             margin:'0 auto',lineHeight:1.6
           }}>
             {t('projects.subtitle')}
@@ -166,9 +183,9 @@ export default function ProjectsSection() {
                 <div style={{
                   position:'absolute',left:-20,top:24,width:12,height:12,
                   borderRadius:'50%',
-                  backgroundColor:isExpanded?'#3b82f6':'#64748b',
-                  border:'3px solid #f8fafc',
-                  boxShadow:`0 0 0 2px ${isExpanded?'#3b82f6':'#e2e8f0'}`,
+                  backgroundColor:isExpanded?colors.accent:colors.textMuted,
+                  border:`3px solid ${colors.bg}`,
+                  boxShadow:`0 0 0 2px ${isExpanded?colors.accent:colors.cardBorder}`,
                   zIndex:10,transform:isExpanded?'scale(1.2)':'scale(1)',
                   transition:'all .3s ease'
                 }}/>
@@ -176,26 +193,26 @@ export default function ProjectsSection() {
                 <div
                   onClick={()=>setExpandedCard(isExpanded?null:index)}
                   style={{
-                    backgroundColor:isExpanded?'#fff':'#f8fafc',
+                    backgroundColor:isExpanded?colors.card:colors.bg,
                     borderRadius:16,padding:32,
-                    border:`2px solid ${isExpanded?'#3b82f6':'#e2e8f0'}`,
+                    border:`2px solid ${isExpanded?colors.accent:colors.cardBorder}`,
                     cursor:'pointer',transition:'all .3s ease',
                     transform:isExpanded?'translateY(-4px)':'translateY(0)',
                     boxShadow:isExpanded
                       ?'0 20px 40px rgba(59,130,246,.15)'
-                      :'0 4px 6px rgba(0,0,0,.05)',
+                      :isDarkMode?'0 4px 6px rgba(0,0,0,.3)':'0 4px 6px rgba(0,0,0,.05)',
                     display:'flex',flexDirection:'column',minHeight:420
                   }}
                 >
                   <h3 style={{
-                    fontSize:24,fontWeight:600,color:'#1e293b',
-                    marginBottom:16,fontFamily:'Inter, sans-serif'
+                    fontSize:24,fontWeight:600,color:colors.heading,
+                    marginBottom:16,fontFamily:'Geist Sans, sans-serif'
                   }}>
                     {project.title}
                   </h3>
 
                   <p style={{
-                    color:'#64748b',lineHeight:1.6,
+                    color:colors.textMuted,lineHeight:1.6,
                     marginBottom:20,fontSize:16
                   }}>
                     {project.description}
@@ -207,65 +224,53 @@ export default function ProjectsSection() {
                   }}>
                     {project.tech.map((tech,ti)=>(
                       <span key={ti} style={{
-                        backgroundColor:'#dbeafe',color:'#3b82f6',
+                        backgroundColor:colors.accentLight,color:colors.accent,
                         padding:'4px 12px',borderRadius:12,
-                        fontSize:12,fontWeight:500,fontFamily:'Inter, sans-serif'
+                        fontSize:12,fontWeight:500,fontFamily:'Geist Sans, sans-serif'
                       }}>
                         {tech}
                       </span>
                     ))}
                   </div>
 
-                                     {/* links */}
-                   {(project.github !== '#' || project.demo !== '#') && (
-                     <div style={{
-                       display:'flex',gap:16,
-                       marginBottom:isExpanded?24:0,marginTop:'auto'
-                     }}>
-                       {project.github !== '#' && (
-                         <a href={project.github} onClick={e=>e.stopPropagation()}
-                           target="_blank" rel="noopener noreferrer"
-                           style={{
-                             padding:'8px 16px',background:'#f8fafc',color:'#475569',
-                             textDecoration:'none',borderRadius:8,fontSize:14,
-                             fontWeight:500,border:'1px solid #e2e8f0',
-                             transition:'all .2s'
-                           }}
-                           onMouseEnter={e=>{
-                             e.currentTarget.style.background='#e2e8f0'
-                           }}
-                           onMouseLeave={e=>{
-                             e.currentTarget.style.background='#f8fafc'
-                           }}
-                         >
-                           {t('projects.viewCode')}
-                         </a>
-                       )}
-                       {project.demo !== '#' && (
-                         <a href={project.demo} onClick={e=>e.stopPropagation()}
-                           target="_blank" rel="noopener noreferrer"
-                           style={{
-                             padding:'8px 16px',background:'#3b82f6',color:'#fff',
-                             textDecoration:'none',borderRadius:8,fontSize:14,
-                             fontWeight:500,transition:'all .2s'
-                           }}
-                           onMouseEnter={e=>{
-                             e.currentTarget.style.background='#2563eb'
-                           }}
-                           onMouseLeave={e=>{
-                             e.currentTarget.style.background='#3b82f6'
-                           }}
-                         >
-                           {project.title === 'Deep Learning in Agriculture' ? 'View Document' : t('projects.viewProject')}
-                         </a>
-                       )}
-                     </div>
-                   )}
+                  {/* links */}
+                  {(project.github !== '#' || project.demo !== '#') && (
+                    <div style={{
+                      display:'flex',gap:16,
+                      marginBottom:isExpanded?24:0,marginTop:'auto'
+                    }}>
+                      {project.github !== '#' && (
+                        <a href={project.github} onClick={e=>e.stopPropagation()}
+                          target="_blank" rel="noopener noreferrer"
+                          style={{
+                            padding:'8px 16px',background:colors.bg,color:colors.text,
+                            textDecoration:'none',borderRadius:8,fontSize:14,
+                            fontWeight:500,border:`1px solid ${colors.cardBorder}`,
+                            transition:'all .2s'
+                          }}
+                        >
+                          {t('projects.viewCode')}
+                        </a>
+                      )}
+                      {project.demo !== '#' && (
+                        <a href={project.demo} onClick={e=>e.stopPropagation()}
+                          target="_blank" rel="noopener noreferrer"
+                          style={{
+                            padding:'8px 16px',background:colors.accent,color:'#fff',
+                            textDecoration:'none',borderRadius:8,fontSize:14,
+                            fontWeight:500,transition:'all .2s'
+                          }}
+                        >
+                          {project.title === 'Deep Learning in Agriculture' ? 'View Document' : t('projects.viewProject')}
+                        </a>
+                      )}
+                    </div>
+                  )}
 
                   {/* expanded */}
                   {isExpanded && (
                     <div style={{
-                      paddingTop:24,borderTop:'1px solid #e2e8f0',
+                      paddingTop:24,borderTop:`1px solid ${colors.cardBorder}`,
                       animation:'slideDown .3s ease-out'
                     }}>
                       <div style={{
@@ -278,12 +283,14 @@ export default function ProjectsSection() {
                           items={project.details.features}
                           bullet="•"
                           bulletColor="#10b981"
+                          isDarkMode={isDarkMode}
                         />
                         <DetailsList
                           title={t('projects.challenges')}
                           items={project.details.challenges}
                           bullet="•"
                           bulletColor="#f59e0b"
+                          isDarkMode={isDarkMode}
                         />
                       </div>
                     </div>
@@ -291,7 +298,7 @@ export default function ProjectsSection() {
 
                   <div style={{
                     textAlign:'center',marginTop:16,
-                    fontSize:12,color:'#94a3b8',
+                    fontSize:12,color:colors.textMuted,
                     display:'flex',alignItems:'center',justifyContent:'center',gap:6
                   }}>
                     <span>{isExpanded ? t('projects.collapse') : t('projects.expand')}</span>
@@ -329,15 +336,15 @@ export default function ProjectsSection() {
 
 /* helper */
 function DetailsList({
-  title, items, bullet, bulletColor
+  title, items, bullet, bulletColor, isDarkMode
 }:{
-  title:string; items:string[]; bullet:string; bulletColor:string
+  title:string; items:string[]; bullet:string; bulletColor:string; isDarkMode?:boolean
 }){
   return (
     <div>
       <h4 style={{
-        fontSize:16,fontWeight:600,color:'#1e293b',
-        marginBottom:12,fontFamily:'Inter, sans-serif'
+        fontSize:16,fontWeight:600,color:isDarkMode ? '#f1f5f9' : '#1e293b',
+        marginBottom:12,fontFamily:'Geist Sans, sans-serif'
       }}>
         {title}
       </h4>
@@ -352,7 +359,7 @@ function DetailsList({
             }}>
               {bullet}
             </span>
-            <span style={{color:'#475569'}}>{item}</span>
+            <span style={{color:isDarkMode ? '#cbd5e1' : '#475569'}}>{item}</span>
           </li>
         ))}
       </ul>
