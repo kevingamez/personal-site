@@ -30,6 +30,12 @@ export function useScrollAnimation<T extends HTMLElement>(
     if (!ref.current) return
 
     const element = ref.current
+    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReduced) {
+      gsap.set(element, { opacity: 1 })
+      return
+    }
 
     // Set initial state based on animation type
     const initialState: gsap.TweenVars = { opacity: 0 }
@@ -101,6 +107,12 @@ export function useStaggerAnimation<T extends HTMLElement>(
     const children = container.querySelectorAll(childSelector)
 
     if (children.length === 0) return
+
+    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) {
+      gsap.set(children, { opacity: 1 })
+      return
+    }
 
     // Set initial state
     const initialState: gsap.TweenVars = { opacity: 0 }
