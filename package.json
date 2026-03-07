@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@astrojs/preact": "^4.1.0",
+    "@astrojs/sitemap": "^3.7.0",
+    "@types/three": "^0.183.1",
     "astro": "^5.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -17,6 +19,7 @@
     "lucide-preact": "^0.515.0",
     "pixi.js": "^7.4.3",
     "preact": "^10.26.9",
+    "three": "^0.183.2",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
