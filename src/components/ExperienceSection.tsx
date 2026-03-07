@@ -242,13 +242,17 @@ export default function ExperienceSection() {
                 />
                 {/* card */}
                 <div
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setExpandedCard(isExpanded ? null : index)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpandedCard(isExpanded ? null : index) } }}
                   style={{
                     backgroundColor: isExpanded ? colors.cardHover : colors.card,
                     padding: 24,
                     borderRadius: 12,
                     border: `2px solid ${isExpanded ? colors.accent : colors.cardBorder}`,
                     cursor: 'pointer',
+                    outline: 'none',
                     transition: 'all .3s cubic-bezier(.4,0,.2,1)',
                     transform: isExpanded ? 'translateY(-4px)' : 'translateY(0)',
                     boxShadow: isExpanded

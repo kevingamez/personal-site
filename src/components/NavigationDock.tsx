@@ -202,6 +202,7 @@ export default function NavigationDock({
             key={item.id}
             href={`#${item.id}`}
             title={item.title}
+            aria-label={item.title}
             style={{
               ...buttonStyle,
               color: isDarkMode ? '#a1a1aa' : '#64748b'
@@ -249,6 +250,7 @@ export default function NavigationDock({
             key={index}
             onClick={control.action}
             title={control.title}
+            aria-label={control.title}
             style={{
               ...buttonStyle,
               color: isDarkMode ? '#a1a1aa' : '#64748b'

@@ -11,9 +11,7 @@ export default function PortfolioLayout() {
       width: '100%',
       scrollBehavior: 'smooth'
     }}>
-      {/* 3D background behind all sections */}
       <ThreeBackground />
-
       {/* Sections */}
       <HeroSection />
       <AboutSection />

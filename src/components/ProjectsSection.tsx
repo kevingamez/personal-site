@@ -194,12 +194,16 @@ export default function ProjectsSection() {
                 }}/>
                 {/* card */}
                 <div
+                  role="button"
+                  tabIndex={0}
                   onClick={()=>setExpandedCard(isExpanded?null:index)}
+                  onKeyDown={(e)=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();setExpandedCard(isExpanded?null:index)} }}
                   style={{
                     backgroundColor:isExpanded?colors.card:colors.bg,
                     borderRadius:16,overflow:'hidden',
                     border:`2px solid ${isExpanded?colors.accent:colors.cardBorder}`,
                     cursor:'pointer',transition:'all .3s ease',
+                    outline:'none',
                     transform:isExpanded?'translateY(-4px)':'translateY(0)',
                     boxShadow:isExpanded
                       ?'0 20px 40px rgba(59,130,246,.15)'
