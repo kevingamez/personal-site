@@ -8,7 +8,7 @@ import gsap from 'gsap'
 
 const getCellSize = () => window.innerWidth < 1000 ? 35 : 25  // Larger cells on mobile
 const MAX_FPS     = 10
-const FADE_STEPS  = 2
+const FADE_STEPS  = 6
 const SEED_PERIOD = 5_000
 const PLAY_DELAY  = 1_000
 const ALIVE       = -1  
@@ -24,22 +24,19 @@ const PATTERNS: Record<string,[number,number][]> = {
        [10,6],[16,6],[24,6],[11,7],[15,7],[12,8],[13,8]],
   
   // Classic patterns
-//   GLIDER:[[1,0],[2,1],[0,2],[1,2],[2,2]],
-//   ACORN:[[0,0],[1,0],[1,2],[3,1],[4,0],[5,0],[6,0]],
-//   R:[[1,0],[2,0],[0,1],[1,1],[1,2]],
-  
+  GLIDER:[[1,0],[2,1],[0,2],[1,2],[2,2]],
+  ACORN:[[0,0],[1,0],[1,2],[3,1],[4,0],[5,0],[6,0]],
+  R:[[1,0],[2,0],[0,1],[1,1],[1,2]],
+
   // Oscillators
-//   PULSAR:[[2,0],[3,0],[4,0],[8,0],[9,0],[10,0],
-//            [0,2],[5,2],[7,2],[12,2],[0,3],[5,3],[7,3],[12,3],
-//            [0,4],[5,4],[7,4],[12,4],[2,5],[3,5],[4,5],[8,5],[9,5],[10,5],
-//            [2,7],[3,7],[4,7],[8,7],[9,7],[10,7],[0,8],[5,8],[7,8],[12,8],
-//            [0,9],[5,9],[7,9],[12,9],[0,10],[5,10],[7,10],[12,10],
-//            [2,12],[3,12],[4,12],[8,12],[9,12],[10,12]],
-//   PENTADECATHLON:[[2,0],[3,0],[1,1],[4,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
-//                   [1,8],[4,8],[2,9],[3,9]],
-//   BEACON:[[0,0],[1,0],[0,1],[3,2],[2,3],[3,3]],
-//   TOAD:[[1,0],[2,0],[3,0],[0,1],[1,1],[2,1]],
-//   BLINKER:[[0,0],[1,0],[2,0]],
+  PULSAR:[[2,0],[3,0],[4,0],[8,0],[9,0],[10,0],
+           [0,2],[5,2],[7,2],[12,2],[0,3],[5,3],[7,3],[12,3],
+           [0,4],[5,4],[7,4],[12,4],[2,5],[3,5],[4,5],[8,5],[9,5],[10,5],
+           [2,7],[3,7],[4,7],[8,7],[9,7],[10,7],[0,8],[5,8],[7,8],[12,8],
+           [0,9],[5,9],[7,9],[12,9],[0,10],[5,10],[7,10],[12,10],
+           [2,12],[3,12],[4,12],[8,12],[9,12],[10,12]],
+  PENTADECATHLON:[[2,0],[3,0],[1,1],[4,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],
+                  [1,8],[4,8],[2,9],[3,9]],
   
   // Spaceships
   LWSS:[[0,0],[3,0],[4,1],[0,2],[4,2],[1,3],[2,3],[3,3],[4,3]],
@@ -49,12 +46,7 @@ const PATTERNS: Record<string,[number,number][]> = {
   // Methuselahs
   DIEHARD:[[6,0],[0,1],[1,1],[1,2],[5,2],[6,2],[7,2]],
   
-  // Still lifes
-//   BLOCK:[[0,0],[1,0],[0,1],[1,1]],
-//   BEEHIVE:[[1,0],[2,0],[0,1],[3,1],[1,2],[2,2]],
-//   LOAF:[[1,0],[2,0],[0,1],[3,1],[1,2],[3,2],[2,3]],
-//   BOAT:[[0,0],[1,0],[0,1],[2,1],[1,2]],
-//   TUB:[[1,0],[0,1],[2,1],[1,2]],
+  // Still lifes (intentionally excluded — they don't move or evolve)
 }
 
 const fadeGrey = (v:number,isDark:boolean)=>{
@@ -165,11 +157,16 @@ export default function GameOfLifeIsland(){
   // Animate title on mount
   useEffect(() => {
     if (titleRef.current) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out', delay: 0.3 }
-      )
+      const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (prefersReduced) {
+        gsap.set(titleRef.current, { opacity: 1 })
+      } else {
+        gsap.fromTo(
+          titleRef.current,
+          { opacity: 0, y: 30, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out', delay: 0.3 }
+        )
+      }
     }
   }, [])
 
@@ -322,13 +319,14 @@ export default function GameOfLifeIsland(){
     resize();requestAnimationFrame(loop)
     addEventListener('resize',resize)
     canvas.addEventListener('pointermove',paint)
-    canvas.addEventListener('pointerenter',()=>{
-      if(running.current) return
-      running.current=true;setPlaying(true);startTimers()
-    })
-    canvas.addEventListener('pointerleave',()=>{
-      if(!running.current) clearTimeout(playTimer.current)
-    })
+
+    // Auto-start the simulation after a short delay (respect reduced motion)
+    const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!prefersReduced) {
+      playTimer.current = window.setTimeout(()=>{
+        running.current=true;setPlaying(true);startTimers()
+      }, PLAY_DELAY)
+    }
 
     return()=>{removeEventListener('resize',resize)
       canvas.removeEventListener('pointermove',paint)
@@ -371,7 +369,7 @@ export default function GameOfLifeIsland(){
           ? `radial-gradient(ellipse at center, transparent 60%, transparent 75%, rgba(26,26,26,0.2) 85%, rgba(26,26,26,0.6) 95%, rgba(26,26,26,0.9) 100%)`
           : `radial-gradient(ellipse at center, transparent 60%, transparent 75%, rgba(255,255,255,0.2) 85%, rgba(255,255,255,0.6) 95%, rgba(255,255,255,0.9) 100%)`
       }}/>
-      
+
       <div
         ref={titleRef}
         style={{
@@ -427,7 +425,7 @@ export default function GameOfLifeIsland(){
       
       {/* Stats overlay */}
       <div style={{
-        position:'absolute',bottom:14,left:14,zIndex:20,
+        position:'absolute',bottom: isMobile ? 70 : 14,left:14,zIndex:20,
         background: isDarkMode ? 'rgba(30,30,30,.85)' : 'rgba(255,255,255,.85)',
         padding:'8px 12px',borderRadius:6,
         fontSize:12,fontFamily:'Geist Sans, sans-serif',
