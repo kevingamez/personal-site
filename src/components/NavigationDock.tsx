@@ -135,12 +135,13 @@ export default function NavigationDock({
     }
   ]
 
+  const buttonSize = isMobile ? '38px' : '44px'
   const buttonStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '44px',
-    height: '44px',
+    width: buttonSize,
+    height: buttonSize,
     borderRadius: '10px',
     textDecoration: 'none',
     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -149,37 +150,53 @@ export default function NavigationDock({
     cursor: 'pointer'
   }
 
-  return (
-    <div style={{
-      position: 'fixed',
-      right: isMobile ? '12px' : '20px',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      zIndex: 100,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px',
-      // Smaller on mobile
-      scale: isMobile ? '0.85' : '1'
-    }}>
-      {/* Navigation Section */}
-      <div style={{
-        backgroundColor: isDarkMode 
-          ? 'rgba(30, 30, 30, 0.9)' 
-          : 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '16px',
-        padding: '12px',
-        border: isDarkMode 
-          ? '1px solid rgba(255, 255, 255, 0.1)' 
-          : '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: isDarkMode
-          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-          : '0 8px 32px rgba(0, 0, 0, 0.1)',
+  const panelStyle = {
+    backgroundColor: isDarkMode
+      ? 'rgba(30, 30, 30, 0.9)'
+      : 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: isMobile ? '14px' : '16px',
+    padding: isMobile ? '8px' : '12px',
+    border: isDarkMode
+      ? '1px solid rgba(255, 255, 255, 0.1)'
+      : '1px solid rgba(0, 0, 0, 0.1)',
+    boxShadow: isDarkMode
+      ? '0 8px 32px rgba(0, 0, 0, 0.3)'
+      : '0 8px 32px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: (isMobile ? 'row' : 'column') as 'row' | 'column',
+    gap: '4px'
+  }
+
+  // Mobile: horizontal bar at bottom center
+  // Desktop: vertical bar on right side
+  const containerStyle = isMobile
+    ? {
+        position: 'fixed' as const,
+        bottom: '12px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 100,
         display: 'flex',
-        flexDirection: 'column',
-        gap: '4px'
-      }}>
+        flexDirection: 'row' as const,
+        gap: '8px',
+        alignItems: 'center',
+      }
+    : {
+        position: 'fixed' as const,
+        right: '20px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '8px',
+      }
+
+  return (
+    <div style={containerStyle}>
+      {/* Navigation Section */}
+      <div style={panelStyle}>
         {navigationItems.map((item) => (
           <a
             key={item.id}
@@ -208,32 +225,25 @@ export default function NavigationDock({
       </div>
 
       {/* Separator */}
-      <div style={{
-        height: '1px',
-        backgroundColor: isDarkMode 
-          ? 'rgba(255, 255, 255, 0.1)' 
-          : 'rgba(0, 0, 0, 0.1)',
-        margin: '4px 12px'
-      }}></div>
+      <div style={isMobile
+        ? {
+            width: '1px',
+            height: '24px',
+            backgroundColor: isDarkMode
+              ? 'rgba(255, 255, 255, 0.1)'
+              : 'rgba(0, 0, 0, 0.1)',
+          }
+        : {
+            height: '1px',
+            backgroundColor: isDarkMode
+              ? 'rgba(255, 255, 255, 0.1)'
+              : 'rgba(0, 0, 0, 0.1)',
+            margin: '4px 12px'
+          }
+      }></div>
 
       {/* Game Controls Section */}
-      <div style={{
-        backgroundColor: isDarkMode 
-          ? 'rgba(30, 30, 30, 0.9)' 
-          : 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)',
-        borderRadius: '16px',
-        padding: '12px',
-        border: isDarkMode 
-          ? '1px solid rgba(255, 255, 255, 0.1)' 
-          : '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: isDarkMode
-          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-          : '0 8px 32px rgba(0, 0, 0, 0.1)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px'
-      }}>
+      <div style={panelStyle}>
         {gameControls.map((control, index) => (
           <button
             key={index}

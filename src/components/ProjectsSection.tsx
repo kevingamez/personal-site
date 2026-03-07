@@ -10,7 +10,7 @@ export default function ProjectsSection() {
 
   // Theme colors
   const colors = {
-    bg: isDarkMode ? '#0f172a' : '#f8fafc',
+    bg: isDarkMode ? 'rgba(15,23,42,0.85)' : 'rgba(248,250,252,0.85)',
     text: isDarkMode ? '#e2e8f0' : '#475569',
     textMuted: isDarkMode ? '#94a3b8' : '#64748b',
     heading: isDarkMode ? '#f1f5f9' : '#0f172a',
@@ -38,6 +38,7 @@ export default function ProjectsSection() {
     /* 2 ─ Personal website (the site you're on) */
     {
       title: 'Portfolio Website',
+      gradient: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
       description: 'This very website! Modern portfolio built with Astro, featuring Game of Life background, smooth animations, and bilingual support.',
       tech: ['Astro', 'TypeScript', 'Preact', 'Zustand'],
       github: 'https://github.com/kevingamez/personal-site',
@@ -68,6 +69,7 @@ export default function ProjectsSection() {
     /* 3 ─ Undergraduate capstone thesis */
     {
       title: 'Deep Learning in Agriculture',
+      gradient: 'linear-gradient(135deg, #10b981, #06b6d4)',
       description: 'Undergraduate thesis on oil-palm crop mapping in Colombia using Sentinel-1/2 satellite imagery and DeepLab V3+ architecture.',
       tech: ['Python', 'PyTorch', 'DeepLab V3+', 'Google Earth Engine'],
       github: '#',
@@ -92,6 +94,7 @@ export default function ProjectsSection() {
     /* 4 ─ CodeFest Ad Astra 2023 */
     {
       title: 'AD ASTRA – Aerial Object Detection',
+      gradient: 'linear-gradient(135deg, #f59e0b, #ef4444)',
       description: 'Open-source library for detecting and classifying Amazon-deforestation events from aircraft footage.',
       tech: ['Python', 'OpenCV', 'YOLOv5', 'FastAPI'],
       github: 'https://github.com/favalosdev/AD_ASTRA2023-SpaceInvaders',
@@ -194,7 +197,7 @@ export default function ProjectsSection() {
                   onClick={()=>setExpandedCard(isExpanded?null:index)}
                   style={{
                     backgroundColor:isExpanded?colors.card:colors.bg,
-                    borderRadius:16,padding:32,
+                    borderRadius:16,overflow:'hidden',
                     border:`2px solid ${isExpanded?colors.accent:colors.cardBorder}`,
                     cursor:'pointer',transition:'all .3s ease',
                     transform:isExpanded?'translateY(-4px)':'translateY(0)',
@@ -204,6 +207,15 @@ export default function ProjectsSection() {
                     display:'flex',flexDirection:'column',minHeight:420
                   }}
                 >
+                  {/* Gradient banner */}
+                  {project.gradient && (
+                    <div style={{
+                      height:6,
+                      background:project.gradient,
+                      flexShrink:0,
+                    }}/>
+                  )}
+                  <div style={{padding:32,display:'flex',flexDirection:'column',flex:1}}>
                   <h3 style={{
                     fontSize:24,fontWeight:600,color:colors.heading,
                     marginBottom:16,fontFamily:'Geist Sans, sans-serif'
@@ -317,6 +329,7 @@ export default function ProjectsSection() {
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
                   </div>
+                  </div>{/* close padding wrapper */}
                 </div>
               </div>
             )
