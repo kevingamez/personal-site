@@ -10,7 +10,7 @@ export default function ExperienceSection() {
 
   // Theme colors
   const colors = {
-    bg: isDarkMode ? '#0f172a' : '#fff',
+    bg: isDarkMode ? 'rgba(15,23,42,0.85)' : 'rgba(255,255,255,0.85)',
     text: isDarkMode ? '#e2e8f0' : '#475569',
     textMuted: isDarkMode ? '#94a3b8' : '#64748b',
     heading: isDarkMode ? '#f1f5f9' : '#0f172a',

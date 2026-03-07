@@ -3,6 +3,7 @@ import AboutSection from './AboutSection'
 import SkillsSection from './SkillsSection'
 import ProjectsSection from './ProjectsSection'
 import ExperienceSection from './ExperienceSection'
+import ThreeBackground from './ThreeHero'
 
 export default function PortfolioLayout() {
   return (
@@ -10,7 +11,8 @@ export default function PortfolioLayout() {
       width: '100%',
       scrollBehavior: 'smooth'
     }}>
-      {/* Navigation is now handled by NavigationDock in Hero section */}
+      {/* 3D background behind all sections */}
+      <ThreeBackground />
 
       {/* Sections */}
       <HeroSection />
