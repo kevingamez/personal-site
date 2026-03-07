@@ -8,23 +8,59 @@ import PortfolioLayout from '../components/PortfolioLayout.tsx';
   <meta charset="utf-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kevin Gamez - Founding Engineer at Enttor</title>
-  <meta name="description" content="Kevin Gamez - Founding Engineer at Enttor passionate about creating interactive experiences and solving complex problems through code." />
+  <title>Kevin Gamez | Founding Engineer at Enttor — Full-Stack, AI & Deep Learning</title>
+  <meta name="description" content="Kevin Gamez is a Founding Engineer at Enttor specializing in full-stack development, AI pipelines, browser automation, and deep learning. MSc from Universidad de los Andes, Bogota, Colombia." />
+  <meta name="keywords" content="Kevin Gamez, Founding Engineer, Enttor, Full-Stack Developer, AI Engineer, Deep Learning, TypeScript, React, Next.js, Python, PyTorch, Bogota, Colombia" />
+  <meta name="author" content="Kevin Gamez" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#3b82f6" />
+  <link rel="canonical" href="https://kevingamez.com/" />
+  <link rel="alternate" hreflang="en" href="https://kevingamez.com/" />
+  <link rel="alternate" hreflang="es" href="https://kevingamez.com/es/" />
+  <link rel="alternate" hreflang="x-default" href="https://kevingamez.com/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://kevingamez.com/" />
-  <meta property="og:title" content="Kevin Gamez - Founding Engineer at Enttor" />
-  <meta property="og:description" content="Founding Engineer at Enttor passionate about creating interactive experiences and solving complex problems through code." />
+  <meta property="og:title" content="Kevin Gamez | Founding Engineer at Enttor" />
+  <meta property="og:description" content="Full-stack engineer specializing in AI pipelines, browser automation, and deep learning. MSc from Universidad de los Andes." />
   <meta property="og:image" content="https://kevingamez.com/og-image.png" />
   <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="es_CO" />
+  <meta property="og:site_name" content="Kevin Gamez" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://kevingamez.com/" />
-  <meta name="twitter:title" content="Kevin Gamez - Founding Engineer at Enttor" />
-  <meta name="twitter:description" content="Founding Engineer at Enttor passionate about creating interactive experiences and solving complex problems through code." />
+  <meta name="twitter:title" content="Kevin Gamez | Founding Engineer at Enttor" />
+  <meta name="twitter:description" content="Full-stack engineer specializing in AI pipelines, browser automation, and deep learning. MSc from Universidad de los Andes." />
   <meta name="twitter:image" content="https://kevingamez.com/og-image.png" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kevin Gamez",
+    "url": "https://kevingamez.com",
+    "jobTitle": "Founding Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Enttor",
+      "url": "https://www.enttor.ai/"
+    },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Universidad de los Andes"
+    },
+    "knowsAbout": ["Full-Stack Development", "Artificial Intelligence", "Deep Learning", "TypeScript", "Python", "React", "Next.js", "PyTorch"],
+    "sameAs": [
+      "https://www.linkedin.com/in/kevin-gamez/",
+      "https://github.com/kevingamez",
+      "https://www.instagram.com/kevin.gamez/"
+    ]
+  }
+  </script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EK3T4PNNY"></script>
@@ -42,6 +78,7 @@ import PortfolioLayout from '../components/PortfolioLayout.tsx';
   <style>
     html {
       scroll-behavior: smooth;
+      scroll-snap-type: y proximity;
     }
 
     body {
@@ -49,6 +86,17 @@ import PortfolioLayout from '../components/PortfolioLayout.tsx';
       padding: 0;
       font-family: 'Geist Sans', sans-serif;
       overflow-x: hidden;
+    }
+
+    section {
+      scroll-snap-align: start;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+        scroll-snap-type: none;
+      }
     }
     
     /* Custom scrollbar */
