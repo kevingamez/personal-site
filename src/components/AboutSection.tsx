@@ -9,7 +9,7 @@ export default function AboutSection() {
 
   // Theme colors
   const colors = {
-    bg: isDarkMode ? '#0f172a' : '#f8fafc',
+    bg: isDarkMode ? 'rgba(15,23,42,0.85)' : 'rgba(248,250,252,0.85)',
     text: isDarkMode ? '#e2e8f0' : '#334155',
     textMuted: isDarkMode ? '#94a3b8' : '#64748b',
     heading: isDarkMode ? '#f1f5f9' : '#0f172a',
@@ -54,6 +54,12 @@ export default function AboutSection() {
   /* typing-effect - only starts when section becomes visible */
   useEffect(() => {
     if (hasAnimated && currentIndex < fullName.length) {
+      const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (prefersReduced) {
+        setDisplayedText(fullName)
+        setCurrentIndex(fullName.length)
+        return
+      }
       const id = setTimeout(() => {
         setDisplayedText((p) => p + fullName[currentIndex])
         setCurrentIndex((p) => p + 1)
