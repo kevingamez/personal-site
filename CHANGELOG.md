@@ -19,3 +19,4 @@
 - FPS ramping animation
 - Google Analytics integration
 - Project card gradient banners
+- Prefers-reduced-motion support
