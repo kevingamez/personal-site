@@ -29,3 +29,4 @@ node_modules/*
 .idea/
 *.swp
 *.swo
+.DS_Store
