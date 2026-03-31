@@ -12,3 +12,6 @@
 - Dark mode support
 - Custom 404 page
 - Accessibility improvements
+
+## v1.0.0
+- Initial release
