@@ -35,3 +35,4 @@
 - localStorage language persistence
 - Canvas-based animation system
 <!-- 4 -->
+<!-- update 6 -->
