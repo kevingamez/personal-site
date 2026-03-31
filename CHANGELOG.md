@@ -8,3 +8,4 @@
 - Interactive 3D hero section
 - Security headers middleware
 - SEO optimizations
+- Responsive navigation dock
