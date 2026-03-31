@@ -11,3 +11,4 @@
 - Responsive navigation dock
 - Dark mode support
 - Custom 404 page
+- Accessibility improvements
