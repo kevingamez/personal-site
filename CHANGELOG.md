@@ -7,3 +7,4 @@
 - Conway's Game of Life background
 - Interactive 3D hero section
 - Security headers middleware
+- SEO optimizations
