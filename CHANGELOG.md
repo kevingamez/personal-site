@@ -9,3 +9,4 @@
 - Security headers middleware
 - SEO optimizations
 - Responsive navigation dock
+- Dark mode support
