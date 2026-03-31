@@ -17,3 +17,4 @@
 - Initial release
 - KG monogram favicon
 - FPS ramping animation
+- Google Analytics integration
