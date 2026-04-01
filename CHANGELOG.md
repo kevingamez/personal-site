@@ -23,3 +23,4 @@
 - Structured data (JSON-LD)
 - Sitemap generation
 - Hreflang tags
+- robots.txt configuration
