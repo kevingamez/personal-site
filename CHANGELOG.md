@@ -20,3 +20,4 @@
 - Google Analytics integration
 - Project card gradient banners
 - Prefers-reduced-motion support
+- Structured data (JSON-LD)
