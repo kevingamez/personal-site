@@ -22,3 +22,4 @@
 - Prefers-reduced-motion support
 - Structured data (JSON-LD)
 - Sitemap generation
+- Hreflang tags
