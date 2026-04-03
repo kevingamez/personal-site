@@ -28,3 +28,4 @@
 - Pointer interaction for painting cells
 - Theme-aware canvas colors
 - Protected logo zone
+- Zustand state management
