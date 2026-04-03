@@ -27,3 +27,4 @@
 - Pattern seeding (Glider Gun, LWSS, MWSS)
 - Pointer interaction for painting cells
 - Theme-aware canvas colors
+- Protected logo zone
