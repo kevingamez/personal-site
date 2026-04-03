@@ -24,3 +24,4 @@
 - Sitemap generation
 - Hreflang tags
 - robots.txt configuration
+- Pattern seeding (Glider Gun, LWSS, MWSS)
