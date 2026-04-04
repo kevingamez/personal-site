@@ -30,3 +30,4 @@
 - Protected logo zone
 - Zustand state management
 - TypeScript strict mode
+- Preact island architecture
