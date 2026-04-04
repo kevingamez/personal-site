@@ -31,3 +31,4 @@
 - Zustand state management
 - TypeScript strict mode
 - Preact island architecture
+- Tailwind CSS dark mode
