@@ -32,3 +32,4 @@
 - TypeScript strict mode
 - Preact island architecture
 - Tailwind CSS dark mode
+- localStorage language persistence
