@@ -29,3 +29,4 @@
 - Theme-aware canvas colors
 - Protected logo zone
 - Zustand state management
+- TypeScript strict mode
