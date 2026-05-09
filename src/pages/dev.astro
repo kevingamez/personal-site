@@ -4,11 +4,6 @@ import { dirname, join } from "node:path"
 
 const buildId = "a7f3c91"
 
-// URL of the code-server playground (deployed separately on Railway).
-// When unset, the "Open in VS Code editor" button is hidden.
-// Set PUBLIC_CODE_SERVER_URL in Vercel env vars (e.g. https://code.kevingamez.com).
-const codeServerUrl = (import.meta.env.PUBLIC_CODE_SERVER_URL as string | undefined) || ""
-
 // ─── Read real project files at build time ───
 // `astro build` and `astro dev` run from the project root.
 const projectRoot = process.cwd()
@@ -365,8 +360,7 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           opacity: 0.4;
         }
       }
-      .titlebar .back,
-      .titlebar .open-cs {
+      .titlebar .back {
         padding: 4px 10px;
         border: 1px solid var(--line-2);
         border-radius: 6px;
@@ -379,17 +373,6 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       .titlebar .back:hover {
         border-color: var(--coral);
         color: var(--coral);
-      }
-      .titlebar .open-cs {
-        background: rgba(217, 105, 68, 0.12);
-        color: var(--coral);
-        border-color: rgba(217, 105, 68, 0.35);
-        font-weight: 500;
-      }
-      .titlebar .open-cs:hover {
-        background: var(--coral);
-        color: #fff;
-        border-color: var(--coral);
       }
 
       .tabsbar {
@@ -1439,18 +1422,6 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       </div>
       <div class="r">
         <span><span class="led"></span>live · build {buildId}</span>
-        {
-          codeServerUrl && (
-            <a
-              class="open-cs"
-              href={codeServerUrl}
-              target="_blank"
-              rel="noopener"
-              title="Open this repo in a real VS Code editor (ephemeral, no auth — edits don't persist)">
-              ⚡ open in vs code →
-            </a>
-          )
-        }
         <a class="back" href="/">← exit dev mode</a>
       </div>
     </div>
