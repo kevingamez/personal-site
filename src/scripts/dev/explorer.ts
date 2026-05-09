@@ -15,15 +15,22 @@ export function initExplorer(): void {
   outlineListEl = document.getElementById('outline-list')
 }
 
+// Each level of nesting indents by this many pixels — vscode's default.
+const INDENT_STEP = 8
+
+function setIndent(el: HTMLElement, depth: number): void {
+  // Base 8px gutter + 8px per nesting level. Workspace root sits flush at 8px.
+  el.style.paddingLeft = 8 + depth * INDENT_STEP + 'px'
+}
+
 function makeFolderItem(name: string, key: string, depth: number): HTMLElement {
   const div = document.createElement('div')
   let cls = 'it fold'
   if (depth === 0) cls += ' workspace-root'
-  if (depth > 0) cls += ' indent'
-  if (depth > 1) cls += ' deep'
   const isOpen = !state.folded.has(key)
   if (!isOpen) cls += ' closed'
   div.className = cls
+  setIndent(div, depth)
   // The workspace root renders as a section header (uppercase, no folder icon,
   // just chevron + bold name) — matches the "KEVINGAMEZ" line in vscode.
   if (depth > 0) {
@@ -56,13 +63,12 @@ function makeFileItem(name: string, pathParts: string[], depth: number): HTMLEle
   }
   const extCls = extMap[ext] || 'ts'
   let cls = 'it file ' + extCls
-  if (depth > 0) cls += ' indent'
-  if (depth > 1) cls += ' deep'
   const rel = pathParts.slice(1).join('/')
   if (rel === state.activeTab) cls += ' active'
   if (isDirty(rel)) cls += ' dirty'
   div.className = cls
   div.dataset.path = rel
+  setIndent(div, depth)
   div.appendChild(makeIcon(name, false))
   const lbl = document.createElement('span')
   lbl.className = 'lbl'
