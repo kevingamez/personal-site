@@ -25,17 +25,70 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
 }
 body {
-  background: var(--bg);
   color: var(--ink);
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  /* macOS-style aurora desktop wallpaper (Antonius Harel, Unsplash, CC0). */
+  background: #0a0a0d url('/dev-bg.jpg') center / cover no-repeat fixed;
+  overflow: hidden;
+}
+.desktop {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 80px;
+}
+@media (max-width: 1400px) {
+  .desktop {
+    padding: 28px 48px;
+  }
+}
+@media (max-width: 880px) {
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  .desktop {
+    padding: 0;
+    height: auto;
+    min-height: 100vh;
+    align-items: stretch;
+  }
+}
+.dev-window {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
   background-image: radial-gradient(rgba(232, 200, 120, 0.025) 1px, transparent 1px);
   background-size: 3px 3px;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.55),
+    0 12px 28px -8px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+@media (max-width: 880px) {
+  .dev-window {
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
 }
 a {
   color: inherit;
