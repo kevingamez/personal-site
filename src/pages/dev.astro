@@ -249,6 +249,11 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <!-- Material Symbols (Google) — UI icons for activity bar etc. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
       :root {
@@ -483,16 +488,30 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         color: var(--ink);
         border-left-color: var(--coral);
       }
-      .activity-bar .ab-item img {
-        width: 22px;
-        height: 22px;
+      .activity-bar .ab-item .material-symbols-outlined {
+        font-size: 22px;
         opacity: 0.78;
-        filter: invert(1) brightness(0.85);
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        transition:
+          opacity 0.15s,
+          font-variation-settings 0.2s;
         pointer-events: none;
       }
-      .activity-bar .ab-item:hover img,
-      .activity-bar .ab-item.on img {
+      .activity-bar .ab-item:hover .material-symbols-outlined,
+      .activity-bar .ab-item.on .material-symbols-outlined {
         opacity: 1;
+      }
+      .activity-bar .ab-item.on .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 1,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+        color: var(--coral);
       }
 
       .explorer {
@@ -1502,24 +1521,23 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
     <div class="app">
       <aside class="activity-bar">
         <button class="ab-item on" data-ab="explorer" title="Explorer (⌃B)" aria-label="Explorer">
-          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/files.svg" alt="" />
+          <span class="material-symbols-outlined">folder_open</span>
         </button>
         <button class="ab-item" data-ab="search" title="Search (⌘P)" aria-label="Search">
-          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/search.svg" alt="" />
+          <span class="material-symbols-outlined">search</span>
         </button>
         <button class="ab-item" data-ab="source-control" title="Source control" aria-label="Source control">
-          <img
-            src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/source-control.svg"
-            alt="" />
+          <span class="material-symbols-outlined">commit</span>
         </button>
         <button class="ab-item" data-ab="extensions" title="Extensions" aria-label="Extensions">
-          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/extensions.svg" alt="" />
+          <span class="material-symbols-outlined">extension</span>
         </button>
         <div class="ab-grow"></div>
+        <button class="ab-item" data-ab="profile" title="Profile" aria-label="Profile">
+          <span class="material-symbols-outlined">account_circle</span>
+        </button>
         <button class="ab-item" data-ab="settings" title="Settings" aria-label="Settings">
-          <img
-            src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/settings-gear.svg"
-            alt="" />
+          <span class="material-symbols-outlined">settings</span>
         </button>
       </aside>
       <aside class="explorer">
