@@ -860,6 +860,13 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         font-size: 11px;
         cursor: pointer;
       }
+      .ed-tabs .et.dirty .x {
+        color: var(--coral);
+        font-size: 12px;
+      }
+      .ed-tabs .et.dirty:hover .x {
+        color: var(--ink-2);
+      }
       .ed-tabs .et:hover .x {
         color: var(--ink-2);
       }
@@ -1396,6 +1403,14 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         flex: 1;
         min-width: 0;
       }
+      /* Dirty-file marker (modified vs saved) */
+      .explorer .it.file.dirty .lbl::after {
+        content: "●";
+        color: #d96944;
+        margin-left: 6px;
+        font-size: 8px;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body>
@@ -1929,6 +1944,52 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         }
         const FS = buildFS()
 
+        // ─── Persistence (localStorage per file path) ───
+        // savedBodies[path] holds the last-saved version of each file (either
+        // hydrated from localStorage on first access, or the build-time pristine
+        // if there's no saved override). Editor body !== savedBodies[path] → dirty.
+        const savedBodies = Object.create(null)
+        const lsKey = (rel) => "dev-edit:" + rel
+        function hydrateSaved(rel) {
+          if (rel in savedBodies) return savedBodies[rel]
+          const node = getNode([PROJECT_NAME, ...rel.split("/")])
+          if (!node || node.type !== "file") return null
+          let stored = null
+          try {
+            stored = localStorage.getItem(lsKey(rel))
+          } catch {
+            // localStorage may be blocked; fall back to pristine
+          }
+          if (stored !== null) {
+            node.body = stored
+            savedBodies[rel] = stored
+          } else {
+            savedBodies[rel] = node.body
+          }
+          return savedBodies[rel]
+        }
+        function isDirty(rel) {
+          const node = getNode([PROJECT_NAME, ...rel.split("/")])
+          if (!node || node.type !== "file") return false
+          // Hydrate if we haven't yet, so saved baseline is correct.
+          if (!(rel in savedBodies)) hydrateSaved(rel)
+          return node.body !== savedBodies[rel]
+        }
+        function saveActive() {
+          if (!activeTab) return
+          const node = getNode([PROJECT_NAME, ...activeTab.split("/")])
+          if (!node || node.type !== "file") return
+          try {
+            localStorage.setItem(lsKey(activeTab), node.body)
+            savedBodies[activeTab] = node.body
+            showToast("✓ saved · " + activeTab)
+          } catch {
+            showToast("⚠ couldn't save (storage blocked)")
+          }
+          // Refresh dirty indicators
+          renderEditor()
+          renderExplorer()
+        }
         // ─── Path utilities ───
         function resolvePath(p) {
           if (p === undefined) return [...cwd]
@@ -2054,6 +2115,8 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           if (!node || node.type !== "file") return false
           if (parts[0] !== PROJECT_NAME) return false
           const rel = parts.slice(1).join("/")
+          // Apply any persisted local edits before showing the file
+          hydrateSaved(rel)
           if (!openTabs.includes(rel)) openTabs.push(rel)
           activeTab = rel
           renderEditor()
@@ -2075,8 +2138,12 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           for (const t of openTabs) {
             const name = t.split("/").pop()
             const div = document.createElement("div")
-            div.className = "et" + (t === activeTab ? " on" : "")
-            div.innerHTML = esc(name) + ' <span class="x">×</span>'
+            const dirty = isDirty(t)
+            div.className = "et" + (t === activeTab ? " on" : "") + (dirty ? " dirty" : "")
+            // Modified files show a coral dot; clean files show ×.
+            // Both stay clickable to close the tab.
+            const closer = dirty ? "●" : "×"
+            div.innerHTML = esc(name) + ' <span class="x">' + closer + "</span>"
             div.addEventListener("click", (e) => {
               if (e.target.classList && e.target.classList.contains("x")) {
                 closeTab(t)
@@ -2114,12 +2181,23 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
               window.addEventListener("cm-ready", mountWhenReady, { once: true })
               return
             }
+            // Track which path the editor is showing so onChange edits the right node
+            const mountedPath = activeTab
+            const mountedNode = node
+            let lastDirty = isDirty(mountedPath)
             window.__cm.mount(edBodyEl, {
-              name: activeTab,
-              lang: node.lang,
-              body: node.body,
+              name: mountedPath,
+              lang: mountedNode.lang,
+              body: mountedNode.body,
               onChange: (newDoc) => {
-                node.body = newDoc
+                mountedNode.body = newDoc
+                const nowDirty = newDoc !== savedBodies[mountedPath]
+                if (nowDirty !== lastDirty) {
+                  lastDirty = nowDirty
+                  // Refresh tab + explorer dirty markers without re-mounting CM
+                  refreshTabsDirty()
+                  refreshExplorerDirty()
+                }
               },
               onCursor: (line, col) => updateStatusPos(line, col),
             })
@@ -2129,6 +2207,28 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         function updateStatusPos(line, col) {
           const el = document.getElementById("status-pos")
           if (el) el.textContent = "UTF-8 · LF · Ln " + line + ", Col " + (col || 1)
+        }
+        // Update modified markers without remounting the editor (which would
+        // reset undo history and cursor position).
+        function refreshTabsDirty() {
+          if (!edTabsEl) return
+          const tabs = edTabsEl.querySelectorAll(".et")
+          tabs.forEach((tab, i) => {
+            const path = openTabs[i]
+            if (!path) return
+            const dirty = isDirty(path)
+            tab.classList.toggle("dirty", dirty)
+            const x = tab.querySelector(".x")
+            if (x) x.textContent = dirty ? "●" : "×"
+          })
+        }
+        function refreshExplorerDirty() {
+          if (!treeEl) return
+          treeEl.querySelectorAll(".it.file").forEach((el) => {
+            const path = el.dataset.path
+            if (!path) return
+            el.classList.toggle("dirty", isDirty(path))
+          })
         }
 
         // ─── Explorer (file tree + outline) ───
@@ -2268,7 +2368,9 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           if (depth > 1) cls += " deep"
           const rel = pathParts.slice(1).join("/")
           if (rel === activeTab) cls += " active"
+          if (isDirty(rel)) cls += " dirty"
           div.className = cls
+          div.dataset.path = rel
           div.appendChild(makeIcon(name, false))
           const lbl = document.createElement("span")
           lbl.className = "lbl"
@@ -3107,7 +3209,7 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
             else openPalette()
           } else if (k === "s") {
             e.preventDefault()
-            showToast(activeTab ? "✓ saved · " + activeTab : "✓ saved")
+            saveActive()
           }
         })
 
