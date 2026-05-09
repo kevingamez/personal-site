@@ -1,6 +1,6 @@
 # personal-site
 
-This is the repo behind **kevingamez.com**. A static Astro site with two faces: a calm editorial home (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono, hero with Conway's Game of Life), and a `/dev` page that's basically VS Code in your browser — file tree, terminal, real CodeMirror editor, command palette.
+This is the repo behind **kevingamez.com**. A static Astro site with two faces: a calm editorial home (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono, hero with Conway's Game of Life), and a `/dev` page that's basically VS Code in your browser · file tree, terminal, real CodeMirror editor, command palette.
 
 The home is what HR and clients see. `/dev` is what other engineers see. Same person, two registers.
 
@@ -41,7 +41,7 @@ Pure static. No SSR. Deploys on Vercel from `main`. Free tier.
 - Not server-rendered. No Node process running anywhere. The whole site is pre-rendered HTML + bundled JS.
 - Not a CMS. All copy lives in `src/content/*.ts` as typed objects. Translating is editing two files.
 - Not bilingual via i18next or middleware. EN and ES are two distinct routes that import the same components and pass different `t` props.
-- Not a real IDE. `/dev` is a static showcase — code edits land in `localStorage`, never in the actual repo. The terminal is a fake shell with a virtual filesystem.
+- Not a real IDE. `/dev` is a static showcase · code edits land in `localStorage`, never in the actual repo. The terminal is a fake shell with a virtual filesystem.
 
 ### Build pipeline
 
@@ -64,7 +64,7 @@ The data is then serialized to JSON and inlined into the page as `<script id="de
 
 Editorial layout. Each section is a component under `src/components/home/`. Section ordering is hard-coded in the page, copy comes from `src/content/home-{en,es}.ts`.
 
-The Conway hero is a `<canvas>` driven by `src/scripts/home/conway.ts` — 64×64 toroidal grid, click to seed, B3/S23 rules, FPS-throttled, respects `prefers-reduced-motion`. The contribution-graph mock under "GitHub" comes from `src/scripts/home/contrib.ts`. Live-ish stats ("commits this month", language breakdown) come from `gh-stats.ts` which calls a tiny build-time helper.
+The Conway hero is a `<canvas>` driven by `src/scripts/home/conway.ts` · 64×64 toroidal grid, click to seed, B3/S23 rules, FPS-throttled, respects `prefers-reduced-motion`. The contribution-graph mock under "GitHub" comes from `src/scripts/home/contrib.ts`. Live-ish stats ("commits this month", language breakdown) come from `gh-stats.ts` which calls a tiny build-time helper.
 
 Two image assets matter: `public/kevin.jpg` (the About portrait, 1200×1500, 4:5 cropped via `object-fit: cover`) and `public/og-image.svg` (Open Graph preview, 1200×630).
 
@@ -74,14 +74,14 @@ This is its own tiny IDE that mimics VS Code's chrome closely. Layout:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ titlebar (kevin@gamez ~/dev — build a7f3c91)                    │
+│ titlebar (kevin@gamez ~/dev · build a7f3c91)                    │
 ├─────────────────────────────────────────────────────────────────┤
 │ workspace tabs (workspace / scratchpad / changelog)             │
 ├──┬──────────┬───────────────────────────────────────┬───────────┤
 │  │          │ editor tabs (file icons + name)       │           │
 │A │ explorer ├───────────────────────────────────────┤  sidebar  │
 │B │  tree    │ CodeMirror 6 (vscodeDark + coral)     │  (stats,  │
-│  │          │ — liquid glass surface, blur 40px     │   tools,  │
+│  │          │ · liquid glass surface, blur 40px     │   tools,  │
 │  │          │                                       │   repos)  │
 │  │          ├───────────────────────────────────────┤           │
 │  │          │ terminal (zsh / build / tail)         │           │
@@ -97,7 +97,7 @@ What you can do:
 | **Activity bar (left)** | Explorer / Search / Source control / Extensions / Settings                                                                              | Material Symbols icons. Search opens the palette. Other items are visual-only.                                                                                                                                                            |
 | **Explorer**            | VS Code-rhythm file tree with PKief Material Icon Theme                                                                                 | 22px rows, 8px-per-level indent, full-width selection, SVG chevrons that rotate on open. Workspace root renders as an uppercase section header.                                                                                           |
 | **Editor**              | Real code editor with VS Code Dark+ syntax                                                                                              | CodeMirror 6 with `@uiw/codemirror-theme-vscode` + a coral theme overlay. Languages loaded lazily per file via Compartment. Liquid Glass panel (`backdrop-filter: blur(40px) saturate(180%)`) over an ambient coral/cool radial gradient. |
-| **Terminal**            | 3 tabs — `zsh` is a real shell on the in-memory FS, `build:watch` streams a fake Vite log, `tail -f prod.log` streams JSONL access logs | All animated client-side, capped at 200 lines. zsh supports `ls cd cat tree mkdir touch rm rmdir mv echo history clear` + `vim/open` (opens file in editor).                                                                              |
+| **Terminal**            | 3 tabs · `zsh` is a real shell on the in-memory FS, `build:watch` streams a fake Vite log, `tail -f prod.log` streams JSONL access logs | All animated client-side, capped at 200 lines. zsh supports `ls cd cat tree mkdir touch rm rmdir mv echo history clear` + `vim/open` (opens file in editor).                                                                              |
 | **Command palette**     | ⌘P fuzzy file search                                                                                                                    | Subsequence match with gap penalty. ↑/↓ navigate, ↵ open, esc close.                                                                                                                                                                      |
 | **Tabs**                | File icons + name + close × (becomes ● when dirty)                                                                                      | Icon swap is the same VS Code "modified" pattern.                                                                                                                                                                                         |
 | **Save**                | ⌘S persists current file's edits to localStorage                                                                                        | Key: `dev-edit:<path>`. On reload, hydrated back into the editor. Modified marker (●) follows.                                                                                                                                            |
@@ -208,7 +208,7 @@ src/
 │   └── dev/                    # 1 css per /dev pane (base, chrome, editor, terminal, …)
 │
 ├── lib/                        # Shared typed config (build + runtime)
-└── middleware.ts               # Security headers (mirror of vercel.json — dormant on static deploys)
+└── middleware.ts               # Security headers (mirror of vercel.json · dormant on static deploys)
 ```
 
 ### Where to make changes
@@ -227,7 +227,7 @@ src/
 | Change indent / chevron  | `src/styles/dev/explorer.css` + `src/scripts/dev/explorer.ts`                                                                                            |
 | Add a security header    | **Both** `vercel.json` AND `src/middleware.ts`                                                                                                           |
 | New analytics event      | `src/scripts/lib/analytics.ts` (typed)                                                                                                                   |
-| OG image                 | `public/og-image.svg` (1200×630) — update both `home.ts` meta entries                                                                                    |
+| OG image                 | `public/og-image.svg` (1200×630) · update both `home.ts` meta entries                                                                                    |
 | About portrait           | `public/kevin.jpg` (4:5, 1200×1500 recommended)                                                                                                          |
 | New env var              | `.env.example` + read in `src/data/*` (build) or expose as `PUBLIC_*` for client                                                                         |
 
@@ -235,15 +235,15 @@ src/
 
 | What                  | How                                                                                       |
 | --------------------- | ----------------------------------------------------------------------------------------- |
-| Static site generator | Astro 5 (no SSR adapter — pure pre-rendered HTML)                                         |
+| Static site generator | Astro 5 (no SSR adapter · pure pre-rendered HTML)                                         |
 | Editor                | CodeMirror 6 (`@codemirror/{view,state,commands,…}`) + `@uiw/codemirror-theme-vscode`     |
 | Lang packages         | `@codemirror/lang-{javascript,markdown,json,css,html,rust}` (lazy-loaded via Compartment) |
 | Icons                 | Material Icon Theme (PKief, file/folder icons) + Material Symbols (Google, UI chrome)     |
 | Fonts                 | Instrument Serif + Inter Tight + JetBrains Mono + IBM Plex Mono (Google Fonts)            |
 | Sitemap               | `@astrojs/sitemap`                                                                        |
 | Lint / format         | Prettier + `prettier-plugin-astro`                                                        |
-| Type-check            | `astro check` (`@astrojs/check`) — strict TS                                              |
-| Tests                 | Playwright smoke (`tests/`) — visits routes, asserts no console errors                    |
+| Type-check            | `astro check` (`@astrojs/check`) · strict TS                                              |
+| Tests                 | Playwright smoke (`tests/`) · visits routes, asserts no console errors                    |
 | Hosting               | Vercel (static, edge CDN, custom headers in `vercel.json`)                                |
 | CI                    | GitHub Actions: `check` + `smoke` + `lighthouse`                                          |
 
@@ -273,7 +273,7 @@ npm test               # playwright smoke
 npm run test:install   # one-time: install playwright chromium
 ```
 
-Run `check` + `format:check` + `build` + `test` before pushing — same gate CI uses.
+Run `check` + `format:check` + `build` + `test` before pushing · same gate CI uses.
 
 ## Conventions
 
@@ -281,7 +281,7 @@ Run `check` + `format:check` + `build` + `test` before pushing — same gate CI 
 - **No inline JS** beyond JSON-LD, GA, and `<script id="dev-data">` carriers. All client logic is bundled via `<script>import '@/scripts/...';</script>`.
 - **EN and ES are 1:1 mirrors.** Whenever you add a section, copy key, or component to one, add it to the other in the same commit.
 - **`prefers-reduced-motion`** is respected by every animated element (Conway, sparkline, request log, build stream, terminal cursor). Test it.
-- **Security headers** live in `vercel.json`. `src/middleware.ts` mirrors them as a fallback for any future SSR adapter — keep both in sync when adding a third-party host.
+- **Security headers** live in `vercel.json`. `src/middleware.ts` mirrors them as a fallback for any future SSR adapter · keep both in sync when adding a third-party host.
 - **Don't fight the formatter.** Run `npm run format` instead of hand-formatting.
 - See `CLAUDE.md` for the Claude-Code-specific notes.
 
@@ -292,18 +292,18 @@ Run `check` + `format:check` + `build` + `test` before pushing — same gate CI 
 | Job            | What                                                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | **check**      | `format:check` → `astro check` → `astro build`                                                                                        |
-| **smoke**      | `playwright test` against the built `preview` server. Visits `/`, `/es/`, `/dev`, a 404 — fails on console errors or render breakage. |
-| **lighthouse** | `.lighthouserc.json` budgets — performance, a11y, SEO, best-practices. Blocks merges that regress.                                    |
+| **smoke**      | `playwright test` against the built `preview` server. Visits `/`, `/es/`, `/dev`, a 404 · fails on console errors or render breakage. |
+| **lighthouse** | `.lighthouserc.json` budgets · performance, a11y, SEO, best-practices. Blocks merges that regress.                                    |
 
 ## Deployment
 
-Vercel deploys `main` automatically. Build command: `npm run build`. Output: `dist/`. No SSR adapter — fully pre-rendered.
+Vercel deploys `main` automatically. Build command: `npm run build`. Output: `dist/`. No SSR adapter · fully pre-rendered.
 
 `vercel.json` configures:
 
-- **Security headers** (CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy) — mirror of `src/middleware.ts`.
+- **Security headers** (CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy) · mirror of `src/middleware.ts`.
 - **Immutable cache** for `/_astro/*` (1-year max-age, hash-busted by Astro).
-- **Redirects** (none currently — placeholder for future).
+- **Redirects** (none currently · placeholder for future).
 
 Custom domain: `kevingamez.com`. Free tier covers this comfortably.
 
@@ -319,9 +319,9 @@ Stuff that bit me. Read before you touch these areas.
 
 **CodeMirror 6**
 
-- Adding a new lang package is async. Mount happens before the lang loads. The Compartment in `dev-editor.ts` reconfigures the lang once it's ready — tests need to wait on idle.
+- Adding a new lang package is async. Mount happens before the lang loads. The Compartment in `dev-editor.ts` reconfigures the lang once it's ready · tests need to wait on idle.
 - The `oneDark`/`vscodeDark` themes set their own background. Our liquid-glass panel needs `backgroundColor: 'transparent'` on `&` AND on `.cm-scroller` AND on `.cm-gutters`, otherwise opaque chunks bleed through.
-- Search panel inputs need explicit color/background overrides — the default ones go invisible on dark.
+- Search panel inputs need explicit color/background overrides · the default ones go invisible on dark.
 
 **Astro scoped CSS**
 
