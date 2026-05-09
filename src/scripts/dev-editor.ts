@@ -32,7 +32,8 @@ import { json } from '@codemirror/lang-json'
 import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import { rust } from '@codemirror/lang-rust'
-import { materialDark } from '@uiw/codemirror-theme-material'
+// VS Code Dark+ theme — same syntax colors as the real editor
+import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 
 type MountOpts = {
   name: string
@@ -167,7 +168,7 @@ function basicExtensions(name: string, lang: string | undefined): Extension[] {
       ...completionKeymap,
       indentWithTab,
     ]),
-    materialDark,
+    vscodeDark,
     coralTheme,
     ...langForFile(name, lang),
   ]
