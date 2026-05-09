@@ -1141,8 +1141,10 @@ const buildId = "a7f3c91"
         vertical-align: middle;
         pointer-events: none;
       }
+      /* Files have no chevron — push their icon right by chevron-width + gap so
+         file icons line up with folder icons at the same depth (vscode rhythm). */
       .explorer .it.file > .ico {
-        margin-left: 2px;
+        margin-left: 18px;
       }
       .explorer .it .lbl {
         white-space: nowrap;
