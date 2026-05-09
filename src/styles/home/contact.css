@@ -44,6 +44,6 @@
   transition: all 0.2s;
 }
 .contact-channels a:hover {
-  color: var(--coral);
+  color: var(--coral-strong);
   border-color: var(--coral);
 }
