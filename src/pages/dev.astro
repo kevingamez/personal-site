@@ -90,22 +90,27 @@ const devDataJson = serializeDevData(await buildDevData())
     </style>
   </head>
   <body>
-    <Titlebar buildId={buildId} />
+    <div class="desktop">
+      <div class="dev-window">
+        <Titlebar buildId={buildId} />
 
-    <div class="app">
-      <ActivityBar />
-      <Explorer />
+        <div class="app">
+          <ActivityBar />
+          <Explorer />
 
-      <main class="center">
-        <EditorPanel />
-        <TerminalPanel />
-        <Workspaces />
-      </main>
+          <main class="center">
+            <EditorPanel />
+            <TerminalPanel />
+            <Workspaces />
+          </main>
 
-      <Sidebar />
+          <Sidebar />
+        </div>
+
+        <StatusBar />
+      </div>
     </div>
 
-    <StatusBar />
     <CommandPalette />
 
     <script id="dev-data" type="application/json" is:inline set:html={devDataJson} />

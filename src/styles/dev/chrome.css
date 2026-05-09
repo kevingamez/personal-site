@@ -127,7 +127,8 @@
 }
 
 .app {
-  height: calc(100vh - 36px - 30px - 22px);
+  flex: 1;
+  min-height: 0;
   display: grid;
   grid-template-columns: 44px 230px 1fr 320px;
 }
@@ -139,10 +140,22 @@
 @media (max-width: 880px) {
   .app {
     grid-template-columns: 1fr;
+    flex: none;
+    overflow: visible;
     height: auto;
-    overflow: auto;
   }
   .activity-bar {
     display: none;
+  }
+  .explorer {
+    max-height: 320px;
+    overflow: auto;
+    border-bottom: 1px solid var(--line);
+  }
+  .center {
+    min-height: 60vh;
+  }
+  .sidebar {
+    border-top: 1px solid var(--line);
   }
 }
