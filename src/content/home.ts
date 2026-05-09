@@ -164,6 +164,21 @@ export interface HomeStrings {
     titleHtml: string
     blurb: string
   }
+  console: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    promptLabel: string
+    streaming: string
+    greeting: string
+    placeholder: string
+    suggest1: string
+    suggest2: string
+    suggest3: string
+    suggest4: string
+    rateLimitMsg: string
+    errorMsg: string
+  }
   contact: {
     titleHtml: string
     body: string
