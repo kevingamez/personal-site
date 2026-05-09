@@ -1,5 +1,8 @@
 import { defineMiddleware } from 'astro:middleware'
 
+// Static deploys ignore this file. The canonical security headers live in
+// `vercel.json` and are applied at the edge. This middleware is kept as a
+// fallback for if/when an SSR adapter is wired up.
 export const onRequest = defineMiddleware(async (_context, next) => {
   const res = await next()
 
@@ -17,6 +20,8 @@ export const onRequest = defineMiddleware(async (_context, next) => {
       "img-src 'self' data: https:",
       "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com",
       "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
     ].join('; ')
   )
 
