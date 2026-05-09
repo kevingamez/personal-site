@@ -618,6 +618,24 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       .explorer .it .dot.warn {
         background: var(--yellow);
       }
+      /* Workspace root renders as a vscode-style section header */
+      .explorer .it.workspace-root {
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        height: 22px;
+        padding: 0 20px 0 8px;
+      }
+      .explorer .it.workspace-root .lbl {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .explorer .it.workspace-root:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
 
       .center {
         display: grid;

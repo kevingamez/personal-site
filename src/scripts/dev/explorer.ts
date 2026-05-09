@@ -18,12 +18,17 @@ export function initExplorer(): void {
 function makeFolderItem(name: string, key: string, depth: number): HTMLElement {
   const div = document.createElement('div')
   let cls = 'it fold'
+  if (depth === 0) cls += ' workspace-root'
   if (depth > 0) cls += ' indent'
   if (depth > 1) cls += ' deep'
   const isOpen = !state.folded.has(key)
   if (!isOpen) cls += ' closed'
   div.className = cls
-  div.appendChild(makeIcon(name, true, isOpen))
+  // The workspace root renders as a section header (uppercase, no folder icon,
+  // just chevron + bold name) — matches the "KEVINGAMEZ" line in vscode.
+  if (depth > 0) {
+    div.appendChild(makeIcon(name, true, isOpen))
+  }
   const lbl = document.createElement('span')
   lbl.className = 'lbl'
   lbl.textContent = name
@@ -87,8 +92,15 @@ function makeFileItem(name: string, pathParts: string[], depth: number): HTMLEle
 }
 
 function walkDir(node: DirNode, pathParts: string[], depth: number, container: HTMLElement): void {
-  // Preserve declaration order — the FS is hand-authored to match the design.
-  const entries = Object.entries(node.children)
+  // VS Code rhythm: folders first (case-insensitive alphabetical),
+  // then files (case-insensitive alphabetical). README.md naturally lands
+  // near the end of the file group.
+  const entries = Object.entries(node.children).sort((a, b) => {
+    const [an, av] = a
+    const [bn, bv] = b
+    if (av.type !== bv.type) return av.type === 'dir' ? -1 : 1
+    return an.localeCompare(bn, undefined, { sensitivity: 'base' })
+  })
   for (const [name, child] of entries) {
     const childPath = [...pathParts, name]
     const key = childPath.join('/')
