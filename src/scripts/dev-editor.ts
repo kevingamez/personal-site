@@ -88,7 +88,8 @@ const coralTheme = EditorView.theme(
       height: '100%',
       fontFamily: '"IBM Plex Mono", "JetBrains Mono", monospace',
       fontSize: '12.5px',
-      backgroundColor: 'var(--bg)',
+      // Transparent so the .editor surface (liquid glass) shows through
+      backgroundColor: 'transparent',
       color: 'var(--ink-2)',
     },
     '.cm-content': {
@@ -96,10 +97,10 @@ const coralTheme = EditorView.theme(
       caretColor: 'var(--coral)',
       padding: '10px 0',
     },
-    '.cm-scroller': { fontFamily: 'inherit', overflow: 'auto' },
+    '.cm-scroller': { fontFamily: 'inherit', overflow: 'auto', backgroundColor: 'transparent' },
     '.cm-gutters': {
-      backgroundColor: 'var(--bg)',
-      borderRight: '1px solid var(--line)',
+      backgroundColor: 'transparent',
+      borderRight: '1px solid rgba(255, 255, 255, 0.06)',
       color: '#3a3a44',
     },
     '.cm-activeLine': { backgroundColor: 'rgba(217, 105, 68, 0.05)' },
