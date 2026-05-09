@@ -5,45 +5,49 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Development Commands
 
 ```bash
-npm run dev      # Start dev server at localhost:4321
-npm run build    # Build static site to ./dist/
-npm run preview  # Preview production build locally
+npm run dev           # Start dev server at localhost:4321
+npm run build         # Build static site to ./dist/
+npm run preview       # Preview production build locally
+npm run check         # Type-check .astro and .ts (astro check)
+npm run format        # Apply Prettier to all files
+npm run format:check  # Verify formatting in CI / pre-deploy
 ```
 
 ## Architecture Overview
 
-This is a **personal portfolio site** built with Astro, featuring an interactive Conway's Game of Life background and bilingual support (English/Spanish).
+Personal portfolio site built with **Astro 5**, deployed as a static build on **Vercel**. Bilingual (EN/ES). Editorial visual design (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono).
 
 ### Tech Stack
-- **Astro 5** - Static site generation with island architecture
-- **Preact** - Lightweight React alternative for interactive components
-- **Zustand** - State management (game state + i18n)
-- **Tailwind CSS** - Utility-first styling with dark mode support
-- **TypeScript** - Strict mode enabled
 
-### Key Directories
-- `src/pages/` - File-based routing (`index.astro` = EN, `es/index.astro` = ES)
-- `src/components/` - Preact components (all interactive elements)
-- `src/store/` - Zustand stores (`gameStore.ts`, `i18nStore.ts`)
-- `src/i18n/locales/` - Translation JSON files (`en.json`, `es.json`)
-- `src/lib/utils.ts` - Utility functions (`cn()` for class merging)
+- **Astro 5** — static site generation, no SSR adapter
+- **Preact** — installed but currently no islands; pages are pure `.astro`
+- **TypeScript** — strict mode (`astro/tsconfigs/strict`)
+- **Prettier** + `prettier-plugin-astro` — formatting
 
-### Component Hydration
-The main `PortfolioLayout.tsx` component uses `client:load` directive in Astro pages, making it interactive immediately. Child Preact components inherit this hydration.
+No CSS framework: each page is self-contained with inline `<style>` blocks scoped to the page (Astro auto-scopes them with `data-astro-cid-*`).
 
-### State Management Pattern
-Zustand stores have custom Preact hooks (`useGameStore()`, `useI18n()`) that sync store changes to component state using `useState + useEffect`.
+### Pages
 
-### Game of Life Implementation
-`GameOfLifeIsland.tsx` is a Canvas-based Conway's Game of Life with:
-- Pattern seeding (Glider Gun, LWSS, MWSS, etc.)
-- Pointer interaction for painting cells
-- Protected logo zone
-- Theme-aware colors
-- FPS ramping (1→10 FPS)
+- `src/pages/index.astro` — English home (full design, Conway hero)
+- `src/pages/es/index.astro` — Spanish mirror
+- `src/pages/dev.astro` — terminal/IDE-styled "dev mode" view
+- `src/pages/404.astro` — themed not-found
 
-### i18n System
-Translation keys use dot-notation (e.g., `t('nav.home')`). Language preference persists to localStorage. The `/es` route sets Spanish as default.
+### Interactivity
+
+All client logic is **inline `<script is:inline>`** in each page (no Preact islands right now). The Conway Game of Life canvas, GitHub contribution graph, dev-mode sparkline / heatmap / request-log / terminal REPL are all vanilla JS in the page itself. If new features need shared state, prefer adding a Preact island under `src/components/` and importing it with a `client:` directive over reintroducing a global store.
+
+### Middleware
+
+`src/middleware.ts` sets security headers (CSP, X-Frame-Options, etc). It runs only when the project is built with an SSR adapter; for the current static deploy on Vercel, it is dormant — set headers via `vercel.json` if you need them at the edge.
 
 ### Path Aliases
-TypeScript configured with `@/*` alias pointing to `./src/*`.
+
+`@/*` → `./src/*` (configured in `tsconfig.json`).
+
+### Conventions
+
+- Prettier config: 2-space indent, single quotes (TS/JS), double quotes (.astro/HTML), semicolons off in TS.
+- Run `npm run check` and `npm run format:check` before pushing.
+- Inline scripts use `is:inline` so Astro doesn't bundle them — keep the GoL, contrib graph, and terminal logic self-contained.
+- When editing the design verbatim from the prototype, keep markup whitespace as Prettier produces it; don't fight the formatter.
