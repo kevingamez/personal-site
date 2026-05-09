@@ -334,7 +334,7 @@ const buildId = "a7f3c91"
       }
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 460px) 1.4fr;
+        grid-template-columns: minmax(0, 1fr) 1.25fr;
         gap: 56px;
         align-items: center;
         width: 100%;
@@ -945,6 +945,167 @@ const buildId = "a7f3c91"
         aspect-ratio: 1/1;
         background: var(--cream-2);
         border: 1px solid rgba(250, 247, 240, 0.18);
+      }
+
+      .gh-banner {
+        position: relative;
+        margin-bottom: 36px;
+        padding: 40px 36px 32px;
+        background: var(--ink);
+        color: var(--cream);
+        border-radius: 14px;
+        box-shadow:
+          6px 6px 0 var(--coral),
+          0 0 0 1px var(--ink);
+        overflow: hidden;
+      }
+      .gh-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(250, 247, 240, 0.06) 1px, transparent 1px);
+        background-size: 24px 24px;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .gh-banner-cap {
+        position: relative;
+        z-index: 1;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--coral);
+        margin-bottom: 28px;
+      }
+      .gh-banner-cap::before {
+        content: "";
+        display: inline-block;
+        width: 22px;
+        height: 1px;
+        background: var(--coral);
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+      .gh-stats-row {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-bottom: 32px;
+      }
+      @media (max-width: 700px) {
+        .gh-stats-row {
+          grid-template-columns: 1fr;
+          gap: 22px;
+        }
+      }
+      .gh-stat {
+        display: flex;
+        flex-direction: column;
+        border-left: 2px solid var(--coral);
+        padding-left: 18px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .gh-stat:nth-child(2) {
+        transition-delay: 0.1s;
+      }
+      .gh-stat:nth-child(3) {
+        transition-delay: 0.2s;
+      }
+      .gh-banner-on .gh-stat {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .gh-stat-num {
+        font-family: "Instrument Serif", serif;
+        font-weight: 400;
+        font-size: clamp(56px, 6vw, 88px);
+        line-height: 0.95;
+        letter-spacing: -0.025em;
+        color: var(--cream);
+        font-variant-numeric: tabular-nums;
+      }
+      .gh-stat-lbl {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--coral);
+        margin-top: 10px;
+      }
+      .gh-stat-sub {
+        font-size: 13px;
+        color: rgba(250, 247, 240, 0.55);
+        margin-top: 4px;
+      }
+      .gh-langbar {
+        position: relative;
+        z-index: 1;
+      }
+      .gh-langbar-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 12px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(250, 247, 240, 0.55);
+      }
+      .gh-langbar-head b {
+        color: var(--cream);
+        font-weight: 600;
+      }
+      .gh-langbar-track {
+        display: flex;
+        width: 100%;
+        height: 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(250, 247, 240, 0.07);
+      }
+      .gh-langbar-seg {
+        display: block;
+        height: 100%;
+        width: 0;
+        transition: width 1.5s cubic-bezier(0.2, 0.8, 0.3, 1);
+      }
+      .gh-langbar-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 22px;
+        margin-top: 16px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: rgba(250, 247, 240, 0.78);
+      }
+      .gh-langbar-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .gh-langbar-legend i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .gh-stat {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .gh-langbar-seg {
+          transition: none;
+        }
       }
 
       .gh-grid {
@@ -1646,8 +1807,54 @@ const buildId = "a7f3c91"
             <h2 class="sec-title">Código que dejo <i>a la vista.</i></h2>
           </div>
           <p class="sec-blurb">
-            El gráfico de contribuciones es un año de actividad. Los repos abajo son los que mantengo de verdad.
+            Los números, los lenguajes y los repos. El gráfico de contribuciones es decorativo; el resto es real.
           </p>
+        </div>
+        <div class="gh-banner">
+          <div class="gh-banner-cap">github.com/kevingamez · snapshot en vivo</div>
+          <div class="gh-stats-row">
+            <div class="gh-stat">
+              <div class="gh-stat-num" data-target="28" data-format="plain">0</div>
+              <div class="gh-stat-lbl">repos públicos</div>
+              <div class="gh-stat-sub">universidad, side projects, ships del trabajo</div>
+            </div>
+            <div class="gh-stat">
+              <div class="gh-stat-num" data-target="8" data-format="plain">0</div>
+              <div class="gh-stat-lbl">lenguajes embarcados</div>
+              <div class="gh-stat-sub">TypeScript va primero · Python segundo</div>
+            </div>
+            <div class="gh-stat">
+              <div class="gh-stat-num" data-target="7" data-format="plain">0</div>
+              <div class="gh-stat-lbl">años en github</div>
+              <div class="gh-stat-sub">desde abril de 2019</div>
+            </div>
+          </div>
+          <div class="gh-langbar">
+            <div class="gh-langbar-head">
+              <span>mezcla de lenguajes</span>
+              <span><b>repos públicos</b></span>
+            </div>
+            <div class="gh-langbar-track">
+              <span class="gh-langbar-seg" data-pct="33" style="background:#3178c6"></span>
+              <span class="gh-langbar-seg" data-pct="27" style="background:#3572A5"></span>
+              <span class="gh-langbar-seg" data-pct="7" style="background:#F05138"></span>
+              <span class="gh-langbar-seg" data-pct="7" style="background:#f1e05a"></span>
+              <span class="gh-langbar-seg" data-pct="7" style="background:#00B4AB"></span>
+              <span class="gh-langbar-seg" data-pct="7" style="background:#384d54"></span>
+              <span class="gh-langbar-seg" data-pct="7" style="background:#563d7c"></span>
+              <span class="gh-langbar-seg" data-pct="5" style="background:#DA5B0B"></span>
+            </div>
+            <div class="gh-langbar-legend">
+              <span><i style="background:#3178c6"></i>TypeScript · 33%</span>
+              <span><i style="background:#3572A5"></i>Python · 27%</span>
+              <span><i style="background:#F05138"></i>Swift · 7%</span>
+              <span><i style="background:#f1e05a"></i>JavaScript · 7%</span>
+              <span><i style="background:#00B4AB"></i>Dart · 7%</span>
+              <span><i style="background:#384d54"></i>Dockerfile · 7%</span>
+              <span><i style="background:#563d7c"></i>CSS · 7%</span>
+              <span><i style="background:#DA5B0B"></i>Jupyter · 5%</span>
+            </div>
+          </div>
         </div>
         <div class="gh-grid">
           <div class="gh-card">
