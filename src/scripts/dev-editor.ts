@@ -158,7 +158,7 @@ let view: EditorView | null = null
 const langCompartment = new Compartment()
 const langCache = new Map<LangKey, Extension[]>()
 
-function baseExtensions(): Extension[] {
+function baseExtensions(name: string): Extension[] {
   return [
     lineNumbers(),
     highlightActiveLineGutter(),
@@ -182,6 +182,7 @@ function baseExtensions(): Extension[] {
     ]),
     vscodeDark,
     coralTheme,
+    EditorView.contentAttributes.of({ 'aria-label': `Code editor — ${name}` }),
   ]
 }
 
@@ -208,7 +209,7 @@ function mount(container: HTMLElement, opts: MountOpts): EditorView {
     view = null
   }
   container.innerHTML = ''
-  const exts: Extension[] = [...baseExtensions(), langCompartment.of([])]
+  const exts: Extension[] = [...baseExtensions(opts.name), langCompartment.of([])]
   if (opts.readOnly) exts.push(EditorState.readOnly.of(true))
   exts.push(
     EditorView.updateListener.of((u) => {

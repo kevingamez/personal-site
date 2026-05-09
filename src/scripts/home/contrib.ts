@@ -73,6 +73,7 @@ export function initContribGraph(): void {
       el.style.setProperty('--d', String(d))
       el.dataset.count = String(count)
       el.dataset.lvl = String(lvl)
+      el.setAttribute('role', 'img')
       el.setAttribute('aria-label', `${count} contribution${count === 1 ? '' : 's'}`)
       g.appendChild(el)
     }

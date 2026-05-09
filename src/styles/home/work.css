@@ -41,7 +41,7 @@
 .proj-num {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: var(--coral);
+  color: var(--coral-strong);
   letter-spacing: 0.12em;
   margin-bottom: 12px;
   display: flex;
@@ -64,6 +64,10 @@
 .proj.featured .proj-name {
   font-size: 44px;
 }
+.proj.featured .proj-num,
+.proj.featured .proj-link {
+  color: #ff8a66;
+}
 .proj-name i {
   color: var(--coral);
   font-style: italic;
@@ -81,7 +85,7 @@
 .proj-link {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  color: var(--coral);
+  color: var(--coral-strong);
   display: inline-flex;
   align-items: center;
   gap: 6px;
