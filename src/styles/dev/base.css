@@ -32,8 +32,18 @@ body {
   font-size: 13px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  /* macOS Big Sur-style golden hour mountains (Nitish Meena, Unsplash, CC0). */
-  background: #0a0a0d url('/dev-bg.jpg') center / cover no-repeat fixed;
+  /* macOS Big Sur-style golden hour mountains (Nitish Meena, Unsplash, CC0).
+     4K source (3840×2560). AVIF for modern browsers (~680KB), JPEG
+     fallback (~1.2MB) for everything else. */
+  background-color: #0a0a0d;
+  background-image: image-set(
+    url('/dev-bg.avif') type('image/avif'),
+    url('/dev-bg.jpg') type('image/jpeg')
+  );
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   overflow: hidden;
 }
 .desktop {
