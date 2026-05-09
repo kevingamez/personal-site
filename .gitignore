@@ -44,3 +44,4 @@ node_modules/*
 # 69
 # 75
 .claude/
+.playwright-mcp/
