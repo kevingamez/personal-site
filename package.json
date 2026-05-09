@@ -17,6 +17,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.1",
     "@astrojs/sitemap": "^3.7.0",
     "@babel/runtime": "^7.29.2",
     "@codemirror/autocomplete": "^6.20.2",
