@@ -58,7 +58,7 @@
   color: var(--ink);
 }
 .lang b {
-  color: var(--coral);
+  color: var(--coral-strong);
   font-weight: 600;
 }
 .dev-toggle {

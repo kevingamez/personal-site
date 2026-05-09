@@ -65,7 +65,7 @@
   color: var(--ink);
 }
 .about-prose i {
-  color: var(--coral);
+  color: var(--coral-strong);
   font-style: italic;
 }
 .quick-facts {
