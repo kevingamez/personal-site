@@ -1,6 +1,10 @@
 // CodeMirror 6 integration for the /dev page.
 // Exposes window.__cm = { mount, destroy, focus } so the inline shell script
 // can mount a real editor in any container.
+//
+// Language packages are dynamically imported per-file via a Compartment, so
+// only the lang(s) actually opened end up in the loaded bundle. The base
+// editor (~200KB) lands on first paint; each lang chunk is ~10–30KB extra.
 
 import {
   EditorView,
@@ -9,7 +13,7 @@ import {
   highlightActiveLine,
   highlightActiveLineGutter,
 } from '@codemirror/view'
-import { EditorState, type Extension } from '@codemirror/state'
+import { Compartment, EditorState, type Extension } from '@codemirror/state'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import {
   syntaxHighlighting,
@@ -26,13 +30,6 @@ import {
   closeBracketsKeymap,
   completionKeymap,
 } from '@codemirror/autocomplete'
-import { javascript } from '@codemirror/lang-javascript'
-import { markdown } from '@codemirror/lang-markdown'
-import { json } from '@codemirror/lang-json'
-import { css } from '@codemirror/lang-css'
-import { html } from '@codemirror/lang-html'
-import { rust } from '@codemirror/lang-rust'
-// VS Code Dark+ theme — same syntax colors as the real editor
 import { vscodeDark } from '@uiw/codemirror-theme-vscode'
 
 type MountOpts = {
@@ -54,32 +51,45 @@ declare global {
   }
 }
 
-function langForFile(name: string, lang?: string): Extension[] {
+type LangKey = 'ts' | 'tsx' | 'js' | 'jsx' | 'md' | 'json' | 'css' | 'html' | 'rust'
+
+function detectLang(name: string, lang?: string): LangKey | null {
   const lower = (name || '').toLowerCase()
-  if (
-    lang === 'ts' ||
-    lower.endsWith('.ts') ||
-    lower.endsWith('.tsx') ||
-    lower.endsWith('.mts') ||
-    lower.endsWith('.cts')
-  ) {
-    return [javascript({ typescript: true, jsx: lower.endsWith('.tsx') })]
+  if (lang === 'ts' || /\.(ts|mts|cts)$/.test(lower)) return 'ts'
+  if (lower.endsWith('.tsx')) return 'tsx'
+  if (/\.(mjs|cjs|js)$/.test(lower)) return 'js'
+  if (lower.endsWith('.jsx')) return 'jsx'
+  if (lang === 'md' || /\.(md|mdx)$/.test(lower)) return 'md'
+  if (lang === 'json' || lower.endsWith('.json')) return 'json'
+  if (lang === 'css' || lower.endsWith('.css')) return 'css'
+  if (lang === 'html' || lang === 'astro' || /\.(html|astro)$/.test(lower)) return 'html'
+  if (lang === 'rs' || lower.endsWith('.rs')) return 'rust'
+  return null
+}
+
+async function loadLang(key: LangKey): Promise<Extension[]> {
+  switch (key) {
+    case 'ts':
+      return [(await import('@codemirror/lang-javascript')).javascript({ typescript: true })]
+    case 'tsx':
+      return [
+        (await import('@codemirror/lang-javascript')).javascript({ typescript: true, jsx: true }),
+      ]
+    case 'js':
+      return [(await import('@codemirror/lang-javascript')).javascript()]
+    case 'jsx':
+      return [(await import('@codemirror/lang-javascript')).javascript({ jsx: true })]
+    case 'md':
+      return [(await import('@codemirror/lang-markdown')).markdown()]
+    case 'json':
+      return [(await import('@codemirror/lang-json')).json()]
+    case 'css':
+      return [(await import('@codemirror/lang-css')).css()]
+    case 'html':
+      return [(await import('@codemirror/lang-html')).html()]
+    case 'rust':
+      return [(await import('@codemirror/lang-rust')).rust()]
   }
-  if (
-    lower.endsWith('.js') ||
-    lower.endsWith('.mjs') ||
-    lower.endsWith('.cjs') ||
-    lower.endsWith('.jsx')
-  ) {
-    return [javascript({ jsx: lower.endsWith('.jsx') })]
-  }
-  if (lang === 'md' || lower.endsWith('.md') || lower.endsWith('.mdx')) return [markdown()]
-  if (lang === 'json' || lower.endsWith('.json')) return [json()]
-  if (lang === 'css' || lower.endsWith('.css')) return [css()]
-  if (lang === 'html' || lang === 'astro' || lower.endsWith('.html') || lower.endsWith('.astro'))
-    return [html()]
-  if (lang === 'rs' || lower.endsWith('.rs')) return [rust()]
-  return []
 }
 
 const coralTheme = EditorView.theme(
@@ -88,7 +98,6 @@ const coralTheme = EditorView.theme(
       height: '100%',
       fontFamily: '"IBM Plex Mono", "JetBrains Mono", monospace',
       fontSize: '12.5px',
-      // Transparent so the .editor surface (liquid glass) shows through
       backgroundColor: 'transparent',
       color: 'var(--ink-2)',
     },
@@ -146,8 +155,10 @@ const coralTheme = EditorView.theme(
 )
 
 let view: EditorView | null = null
+const langCompartment = new Compartment()
+const langCache = new Map<LangKey, Extension[]>()
 
-function basicExtensions(name: string, lang: string | undefined): Extension[] {
+function baseExtensions(): Extension[] {
   return [
     lineNumbers(),
     highlightActiveLineGutter(),
@@ -171,8 +182,24 @@ function basicExtensions(name: string, lang: string | undefined): Extension[] {
     ]),
     vscodeDark,
     coralTheme,
-    ...langForFile(name, lang),
   ]
+}
+
+function applyLangAsync(name: string, lang: string | undefined): void {
+  const key = detectLang(name, lang)
+  if (!key) {
+    view?.dispatch({ effects: langCompartment.reconfigure([]) })
+    return
+  }
+  const cached = langCache.get(key)
+  if (cached) {
+    view?.dispatch({ effects: langCompartment.reconfigure(cached) })
+    return
+  }
+  loadLang(key).then((ext) => {
+    langCache.set(key, ext)
+    if (view) view.dispatch({ effects: langCompartment.reconfigure(ext) })
+  })
 }
 
 function mount(container: HTMLElement, opts: MountOpts): EditorView {
@@ -181,7 +208,7 @@ function mount(container: HTMLElement, opts: MountOpts): EditorView {
     view = null
   }
   container.innerHTML = ''
-  const exts = basicExtensions(opts.name, opts.lang)
+  const exts: Extension[] = [...baseExtensions(), langCompartment.of([])]
   if (opts.readOnly) exts.push(EditorState.readOnly.of(true))
   exts.push(
     EditorView.updateListener.of((u) => {
@@ -195,16 +222,18 @@ function mount(container: HTMLElement, opts: MountOpts): EditorView {
   )
   const state = EditorState.create({ doc: opts.body || '', extensions: exts })
   view = new EditorView({ state, parent: container })
+  applyLangAsync(opts.name, opts.lang)
   return view
 }
 
-function destroy() {
+function destroy(): void {
   if (view) {
     view.destroy()
     view = null
   }
 }
-function focus() {
+
+function focus(): void {
   if (view) view.focus()
 }
 
