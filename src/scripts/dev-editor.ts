@@ -32,7 +32,7 @@ import { json } from '@codemirror/lang-json'
 import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import { rust } from '@codemirror/lang-rust'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { materialDark } from '@uiw/codemirror-theme-material'
 
 type MountOpts = {
   name: string
@@ -167,7 +167,7 @@ function basicExtensions(name: string, lang: string | undefined): Extension[] {
       ...completionKeymap,
       indentWithTab,
     ]),
-    oneDark,
+    materialDark,
     coralTheme,
     ...langForFile(name, lang),
   ]
