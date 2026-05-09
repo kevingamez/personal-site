@@ -625,6 +625,24 @@ const buildId = "a7f3c91"
         color: var(--mute-2);
         font-family: "Inter Tight", sans-serif;
       }
+      .term-input .pr,
+      .term-body .pr {
+        white-space: nowrap;
+      }
+      .term-body .ls-dir {
+        color: var(--blue);
+        cursor: pointer;
+      }
+      .term-body .ls-dir:hover {
+        color: var(--coral);
+      }
+      .term-body .ls-file {
+        color: var(--ink-2);
+        cursor: pointer;
+      }
+      .term-body .ls-file:hover {
+        color: var(--coral);
+      }
 
       .sidebar {
         background: var(--panel);
@@ -1081,8 +1099,8 @@ const buildId = "a7f3c91"
             </div>
           </div>
           <div class="term-input">
-            <span class="pr">~</span>
-            <input id="cmd" placeholder="type a command, press enter…" autocomplete="off" />
+            <span class="pr" id="prompt">~/kevin-gamez $</span>
+            <input id="cmd" placeholder="try ls, cat src/about.ts, vim README.md, help…" autocomplete="off" autofocus />
             <span class="hint">↵ run · ↑ history · ⌃L clear</span>
           </div>
         </section>
@@ -1269,42 +1287,270 @@ const buildId = "a7f3c91"
         }, 2200)
       })()
 
-      /* ─── Terminal commands ─── */
+      /* ─── Shell + virtual filesystem + editor ─── */
       ;(function () {
         const term = document.getElementById("term")
         const input = document.getElementById("cmd")
+        const promptEl = document.getElementById("prompt")
+        const edTabsEl = document.querySelector(".ed-tabs")
+        const edBodyEl = document.querySelector(".ed-body")
+        const terminalEl = document.querySelector(".terminal")
         if (!term || !input) return
-        let lineNum = 8
-        const responses = {
-          about: ["kevin gámez · founder @ enttor.ai · bogotá", "eng for 7 yrs, ceo for 2, math nerd for life"],
-          work: [
-            '<span class="ac">enttor.ai</span>      → ad-creative pipelines at scale',
-            '<span class="ac">automata-rs</span>    → wasm cellular automata · ★412',
-            '<span class="ac">fractal-atlas</span>  → glsl deep-zoom · ★189',
-          ],
-          stack: [
-            '<span class="di">runtime</span>   node 22 · bun 1.1 · cf workers',
-            '<span class="di">storage</span>   postgres 16 · redis · r2',
-            '<span class="di">models</span>    claude · openai · ollama',
-          ],
-          repos: [
-            'kevingamez/<span class="ac">automata-rs</span>      ★412',
-            'kevingamez/<span class="ac">fractal-atlas</span>    ★189',
-            'kevingamez/<span class="ac">primes-notebook</span>  ★33',
-            'kevingamez/<span class="ac">personal-site</span>    ★64',
-          ],
-          contact: [
-            '<span class="em">email</span>     hi@kevingamez.com',
-            '<span class="em">github</span>    github.com/kevingamez',
-            '<span class="em">x</span>         x.com/kevin_gamez',
-          ],
-          life: ['↗ opening conway\'s game of life… see hero on <span class="ac">/</span>'],
-          vim: ['<span class="ye">E437:</span> terminal capability "cm" required'],
-          help: [
-            '<span class="gr">commands:</span> <span class="ac">about</span> <span class="ac">work</span> <span class="ac">stack</span> <span class="ac">repos</span> <span class="ac">contact</span> <span class="ac">life</span> <span class="ac">vim</span> <span class="ac">clear</span>',
-          ],
+
+        // ─── State ───
+        let lineNum = 0
+        let cwd = ["kevin-gamez"]
+        const history = []
+        let historyIdx = 0
+        let openTabs = []
+        let activeTab = null
+
+        // ─── Virtual FS helpers ───
+        const _f = (lang, body) => ({ type: "file", lang, body })
+        const _d = (children) => ({ type: "dir", children })
+
+        const FS = _d({
+          "kevin-gamez": _d({
+            src: _d({
+              "about.ts": _f(
+                "ts",
+                `// kevin-gamez/src/about.ts
+// who, what, where.
+
+export const about = {
+  name:    "kevin gámez",
+  role:    "founder + engineer",
+  company: "enttor.ai",
+  city:    "bogotá, co",
+  utc:     -5,
+  since:   2024,
+} as const;
+
+export const oneLiner = () =>
+  \`\${about.name} — \${about.role} at \${about.company}\`;`
+              ),
+              "stack.ts": _f(
+                "ts",
+                `// kevin-gamez/src/stack.ts
+// what i actually use, kept honest by being read.
+
+import type { Tool } from "./types";
+
+export const stack = {
+  runtime:    ["node 22", "bun 1.1", "cf workers"],
+  languages:  {
+    production: ["typescript", "rust", "python", "sql"],
+    learning:   ["zig", "coq", "lean"],
+  },
+  storage:    ["postgres 16", "redis", "r2", "meilisearch"],
+  models:     ["claude", "openai", "ollama"],
+  delivery:   ["gh actions", "cf pages", "sentry"],
+  tools:      ["neovim", "ghostty", "linear", "figma"],
+} as const satisfies Record<string, Tool[]>;
+
+export const summary = () =>
+  "small, sharp tools that compound.";
+
+/* runtime: see /api/now for the live picture */`
+              ),
+              "work.ts": _f(
+                "ts",
+                `// kevin-gamez/src/work.ts
+// projects i still believe in.
+
+export const work = [
+  { id: "enttor",          featured: true,  stack: ["ts","postgres","anthropic"] },
+  { id: "automata-rs",     stars: 412,      stack: ["rust","wasm"] },
+  { id: "fractal-atlas",   stars: 189,      stack: ["ts","glsl"] },
+  { id: "primes-notebook", stars: 33,       stack: ["python","numpy"] },
+  { id: "personal-site",   stars: 64,       stack: ["astro","preact"] },
+] as const;
+
+export type Project = (typeof work)[number];`
+              ),
+              "life.rs": _f(
+                "rs",
+                `// kevin-gamez/src/life.rs
+// conway's game of life, the wasm-friendly version.
+
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub struct Life {
+    cols: u32,
+    rows: u32,
+    cells: Vec<u8>,
+}
+
+#[wasm_bindgen]
+impl Life {
+    pub fn new(cols: u32, rows: u32) -> Life {
+        Life { cols, rows, cells: vec![0; (cols * rows) as usize] }
+    }
+
+    pub fn step(&mut self) {
+        // toroidal neighborhood, B3/S23 rules.
+        // see: github.com/kevingamez/automata-rs
+    }
+}`
+              ),
+            }),
+            api: _d({
+              "now.ts": _f(
+                "ts",
+                `// GET /api/now → live availability + current obsession
+export const GET = async () =>
+  Response.json({
+    available: true,
+    shipping:  "eval-as-a-service v0.4",
+    reading:   "a mathematician's apology",
+    thinking:  "jones polynomial",
+    ts:        Date.now(),
+  });`
+              ),
+              "repos.ts": _f(
+                "ts",
+                `// GET /api/repos → cached top 5 from github
+import { fetchRepos } from "../lib/github";
+
+export const GET = async () => {
+  const repos = await fetchRepos("kevingamez", { top: 5 });
+  return Response.json(repos);
+};`
+              ),
+              "eval.ts": _f(
+                "ts",
+                `// POST /api/eval → run a brand-fit eval over a creative variant
+import { z } from "zod";
+import { judge } from "../lib/eval";
+
+const Body = z.object({
+  brief:   z.string().min(20),
+  variant: z.string(),
+});
+
+export const POST = async (req: Request) => {
+  const input = Body.parse(await req.json());
+  const score = await judge(input);
+  return Response.json({ score });
+};`
+              ),
+            }),
+            tests: _d({}),
+            "README.md": _f(
+              "md",
+              `# kevin-gamez
+
+> a small studio of one, mostly happy.
+
+## what's in here
+- src/      personal site / portfolio sources
+- api/      edge handlers for /api/now, /api/repos, /api/eval
+- tests/    the few that matter
+
+## build
+$ bun install
+$ bun run dev    # localhost:4321
+$ bun run build  # static dist/
+
+## also nearby
+- github.com/kevingamez
+- enttor.ai
+- hi@kevingamez.com`
+            ),
+            "package.json": _f(
+              "json",
+              `{
+  "name": "kevin-gamez",
+  "description": "personal site + portfolio",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "lint": "biome lint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "astro": "^5.9",
+    "preact": "^10.26"
+  }
+}`
+            ),
+            "cargo.toml": _f(
+              "toml",
+              `[package]
+name        = "automata-rs"
+version     = "0.4.2"
+edition     = "2021"
+description = "cellular automata sandbox compiled to wasm"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+js-sys       = "0.3"
+
+[profile.release]
+opt-level = "z"
+lto       = true`
+            ),
+            "bun.lock": _f("lock", "# bun lockfile (truncated for the demo)\n# generated 2026-05-09\n"),
+            "style.css": _f("css", "/* unused — all styles live inline in astro pages */\n"),
+            "CHANGELOG.md": _f(
+              "md",
+              `# changelog
+
+## v14.2 — 2026-05
+- redesign: instrument serif + cream/coral palette
+- new /dev page with a working shell
+
+## v14.1 — 2026-05
+- /es mirror with full translations
+- drop tailwind/zustand/preact-stores; pure astro pages
+
+## v13 — 2026-04
+- replace julia with hopf fibration
+- 4d circles projected to 3d, drag to rotate`
+            ),
+          }),
+        })
+
+        // ─── Path utilities ───
+        function resolvePath(p) {
+          if (p === undefined) return [...cwd]
+          let parts
+          if (p === "~" || p === "~/") parts = []
+          else if (p.startsWith("~/")) parts = p.slice(2).split("/")
+          else if (p.startsWith("/")) parts = p.slice(1).split("/")
+          else parts = [...cwd, ...p.split("/")]
+          const out = []
+          for (const part of parts) {
+            if (!part || part === ".") continue
+            if (part === "..") {
+              out.pop()
+              continue
+            }
+            out.push(part)
+          }
+          return out
+        }
+        function getNode(parts) {
+          let node = FS
+          for (const part of parts) {
+            if (!node || node.type !== "dir" || !node.children[part]) return null
+            node = node.children[part]
+          }
+          return node
+        }
+        function pathDisplay(parts) {
+          return "~/" + parts.join("/")
+        }
+        function updatePrompt() {
+          if (promptEl) promptEl.textContent = pathDisplay(cwd) + " $"
         }
 
+        // ─── Output ───
         function addLine(html) {
           const div = document.createElement("div")
           div.className = "ln"
@@ -1312,28 +1558,443 @@ const buildId = "a7f3c91"
           term.appendChild(div)
           term.scrollTop = term.scrollHeight
         }
+        function err(msg) {
+          addLine('<span class="ye">' + esc(msg) + "</span>")
+        }
         function clearCursor() {
-          ;[...term.querySelectorAll(".cu")].forEach((c) => c.remove())
+          term.querySelectorAll(".cu").forEach((c) => c.remove())
+        }
+        function esc(s) {
+          return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
         }
 
+        // ─── Syntax highlighter ───
+        const KW_TS =
+          /\b(import|export|const|let|var|type|interface|class|extends|implements|return|async|await|function|as|from|if|else|switch|case|break|true|false|null|undefined|new|this|satisfies|typeof|keyof|enum|public|private|protected|readonly|in|of|for|while|do)\b/g
+        const KW_RS =
+          /\b(pub|fn|let|mut|use|mod|struct|impl|match|return|if|else|true|false|as|trait|crate|self|Self|where|move|async|await|loop|while|for|in|ref)\b/g
+        const TY =
+          /\b(string|number|boolean|void|any|unknown|never|object|symbol|bigint|Record|Array|Promise|Map|Set|Date|Response|Request|Tool|Project|u8|u16|u32|u64|i8|i16|i32|i64|f32|f64|bool|str|String|Vec|Option|Result|Box)\b/g
+        function highlightPlain(text, lang) {
+          let s = esc(text)
+          s = s.replace(lang === "rs" ? KW_RS : KW_TS, '<span class="kw">$1</span>')
+          s = s.replace(TY, '<span class="ty">$1</span>')
+          s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="num">$1</span>')
+          return s
+        }
+        function highlightCode(line, lang) {
+          const out = []
+          const n = line.length
+          let i = 0
+          while (i < n) {
+            if (line[i] === "/" && line[i + 1] === "/") {
+              out.push('<span class="cm">' + esc(line.slice(i)) + "</span>")
+              i = n
+            } else if (line[i] === "/" && line[i + 1] === "*") {
+              out.push('<span class="cm">' + esc(line.slice(i)) + "</span>")
+              i = n
+            } else if (line[i] === '"' || line[i] === "'" || line[i] === "`") {
+              const q = line[i]
+              let j = i + 1
+              while (j < n && line[j] !== q) {
+                if (line[j] === "\\") j++
+                j++
+              }
+              out.push('<span class="st">' + esc(line.slice(i, Math.min(j + 1, n))) + "</span>")
+              i = j + 1
+            } else {
+              let j = i
+              while (j < n && line[j] !== "/" && line[j] !== '"' && line[j] !== "'" && line[j] !== "`") j++
+              out.push(highlightPlain(line.slice(i, j), lang))
+              i = j
+            }
+          }
+          return out.join("")
+        }
+        function highlightJson(line) {
+          let s = esc(line)
+          s = s.replace(/"([^"]*)"(\s*):/g, '<span class="pn">"$1"</span>$2:')
+          s = s.replace(/(:\s*)"([^"]*)"/g, '$1<span class="st">"$2"</span>')
+          s = s.replace(/\b(true|false|null)\b/g, '<span class="kw">$1</span>')
+          s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="num">$1</span>')
+          return s
+        }
+        function highlightToml(line) {
+          if (/^\s*\[.*\]\s*$/.test(line)) return '<span class="ty">' + esc(line) + "</span>"
+          let s = esc(line)
+          s = s.replace(/^(\s*)([\w-]+)(\s*=)/, '$1<span class="pn">$2</span>$3')
+          s = s.replace(/"([^"]*)"/g, '<span class="st">"$1"</span>')
+          s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="num">$1</span>')
+          s = s.replace(/^(\s*)#(.*)$/, '$1<span class="cm">#$2</span>')
+          return s
+        }
+        function highlight(line, lang) {
+          if (lang === "json") return highlightJson(line)
+          if (lang === "toml") return highlightToml(line)
+          if (lang === "ts" || lang === "rs") return highlightCode(line, lang)
+          return esc(line)
+        }
+
+        // ─── Editor ───
+        function openFile(parts) {
+          const node = getNode(parts)
+          if (!node || node.type !== "file") return false
+          if (parts[0] !== "kevin-gamez") return false
+          const rel = parts.slice(1).join("/")
+          if (!openTabs.includes(rel)) openTabs.push(rel)
+          activeTab = rel
+          renderEditor()
+          return true
+        }
+        function closeTab(rel) {
+          openTabs = openTabs.filter((t) => t !== rel)
+          if (activeTab === rel) activeTab = openTabs[openTabs.length - 1] || null
+          renderEditor()
+        }
+        function renderEditor() {
+          if (!edTabsEl || !edBodyEl) return
+          // rebuild tabs (preserve grow + breadcrumb at the end)
+          edTabsEl.innerHTML = ""
+          for (const t of openTabs) {
+            const name = t.split("/").pop()
+            const div = document.createElement("div")
+            div.className = "et" + (t === activeTab ? " on" : "")
+            div.innerHTML = esc(name) + ' <span class="x">×</span>'
+            div.addEventListener("click", (e) => {
+              if (e.target.classList && e.target.classList.contains("x")) {
+                closeTab(t)
+              } else {
+                activeTab = t
+                renderEditor()
+              }
+            })
+            edTabsEl.appendChild(div)
+          }
+          const grow = document.createElement("div")
+          grow.className = "grow"
+          edTabsEl.appendChild(grow)
+          const bc = document.createElement("div")
+          bc.className = "breadcrumb"
+          if (activeTab) {
+            const pp = activeTab.split("/")
+            const dir = pp.slice(0, -1).join(" › ")
+            bc.innerHTML = (dir ? esc(dir) + " › " : "") + "<b>" + esc(pp[pp.length - 1]) + "</b>"
+          }
+          edTabsEl.appendChild(bc)
+
+          // body
+          edBodyEl.innerHTML = ""
+          if (!activeTab) {
+            edBodyEl.innerHTML =
+              '<div style="padding:40px 24px;color:var(--mute-2);font-family:Inter Tight,sans-serif;font-size:13px">no file open. try <span class="ac">cat src/stack.ts</span></div>'
+            return
+          }
+          const node = getNode(["kevin-gamez", ...activeTab.split("/")])
+          if (!node || node.type !== "file") return
+          const lines = node.body.split("\n")
+          if (lines.length && lines[lines.length - 1] === "") lines.pop()
+          for (let idx = 0; idx < lines.length; idx++) {
+            const row = document.createElement("div")
+            row.className = "ed-row"
+            const html = highlight(lines[idx], node.lang) || "&nbsp;"
+            row.innerHTML = '<span class="gut">' + (idx + 1) + '</span><span class="txt">' + html + "</span>"
+            edBodyEl.appendChild(row)
+          }
+        }
+
+        // ─── Commands ───
+        const COMMANDS = {
+          pwd: () => addLine(esc(pathDisplay(cwd))),
+          whoami: () => addLine('kevin · founder @ enttor.ai · <span class="ac">bogotá / utc-5</span>'),
+          date: () => addLine(esc(new Date().toString())),
+          uname: () => addLine("Darwin kevin-gamez 25.4.0 arm64"),
+          ls: (args) => {
+            const target = args[0] ? resolvePath(args[0]) : cwd
+            const node = getNode(target)
+            if (!node) return err("ls: " + (args[0] || ".") + ": no such file or directory")
+            if (node.type === "file") return addLine(esc(target[target.length - 1]))
+            const entries = Object.entries(node.children)
+            entries.sort((a, b) => {
+              if (a[1].type !== b[1].type) return a[1].type === "dir" ? -1 : 1
+              return a[0].localeCompare(b[0])
+            })
+            if (!entries.length) return addLine('<span class="gr">(empty)</span>')
+            const html = entries
+              .map(([name, n]) => {
+                if (n.type === "dir")
+                  return '<span class="ls-dir" data-cd="' + esc(name) + '">' + esc(name) + "/</span>"
+                return '<span class="ls-file" data-cat="' + esc(name) + '">' + esc(name) + "</span>"
+              })
+              .join("  ")
+            addLine(html)
+          },
+          cd: (args) => {
+            const target = args[0] === undefined || args[0] === "~" ? [] : resolvePath(args[0])
+            const node = getNode(target)
+            if (!node) return err("cd: " + args[0] + ": no such file or directory")
+            if (node.type !== "dir") return err("cd: " + args[0] + ": not a directory")
+            cwd = target
+            updatePrompt()
+          },
+          cat: (args) => {
+            if (!args[0]) return err("cat: missing operand")
+            const target = resolvePath(args[0])
+            const node = getNode(target)
+            if (!node) return err("cat: " + args[0] + ": no such file or directory")
+            if (node.type !== "file") return err("cat: " + args[0] + ": is a directory")
+            const lines = node.body.split("\n")
+            if (lines.length && lines[lines.length - 1] === "") lines.pop()
+            for (const ln of lines) addLine(highlight(ln, node.lang) || "&nbsp;")
+            if (target[0] === "kevin-gamez") openFile(target)
+          },
+          vim: (args) => {
+            if (!args[0]) {
+              addLine(
+                '<span class="ye">E437:</span> terminal capability "cm" required (try <span class="ac">vim &lt;file&gt;</span>)'
+              )
+              return
+            }
+            const target = resolvePath(args[0])
+            const node = getNode(target)
+            if (!node) return err("vim: " + args[0] + ": no such file or directory")
+            if (node.type !== "file") return err("vim: " + args[0] + ": is a directory")
+            if (target[0] !== "kevin-gamez") return err("vim: cannot open files outside ~/kevin-gamez")
+            openFile(target)
+            addLine('<span class="gr">↗ opened ' + esc(args[0]) + " in editor</span>")
+          },
+          mkdir: (args) => {
+            if (!args[0]) return err("mkdir: missing operand")
+            const target = resolvePath(args[0])
+            if (!target.length) return err("mkdir: invalid path")
+            const parent = getNode(target.slice(0, -1))
+            const name = target[target.length - 1]
+            if (!parent || parent.type !== "dir") return err("mkdir: " + args[0] + ": no such directory")
+            if (parent.children[name]) return err("mkdir: " + args[0] + ": file exists")
+            parent.children[name] = _d({})
+          },
+          touch: (args) => {
+            if (!args[0]) return err("touch: missing operand")
+            const target = resolvePath(args[0])
+            const parent = getNode(target.slice(0, -1))
+            const name = target[target.length - 1]
+            if (!parent || parent.type !== "dir") return err("touch: " + args[0] + ": cannot create")
+            if (parent.children[name]) return
+            const ext = (name.split(".").pop() || "").toLowerCase()
+            const langMap = { ts: "ts", tsx: "ts", js: "ts", mjs: "ts", rs: "rs", md: "md", json: "json", toml: "toml" }
+            parent.children[name] = _f(langMap[ext] || "plain", "")
+          },
+          rm: (args) => {
+            const flags = args.filter((a) => a.startsWith("-"))
+            const targets = args.filter((a) => !a.startsWith("-"))
+            if (!targets.length) return err("rm: missing operand")
+            const recursive = flags.some((f) => /r/.test(f))
+            for (const t of targets) {
+              const tp = resolvePath(t)
+              const parent = getNode(tp.slice(0, -1))
+              const name = tp[tp.length - 1]
+              if (!parent || !parent.children[name]) {
+                err("rm: " + t + ": no such file or directory")
+                continue
+              }
+              if (parent.children[name].type === "dir" && !recursive) {
+                err("rm: " + t + ": is a directory")
+                continue
+              }
+              delete parent.children[name]
+            }
+          },
+          rmdir: (args) => {
+            if (!args[0]) return err("rmdir: missing operand")
+            const tp = resolvePath(args[0])
+            const parent = getNode(tp.slice(0, -1))
+            const name = tp[tp.length - 1]
+            const node = parent && parent.children[name]
+            if (!node || node.type !== "dir") return err("rmdir: " + args[0] + ": not a directory")
+            if (Object.keys(node.children).length) return err("rmdir: " + args[0] + ": directory not empty")
+            delete parent.children[name]
+          },
+          mv: (args) => {
+            if (args.length < 2) return err("mv: missing operand")
+            const src = resolvePath(args[0])
+            const dst = resolvePath(args[1])
+            const sParent = getNode(src.slice(0, -1))
+            const sName = src[src.length - 1]
+            if (!sParent || !sParent.children[sName]) return err("mv: " + args[0] + ": no such file or directory")
+            const dParent = getNode(dst.slice(0, -1))
+            const dName = dst[dst.length - 1]
+            if (!dParent || dParent.type !== "dir") return err("mv: " + args[1] + ": no such directory")
+            dParent.children[dName] = sParent.children[sName]
+            delete sParent.children[sName]
+          },
+          echo: (args) => addLine(esc(args.join(" "))),
+          tree: () => {
+            const node = getNode(cwd)
+            if (!node || node.type !== "dir") return
+            addLine('<span class="ac">' + esc(pathDisplay(cwd)) + "</span>")
+            const walk = (n, prefix, depth) => {
+              if (depth > 3) return
+              const entries = Object.entries(n.children).sort((a, b) => {
+                if (a[1].type !== b[1].type) return a[1].type === "dir" ? -1 : 1
+                return a[0].localeCompare(b[0])
+              })
+              entries.forEach(([name, c], i) => {
+                const last = i === entries.length - 1
+                const branch = last ? "└── " : "├── "
+                addLine(
+                  '<span class="gr">' +
+                    esc(prefix + branch) +
+                    "</span>" +
+                    (c.type === "dir" ? '<span class="ac">' + esc(name) + "/</span>" : esc(name))
+                )
+                if (c.type === "dir") walk(c, prefix + (last ? "    " : "│   "), depth + 1)
+              })
+            }
+            walk(node, "", 0)
+          },
+          history: () => {
+            history.forEach((h, i) => addLine('  <span class="gr">' + (i + 1) + "</span>  " + esc(h)))
+          },
+          clear: () => {
+            term.innerHTML = ""
+            lineNum = 0
+          },
+          help: () => {
+            addLine(
+              '<span class="gr">filesystem:</span> <span class="ac">ls</span> <span class="ac">cd</span> <span class="ac">pwd</span> <span class="ac">cat</span> <span class="ac">tree</span> <span class="ac">mkdir</span> <span class="ac">touch</span> <span class="ac">rm</span> <span class="ac">rmdir</span> <span class="ac">mv</span> <span class="ac">echo</span>'
+            )
+            addLine(
+              '<span class="gr">editor:</span>     <span class="ac">vim</span>  → opens a file in the panel above'
+            )
+            addLine(
+              '<span class="gr">about me:</span>   <span class="ac">whoami</span> <span class="ac">about</span> <span class="ac">work</span> <span class="ac">stack</span> <span class="ac">repos</span> <span class="ac">contact</span> <span class="ac">life</span>'
+            )
+            addLine(
+              '<span class="gr">utility:</span>    <span class="ac">date</span> <span class="ac">uname</span> <span class="ac">history</span> <span class="ac">clear</span>  ·  <span class="gr">↑/↓</span> history  <span class="gr">⌃L</span> clear'
+            )
+          },
+          about: () => {
+            addLine("kevin gámez · founder @ enttor.ai · bogotá")
+            addLine("eng for 7 yrs, ceo for 2, math nerd for life")
+          },
+          work: () => {
+            addLine('<span class="ac">enttor.ai</span>      → ad-creative pipelines at scale')
+            addLine('<span class="ac">automata-rs</span>    → wasm cellular automata · ★412')
+            addLine('<span class="ac">fractal-atlas</span>  → glsl deep-zoom · ★189')
+          },
+          stack: () => {
+            addLine('<span class="di">runtime</span>   node 22 · bun 1.1 · cf workers')
+            addLine('<span class="di">storage</span>   postgres 16 · redis · r2')
+            addLine('<span class="di">models</span>    claude · openai · ollama')
+          },
+          repos: () => {
+            addLine('kevingamez/<span class="ac">automata-rs</span>      ★412')
+            addLine('kevingamez/<span class="ac">fractal-atlas</span>    ★189')
+            addLine('kevingamez/<span class="ac">primes-notebook</span>  ★33')
+            addLine('kevingamez/<span class="ac">personal-site</span>    ★64')
+          },
+          contact: () => {
+            addLine('<span class="em">email</span>     hi@kevingamez.com')
+            addLine('<span class="em">github</span>    github.com/kevingamez')
+            addLine('<span class="em">x</span>         x.com/kevin_gamez')
+          },
+          life: () => addLine('↗ opening conway\'s game of life… see hero on <span class="ac">/</span>'),
+        }
+        // aliases (added via bracket access to keep TS happy with the literal map type)
+        ;["ll", "dir"].forEach((a) => (COMMANDS[a] = COMMANDS.ls))
+        ;["nvim", "open", "edit"].forEach((a) => (COMMANDS[a] = COMMANDS.vim))
+        COMMANDS["cls"] = COMMANDS.clear
+        COMMANDS["man"] = (args) => {
+          if (!args[0]) return err("what manual page do you want?")
+          if (COMMANDS[args[0]])
+            addLine(
+              '<span class="gr">no man page — try just running</span> <span class="ac">' + esc(args[0]) + "</span>"
+            )
+          else err("No manual entry for " + args[0])
+        }
+
+        function tokenize(line) {
+          return (line.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || []).map((t) => {
+            if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) return t.slice(1, -1)
+            return t
+          })
+        }
+        function run(cmdLine) {
+          const [cmd, ...args] = tokenize(cmdLine)
+          if (!cmd) return
+          if (COMMANDS[cmd]) {
+            try {
+              COMMANDS[cmd](args)
+            } catch (e) {
+              err(cmd + ": " + (e && e.message ? e.message : e))
+            }
+          } else {
+            err("zsh: command not found: " + cmd + "  · try help")
+          }
+        }
+        function submit(v) {
+          clearCursor()
+          addLine('<span class="pr">' + esc(pathDisplay(cwd)) + ' $</span> <span class="cmd">' + esc(v) + "</span>")
+          history.push(v)
+          historyIdx = history.length
+          run(v.trim())
+          addLine('<span class="pr">' + esc(pathDisplay(cwd)) + ' $</span> <span class="cu"></span>')
+          input.value = ""
+        }
+
+        // ─── Events ───
         input.addEventListener("keydown", (e) => {
           if (e.key === "Enter") {
-            const v = input.value.trim()
-            if (!v) return
-            clearCursor()
-            addLine('<span class="pr">~</span> <span class="cmd">' + v + "</span>")
-            if (v === "clear") {
-              term.innerHTML = ""
-              lineNum = 0
-            } else if (responses[v]) {
-              for (const line of responses[v]) addLine(line)
-            } else {
-              addLine('<span class="ye">zsh:</span> command not found: ' + v + '  · try <span class="ac">help</span>')
+            const v = input.value
+            if (!v.trim()) return
+            submit(v)
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault()
+            if (historyIdx > 0) {
+              historyIdx--
+              input.value = history[historyIdx]
             }
-            addLine('<span class="pr">~</span> <span class="cu"></span>')
-            input.value = ""
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault()
+            if (historyIdx < history.length - 1) {
+              historyIdx++
+              input.value = history[historyIdx]
+            } else {
+              historyIdx = history.length
+              input.value = ""
+            }
+          } else if ((e.key === "l" || e.key === "L") && e.ctrlKey) {
+            e.preventDefault()
+            COMMANDS.clear()
           }
         })
+
+        // click anywhere in terminal focuses input
+        if (terminalEl) terminalEl.addEventListener("click", () => input.focus())
+
+        // delegated clicks for ls output (cd / cat shortcuts)
+        term.addEventListener("click", (e) => {
+          const t = e.target
+          if (!t || !t.dataset) return
+          if (t.dataset.cd) submit("cd " + t.dataset.cd)
+          else if (t.dataset.cat) submit("cat " + t.dataset.cat)
+        })
+
+        // ─── Init ───
+        // wipe any pre-rendered welcome lines and start fresh
+        term.innerHTML = ""
+        lineNum = 0
+        updatePrompt()
+        addLine(
+          '<span class="gr">welcome to ~/kevin-gamez · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
+        )
+        addLine(
+          '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat src/about.ts</span> · <span class="ac">vim README.md</span> · <span class="ac">tree</span>'
+        )
+        addLine('<span class="pr">' + esc(pathDisplay(cwd)) + ' $</span> <span class="cu"></span>')
+        // open stack.ts by default
+        openFile(["kevin-gamez", "src", "stack.ts"])
+        // give input focus
+        setTimeout(() => input.focus(), 0)
       })()
     </script>
   </body>
