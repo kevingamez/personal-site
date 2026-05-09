@@ -1,0 +1,318 @@
+/* ─── Console section · Warp-style dark glass on cream ─── */
+.console-section {
+  position: relative;
+  padding: 96px 0;
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+  overflow: hidden;
+}
+/* Subtle warm wash so the dark glass has something to refract */
+.console-section::before,
+.console-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.console-section::before {
+  background: rgba(217, 105, 68, 0.32);
+  width: 30vw;
+  height: 30vw;
+  top: 18%;
+  left: 18%;
+}
+.console-section::after {
+  background: rgba(252, 230, 220, 0.7);
+  width: 26vw;
+  height: 26vw;
+  top: 35%;
+  right: 15%;
+}
+
+.console-wrap {
+  position: relative;
+  z-index: 1;
+}
+.console-head {
+  margin-bottom: 32px;
+}
+
+/* The terminal — dark translucent glass floating on cream */
+.console-shell {
+  position: relative;
+  background: rgba(20, 18, 28, 0.78);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -20px rgba(31, 29, 26, 0.45),
+    0 12px 28px -10px rgba(31, 29, 26, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(232, 232, 236, 0.95);
+}
+
+/* Title bar */
+.cs-tabs {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  background: rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11.5px;
+  color: rgba(232, 232, 236, 0.6);
+}
+.ct-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.ct-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: block;
+}
+.ct-dots i:nth-child(1) {
+  background: #ff5f56;
+}
+.ct-dots i:nth-child(2) {
+  background: #ffbd2e;
+}
+.ct-dots i:nth-child(3) {
+  background: #27c93f;
+}
+.ct-prompt {
+  color: rgba(232, 232, 236, 0.85);
+}
+.ct-grow {
+  flex: 1;
+}
+.ct-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+.ct-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5be59f;
+  box-shadow: 0 0 8px #5be59f;
+  animation: ct-pulse 2s ease-in-out infinite;
+}
+@keyframes ct-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct-led {
+    animation: none;
+  }
+}
+
+/* Output stream */
+.cs-stream {
+  padding: 18px 18px 8px;
+  min-height: 260px;
+  max-height: 460px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+.cs-stream::-webkit-scrollbar {
+  width: 8px;
+}
+.cs-stream::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Each interaction is a Warp-style block */
+.cs-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  animation: cs-block-in 0.3s ease-out both;
+}
+@keyframes cs-block-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.cs-line {
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+}
+.cs-cmd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  color: rgba(232, 232, 236, 0.95);
+}
+.cs-cmd .ci-host {
+  color: #5be59f;
+}
+.cs-cmd .ci-sep {
+  color: rgba(232, 232, 236, 0.55);
+}
+.cs-cmd .ci-prompt {
+  color: var(--coral);
+}
+.cs-cmd-text {
+  color: rgba(232, 232, 236, 0.98);
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
+}
+.cs-out {
+  color: rgba(232, 232, 236, 0.85);
+  padding-left: 0;
+}
+.cs-out b,
+.cs-out strong {
+  color: #fff;
+  font-weight: 600;
+}
+.cs-out code {
+  color: #ffb066;
+  background: rgba(255, 176, 102, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 12.5px;
+}
+.cs-out a {
+  color: #6b8eff;
+  border-bottom: 1px dashed currentColor;
+}
+.cs-tool {
+  color: rgba(232, 232, 236, 0.7);
+  font-size: 12px;
+  padding: 2px 0;
+}
+.cs-tool-tag {
+  color: var(--coral);
+  margin-right: 8px;
+}
+
+/* Streaming caret */
+.cm-streaming::after {
+  content: '▍';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--coral);
+  animation: caret-blink 0.9s steps(2, end) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Suggestions row — looks like CLI hints */
+.cs-suggest {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 18px 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.06);
+  margin-top: 4px;
+  padding-top: 12px;
+}
+.cs-suggest button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(232, 232, 236, 0.7);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cs-suggest button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--coral);
+  color: #fff;
+}
+.cs-suggest button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Persistent input prompt */
+.cs-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 16px;
+  background: rgba(0, 0, 0, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: inherit;
+  font-size: 13px;
+}
+.cs-input .ci-host {
+  color: #5be59f;
+}
+.cs-input .ci-sep {
+  color: rgba(232, 232, 236, 0.55);
+}
+.cs-input .ci-prompt {
+  color: var(--coral);
+  margin-right: 4px;
+}
+#console-msg {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(232, 232, 236, 0.98);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  caret-color: var(--coral);
+  padding: 2px 0;
+}
+#console-msg::placeholder {
+  color: rgba(232, 232, 236, 0.35);
+}
+.cs-input-busy {
+  opacity: 0.5;
+}
+
+@media (max-width: 700px) {
+  .console-section {
+    padding: 64px 0;
+  }
+  .cs-stream {
+    padding: 14px 12px 6px;
+    min-height: 220px;
+    max-height: 380px;
+  }
+  .cs-suggest {
+    padding: 8px 12px 10px;
+  }
+  .cs-input {
+    padding: 11px 12px;
+  }
+}

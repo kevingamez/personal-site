@@ -6,11 +6,13 @@ import { track } from '../lib/analytics'
 import { initConway } from './conway'
 import { initContribGraph } from './contrib'
 import { initGhStats } from './gh-stats'
+import { initConsole } from './console'
 
 bootstrapClient()
 initConway()
 initContribGraph()
 initGhStats()
+initConsole()
 
 const langLink = document.querySelector<HTMLAnchorElement>('a.lang')
 if (langLink) {

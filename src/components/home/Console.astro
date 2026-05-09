@@ -1,0 +1,48 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["console"]
+}
+
+const { t } = Astro.props
+---
+
+<section id="console" class="console-section">
+  <div class="wrap console-wrap">
+    <div class="sec-head console-head">
+      <div>
+        <div class="sec-num console-secnum">{t.secNum}</div>
+        <h2 class="sec-title console-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb console-blurb">{t.blurb}</p>
+    </div>
+
+    <div class="console-shell">
+      <div class="cs-tabs">
+        <span class="ct-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="ct-prompt">{t.promptLabel}</span>
+        <span class="ct-grow"></span>
+        <span class="ct-meta"><i class="ct-led"></i>{t.streaming}</span>
+      </div>
+
+      <div class="cs-stream" id="console-stream" aria-live="polite">
+        <pre class="cs-line cs-out">{t.greeting}</pre>
+      </div>
+
+      <div class="cs-suggest" id="console-suggest" aria-label="Preset queries">
+        <button type="button" data-prompt={t.suggest1}>↳ {t.suggest1}</button>
+        <button type="button" data-prompt={t.suggest2}>↳ {t.suggest2}</button>
+        <button type="button" data-prompt={t.suggest3}>↳ {t.suggest3}</button>
+        <button type="button" data-prompt={t.suggest4}>↳ {t.suggest4}</button>
+      </div>
+
+      <form class="cs-input" id="console-form" autocomplete="off">
+        <span class="ci-host">kevin@gamez</span>
+        <span class="ci-sep">~</span>
+        <span class="ci-prompt">$</span>
+        <input id="console-msg" type="text" placeholder={t.placeholder} aria-label="Console input" />
+      </form>
+    </div>
+  </div>
+</section>
