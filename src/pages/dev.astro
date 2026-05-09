@@ -1,0 +1,528 @@
+---
+const buildId = 'a7f3c91';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kevin@gamez ~/dev — dev mode</title>
+  <meta name="description" content="Dev-mode portfolio of Kevin Gámez — a tmux/terminal-styled view of the same person." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0a0a0d" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="canonical" href="https://kevingamez.com/dev" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#0a0a0d;
+      --panel:#10101a;
+      --panel-2:#16161e;
+      --line:#22222c;
+      --line-2:#2a2a36;
+      --ink:#e8e8ec;
+      --ink-2:#c9c9d1;
+      --mute:#7d7d88;
+      --mute-2:#555560;
+      --coral:#d96944;
+      --coral-soft:#3a201a;
+      --green:#3fb950;
+      --yellow:#d29922;
+      --red:#f85149;
+      --blue:#7a98c4;
+      --purple:#c47ad9;
+      --string:#a5d6ff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;overflow:hidden}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"JetBrains Mono",monospace;
+      font-size:13px;
+      line-height:1.55;
+      -webkit-font-smoothing:antialiased;
+      background-image:radial-gradient(rgba(232,200,120,0.025) 1px,transparent 1px);
+      background-size:3px 3px;
+    }
+    a{color:inherit;text-decoration:none}
+    ::selection{background:var(--coral);color:#fff}
+
+    .titlebar{
+      height:36px;background:#15141a;border-bottom:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 14px;font-size:11px;color:var(--mute);
+    }
+    .titlebar .l{display:flex;align-items:center;gap:14px}
+    .titlebar .dots{display:flex;gap:6px}
+    .titlebar .dots span{width:11px;height:11px;border-radius:50%}
+    .titlebar .dots span:nth-child(1){background:#ff5f56}
+    .titlebar .dots span:nth-child(2){background:#ffbd2e}
+    .titlebar .dots span:nth-child(3){background:#27c93f}
+    .titlebar .ttl{color:#aaa;font-size:11.5px}
+    .titlebar .ttl b{color:#fff;font-weight:500}
+    .titlebar .r{display:flex;align-items:center;gap:14px;font-size:11px}
+    .titlebar .led{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+    @keyframes pulse{50%{opacity:0.4}}
+    .titlebar .back{padding:4px 10px;border:1px solid var(--line-2);border-radius:6px;color:var(--ink-2);transition:all .15s;font-family:"Inter Tight",sans-serif;font-size:11.5px}
+    .titlebar .back:hover{border-color:var(--coral);color:var(--coral)}
+
+    .tabsbar{
+      height:30px;background:#0d0d14;border-bottom:1px solid var(--line);
+      display:flex;align-items:stretch;font-size:11.5px;color:var(--mute);
+    }
+    .tabsbar .tab{padding:0 16px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--line);cursor:pointer;transition:all .15s}
+    .tabsbar .tab:hover{color:var(--ink-2);background:#11111a}
+    .tabsbar .tab.on{color:var(--ink);background:var(--bg);border-bottom:2px solid var(--coral);position:relative;top:1px}
+    .tabsbar .tab .num{color:var(--coral);font-weight:600}
+    .tabsbar .tab.muted{color:var(--mute-2)}
+    .tabsbar .grow{flex:1}
+    .tabsbar .live{padding:0 16px;display:flex;align-items:center;gap:8px;color:var(--mute);font-size:10.5px;letter-spacing:0.06em}
+    .tabsbar .live b{color:var(--green)}
+
+    .app{
+      height:calc(100vh - 36px - 30px - 22px);
+      display:grid;
+      grid-template-columns:230px 1fr 320px;
+    }
+    @media(max-width:1100px){.app{grid-template-columns:200px 1fr 280px}}
+    @media(max-width:880px){.app{grid-template-columns:1fr;height:auto;overflow:auto}}
+
+    .explorer{background:var(--panel);border-right:1px solid var(--line);padding:14px 0;overflow-y:auto;font-size:12px}
+    .explorer .hd{padding:10px 14px 6px;color:var(--mute);text-transform:uppercase;letter-spacing:0.1em;font-size:10px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+    .explorer .hd .actions{color:var(--mute-2);letter-spacing:0;font-weight:400;font-size:11px}
+    .explorer .it{padding:3px 14px;color:var(--ink-2);display:flex;align-items:center;gap:8px;cursor:pointer;line-height:1.6}
+    .explorer .it:hover{background:#1a1a24}
+    .explorer .it.fold::before{content:"▾";color:var(--mute);font-size:9px;width:10px}
+    .explorer .it.fold.closed::before{content:"▸"}
+    .explorer .it.file::before{content:"";width:11px;height:11px;border-radius:2px;display:inline-block;margin-left:14px}
+    .explorer .it.file.ts::before{background:#3178c6}
+    .explorer .it.file.tsx::before{background:#3178c6}
+    .explorer .it.file.rs::before{background:#dea584}
+    .explorer .it.file.md::before{background:#519aba}
+    .explorer .it.file.json::before{background:#cbcb41}
+    .explorer .it.file.toml::before{background:#9c4221}
+    .explorer .it.file.css::before{background:#563d7c}
+    .explorer .it.file.lock::before{background:#666;border-radius:50%}
+    .explorer .it.indent{padding-left:28px}
+    .explorer .it.indent.deep{padding-left:42px}
+    .explorer .it.active{background:rgba(217,105,68,0.10);color:#fff;border-left:2px solid var(--coral);padding-left:12px}
+    .explorer .it.active.indent{padding-left:26px}
+    .explorer .it.active.indent.deep{padding-left:40px}
+    .explorer .it .badge{margin-left:auto;font-size:9.5px;padding:1px 5px;border-radius:8px;background:var(--coral-soft);color:var(--coral);letter-spacing:0.04em}
+    .explorer .it .dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .explorer .it .dot.warn{background:var(--yellow)}
+
+    .center{display:grid;grid-template-rows:1fr 250px;overflow:hidden;border-right:1px solid var(--line)}
+    @media(max-width:880px){.center{grid-template-rows:auto auto}}
+
+    .editor{background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+    .ed-tabs{height:34px;background:#0d0d14;border-bottom:1px solid var(--line);display:flex;align-items:stretch;font-size:11.5px}
+    .ed-tabs .et{padding:0 14px;display:flex;align-items:center;gap:8px;color:var(--mute);border-right:1px solid var(--line)}
+    .ed-tabs .et.on{background:var(--bg);color:#fff;border-bottom:2px solid var(--coral);position:relative;top:1px}
+    .ed-tabs .et .x{color:var(--mute-2);font-size:11px;cursor:pointer}
+    .ed-tabs .et:hover .x{color:var(--ink-2)}
+    .ed-tabs .grow{flex:1}
+    .ed-tabs .breadcrumb{padding:0 14px;display:flex;align-items:center;gap:6px;color:var(--mute-2);font-size:11px}
+    .ed-tabs .breadcrumb b{color:var(--ink-2);font-weight:500}
+    .ed-body{flex:1;overflow:auto;padding:12px 0;background:var(--bg);position:relative}
+    .ed-body::-webkit-scrollbar{width:8px;height:8px}
+    .ed-body::-webkit-scrollbar-thumb{background:#22222c;border-radius:4px}
+    .ed-row{display:flex;gap:14px;padding:0 18px;line-height:1.7;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+    .ed-row .gut{color:#3a3a44;width:34px;text-align:right;flex-shrink:0;user-select:none}
+    .ed-row .gut.cur{color:var(--coral);font-weight:600}
+    .ed-row .txt{flex:1;white-space:pre;color:var(--ink-2)}
+    .ed-row.cur{background:rgba(217,105,68,0.05)}
+    .ed-row .kw{color:#ff7b72}
+    .ed-row .fn{color:#d2a8ff}
+    .ed-row .st{color:var(--string)}
+    .ed-row .nm{color:#79c0ff}
+    .ed-row .cm{color:#6e7585;font-style:italic}
+    .ed-row .num{color:#79c0ff}
+    .ed-row .pn{color:#ffa657}
+    .ed-row .op{color:#ff7b72}
+    .ed-row .ty{color:#a5d6ff}
+    .ed-row .br{color:#8b949e}
+
+    .terminal{background:#08080c;border-top:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+    .term-tabs{height:28px;background:#0d0d14;border-bottom:1px solid var(--line);display:flex;align-items:stretch;font-size:11px;color:var(--mute)}
+    .term-tabs .tt{padding:0 14px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--line)}
+    .term-tabs .tt.on{background:#08080c;color:var(--ink);border-bottom:2px solid var(--coral);position:relative;top:1px}
+    .term-tabs .tt::before{content:"●";font-size:8px}
+    .term-tabs .tt:nth-child(1)::before{color:var(--coral)}
+    .term-tabs .tt:nth-child(2)::before{color:var(--green)}
+    .term-tabs .tt:nth-child(3)::before{color:var(--yellow)}
+    .term-tabs .grow{flex:1}
+    .term-tabs .actions{padding:0 12px;display:flex;align-items:center;gap:10px;color:var(--mute-2);font-size:11px}
+    .term-body{flex:1;padding:12px 16px;overflow-y:auto;font-size:12.5px;color:#e8c878}
+    .term-body::-webkit-scrollbar{width:8px}.term-body::-webkit-scrollbar-thumb{background:#22222c;border-radius:4px}
+    .term-body .ln{display:flex;gap:10px;padding:0;margin-bottom:1px}
+    .term-body .ln .gut{color:#3a3a40;width:24px;text-align:right;flex-shrink:0;user-select:none;font-size:11px}
+    .term-body .ln .txt{flex:1;white-space:pre-wrap;word-break:break-word;color:#d4d4dc}
+    .pr{color:var(--green)}.cmd{color:#fff}.ok{color:var(--green)}
+    .ac{color:var(--coral)}.di{color:var(--blue)}.gr{color:var(--mute)}.em{color:var(--purple)}
+    .ye{color:var(--yellow)}.cu{display:inline-block;width:8px;height:14px;background:#e8c878;vertical-align:-2px;margin-left:2px;animation:bl 1s steps(2) infinite}
+    @keyframes bl{50%{opacity:0}}
+    .term-input{padding:6px 16px 10px;display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);font-size:12.5px;background:#08080c}
+    .term-input .pr{color:var(--green)}
+    .term-input input{flex:1;background:transparent;border:none;outline:none;color:#fff;font-family:inherit;font-size:inherit;caret-color:var(--coral)}
+    .term-input .hint{font-size:10.5px;color:var(--mute-2);font-family:"Inter Tight",sans-serif}
+
+    .sidebar{background:var(--panel);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px}
+    .sidebar::-webkit-scrollbar{width:8px}.sidebar::-webkit-scrollbar-thumb{background:#22222c;border-radius:4px}
+    .panel{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:14px;font-family:"Inter Tight",sans-serif}
+    .panel .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--mute);letter-spacing:0.1em;text-transform:uppercase}
+    .panel .ph b{color:var(--ink);font-weight:600}
+    .panel .ph .pos{color:var(--green);text-transform:none;letter-spacing:0;font-size:11px}
+    .panel .ph .neg{color:var(--red);text-transform:none;letter-spacing:0;font-size:11px}
+
+    .metric .vl{font-family:"JetBrains Mono",monospace;font-size:30px;font-weight:600;color:#fff;line-height:1}
+    .metric .vl span{font-size:13px;color:var(--mute);font-weight:400}
+    .metric .sub{font-size:11.5px;color:var(--mute);margin-top:6px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+    .spark{height:48px;display:flex;align-items:flex-end;gap:2px;margin-top:10px}
+    .spark span{flex:1;background:linear-gradient(180deg,var(--coral),#7a3a25);border-radius:1px;transition:height .4s}
+
+    .stack-list{font-family:"JetBrains Mono",monospace;font-size:11.5px;display:flex;flex-direction:column;gap:6px}
+    .stack-list div{display:flex;justify-content:space-between;align-items:center}
+    .stack-list .nm{color:var(--ink-2)}
+    .stack-list .ok{color:var(--green)}
+    .stack-list .warn{color:var(--yellow)}
+
+    .reqs{font-family:"JetBrains Mono",monospace;font-size:11px;line-height:1.85;max-height:140px;overflow:hidden}
+    .reqs .r{display:grid;grid-template-columns:38px 50px 1fr;gap:8px;color:var(--ink-2)}
+    .reqs .r .m200{color:var(--green)}.reqs .r .m4xx{color:var(--yellow)}.reqs .r .m5xx{color:var(--red)}
+    .reqs .r .ms{color:var(--ink-2)}.reqs .r .pa{color:var(--blue)}
+
+    .hm{display:grid;grid-template-columns:repeat(26,1fr);gap:2px;margin-top:6px}
+    .hm div{aspect-ratio:1;background:#1a1a22;border-radius:1.5px}
+    .hm div.l1{background:#3a201a}.hm div.l2{background:#7a3a25}
+    .hm div.l3{background:#d96944}.hm div.l4{background:#ff8a55;box-shadow:0 0 4px #ff8a55}
+    .hm-legend{display:flex;justify-content:space-between;font-size:9.5px;color:var(--mute);margin-top:6px;font-family:"JetBrains Mono",monospace}
+
+    .repos{display:flex;flex-direction:column;gap:6px}
+    .repos a{display:flex;justify-content:space-between;padding:8px 10px;border:1px solid var(--line);border-radius:5px;font-size:11.5px;font-family:"JetBrains Mono",monospace;color:var(--ink-2);transition:all .15s}
+    .repos a:hover{border-color:var(--coral);color:#fff}
+    .repos .lg{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+    .repos .star{color:var(--mute);font-size:11px}
+
+    .statusbar{
+      height:22px;background:var(--coral);color:#fff;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 14px;font-size:10.5px;letter-spacing:0.04em;
+    }
+    .statusbar .l, .statusbar .r{display:flex;align-items:center;gap:14px}
+    .statusbar .l span, .statusbar .r span{display:inline-flex;align-items:center;gap:4px}
+
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="l">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="ttl">kevin@gamez — <b>~/dev</b> — 1452 × 902</div>
+  </div>
+  <div class="r">
+    <span><span class="led"></span>live · build {buildId}</span>
+    <a class="back" href="/">← exit dev mode</a>
+  </div>
+</div>
+
+<div class="tabsbar">
+  <div class="tab on"><span class="num">1</span>workspace</div>
+  <div class="tab muted"><span class="num">2</span>scratchpad</div>
+  <div class="tab muted"><span class="num">3</span>changelog</div>
+  <div class="grow"></div>
+  <div class="live">utc-5 · bogotá · <b>04°35′N</b></div>
+</div>
+
+<div class="app">
+
+  <aside class="explorer">
+    <div class="hd">Explorer<span class="actions">⊕ ⟲</span></div>
+    <div class="it fold">kevin-gamez</div>
+    <div class="it indent fold">src</div>
+    <div class="it indent deep file ts">about.ts</div>
+    <div class="it indent deep file ts active">stack.ts</div>
+    <div class="it indent deep file ts">work.ts<span class="dot"></span></div>
+    <div class="it indent deep file rs">life.rs</div>
+    <div class="it indent fold">api</div>
+    <div class="it indent deep file ts">now.ts</div>
+    <div class="it indent deep file ts">repos.ts<span class="dot warn"></span></div>
+    <div class="it indent deep file ts">eval.ts<span class="badge">M</span></div>
+    <div class="it indent fold closed">tests</div>
+    <div class="it indent file md">README.md</div>
+    <div class="it indent file json">package.json</div>
+    <div class="it indent file toml">cargo.toml</div>
+    <div class="it indent file lock">bun.lock</div>
+    <div class="it indent file css">style.css</div>
+    <div class="it indent file md">CHANGELOG.md</div>
+
+    <div class="hd" style="margin-top:18px">Outline · stack.ts</div>
+    <div class="it indent">▸ stack</div>
+    <div class="it indent deep">▸ runtime</div>
+    <div class="it indent deep">▸ languages</div>
+    <div class="it indent deep">▸ storage</div>
+    <div class="it indent deep">▸ models</div>
+    <div class="it indent">▸ summary()</div>
+
+    <div class="hd" style="margin-top:18px">Source control</div>
+    <div class="it indent">⎇ main</div>
+    <div class="it indent">⊕ 0 / ⊖ 0</div>
+    <div class="it indent">last commit · 12s ago</div>
+  </aside>
+
+  <main class="center">
+
+    <section class="editor">
+      <div class="ed-tabs">
+        <div class="et on">stack.ts <span class="x">×</span></div>
+        <div class="et">about.ts <span class="x">×</span></div>
+        <div class="et">life.rs <span class="x">×</span></div>
+        <div class="et">README.md <span class="x">×</span></div>
+        <div class="grow"></div>
+        <div class="breadcrumb">src › <b>stack.ts</b></div>
+      </div>
+      <div class="ed-body">
+        <div class="ed-row"><span class="gut">1</span><span class="txt"><span class="cm">// kevin-gamez/src/stack.ts</span></span></div>
+        <div class="ed-row"><span class="gut">2</span><span class="txt"><span class="cm">// what i actually use, kept honest by being read.</span></span></div>
+        <div class="ed-row"><span class="gut">3</span><span class="txt"></span></div>
+        <div class="ed-row"><span class="gut">4</span><span class="txt"><span class="kw">import type</span> {<span class="ty"> Tool </span>} <span class="kw">from</span> <span class="st">"./types"</span>;</span></div>
+        <div class="ed-row"><span class="gut">5</span><span class="txt"></span></div>
+        <div class="ed-row cur"><span class="gut cur">6</span><span class="txt"><span class="kw">export const</span> <span class="nm">stack</span> = &#123;</span></div>
+        <div class="ed-row"><span class="gut">7</span><span class="txt">  <span class="pn">runtime</span>:    [<span class="st">"node 22"</span>, <span class="st">"bun 1.1"</span>, <span class="st">"cf workers"</span>],</span></div>
+        <div class="ed-row"><span class="gut">8</span><span class="txt">  <span class="pn">languages</span>:  &#123;</span></div>
+        <div class="ed-row"><span class="gut">9</span><span class="txt">    <span class="pn">production</span>: [<span class="st">"typescript"</span>, <span class="st">"rust"</span>, <span class="st">"python"</span>, <span class="st">"sql"</span>],</span></div>
+        <div class="ed-row"><span class="gut">10</span><span class="txt">    <span class="pn">learning</span>:   [<span class="st">"zig"</span>, <span class="st">"coq"</span>, <span class="st">"lean"</span>],</span></div>
+        <div class="ed-row"><span class="gut">11</span><span class="txt">  &#125;,</span></div>
+        <div class="ed-row"><span class="gut">12</span><span class="txt">  <span class="pn">storage</span>:    [<span class="st">"postgres 16"</span>, <span class="st">"redis"</span>, <span class="st">"r2"</span>, <span class="st">"meilisearch"</span>],</span></div>
+        <div class="ed-row"><span class="gut">13</span><span class="txt">  <span class="pn">models</span>:     [<span class="st">"claude"</span>, <span class="st">"openai"</span>, <span class="st">"ollama"</span>],</span></div>
+        <div class="ed-row"><span class="gut">14</span><span class="txt">  <span class="pn">delivery</span>:   [<span class="st">"gh actions"</span>, <span class="st">"cf pages"</span>, <span class="st">"sentry"</span>],</span></div>
+        <div class="ed-row"><span class="gut">15</span><span class="txt">  <span class="pn">tools</span>:      [<span class="st">"neovim"</span>, <span class="st">"ghostty"</span>, <span class="st">"linear"</span>, <span class="st">"figma"</span>],</span></div>
+        <div class="ed-row"><span class="gut">16</span><span class="txt">&#125; <span class="kw">as const</span> <span class="kw">satisfies</span> <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">Tool</span>[]&gt;;</span></div>
+        <div class="ed-row"><span class="gut">17</span><span class="txt"></span></div>
+        <div class="ed-row"><span class="gut">18</span><span class="txt"><span class="kw">export const</span> <span class="nm">summary</span> = () =&gt;</span></div>
+        <div class="ed-row"><span class="gut">19</span><span class="txt">  <span class="st">"small, sharp tools that compound."</span>;</span></div>
+        <div class="ed-row"><span class="gut">20</span><span class="txt"></span></div>
+        <div class="ed-row"><span class="gut">21</span><span class="txt"><span class="cm">/* runtime: see /api/now for the live picture */</span></span></div>
+      </div>
+    </section>
+
+    <section class="terminal">
+      <div class="term-tabs">
+        <div class="tt on">zsh</div>
+        <div class="tt">build:watch</div>
+        <div class="tt">tail -f prod.log</div>
+        <div class="grow"></div>
+        <div class="actions">⎘ split  ⊕ new  ↗ pop-out</div>
+      </div>
+      <div class="term-body" id="term">
+        <div class="ln"><span class="gut">1</span><span class="txt"><span class="pr">~</span> <span class="cmd">whoami</span></span></div>
+        <div class="ln"><span class="gut">2</span><span class="txt">kevin gámez · founder @ enttor.ai · <span class="ac">bogotá / utc-5</span></span></div>
+        <div class="ln"><span class="gut">3</span><span class="txt"><span class="pr">~</span> <span class="cmd">curl -s api.kevingamez.dev/now | jq</span></span></div>
+        <div class="ln"><span class="gut">4</span><span class="txt"><span class="gr">&#123;</span> <span class="em">"available"</span>: <span class="ok">true</span>, <span class="em">"shipping"</span>: <span class="ac">"eval-as-a-service v0.4"</span> <span class="gr">&#125;</span></span></div>
+        <div class="ln"><span class="gut">5</span><span class="txt"><span class="pr">~</span> <span class="cmd">help</span></span></div>
+        <div class="ln"><span class="gut">6</span><span class="txt"><span class="gr">commands:</span> <span class="ac">about</span> <span class="ac">work</span> <span class="ac">stack</span> <span class="ac">repos</span> <span class="ac">contact</span> <span class="ac">life</span> <span class="ac">vim</span> <span class="ac">clear</span></span></div>
+        <div class="ln"><span class="gut">7</span><span class="txt"><span class="pr">~</span> <span class="cu"></span></span></div>
+      </div>
+      <div class="term-input">
+        <span class="pr">~</span>
+        <input id="cmd" placeholder="type a command, press enter…" autocomplete="off" />
+        <span class="hint">↵ run · ↑ history · ⌃L clear</span>
+      </div>
+    </section>
+
+  </main>
+
+  <aside class="sidebar">
+
+    <div class="panel">
+      <div class="ph"><b>traffic / 60min</b><span class="pos">+12%</span></div>
+      <div class="row2">
+        <div class="metric"><div class="vl">3,418<span> req/m</span></div><div class="sub">vs 3,051 last hour</div></div>
+        <div class="metric"><div class="vl">214<span> live</span></div><div class="sub">peak today: 489</div></div>
+      </div>
+      <div class="spark" id="spark"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><b>runtime · prod</b><span class="pos">healthy</span></div>
+      <div class="stack-list">
+        <div><span class="nm">postgres</span><span class="ok">● 38ms</span></div>
+        <div><span class="nm">redis</span><span class="ok">● 2ms</span></div>
+        <div><span class="nm">cf workers</span><span class="ok">● ok</span></div>
+        <div><span class="nm">anthropic</span><span class="warn">● slow · 142ms</span></div>
+        <div><span class="nm">openai</span><span class="ok">● ok</span></div>
+        <div><span class="nm">sentry</span><span class="ok">● 0 new</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><b>tail -f /var/log/access</b></div>
+      <div class="reqs" id="reqs">
+        <div class="r"><span class="m200">200</span><span class="ms">38ms</span><span class="pa">GET /api/now</span></div>
+        <div class="r"><span class="m200">200</span><span class="ms">42ms</span><span class="pa">GET /api/repos</span></div>
+        <div class="r"><span class="m200">200</span><span class="ms">28ms</span><span class="pa">GET /</span></div>
+        <div class="r"><span class="m4xx">404</span><span class="ms">11ms</span><span class="pa">GET /favicon.ico</span></div>
+        <div class="r"><span class="m200">200</span><span class="ms">156ms</span><span class="pa">POST /api/eval</span></div>
+        <div class="r"><span class="m200">200</span><span class="ms">35ms</span><span class="pa">GET /life/state</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><b>contributions · 26w</b><span class="pos">1,284</span></div>
+      <div class="hm" id="hm"></div>
+      <div class="hm-legend"><span>26w ago</span><span>today</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><b>open source</b></div>
+      <div class="repos">
+        <a href="https://github.com/kevingamez" target="_blank" rel="noopener"><span><span class="lg" style="background:#dea584"></span>automata-rs</span><span class="star">★ 412</span></a>
+        <a href="https://github.com/kevingamez" target="_blank" rel="noopener"><span><span class="lg" style="background:#3178c6"></span>fractal-atlas</span><span class="star">★ 189</span></a>
+        <a href="https://github.com/kevingamez" target="_blank" rel="noopener"><span><span class="lg" style="background:#3572A5"></span>primes-notebook</span><span class="star">★ 33</span></a>
+        <a href="https://github.com/kevingamez/personal-site" target="_blank" rel="noopener"><span><span class="lg" style="background:#ff5d01"></span>personal-site</span><span class="star">★ 64</span></a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><b>now() →</b></div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--ink-2)">
+        <div><span class="ac">building</span> · eval-as-a-service v0.4</div>
+        <div><span class="ac">reading</span> · A Mathematician's Apology</div>
+        <div><span class="ac">listening</span> · Caribou — Honey</div>
+        <div><span class="ac">thinking</span> · Jones polynomial</div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<div class="statusbar">
+  <div class="l">
+    <span>● NORMAL</span>
+    <span>⎇ main</span>
+    <span>✓ clean</span>
+    <span>typescript · 5.4</span>
+  </div>
+  <div class="r">
+    <span>p50 38ms · p95 142ms</span>
+    <span>err 0.02%</span>
+    <span>uptime 217d</span>
+    <span>UTF-8 · LF · Ln 6, Col 24</span>
+  </div>
+</div>
+
+<script is:inline>
+/* ─── Live sparkline ─── */
+(function(){
+  const s = document.getElementById('spark');
+  if(!s) return;
+  const N = 30;
+  const arr = Array.from({length:N}, () => 30 + Math.random()*60);
+  function render(){
+    s.innerHTML = '';
+    for(const v of arr){
+      const sp = document.createElement('span');
+      sp.style.height = v + '%';
+      s.appendChild(sp);
+    }
+  }
+  render();
+  setInterval(()=>{ arr.shift(); arr.push(40 + Math.random()*55); render(); }, 1800);
+})();
+
+/* ─── Heatmap ─── */
+(function(){
+  const hm = document.getElementById('hm');
+  if(!hm) return;
+  const total = 7*26;
+  for(let i=0;i<total;i++){
+    const r = Math.random();
+    let cls = '';
+    if(r>0.45) cls='l1';
+    if(r>0.70) cls='l2';
+    if(r>0.88) cls='l3';
+    if(r>0.97) cls='l4';
+    const d = document.createElement('div');
+    if(cls) d.className = cls;
+    hm.appendChild(d);
+  }
+})();
+
+/* ─── Live request log ─── */
+(function(){
+  const reqs = document.getElementById('reqs');
+  if(!reqs) return;
+  const paths = ['GET /api/now','GET /api/repos','GET /','GET /life/state','POST /api/eval','GET /work','GET /about','GET /sitemap.xml'];
+  setInterval(()=>{
+    const p = paths[Math.floor(Math.random()*paths.length)];
+    const ms = 20 + Math.floor(Math.random()*180);
+    const status = Math.random()>0.95 ? '4xx' : '200';
+    const cls = status==='200' ? 'm200' : 'm4xx';
+    const r = document.createElement('div');
+    r.className = 'r';
+    r.innerHTML = '<span class="'+cls+'">'+(status==='200'?'200':'404')+'</span><span class="ms">'+ms+'ms</span><span class="pa">'+p+'</span>';
+    reqs.insertBefore(r, reqs.firstChild);
+    while(reqs.children.length>7) reqs.removeChild(reqs.lastChild);
+  }, 2200);
+})();
+
+/* ─── Terminal commands ─── */
+(function(){
+  const term = document.getElementById('term');
+  const input = document.getElementById('cmd');
+  if(!term || !input) return;
+  let lineNum = 8;
+  const responses = {
+    about:    ['kevin gámez · founder @ enttor.ai · bogotá', 'eng for 7 yrs, ceo for 2, math nerd for life'],
+    work:     ['<span class="ac">enttor.ai</span>      → ad-creative pipelines at scale', '<span class="ac">automata-rs</span>    → wasm cellular automata · ★412', '<span class="ac">fractal-atlas</span>  → glsl deep-zoom · ★189'],
+    stack:    ['<span class="di">runtime</span>   node 22 · bun 1.1 · cf workers', '<span class="di">storage</span>   postgres 16 · redis · r2', '<span class="di">models</span>    claude · openai · ollama'],
+    repos:    ['kevingamez/<span class="ac">automata-rs</span>      ★412', 'kevingamez/<span class="ac">fractal-atlas</span>    ★189', 'kevingamez/<span class="ac">primes-notebook</span>  ★33', 'kevingamez/<span class="ac">personal-site</span>    ★64'],
+    contact:  ['<span class="em">email</span>     hi@kevingamez.com', '<span class="em">github</span>    github.com/kevingamez', '<span class="em">x</span>         x.com/kevin_gamez'],
+    life:     ['↗ opening conway\'s game of life… see hero on <span class="ac">/</span>'],
+    vim:      ['<span class="ye">E437:</span> terminal capability "cm" required'],
+    help:     ['<span class="gr">commands:</span> <span class="ac">about</span> <span class="ac">work</span> <span class="ac">stack</span> <span class="ac">repos</span> <span class="ac">contact</span> <span class="ac">life</span> <span class="ac">vim</span> <span class="ac">clear</span>'],
+  };
+
+  function addLine(html){
+    const div = document.createElement('div');
+    div.className = 'ln';
+    div.innerHTML = '<span class="gut">'+(++lineNum)+'</span><span class="txt">'+html+'</span>';
+    term.appendChild(div);
+    term.scrollTop = term.scrollHeight;
+  }
+  function clearCursor(){
+    [...term.querySelectorAll('.cu')].forEach(c => c.remove());
+  }
+
+  input.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      const v = input.value.trim();
+      if(!v) return;
+      clearCursor();
+      addLine('<span class="pr">~</span> <span class="cmd">'+v+'</span>');
+      if(v === 'clear'){
+        term.innerHTML = '';
+        lineNum = 0;
+      } else if(responses[v]){
+        for(const line of responses[v]) addLine(line);
+      } else {
+        addLine('<span class="ye">zsh:</span> command not found: '+v+'  · try <span class="ac">help</span>');
+      }
+      addLine('<span class="pr">~</span> <span class="cu"></span>');
+      input.value = '';
+    }
+  });
+})();
+</script>
+</body>
+</html>
