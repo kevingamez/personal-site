@@ -1,0 +1,69 @@
+footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 48px 0 32px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 36px;
+}
+@media (max-width: 780px) {
+  .foot-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.foot-grid h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(250, 247, 240, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  font-weight: 400;
+}
+.foot-grid .col-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px;
+  line-height: 1.1;
+  margin: 0 0 8px;
+}
+.foot-grid .col-name i {
+  font-style: italic;
+  color: var(--coral);
+}
+.foot-grid p {
+  font-size: 14px;
+  color: rgba(250, 247, 240, 0.7);
+  max-width: 36ch;
+  margin: 0;
+}
+.foot-grid ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.foot-grid ul a {
+  color: rgba(250, 247, 240, 0.78);
+  transition: color 0.2s;
+}
+.foot-grid ul a:hover {
+  color: var(--coral);
+}
+.colophon {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid rgba(250, 247, 240, 0.12);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: rgba(250, 247, 240, 0.5);
+  letter-spacing: 0.06em;
+  flex-wrap: wrap;
+  gap: 14px;
+}

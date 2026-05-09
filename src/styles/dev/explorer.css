@@ -1,0 +1,121 @@
+.explorer {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 0;
+  overflow-y: auto;
+  font-size: 13px;
+  font-family: 'Inter Tight', system-ui, sans-serif;
+}
+.explorer .hd {
+  padding: 14px 20px 4px;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.explorer .hd .actions {
+  color: var(--mute-2);
+  letter-spacing: 0;
+  font-weight: 400;
+  font-size: 11px;
+}
+.explorer .it {
+  height: 22px;
+  padding: 0 20px 0 8px;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  line-height: 22px;
+  font-size: 13px;
+  position: relative;
+}
+.explorer .it:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+/* Chevron — real vscode-style chevron (>), rotates to v when expanded */
+.explorer .it.fold::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6 4l4 4-4 4' stroke='%23858585' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: rotate(90deg);
+  transition: transform 0.15s ease;
+}
+.explorer .it.fold.closed::before {
+  transform: rotate(0);
+}
+.explorer .it.fold:hover::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6 4l4 4-4 4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>");
+}
+/* Files reserve the chevron column so their icon aligns with folder icons. */
+.explorer .it.file::before {
+  content: '';
+  width: 16px;
+  flex-shrink: 0;
+}
+.explorer .it.indent {
+  padding-left: 16px;
+}
+.explorer .it.indent.deep {
+  padding-left: 24px;
+}
+.explorer .it.active {
+  background: rgba(217, 105, 68, 0.18);
+  color: #fff;
+}
+.explorer .it.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--coral);
+}
+.explorer .it .badge {
+  margin-left: auto;
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  letter-spacing: 0.04em;
+}
+.explorer .it .dot {
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.explorer .it .dot.warn {
+  background: var(--yellow);
+}
+/* Workspace root renders as a vscode-style section header */
+.explorer .it.workspace-root {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  height: 22px;
+  padding: 0 20px 0 8px;
+}
+.explorer .it.workspace-root .lbl {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.explorer .it.workspace-root:hover {
+  background: rgba(255, 255, 255, 0.04);
+}

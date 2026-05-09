@@ -1,0 +1,44 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["about"]
+}
+
+const { t } = Astro.props
+---
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <div class="portrait"><span class="badge">K. GÁMEZ · 2026</span></div>
+      </div>
+      <div class="about-prose">
+        <p><Fragment set:html={t.p1Html} /></p>
+        <p><Fragment set:html={t.p2Html} /></p>
+        <p><Fragment set:html={t.p3Html} /></p>
+        <div class="quick-facts">
+          <div class="qf"><div class="k">{t.qfBased}</div><div class="v">{t.qfBasedV}</div></div>
+          <div class="qf">
+            <div class="k">{t.qfRole}</div><div class="v">{t.qfRoleV}</div>
+          </div>
+          <div class="qf">
+            <div class="k">{t.qfStack}</div><div class="v">{t.qfStackV}</div>
+          </div>
+          <div class="qf">
+            <div class="k">{t.qfObsessed}</div>
+            <div class="v"><Fragment set:html={t.qfObsessedV} /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

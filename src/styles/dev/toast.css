@@ -1,0 +1,25 @@
+/* Save toast */
+.toast {
+  position: fixed;
+  bottom: 40px;
+  right: 24px;
+  background: var(--coral);
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+  z-index: 200;
+  box-shadow: 0 6px 20px rgba(217, 105, 68, 0.4);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}

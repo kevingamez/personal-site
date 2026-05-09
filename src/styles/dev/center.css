@@ -1,0 +1,77 @@
+.center {
+  display: grid;
+  grid-template-rows: 1fr 250px;
+  overflow: hidden;
+  border-right: 1px solid var(--line);
+  position: relative;
+  isolation: isolate;
+}
+/* Ambient gradient behind the editor — gives the liquid glass blur
+   something to refract. Subtle coral + cool tint. */
+.center::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 28% 22%, rgba(217, 105, 68, 0.22), transparent 65%),
+    radial-gradient(ellipse 60% 55% at 78% 75%, rgba(120, 145, 200, 0.16), transparent 70%),
+    radial-gradient(ellipse 40% 45% at 50% 50%, rgba(196, 122, 217, 0.1), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+@media (max-width: 880px) {
+  .center {
+    grid-template-rows: auto auto;
+  }
+}
+/* workspace switching: hide / show sections by parent state */
+.center.ws-workspace > .scratchpad,
+.center.ws-workspace > .changelog-view {
+  display: none;
+}
+.center.ws-scratchpad > .editor,
+.center.ws-scratchpad > .terminal,
+.center.ws-scratchpad > .changelog-view {
+  display: none;
+}
+.center.ws-changelog > .editor,
+.center.ws-changelog > .terminal,
+.center.ws-changelog > .scratchpad {
+  display: none;
+}
+.center.ws-scratchpad,
+.center.ws-changelog {
+  grid-template-rows: 1fr;
+}
+.tabsbar .tab {
+  cursor: pointer;
+}
+.term-tabs .tt[data-term] {
+  cursor: pointer;
+}
+.term-stream {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+.term-stream .ln .ts {
+  color: var(--mute-2);
+}
+.term-stream .ln .lvl-info {
+  color: var(--green);
+}
+.term-stream .ln .lvl-warn {
+  color: var(--yellow);
+}
+.term-stream .ln .lvl-err {
+  color: var(--red);
+}
+.term-stream .ln .key {
+  color: var(--blue);
+}
+.term-stream .ln .vite {
+  color: #c47ad9;
+}
+.term-stream .ln .arrow {
+  color: var(--coral);
+}

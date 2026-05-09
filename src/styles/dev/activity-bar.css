@@ -1,0 +1,62 @@
+/* ─── Activity bar (left strip, vscode-style) ─── */
+.activity-bar {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0;
+  gap: 2px;
+}
+.activity-bar .ab-grow {
+  flex: 1;
+}
+.activity-bar .ab-item {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  color: var(--mute);
+  transition: color 0.15s;
+  padding: 0;
+  position: relative;
+}
+.activity-bar .ab-item:hover {
+  color: var(--ink);
+}
+.activity-bar .ab-item.on {
+  color: var(--ink);
+  border-left-color: var(--coral);
+}
+.activity-bar .ab-item .material-symbols-outlined {
+  font-size: 22px;
+  opacity: 0.78;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  transition:
+    opacity 0.15s,
+    font-variation-settings 0.2s;
+  pointer-events: none;
+}
+.activity-bar .ab-item:hover .material-symbols-outlined,
+.activity-bar .ab-item.on .material-symbols-outlined {
+  opacity: 1;
+}
+.activity-bar .ab-item.on .material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+  color: var(--coral);
+}
+
+/* ─── Explorer (vscode rhythm: tight, 22px row height, full-width selection) ─── */

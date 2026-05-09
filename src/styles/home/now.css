@@ -1,0 +1,29 @@
+/* Now grid styles (legacy — unimported, kept to satisfy formatter). */
+.now-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 700px) {
+  .now-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.now-cell {
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+}
+.now-cell .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--coral);
+}
+.now-cell .v {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  margin-top: 10px;
+}
