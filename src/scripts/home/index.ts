@@ -3,6 +3,8 @@
 
 import { initConway } from './conway'
 import { initContribGraph } from './contrib'
+import { initGhStats } from './gh-stats'
 
 initConway()
 initContribGraph()
+initGhStats()
