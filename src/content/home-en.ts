@@ -3,17 +3,17 @@ import type { HomeStrings } from './home'
 export const en: HomeStrings = {
   meta: {
     htmlLang: 'en',
-    title: 'Kevin Gámez — software, math, small worlds',
+    title: 'Kevin Gámez · software, math, small worlds',
     description:
       'Kevin Gámez is the founding engineer at Enttor, based in Bogotá. AI outbound, browser automation, OpenAI pipelines, Next.js / NestJS / Postgres.',
     canonical: 'https://kevingamez.com/',
     ogUrl: 'https://kevingamez.com/',
-    ogTitle: 'Kevin Gámez — software, math, small worlds',
+    ogTitle: 'Kevin Gámez · software, math, small worlds',
     ogDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
-    twitterTitle: 'Kevin Gámez — software, math, small worlds',
+    twitterTitle: 'Kevin Gámez · software, math, small worlds',
     twitterDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     includeJsonLd: true,
@@ -37,7 +37,7 @@ export const en: HomeStrings = {
   hero: {
     hello: "Hi, I'm Kevin",
     titleHtml: 'I build software<br />that <i>compounds.</i>',
-    lede: 'Founding engineer at <b>enttor.ai</b>, building AI outbound at scale — browser automation, OpenAI pipelines,\n            Instagram/LinkedIn prospecting. Previously founding engineer at Samsam. M.Sc. in deep learning at Uniandes.',
+    lede: 'Founding engineer at <b>enttor.ai</b>, building AI outbound at scale · browser automation, OpenAI pipelines,\n            Instagram/LinkedIn prospecting. Previously founding engineer at Samsam. M.Sc. in deep learning at Uniandes.',
     btnSeeWork: 'See work →',
     btnGetInTouch: 'Get in touch',
     available: 'Available · Q2',
@@ -53,14 +53,14 @@ export const en: HomeStrings = {
     fps: 'fps',
   },
   about: {
-    secNum: '§01 — About',
+    secNum: '§01 · About',
     titleHtml: 'A small studio of <i>one</i>, mostly happy.',
     blurb:
       'Founding engineer, full-stack, deep-learning grad. Short version below; long version over coffee.',
     p1Html:
       "I'm a software engineer from Bogotá. As <b>founding engineer at Enttor</b> I built the AI outbound engine and\n              browser automation flows for Instagram/LinkedIn prospecting, the Next.js dashboards, the NestJS APIs, and the\n              Supabase + Inngest plumbing that holds it together.",
     p2Html:
-      'Before that I was founding engineer at <b>Samsam</b>, an e-commerce platform — shopper and merchant apps\n              in TypeScript, React Native, Next.js, Prisma and PostgreSQL. Earlier work crossed data analytics (SQL\n              models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and\n              environmental risk detection.',
+      'Before that I was founding engineer at <b>Samsam</b>, an e-commerce platform · shopper and merchant apps\n              in TypeScript, React Native, Next.js, Prisma and PostgreSQL. Earlier work crossed data analytics (SQL\n              models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and\n              environmental risk detection.',
     p3Html:
       'I finished a B.Sc. in Systems and Computing and an M.Sc. in Information Engineering at <b\n                >Universidad de los Andes</b\n              >, with a specialization in deep learning and a minor in Management. The Game of Life on the right has\n              been alive since 1970; I just gave it a frame.',
     qfBased: 'Based',
@@ -73,7 +73,7 @@ export const en: HomeStrings = {
     qfObsessedV: 'Browser automation &amp; LLM pipelines',
   },
   skills: {
-    secNum: '§02 — Tools',
+    secNum: '§02 · Tools',
     titleHtml: 'The kit, and what I <i>actually</i> reach for.',
     blurb:
       "Everything I've used in production. Coral chips are what I'd pick today, given the choice.",
@@ -89,43 +89,43 @@ export const en: HomeStrings = {
     },
   },
   experience: {
-    secNum: '§03 — Trajectory',
+    secNum: '§03 · Trajectory',
     titleHtml: 'A short, mostly <i>linear</i> story.',
     blurb:
       "Two founding-engineer tours, a master's in deep learning, and the long stretch at Uniandes that taught me\n            how to ship.",
-    e1Year: 'Jun 2025 — now',
+    e1Year: 'Jun 2025 · now',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
-      'AI outbound engine — browser automation and OpenAI pipelines for Instagram/LinkedIn prospecting,\n                filtering and automated DMs at scale. Full-stack platform: Next.js dashboards, NestJS APIs, Vercel\n                infra. IG/X/Twitter prospecting on Supabase + Inngest with duplicate-detection logic.',
-    e2Year: 'Feb 2024 — Mar 2025',
+      'AI outbound engine · browser automation and OpenAI pipelines for Instagram/LinkedIn prospecting,\n                filtering and automated DMs at scale. Full-stack platform: Next.js dashboards, NestJS APIs, Vercel\n                infra. IG/X/Twitter prospecting on Supabase + Inngest with duplicate-detection logic.',
+    e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · e-commerce platform',
     e2Desc:
       'Built shopper and merchant apps in TypeScript, React Native, Next.js, Prisma and PostgreSQL. Refactored\n                core services for ~10% lower response times and shipped an alert routing system that pushed\n                critical-error visibility +70%.',
-    e3Year: 'Jan 2024 — May 2025',
+    e3Year: 'Jan 2024 · May 2025',
     e3RoleHtml: 'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
     e3Meta: 'Specialization in deep learning · concurrent graduate TA',
     e3Desc:
-      'Deep learning, computer vision, applied ML — including satellite imagery for cropland and environmental\n                risk detection. Worked as a graduate teaching assistant designing labs and course materials in parallel.',
-    e4Year: 'Jan 2019 — Dec 2023',
+      'Deep learning, computer vision, applied ML · including satellite imagery for cropland and environmental\n                risk detection. Worked as a graduate teaching assistant designing labs and course materials in parallel.',
+    e4Year: 'Jan 2019 · Dec 2023',
     e4RoleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
     e4Meta: 'Minor in Management · Andrés Bello National Distinction',
     e4Desc:
       'Five years across systems, algorithms, ML and a management minor. Side projects in Python, TypeScript,\n                Java and Swift; certifications in AWS Cloud Foundations and Cloud Developing along the way.',
   },
   work: {
-    secNum: '§04 — Selected work',
+    secNum: '§04 · Selected work',
     titleHtml: "Things I've built and <i>still believe in.</i>",
     blurb:
       'A handful out of many. Each one taught me a different lesson; the lessons compound, the projects compound.',
     p1Featured: '01 / FEATURED',
-    p1NameHtml: 'enttor.ai — <i>creative for marketers, at scale.</i>',
+    p1NameHtml: 'enttor.ai · <i>creative for marketers, at scale.</i>',
     p1Desc:
       'Pipelines that take a brand brief, generate hundreds of ad creative variants, score them with LLM-based\n                aesthetic + brand-fit evals, and deploy the survivors. From founding line to thousands of MAU; the eval\n                pipeline alone runs ~120k judgments a day.',
     p1Link: 'Read the case study →',
     p2Desc:
       "A WebAssembly cellular-automaton sandbox: Conway, Wireworld, Brian's Brain, Lenia. Real-time on a million\n              cells, all running in the browser. The hero on this page uses a sibling implementation.",
     p3Desc:
-      'An interactive atlas of escape-time fractals — Mandelbrot, Burning Ship, Julia, Newton — with deep zoom,\n              color schemes, and shareable URLs. A weekend project that ate three weekends.',
+      'An interactive atlas of escape-time fractals · Mandelbrot, Burning Ship, Julia, Newton · with deep zoom,\n              color schemes, and shareable URLs. A weekend project that ate three weekends.',
     p4Desc:
       'Number-theory walkthroughs as live Jupyter notebooks: Ulam spiral, Goldbach pairs, the Riemann staircase.\n              Used by a few math teachers I admire.',
     p5Name: 'this site',
@@ -133,7 +133,7 @@ export const en: HomeStrings = {
       "The page you're on. Open-source, built incrementally, and a place to put math that I think is beautiful\n              next to software I'm proud of.",
   },
   github: {
-    secNum: '§05 — Open source',
+    secNum: '§05 · Open source',
     titleHtml: 'Code I leave <i>out in the open.</i>',
     blurb:
       'The numbers, the languages, and the repos. The contribution graph is decorative; everything else is real.',
@@ -162,7 +162,7 @@ export const en: HomeStrings = {
     repoCloudDesc: 'Containerized service deploys on Cloud Run.',
   },
   now: {
-    secNum: '§06 — Now',
+    secNum: '§06 · Now',
     titleHtml: "What's on my desk <i>this week.</i>",
     blurb: 'A live snapshot. Updated when something changes; usually every Monday morning.',
     buildingK: 'Building',
@@ -180,7 +180,7 @@ export const en: HomeStrings = {
     thinkingSub: 'Specifically the Jones polynomial. No applications yet, but it keeps me up.',
   },
   bookshelf: {
-    secNum: '§07 — Bookshelf',
+    secNum: '§07 · Bookshelf',
     titleHtml: 'Four books that <i>changed how I work.</i>',
     blurb: 'Not the canon. Just the ones I keep recommending.',
   },
@@ -202,6 +202,6 @@ export const en: HomeStrings = {
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
     fonts: 'Set in Instrument Serif &amp; Inter Tight',
-    estab: 'EST. 2026 · BOGOTÁ — 04°35′N',
+    estab: 'EST. 2026 · BOGOTÁ · 04°35′N',
   },
 }

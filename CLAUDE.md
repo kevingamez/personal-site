@@ -22,28 +22,28 @@ Personal portfolio site built with **Astro 5**, deployed as a static build on **
 
 ### Tech Stack
 
-- **Astro 5** — static site generation, no SSR adapter
-- **Preact** — installed (islands allowed when needed)
-- **TypeScript** — strict mode (`astro/tsconfigs/strict`)
-- **Prettier** + `prettier-plugin-astro` — formatting
-- **Playwright** — smoke tests (`tests/`)
+- **Astro 5** · static site generation, no SSR adapter
+- **Preact** · installed (islands allowed when needed)
+- **TypeScript** · strict mode (`astro/tsconfigs/strict`)
+- **Prettier** + `prettier-plugin-astro` · formatting
+- **Playwright** · smoke tests (`tests/`)
 
 ### Pages
 
-- `src/pages/index.astro` — English home (Conway hero)
-- `src/pages/es/index.astro` — Spanish mirror
-- `src/pages/dev.astro` — terminal/IDE-styled "dev mode"
-- `src/pages/404.astro` — themed not-found
+- `src/pages/index.astro` · English home (Conway hero)
+- `src/pages/es/index.astro` · Spanish mirror
+- `src/pages/dev.astro` · terminal/IDE-styled "dev mode"
+- `src/pages/404.astro` · themed not-found
 
 ### Client logic
 
-Interactive logic lives in **`src/scripts/*.ts`** and is imported from pages with a normal `<script>` tag (Astro bundles & type-checks it). Avoid `is:inline` for anything beyond ~10 lines or analytics snippets — bundled scripts are typechecked, tree-shaken, and don't need `'unsafe-inline'` in CSP.
+Interactive logic lives in **`src/scripts/*.ts`** and is imported from pages with a normal `<script>` tag (Astro bundles & type-checks it). Avoid `is:inline` for anything beyond ~10 lines or analytics snippets · bundled scripts are typechecked, tree-shaken, and don't need `'unsafe-inline'` in CSP.
 
 If a feature needs shared state, build it as a Preact island under `src/components/` and import with a `client:` directive.
 
 ### Security headers
 
-Headers (CSP, X-Frame-Options, Permissions-Policy, etc.) are served by **`vercel.json`** at the edge for the static deploy. `src/middleware.ts` mirrors the same set as a fallback for any future SSR adapter — keep both in sync.
+Headers (CSP, X-Frame-Options, Permissions-Policy, etc.) are served by **`vercel.json`** at the edge for the static deploy. `src/middleware.ts` mirrors the same set as a fallback for any future SSR adapter · keep both in sync.
 
 When adding a new third-party host (analytics, fonts, image CDN), update **both** files.
 
@@ -64,7 +64,7 @@ When adding a new third-party host (analytics, fonts, image CDN), update **both*
 ### Style
 
 - Prettier: 2-space indent, single quotes (TS/JS), double quotes (.astro/HTML), no semicolons in TS.
-- Don't fight the formatter — run `npm run format` instead of hand-formatting.
+- Don't fight the formatter · run `npm run format` instead of hand-formatting.
 
 ### Animations & accessibility
 
@@ -82,7 +82,7 @@ Every animation must check `prefers-reduced-motion`. For canvas/JS animations, g
 
 ### Things to avoid
 
-- Don't put heavy JS in `<script is:inline>` — it bypasses bundling, typechecking, and forces `'unsafe-inline'` in CSP.
+- Don't put heavy JS in `<script is:inline>` · it bypasses bundling, typechecking, and forces `'unsafe-inline'` in CSP.
 - Don't add a new font, analytics, or image host without updating CSP in **both** `vercel.json` and `src/middleware.ts`.
-- Don't commit binary screenshots or build artifacts to the repo root — they belong in `/public` if they ship, otherwise `.gitignore` them.
-- Don't introduce backwards-compatibility shims for visual changes — change the design directly.
+- Don't commit binary screenshots or build artifacts to the repo root · they belong in `/public` if they ship, otherwise `.gitignore` them.
+- Don't introduce backwards-compatibility shims for visual changes · change the design directly.
