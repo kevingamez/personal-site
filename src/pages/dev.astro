@@ -1,5 +1,231 @@
 ---
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "node:fs"
+import { dirname, join } from "node:path"
+
 const buildId = "a7f3c91"
+
+// ─── Read real project files at build time ───
+// `astro build` and `astro dev` run from the project root.
+const projectRoot = process.cwd()
+
+const readSafe = (rel: string): string => {
+  try {
+    return readFileSync(join(projectRoot, rel), "utf-8")
+  } catch {
+    return ""
+  }
+}
+
+const langOf = (name: string): string => {
+  const lower = name.toLowerCase()
+  if (lower.endsWith(".astro")) return "astro"
+  if (
+    lower.endsWith(".ts") ||
+    lower.endsWith(".tsx") ||
+    lower.endsWith(".js") ||
+    lower.endsWith(".mjs") ||
+    lower.endsWith(".cjs")
+  )
+    return "ts"
+  if (lower.endsWith(".rs")) return "rs"
+  if (lower.endsWith(".md")) return "md"
+  if (lower.endsWith(".json")) return "json"
+  if (lower.endsWith(".toml")) return "toml"
+  if (lower.endsWith(".css")) return "css"
+  if (lower.endsWith(".html")) return "html"
+  return "plain"
+}
+
+// Order matters — preserved in tree rendering
+const LOCAL_FILE_PATHS = [
+  "src/pages/es/index.astro",
+  "src/pages/404.astro",
+  "src/pages/dev.astro",
+  "src/pages/index.astro",
+  "src/middleware.ts",
+  ".editorconfig",
+  ".gitignore",
+  ".prettierignore",
+  ".prettierrc.json",
+  "astro.config.mjs",
+  "CHANGELOG.md",
+  "CLAUDE.md",
+  "CONTRIBUTING.md",
+  "package.json",
+  "README.md",
+  "tsconfig.json",
+]
+const localFiles: Record<string, { lang: string; body: string }> = {}
+for (const p of LOCAL_FILE_PATHS) {
+  const body = readSafe(p)
+  if (body) localFiles[p] = { lang: langOf(p), body }
+}
+
+// ─── Fetch GitHub public repos + READMEs at build time ───
+const GH_USER = "kevingamez"
+
+type RawRepo = {
+  name: string
+  full_name: string
+  description: string | null
+  html_url: string
+  stargazers_count: number
+  language: string | null
+  topics?: string[]
+  updated_at: string
+  fork: boolean
+  archived: boolean
+}
+
+type Repo = {
+  name: string
+  description: string | null
+  url: string
+  stars: number
+  language: string | null
+  topics: string[]
+  updated: string
+  archived: boolean
+  readme: string
+}
+
+// Cache the API response so the build still works when GitHub rate-limits us
+// or there's no network. Cache lives at .cache/github-repos.json (gitignored).
+const cacheFile = join(projectRoot, ".cache", "github-repos.json")
+const ONE_DAY = 24 * 60 * 60 * 1000
+
+function readCache(): Repo[] {
+  try {
+    if (!existsSync(cacheFile)) return []
+    const data = JSON.parse(readFileSync(cacheFile, "utf-8")) as Repo[]
+    return Array.isArray(data) ? data : []
+  } catch {
+    return []
+  }
+}
+function writeCache(repos: Repo[]) {
+  try {
+    mkdirSync(dirname(cacheFile), { recursive: true })
+    writeFileSync(cacheFile, JSON.stringify(repos, null, 2))
+  } catch {
+    // ignore cache write failures
+  }
+}
+function cacheAgeMs(): number {
+  try {
+    return Date.now() - statSync(cacheFile).mtimeMs
+  } catch {
+    return Infinity
+  }
+}
+
+async function fetchGithubRepos(): Promise<Repo[]> {
+  try {
+    const headers: Record<string, string> = {
+      "User-Agent": "personal-site-build",
+      Accept: "application/vnd.github+json",
+    }
+    // Optional auth via env var → 5000 req/hr instead of 60
+    if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
+
+    const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=30&sort=updated&type=owner`, {
+      headers,
+    })
+    if (!res.ok) return []
+    const repos = (await res.json()) as RawRepo[]
+    if (!Array.isArray(repos)) return []
+    const filtered = repos.filter((r) => !r.fork).slice(0, 12)
+    const enriched: Repo[] = []
+    for (const r of filtered) {
+      let readme = ""
+      try {
+        const rr = await fetch(`https://api.github.com/repos/${r.full_name}/readme`, {
+          headers: { ...headers, Accept: "application/vnd.github.raw" },
+        })
+        if (rr.ok) readme = await rr.text()
+      } catch {
+        // ignore individual readme failures
+      }
+      enriched.push({
+        name: r.name,
+        description: r.description,
+        url: r.html_url,
+        stars: r.stargazers_count,
+        language: r.language,
+        topics: r.topics || [],
+        updated: r.updated_at,
+        archived: r.archived,
+        readme: readme || `# ${r.name}\n\n${r.description || "_(no description)_"}\n\n[${r.html_url}](${r.html_url})\n`,
+      })
+    }
+    return enriched
+  } catch {
+    return []
+  }
+}
+
+// Use cache if recent (< 1 day) — saves the rate limit. Refetch otherwise.
+const cached = readCache()
+let githubRepos: Repo[] = cached
+if (!cached.length || cacheAgeMs() > ONE_DAY) {
+  const fresh = await fetchGithubRepos()
+  if (fresh.length) {
+    githubRepos = fresh
+    writeCache(fresh)
+  }
+}
+
+const fmtDate = (iso: string) => new Date(iso).toISOString().slice(0, 10)
+function generateOverview(repos: Repo[]): string {
+  const ls: string[] = []
+  ls.push(`# ${GH_USER} · public repos`)
+  ls.push("")
+  if (!repos.length) {
+    ls.push("_GitHub API was unreachable at build time. Check back later._")
+    return ls.join("\n")
+  }
+  ls.push(`> Auto-generated at build · ${repos.length} public repos · sorted by last updated.`)
+  ls.push("")
+  for (const r of repos) {
+    ls.push(`## ${r.name}${r.archived ? " *(archived)*" : ""}`)
+    if (r.description) ls.push(`> ${r.description}`)
+    const meta: string[] = []
+    if (r.language) meta.push(r.language)
+    if (r.stars > 0) meta.push(`★ ${r.stars}`)
+    meta.push(`updated ${fmtDate(r.updated)}`)
+    ls.push("")
+    ls.push("`" + meta.join(" · ") + "`")
+    if (r.topics.length) {
+      ls.push("")
+      ls.push("tags: " + r.topics.map((t) => "`" + t + "`").join(" "))
+    }
+    ls.push("")
+    ls.push(`[${r.url}](${r.url})`)
+    ls.push("")
+  }
+  return ls.join("\n")
+}
+
+const overview = generateOverview(githubRepos)
+
+const devData = {
+  user: GH_USER,
+  localProjectName: "personal-site",
+  localFiles,
+  githubRepos: githubRepos.map((r) => ({
+    name: r.name,
+    description: r.description,
+    url: r.url,
+    stars: r.stars,
+    language: r.language,
+    archived: r.archived,
+    readme: r.readme,
+  })),
+  overview,
+}
+
+// Escape "<" so the JSON is safe inside a <script> tag
+const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
 ---
 
 <!doctype html>
@@ -1356,7 +1582,7 @@ const buildId = "a7f3c91"
             </div>
           </div>
           <div class="term-input">
-            <span class="pr" id="prompt">~/kevin-gamez $</span>
+            <span class="pr" id="prompt">~ $</span>
             <input id="cmd" placeholder="try ls, cat src/about.ts, vim README.md, help…" autocomplete="off" autofocus />
             <span class="hint">↵ run · ↑ history · ⌃L clear</span>
           </div>
@@ -1381,7 +1607,7 @@ const buildId = "a7f3c91"
           <div class="ed-tabs">
             <div class="et on">CHANGELOG.md <span class="x">×</span></div>
             <div class="grow"></div>
-            <div class="breadcrumb">kevin-gamez › <b>CHANGELOG.md</b></div>
+            <div class="breadcrumb"><b>CHANGELOG.md</b></div>
           </div>
           <article class="changelog-body" id="changelog-body"></article>
         </section>
@@ -1511,6 +1737,8 @@ const buildId = "a7f3c91"
 
     <div class="toast" id="toast"></div>
 
+    <script id="dev-data" type="application/json" is:inline set:html={devDataJson} />
+
     <script is:inline>
       /* ─── Live sparkline ─── */
       ;(function () {
@@ -1598,9 +1826,20 @@ const buildId = "a7f3c91"
         const terminalEl = document.querySelector(".terminal")
         if (!term || !input) return
 
+        // ─── Build-time data injected via <script type="application/json"> ───
+        const __DATA = (() => {
+          try {
+            const el = document.getElementById("dev-data")
+            return JSON.parse((el && el.textContent) || "{}")
+          } catch {
+            return {}
+          }
+        })()
+        const PROJECT_NAME = __DATA.user || "kevingamez"
+
         // ─── State ───
         let lineNum = 0
-        let cwd = ["kevin-gamez"]
+        let cwd = [PROJECT_NAME]
         const history = []
         let historyIdx = 0
         let openTabs = []
@@ -1610,227 +1849,63 @@ const buildId = "a7f3c91"
         const _f = (lang, body) => ({ type: "file", lang, body })
         const _d = (children) => ({ type: "dir", children })
 
-        // explorer decorations preserved from the design
-        const FILE_META = {
-          "src/work.ts": { dot: "normal" },
-          "api/repos.ts": { dot: "warn" },
-          "api/eval.ts": { badge: "M" },
+        // No demo decorations on real files. Override per-file from data later if needed.
+        const FILE_META = {}
+        const OUTLINE_MAP = {}
+        const folded = new Set()
+
+        // Build the FS from injected data:
+        //   {PROJECT_NAME}/                 (the github user)
+        //     README.md                     (overview, default open)
+        //     {repo-name}/                  (one folder per public repo)
+        //       README.md                   (fetched at build time)
+        //     {localProjectName}/           (this project's real source files)
+        //       src/...
+        //       README.md, package.json, ...
+        function buildFS() {
+          const root = _d({})
+          const userDir = _d({})
+          root.children[PROJECT_NAME] = userDir
+
+          // Overview README at the user folder root
+          if (typeof __DATA.overview === "string") {
+            userDir.children["README.md"] = _f("md", __DATA.overview)
+          }
+
+          // One folder per public repo
+          if (Array.isArray(__DATA.githubRepos)) {
+            for (const r of __DATA.githubRepos) {
+              if (!r || !r.name) continue
+              userDir.children[r.name] = _d({
+                "README.md": _f("md", r.readme || ""),
+              })
+            }
+          }
+
+          // Local project files under <localProjectName>/
+          const localName = __DATA.localProjectName || "personal-site"
+          const localFiles = __DATA.localFiles || {}
+          // Make sure the local project folder exists even if files arrive in deep order.
+          // If a folder of the same name already came from githubRepos (likely),
+          // we merge into it so the local source augments the README.
+          let localDir = userDir.children[localName]
+          if (!localDir || localDir.type !== "dir") {
+            localDir = _d({})
+            userDir.children[localName] = localDir
+          }
+          for (const [path, file] of Object.entries(localFiles)) {
+            const parts = path.split("/")
+            let cur = localDir
+            for (let i = 0; i < parts.length - 1; i++) {
+              const seg = parts[i]
+              if (!cur.children[seg]) cur.children[seg] = _d({})
+              cur = cur.children[seg]
+            }
+            cur.children[parts[parts.length - 1]] = _f(file.lang, file.body)
+          }
+          return root
         }
-        // hand-tuned outlines for files that benefit from nested entries (matches original design)
-        const OUTLINE_MAP = {
-          "src/stack.ts": [
-            { name: "stack", children: ["runtime", "languages", "storage", "models"] },
-            { name: "summary()", children: [] },
-          ],
-        }
-        const folded = new Set(["kevin-gamez/tests"])
-
-        const FS = _d({
-          "kevin-gamez": _d({
-            src: _d({
-              "about.ts": _f(
-                "ts",
-                `// kevin-gamez/src/about.ts
-// who, what, where.
-
-export const about = {
-  name:    "kevin gámez",
-  role:    "founder + engineer",
-  company: "enttor.ai",
-  city:    "bogotá, co",
-  utc:     -5,
-  since:   2024,
-} as const;
-
-export const oneLiner = () =>
-  \`\${about.name} — \${about.role} at \${about.company}\`;`
-              ),
-              "stack.ts": _f(
-                "ts",
-                `// kevin-gamez/src/stack.ts
-// what i actually use, kept honest by being read.
-
-import type { Tool } from "./types";
-
-export const stack = {
-  runtime:    ["node 22", "bun 1.1", "cf workers"],
-  languages:  {
-    production: ["typescript", "rust", "python", "sql"],
-    learning:   ["zig", "coq", "lean"],
-  },
-  storage:    ["postgres 16", "redis", "r2", "meilisearch"],
-  models:     ["claude", "openai", "ollama"],
-  delivery:   ["gh actions", "cf pages", "sentry"],
-  tools:      ["neovim", "ghostty", "linear", "figma"],
-} as const satisfies Record<string, Tool[]>;
-
-export const summary = () =>
-  "small, sharp tools that compound.";
-
-/* runtime: see /api/now for the live picture */`
-              ),
-              "work.ts": _f(
-                "ts",
-                `// kevin-gamez/src/work.ts
-// projects i still believe in.
-
-export const work = [
-  { id: "enttor",          featured: true,  stack: ["ts","postgres","anthropic"] },
-  { id: "automata-rs",     stars: 412,      stack: ["rust","wasm"] },
-  { id: "fractal-atlas",   stars: 189,      stack: ["ts","glsl"] },
-  { id: "primes-notebook", stars: 33,       stack: ["python","numpy"] },
-  { id: "personal-site",   stars: 64,       stack: ["astro","preact"] },
-] as const;
-
-export type Project = (typeof work)[number];`
-              ),
-              "life.rs": _f(
-                "rs",
-                `// kevin-gamez/src/life.rs
-// conway's game of life, the wasm-friendly version.
-
-use wasm_bindgen::prelude::*;
-
-#[wasm_bindgen]
-pub struct Life {
-    cols: u32,
-    rows: u32,
-    cells: Vec<u8>,
-}
-
-#[wasm_bindgen]
-impl Life {
-    pub fn new(cols: u32, rows: u32) -> Life {
-        Life { cols, rows, cells: vec![0; (cols * rows) as usize] }
-    }
-
-    pub fn step(&mut self) {
-        // toroidal neighborhood, B3/S23 rules.
-        // see: github.com/kevingamez/automata-rs
-    }
-}`
-              ),
-            }),
-            api: _d({
-              "now.ts": _f(
-                "ts",
-                `// GET /api/now → live availability + current obsession
-export const GET = async () =>
-  Response.json({
-    available: true,
-    shipping:  "eval-as-a-service v0.4",
-    reading:   "a mathematician's apology",
-    thinking:  "jones polynomial",
-    ts:        Date.now(),
-  });`
-              ),
-              "repos.ts": _f(
-                "ts",
-                `// GET /api/repos → cached top 5 from github
-import { fetchRepos } from "../lib/github";
-
-export const GET = async () => {
-  const repos = await fetchRepos("kevingamez", { top: 5 });
-  return Response.json(repos);
-};`
-              ),
-              "eval.ts": _f(
-                "ts",
-                `// POST /api/eval → run a brand-fit eval over a creative variant
-import { z } from "zod";
-import { judge } from "../lib/eval";
-
-const Body = z.object({
-  brief:   z.string().min(20),
-  variant: z.string(),
-});
-
-export const POST = async (req: Request) => {
-  const input = Body.parse(await req.json());
-  const score = await judge(input);
-  return Response.json({ score });
-};`
-              ),
-            }),
-            tests: _d({}),
-            "README.md": _f(
-              "md",
-              `# kevin-gamez
-
-> a small studio of one, mostly happy.
-
-## what's in here
-- src/      personal site / portfolio sources
-- api/      edge handlers for /api/now, /api/repos, /api/eval
-- tests/    the few that matter
-
-## build
-$ bun install
-$ bun run dev    # localhost:4321
-$ bun run build  # static dist/
-
-## also nearby
-- github.com/kevingamez
-- enttor.ai
-- hi@kevingamez.com`
-            ),
-            "package.json": _f(
-              "json",
-              `{
-  "name": "kevin-gamez",
-  "description": "personal site + portfolio",
-  "type": "module",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "lint": "biome lint .",
-    "test": "vitest"
-  },
-  "dependencies": {
-    "astro": "^5.9",
-    "preact": "^10.26"
-  }
-}`
-            ),
-            "cargo.toml": _f(
-              "toml",
-              `[package]
-name        = "automata-rs"
-version     = "0.4.2"
-edition     = "2021"
-description = "cellular automata sandbox compiled to wasm"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[dependencies]
-wasm-bindgen = "0.2"
-js-sys       = "0.3"
-
-[profile.release]
-opt-level = "z"
-lto       = true`
-            ),
-            "bun.lock": _f("lock", "# bun lockfile (truncated for the demo)\n# generated 2026-05-09\n"),
-            "style.css": _f("css", "/* unused — all styles live inline in astro pages */\n"),
-            "CHANGELOG.md": _f(
-              "md",
-              `# changelog
-
-## v14.2 — 2026-05
-- redesign: instrument serif + cream/coral palette
-- new /dev page with a working shell
-
-## v14.1 — 2026-05
-- /es mirror with full translations
-- drop tailwind/zustand/preact-stores; pure astro pages
-
-## v13 — 2026-04
-- replace julia with hopf fibration
-- 4d circles projected to 3d, drag to rotate`
-            ),
-          }),
-        })
+        const FS = buildFS()
 
         // ─── Path utilities ───
         function resolvePath(p) {
@@ -1955,7 +2030,7 @@ lto       = true`
         function openFile(parts) {
           const node = getNode(parts)
           if (!node || node.type !== "file") return false
-          if (parts[0] !== "kevin-gamez") return false
+          if (parts[0] !== PROJECT_NAME) return false
           const rel = parts.slice(1).join("/")
           if (!openTabs.includes(rel)) openTabs.push(rel)
           activeTab = rel
@@ -2009,7 +2084,7 @@ lto       = true`
               '<div style="padding:40px 24px;color:var(--mute-2);font-family:Inter Tight,sans-serif;font-size:13px">no file open. try <span class="ac">cat src/stack.ts</span></div>'
             return
           }
-          const node = getNode(["kevin-gamez", ...activeTab.split("/")])
+          const node = getNode([PROJECT_NAME, ...activeTab.split("/")])
           if (!node || node.type !== "file") return
           const lines = node.body.split("\n")
           if (lines.length && lines[lines.length - 1] === "") lines.pop()
@@ -2225,9 +2300,9 @@ lto       = true`
         function renderExplorer() {
           if (!treeEl) return
           treeEl.innerHTML = ""
-          const root = FS.children["kevin-gamez"]
-          const rootKey = "kevin-gamez"
-          treeEl.appendChild(makeFolderItem("kevin-gamez", rootKey, 0))
+          const root = FS.children[PROJECT_NAME]
+          const rootKey = PROJECT_NAME
+          treeEl.appendChild(makeFolderItem(PROJECT_NAME, rootKey, 0))
           if (!folded.has(rootKey)) walkDir(root, [rootKey], 1, treeEl)
         }
 
@@ -2259,7 +2334,7 @@ lto       = true`
             }
             return
           }
-          const node = getNode(["kevin-gamez", ...activeTab.split("/")])
+          const node = getNode([PROJECT_NAME, ...activeTab.split("/")])
           if (!node) return
           const ext = (name.split(".").pop() || "").toLowerCase()
           let symbols = []
@@ -2311,7 +2386,7 @@ lto       = true`
           pwd: () => addLine(esc(pathDisplay(cwd))),
           whoami: () => addLine('kevin · founder @ enttor.ai · <span class="ac">bogotá / utc-5</span>'),
           date: () => addLine(esc(new Date().toString())),
-          uname: () => addLine("Darwin kevin-gamez 25.4.0 arm64"),
+          uname: () => addLine("Darwin " + PROJECT_NAME + " 25.4.0 arm64"),
           ls: (args) => {
             const target = args[0] ? resolvePath(args[0]) : cwd
             const node = getNode(target)
@@ -2349,7 +2424,7 @@ lto       = true`
             const lines = node.body.split("\n")
             if (lines.length && lines[lines.length - 1] === "") lines.pop()
             for (const ln of lines) addLine(highlight(ln, node.lang) || "&nbsp;")
-            if (target[0] === "kevin-gamez") openFile(target)
+            if (target[0] === PROJECT_NAME) openFile(target)
           },
           vim: (args) => {
             if (!args[0]) {
@@ -2362,7 +2437,7 @@ lto       = true`
             const node = getNode(target)
             if (!node) return err("vim: " + args[0] + ": no such file or directory")
             if (node.type !== "file") return err("vim: " + args[0] + ": is a directory")
-            if (target[0] !== "kevin-gamez") return err("vim: cannot open files outside ~/kevin-gamez")
+            if (target[0] !== PROJECT_NAME) return err("vim: cannot open files outside ~/" + PROJECT_NAME + "")
             openFile(target)
             addLine('<span class="gr">↗ opened ' + esc(args[0]) + " in editor</span>")
           },
@@ -2633,7 +2708,7 @@ lto       = true`
         }
         function renderChangelog() {
           if (!changelogBodyEl) return
-          const node = getNode(["kevin-gamez", "CHANGELOG.md"])
+          const node = getNode([PROJECT_NAME, "CHANGELOG.md"])
           if (!node) return
           changelogBodyEl.innerHTML = mdToHtml(node.body)
         }
@@ -2909,7 +2984,7 @@ lto       = true`
           if (!paletteListEl || !paletteInputEl) return
           const q = paletteInputEl.value.trim()
           const all = []
-          flattenFiles(FS.children["kevin-gamez"], ["kevin-gamez"], all)
+          flattenFiles(FS.children[PROJECT_NAME], [PROJECT_NAME], all)
           if (!q) {
             paletteResults = all.slice(0, 50)
           } else {
@@ -3033,14 +3108,16 @@ lto       = true`
         // initial status bar position (matches stack.ts default)
         updateStatusPos(6, 24)
         addLine(
-          '<span class="gr">welcome to ~/kevin-gamez · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
+          '<span class="gr">welcome to ~/' +
+            esc(PROJECT_NAME) +
+            ' · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
         )
         addLine(
-          '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat src/about.ts</span> · <span class="ac">vim README.md</span> · <span class="ac">tree</span>'
+          '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat README.md</span> · <span class="ac">tree</span>'
         )
         addLine('<span class="pr">' + esc(pathDisplay(cwd)) + ' $</span> <span class="cu"></span>')
-        // open stack.ts by default
-        openFile(["kevin-gamez", "src", "stack.ts"])
+        // Default open: the auto-generated github overview README
+        openFile([PROJECT_NAME, "README.md"])
         // give input focus
         setTimeout(() => input.focus(), 0)
       })()
