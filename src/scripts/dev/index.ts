@@ -12,6 +12,7 @@ import { initExplorer, renderExplorer, renderOutline } from './explorer'
 import { addLine, initTerminal, resetTerminal, setTerminal, updatePrompt } from './terminal'
 import { initWorkspaces, setWorkspace } from './workspaces'
 import { closePalette, initPalette, isPaletteOpen, openPalette } from './palette'
+import { initActivityBar } from './activity-bar'
 import { initToast, showToast } from './toast'
 import { esc } from './highlight'
 
@@ -38,6 +39,7 @@ function init(): void {
   initTerminal()
   initWorkspaces()
   initPalette()
+  initActivityBar()
 
   // Global ⌘P / ⌘S shortcuts.
   document.addEventListener('keydown', (e) => {

@@ -5,6 +5,7 @@
 import { PROJECT_NAME, getNode, state } from './state'
 import { hydrateSaved, isDirty } from './persistence'
 import { esc } from './highlight'
+import { iconUrl } from './icons'
 
 let edTabsEl: HTMLElement | null = null
 let edBodyEl: HTMLElement | null = null
@@ -54,7 +55,17 @@ export function renderEditor(): void {
     const dirty = isDirty(t)
     div.className = 'et' + (t === state.activeTab ? ' on' : '') + (dirty ? ' dirty' : '')
     const closer = dirty ? '●' : '×'
-    div.innerHTML = esc(name) + ' <span class="x">' + closer + '</span>'
+    // VS Code-style: file icon + name + close/dirty marker
+    div.innerHTML =
+      '<img class="et-ico" src="' +
+      iconUrl(name, false) +
+      '" alt="" />' +
+      '<span class="et-name">' +
+      esc(name) +
+      '</span>' +
+      ' <span class="x">' +
+      closer +
+      '</span>'
     div.addEventListener('click', (e) => {
       const target = e.target as HTMLElement
       if (target.classList && target.classList.contains('x')) {
@@ -74,7 +85,15 @@ export function renderEditor(): void {
   if (state.activeTab) {
     const pp = state.activeTab.split('/')
     const dir = pp.slice(0, -1).join(' › ')
-    bc.innerHTML = (dir ? esc(dir) + ' › ' : '') + '<b>' + esc(pp[pp.length - 1]) + '</b>'
+    const fileName = pp[pp.length - 1]
+    bc.innerHTML =
+      (dir ? esc(dir) + ' › ' : '') +
+      '<img class="bc-ico" src="' +
+      iconUrl(fileName, false) +
+      '" alt="" />' +
+      '<b>' +
+      esc(fileName) +
+      '</b>'
   }
   edTabsEl.appendChild(bc)
 
