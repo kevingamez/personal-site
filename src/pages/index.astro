@@ -320,19 +320,50 @@ const buildId = "a7f3c91"
 
       /* ─── Hero ─── */
       .hero {
-        padding: 64px 0 96px;
+        min-height: calc(100svh - 54px);
+        display: flex;
+        align-items: center;
+        padding: 24px 0 56px;
         border-bottom: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, rgba(31, 29, 26, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(31, 29, 26, 0.05) 1px, transparent 1px);
+        background-size: 88px 88px;
+        background-position: -1px -1px;
+        pointer-events: none;
+        z-index: 0;
+        mask-image: radial-gradient(ellipse 60% 70% at 25% 50%, transparent 5%, black 90%);
+        -webkit-mask-image: radial-gradient(ellipse 60% 70% at 25% 50%, transparent 5%, black 90%);
+      }
+      .hero > .wrap {
+        position: relative;
+        z-index: 1;
       }
       .hero-grid {
         display: grid;
-        grid-template-columns: 1.25fr 1fr;
-        gap: 60px;
+        grid-template-columns: minmax(0, 580px) 1fr;
+        gap: 64px;
         align-items: center;
+        width: 100%;
       }
       @media (max-width: 900px) {
+        .hero {
+          min-height: 0;
+          padding: 56px 0 88px;
+        }
+        .hero::before {
+          display: none;
+        }
         .hero-grid {
           grid-template-columns: 1fr;
-          gap: 40px;
+          gap: 48px;
         }
       }
       .hello {
@@ -377,10 +408,11 @@ const buildId = "a7f3c91"
       h1.hero-title {
         font-family: "Instrument Serif", serif;
         font-weight: 400;
-        font-size: clamp(60px, 8vw, 104px);
-        line-height: 0.92;
+        font-size: clamp(56px, 6.6vw, 92px);
+        line-height: 0.94;
         letter-spacing: -0.028em;
         margin: 0 0 24px;
+        text-wrap: balance;
       }
       h1.hero-title i {
         font-style: italic;
@@ -479,11 +511,23 @@ const buildId = "a7f3c91"
       .gol-frame {
         position: relative;
         aspect-ratio: 1/1;
+        max-height: calc(100svh - 180px);
+        margin-left: auto;
+        max-width: 100%;
         border: 1.5px solid var(--ink);
         background: var(--cream-2);
         box-shadow:
-          7px 7px 0 var(--ink),
-          11px 11px 0 var(--coral);
+          9px 9px 0 var(--ink),
+          14px 14px 0 var(--coral);
+      }
+      @media (max-width: 900px) {
+        .gol-frame {
+          max-height: none;
+          margin-left: 0;
+          box-shadow:
+            7px 7px 0 var(--ink),
+            11px 11px 0 var(--coral);
+        }
       }
       .gol-frame canvas {
         position: absolute;
