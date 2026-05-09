@@ -15,7 +15,7 @@ section {
 .sec-num {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
-  color: var(--coral);
+  color: var(--coral-strong);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   display: flex;

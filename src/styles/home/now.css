@@ -20,7 +20,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--coral);
+  color: var(--coral-strong);
 }
 .now-cell .v {
   font-family: 'Instrument Serif', serif;
