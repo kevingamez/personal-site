@@ -880,10 +880,27 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       }
       .ed-body {
         flex: 1;
-        overflow: auto;
-        padding: 12px 0;
+        overflow: hidden;
+        padding: 0;
         background: var(--bg);
         position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .ed-body .cm-editor {
+        flex: 1;
+        height: auto;
+        min-height: 0;
+      }
+      .ed-body .cm-scroller {
+        overflow: auto;
+      }
+      .ed-body .ed-empty {
+        padding: 40px 24px;
+        color: var(--mute-2);
+        font-family: "Inter Tight", sans-serif;
+        font-size: 13px;
       }
       .ed-body::-webkit-scrollbar {
         width: 8px;
@@ -1739,6 +1756,11 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
 
     <script id="dev-data" type="application/json" is:inline set:html={devDataJson} />
 
+    <!-- CodeMirror 6: real editor (bundled by Vite from src/scripts/dev-editor.ts) -->
+    <script>
+      import "../scripts/dev-editor.ts"
+    </script>
+
     <script is:inline>
       /* ─── Live sparkline ─── */
       ;(function () {
@@ -2077,40 +2099,32 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           }
           edTabsEl.appendChild(bc)
 
-          // body
+          // body — mount CodeMirror for the active file
           edBodyEl.innerHTML = ""
           if (!activeTab) {
-            edBodyEl.innerHTML =
-              '<div style="padding:40px 24px;color:var(--mute-2);font-family:Inter Tight,sans-serif;font-size:13px">no file open. try <span class="ac">cat src/stack.ts</span></div>'
+            if (window.__cm) window.__cm.destroy()
+            edBodyEl.innerHTML = '<div class="ed-empty">no file open. try <span class="ac">cat README.md</span></div>'
             return
           }
           const node = getNode([PROJECT_NAME, ...activeTab.split("/")])
           if (!node || node.type !== "file") return
-          const lines = node.body.split("\n")
-          if (lines.length && lines[lines.length - 1] === "") lines.pop()
-          for (let idx = 0; idx < lines.length; idx++) {
-            const row = document.createElement("div")
-            row.className = "ed-row"
-            const html = highlight(lines[idx], node.lang) || "&nbsp;"
-            row.innerHTML = '<span class="gut">' + (idx + 1) + '</span><span class="txt">' + html + "</span>"
-            row.addEventListener("click", () => setEditorRow(idx + 1))
-            edBodyEl.appendChild(row)
+          // Wait for CodeMirror module (bundled async) before mounting.
+          const mountWhenReady = () => {
+            if (!window.__cm) {
+              window.addEventListener("cm-ready", mountWhenReady, { once: true })
+              return
+            }
+            window.__cm.mount(edBodyEl, {
+              name: activeTab,
+              lang: node.lang,
+              body: node.body,
+              onChange: (newDoc) => {
+                node.body = newDoc
+              },
+              onCursor: (line, col) => updateStatusPos(line, col),
+            })
           }
-        }
-        function setEditorRow(line) {
-          if (!edBodyEl) return
-          edBodyEl.querySelectorAll(".ed-row.cur").forEach((r) => {
-            r.classList.remove("cur")
-            const g = r.querySelector(".gut")
-            if (g) g.classList.remove("cur")
-          })
-          const rows = edBodyEl.querySelectorAll(".ed-row")
-          const row = rows[line - 1]
-          if (!row) return
-          row.classList.add("cur")
-          const g = row.querySelector(".gut")
-          if (g) g.classList.add("cur")
-          updateStatusPos(line, 1)
+          mountWhenReady()
         }
         function updateStatusPos(line, col) {
           const el = document.getElementById("status-pos")
