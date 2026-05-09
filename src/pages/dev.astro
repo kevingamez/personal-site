@@ -430,11 +430,11 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
       .app {
         height: calc(100vh - 36px - 30px - 22px);
         display: grid;
-        grid-template-columns: 230px 1fr 320px;
+        grid-template-columns: 44px 230px 1fr 320px;
       }
       @media (max-width: 1100px) {
         .app {
-          grid-template-columns: 200px 1fr 280px;
+          grid-template-columns: 44px 200px 1fr 280px;
         }
       }
       @media (max-width: 880px) {
@@ -443,6 +443,56 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
           height: auto;
           overflow: auto;
         }
+        .activity-bar {
+          display: none;
+        }
+      }
+
+      /* ─── Activity bar (left strip, vscode-style) ─── */
+      .activity-bar {
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 6px 0;
+        gap: 2px;
+      }
+      .activity-bar .ab-grow {
+        flex: 1;
+      }
+      .activity-bar .ab-item {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        border-left: 2px solid transparent;
+        cursor: pointer;
+        color: var(--mute);
+        transition: color 0.15s;
+        padding: 0;
+        position: relative;
+      }
+      .activity-bar .ab-item:hover {
+        color: var(--ink);
+      }
+      .activity-bar .ab-item.on {
+        color: var(--ink);
+        border-left-color: var(--coral);
+      }
+      .activity-bar .ab-item img {
+        width: 22px;
+        height: 22px;
+        opacity: 0.78;
+        filter: invert(1) brightness(0.85);
+        pointer-events: none;
+      }
+      .activity-bar .ab-item:hover img,
+      .activity-bar .ab-item.on img {
+        opacity: 1;
       }
 
       .explorer {
@@ -1412,6 +1462,21 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
         font-size: 8px;
         vertical-align: middle;
       }
+      /* File icons in editor tabs (vscode-style) */
+      .ed-tabs .et .et-ico,
+      .ed-tabs .breadcrumb .bc-ico {
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+        margin-right: 6px;
+        flex-shrink: 0;
+        pointer-events: none;
+        display: inline-block;
+      }
+      .ed-tabs .et .et-name {
+        display: inline-block;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body>
@@ -1435,6 +1500,28 @@ const devDataJson = JSON.stringify(devData).replace(/</g, "\\u003c")
     </div>
 
     <div class="app">
+      <aside class="activity-bar">
+        <button class="ab-item on" data-ab="explorer" title="Explorer (⌃B)" aria-label="Explorer">
+          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/files.svg" alt="" />
+        </button>
+        <button class="ab-item" data-ab="search" title="Search (⌘P)" aria-label="Search">
+          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/search.svg" alt="" />
+        </button>
+        <button class="ab-item" data-ab="source-control" title="Source control" aria-label="Source control">
+          <img
+            src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/source-control.svg"
+            alt="" />
+        </button>
+        <button class="ab-item" data-ab="extensions" title="Extensions" aria-label="Extensions">
+          <img src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/extensions.svg" alt="" />
+        </button>
+        <div class="ab-grow"></div>
+        <button class="ab-item" data-ab="settings" title="Settings" aria-label="Settings">
+          <img
+            src="https://cdn.jsdelivr.net/npm/@vscode/codicons@latest/src/icons/settings-gear.svg"
+            alt="" />
+        </button>
+      </aside>
       <aside class="explorer">
         <div class="hd">Explorer<span class="actions">⊕ ⟲</span></div>
         <div id="file-tree"></div>
