@@ -1,6 +1,5 @@
 ---
 ---
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,78 +7,54 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 — Kevin Gamez</title>
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/style.min.css" as="style" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.2.0/dist/fonts/geist-sans/style.min.css" />
+  <title>404 — Kevin Gámez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Geist Sans', system-ui, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    :root{
+      --cream:#faf7f0;
+      --ink:#1f1d1a;
+      --ink-2:#3a352f;
+      --muted:#6b6660;
+      --line-2:rgba(31,29,26,0.18);
+      --coral:#d96944;
     }
-    /* Grid background matching site sections */
-    body::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 25px 25px;
-      pointer-events: none;
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--cream);
+      color:var(--ink);
+      font-family:"Inter Tight",system-ui,-apple-system,sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:24px;
     }
-    .container { max-width: 480px; padding: 40px 20px; position: relative; z-index: 1; }
-    h1 {
-      font-size: clamp(5rem, 15vw, 8rem);
-      font-weight: 700;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      margin-bottom: 16px;
-    }
-    p {
-      font-size: 18px;
-      color: #94a3b8;
-      margin-bottom: 32px;
-      line-height: 1.6;
-    }
-    a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: #3b82f6;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 15px;
-      transition: all 0.2s;
-    }
-    a:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-    a:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    .wrap{max-width:520px}
+    .tag{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--coral);letter-spacing:0.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;margin-bottom:20px}
+    .tag::before{content:"";width:24px;height:1px;background:var(--coral)}
+    h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:clamp(80px,18vw,160px);line-height:0.95;letter-spacing:-0.025em;margin:0 0 16px}
+    h1 i{font-style:italic;color:var(--coral)}
+    p{font-size:17px;color:var(--ink-2);line-height:1.55;margin:0 0 28px;text-wrap:balance}
+    .ctas{display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;transition:transform .2s, background .2s}
+    .btn-primary{background:var(--ink);color:var(--cream)}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-ghost{border:1px solid var(--line-2);color:var(--ink)}
+    .btn-ghost:hover{background:#f3ede2}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>404</h1>
-    <p>This page doesn't exist. Maybe the URL is wrong, or it was moved.</p>
-    <a href="/">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/>
-      </svg>
-      Back to home
-    </a>
+  <div class="wrap">
+    <div class="tag">§ — Lost</div>
+    <h1>4<i>0</i>4</h1>
+    <p>This page doesn't exist — the URL might be wrong, or it moved. Either way, the Game of Life is still running back home.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="/">← Back home</a>
+      <a class="btn btn-ghost" href="/dev">Open dev mode</a>
+    </div>
   </div>
 </body>
 </html>
