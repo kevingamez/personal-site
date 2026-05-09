@@ -900,33 +900,12 @@ const buildId = "a7f3c91"
     <div class="app">
       <aside class="explorer">
         <div class="hd">Explorer<span class="actions">⊕ ⟲</span></div>
-        <div class="it fold">kevin-gamez</div>
-        <div class="it indent fold">src</div>
-        <div class="it indent deep file ts">about.ts</div>
-        <div class="it indent deep file ts active">stack.ts</div>
-        <div class="it indent deep file ts">work.ts<span class="dot"></span></div>
-        <div class="it indent deep file rs">life.rs</div>
-        <div class="it indent fold">api</div>
-        <div class="it indent deep file ts">now.ts</div>
-        <div class="it indent deep file ts">repos.ts<span class="dot warn"></span></div>
-        <div class="it indent deep file ts">eval.ts<span class="badge">M</span></div>
-        <div class="it indent fold closed">tests</div>
-        <div class="it indent file md">README.md</div>
-        <div class="it indent file json">package.json</div>
-        <div class="it indent file toml">cargo.toml</div>
-        <div class="it indent file lock">bun.lock</div>
-        <div class="it indent file css">style.css</div>
-        <div class="it indent file md">CHANGELOG.md</div>
+        <div id="file-tree"></div>
 
-        <div class="hd" style="margin-top:18px">Outline · stack.ts</div>
-        <div class="it indent">▸ stack</div>
-        <div class="it indent deep">▸ runtime</div>
-        <div class="it indent deep">▸ languages</div>
-        <div class="it indent deep">▸ storage</div>
-        <div class="it indent deep">▸ models</div>
-        <div class="it indent">▸ summary()</div>
+        <div class="hd" id="outline-hd" style="margin-top: 18px">Outline</div>
+        <div id="outline-list"></div>
 
-        <div class="hd" style="margin-top:18px">Source control</div>
+        <div class="hd" style="margin-top: 18px">Source control</div>
         <div class="it indent">⎇ main</div>
         <div class="it indent">⊕ 0 / ⊖ 0</div>
         <div class="it indent">last commit · 12s ago</div>
@@ -1309,6 +1288,14 @@ const buildId = "a7f3c91"
         const _f = (lang, body) => ({ type: "file", lang, body })
         const _d = (children) => ({ type: "dir", children })
 
+        // explorer decorations preserved from the design
+        const FILE_META = {
+          "src/work.ts": { dot: "normal" },
+          "api/repos.ts": { dot: "warn" },
+          "api/eval.ts": { badge: "M" },
+        }
+        const folded = new Set(["kevin-gamez/tests"])
+
         const FS = _d({
           "kevin-gamez": _d({
             src: _d({
@@ -1644,12 +1631,16 @@ lto       = true`
           if (!openTabs.includes(rel)) openTabs.push(rel)
           activeTab = rel
           renderEditor()
+          renderExplorer()
+          renderOutline()
           return true
         }
         function closeTab(rel) {
           openTabs = openTabs.filter((t) => t !== rel)
           if (activeTab === rel) activeTab = openTabs[openTabs.length - 1] || null
           renderEditor()
+          renderExplorer()
+          renderOutline()
         }
         function renderEditor() {
           if (!edTabsEl || !edBodyEl) return
@@ -1699,6 +1690,133 @@ lto       = true`
             const html = highlight(lines[idx], node.lang) || "&nbsp;"
             row.innerHTML = '<span class="gut">' + (idx + 1) + '</span><span class="txt">' + html + "</span>"
             edBodyEl.appendChild(row)
+          }
+        }
+
+        // ─── Explorer (file tree + outline) ───
+        const treeEl = document.getElementById("file-tree")
+        const outlineHdEl = document.getElementById("outline-hd")
+        const outlineListEl = document.getElementById("outline-list")
+
+        function makeFolderItem(name, key, depth) {
+          const div = document.createElement("div")
+          let cls = "it fold"
+          if (depth > 0) cls += " indent"
+          if (depth > 1) cls += " deep"
+          if (folded.has(key)) cls += " closed"
+          div.className = cls
+          div.textContent = name
+          div.addEventListener("click", () => {
+            if (folded.has(key)) folded.delete(key)
+            else folded.add(key)
+            renderExplorer()
+          })
+          return div
+        }
+        function makeFileItem(name, pathParts, depth) {
+          const div = document.createElement("div")
+          const ext = (name.split(".").pop() || "").toLowerCase()
+          const extCls =
+            { ts: "ts", tsx: "tsx", rs: "rs", md: "md", json: "json", toml: "toml", lock: "lock", css: "css" }[ext] ||
+            "ts"
+          let cls = "it file " + extCls
+          if (depth > 0) cls += " indent"
+          if (depth > 1) cls += " deep"
+          const rel = pathParts.slice(1).join("/")
+          if (rel === activeTab) cls += " active"
+          div.className = cls
+          // base label
+          let html = esc(name)
+          // restore decorations from FILE_META
+          const meta = FILE_META[rel]
+          if (meta) {
+            if (meta.dot === "normal") html += '<span class="dot"></span>'
+            if (meta.dot === "warn") html += '<span class="dot warn"></span>'
+            if (meta.badge) html += '<span class="badge">' + esc(meta.badge) + "</span>"
+          }
+          div.innerHTML = html
+          div.addEventListener("click", () => openFile(pathParts))
+          return div
+        }
+        function walkDir(node, pathParts, depth, container) {
+          const entries = Object.entries(node.children).sort((a, b) => {
+            if (a[1].type !== b[1].type) return a[1].type === "dir" ? -1 : 1
+            return a[0].localeCompare(b[0])
+          })
+          for (const [name, child] of entries) {
+            const childPath = [...pathParts, name]
+            const key = childPath.join("/")
+            if (child.type === "dir") {
+              container.appendChild(makeFolderItem(name, key, depth))
+              if (!folded.has(key)) walkDir(child, childPath, depth + 1, container)
+            } else {
+              container.appendChild(makeFileItem(name, childPath, depth))
+            }
+          }
+        }
+        function renderExplorer() {
+          if (!treeEl) return
+          treeEl.innerHTML = ""
+          const root = FS.children["kevin-gamez"]
+          const rootKey = "kevin-gamez"
+          treeEl.appendChild(makeFolderItem("kevin-gamez", rootKey, 0))
+          if (!folded.has(rootKey)) walkDir(root, [rootKey], 1, treeEl)
+        }
+
+        function renderOutline() {
+          if (!outlineHdEl || !outlineListEl) return
+          if (!activeTab) {
+            outlineHdEl.textContent = "Outline"
+            outlineListEl.innerHTML = ""
+            return
+          }
+          const name = activeTab.split("/").pop()
+          outlineHdEl.textContent = "Outline · " + name
+          outlineListEl.innerHTML = ""
+          const node = getNode(["kevin-gamez", ...activeTab.split("/")])
+          if (!node) return
+          const ext = (name.split(".").pop() || "").toLowerCase()
+          let symbols = []
+          if (ext === "ts" || ext === "tsx" || ext === "js") {
+            const re = /\bexport\s+(?:default\s+)?(const|function|class|type|interface|enum)\s+([\w$_]+)/g
+            let m
+            while ((m = re.exec(node.body))) symbols.push({ kind: m[1], name: m[2] })
+          } else if (ext === "rs") {
+            const re = /\b(pub\s+(?:fn|struct|enum|trait|mod|const)|fn|struct|enum|trait|mod)\s+([\w_]+)/g
+            let m
+            while ((m = re.exec(node.body))) symbols.push({ kind: m[1].replace(/^pub\s+/, ""), name: m[2] })
+          } else if (ext === "md") {
+            const lines = node.body.split("\n")
+            for (const ln of lines) {
+              const m = ln.match(/^(#{1,3})\s+(.+)$/)
+              if (m) symbols.push({ kind: "h" + m[1].length, name: m[2] })
+            }
+          } else if (ext === "json") {
+            const lines = node.body.split("\n")
+            for (const ln of lines) {
+              const m = ln.match(/^\s+"([\w-]+)"\s*:/)
+              if (m) symbols.push({ kind: "key", name: m[1] })
+            }
+          } else if (ext === "toml") {
+            const lines = node.body.split("\n")
+            for (const ln of lines) {
+              const m = ln.match(/^\s*\[(.+)\]\s*$/)
+              if (m) symbols.push({ kind: "section", name: m[1] })
+            }
+          }
+          if (!symbols.length) {
+            const div = document.createElement("div")
+            div.className = "it indent"
+            div.style.color = "var(--mute-2)"
+            div.textContent = "(no symbols)"
+            outlineListEl.appendChild(div)
+            return
+          }
+          for (const s of symbols) {
+            const div = document.createElement("div")
+            div.className = "it indent"
+            div.textContent = "▸ " + s.name + (s.kind === "function" || s.kind === "fn" ? "()" : "")
+            outlineListEl.appendChild(div)
           }
         }
 
@@ -1939,6 +2057,9 @@ lto       = true`
           run(v.trim())
           addLine('<span class="pr">' + esc(pathDisplay(cwd)) + ' $</span> <span class="cu"></span>')
           input.value = ""
+          // FS or active file may have changed — keep explorer in sync
+          renderExplorer()
+          renderOutline()
         }
 
         // ─── Events ───
@@ -1984,6 +2105,7 @@ lto       = true`
         term.innerHTML = ""
         lineNum = 0
         updatePrompt()
+        renderExplorer()
         addLine(
           '<span class="gr">welcome to ~/kevin-gamez · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
         )
