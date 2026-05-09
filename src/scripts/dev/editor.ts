@@ -6,6 +6,9 @@ import { PROJECT_NAME, getNode, state } from './state'
 import { hydrateSaved, isDirty } from './persistence'
 import { esc } from './highlight'
 import { iconUrl } from './icons'
+import { track } from '../lib/analytics'
+
+type OpenSource = 'palette' | 'tree' | 'init' | 'terminal'
 
 let edTabsEl: HTMLElement | null = null
 let edBodyEl: HTMLElement | null = null
@@ -24,7 +27,7 @@ export function initEditor(): void {
   edBodyEl = document.querySelector('.ed-body')
 }
 
-export function openFile(parts: string[]): boolean {
+export function openFile(parts: string[], via: OpenSource = 'tree'): boolean {
   const node = getNode(parts)
   if (!node || node.type !== 'file') return false
   if (parts[0] !== PROJECT_NAME) return false
@@ -32,6 +35,10 @@ export function openFile(parts: string[]): boolean {
   hydrateSaved(rel)
   if (!state.openTabs.includes(rel)) state.openTabs.push(rel)
   state.activeTab = rel
+  track<{ name: 'file_open'; props: { path: string; via: OpenSource } }>('file_open', {
+    path: rel,
+    via,
+  })
   renderEditor()
   renderExplorerFn()
   renderOutlineFn()

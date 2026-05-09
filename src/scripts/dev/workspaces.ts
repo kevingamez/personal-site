@@ -4,6 +4,7 @@
 import { PROJECT_NAME, getNode } from './state'
 import { mdToHtml } from './markdown'
 import { focusInput } from './terminal'
+import { track } from '../lib/analytics'
 
 let centerEl: HTMLElement | null = null
 let scratchEl: HTMLTextAreaElement | null = null
@@ -20,6 +21,9 @@ function renderChangelog(): void {
 
 export function setWorkspace(name: WorkspaceName): void {
   if (!centerEl) return
+  track<{ name: 'workspace_switch'; props: { to: WorkspaceName } }>('workspace_switch', {
+    to: name,
+  })
   ;(['workspace', 'scratchpad', 'changelog'] as const).forEach((w) =>
     centerEl?.classList.toggle('ws-' + w, w === name)
   )

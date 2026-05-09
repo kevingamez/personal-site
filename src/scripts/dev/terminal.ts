@@ -6,6 +6,7 @@ import { esc } from './highlight'
 import { buildCommands, tokenize, type CommandMap } from './commands'
 import { renderExplorer, renderOutline } from './explorer'
 import { makeBuildLoop, makeTailLoop } from './build-stream'
+import { track } from '../lib/analytics'
 
 let term: HTMLElement | null = null
 let input: HTMLInputElement | null = null
@@ -45,6 +46,9 @@ export function updatePrompt(): void {
 function run(cmdLine: string): void {
   const [cmd, ...args] = tokenize(cmdLine)
   if (!cmd || !commands) return
+  track<{ name: 'terminal_command'; props: { command: string } }>('terminal_command', {
+    command: cmd,
+  })
   if (commands[cmd]) {
     try {
       commands[cmd](args)

@@ -6,6 +6,7 @@ import { esc } from './highlight'
 import { openFile } from './editor'
 import { isCenterWorkspace, setWorkspace } from './workspaces'
 import { focusInput } from './terminal'
+import { track } from '../lib/analytics'
 
 type FileEntry = { path: string; name: string; score?: number }
 
@@ -79,6 +80,7 @@ export function openPalette(): void {
   paletteIdx = 0
   renderPalette()
   setTimeout(() => paletteInputEl?.focus(), 0)
+  track<{ name: 'palette_open' }>('palette_open')
 }
 
 export function closePalette(): void {
@@ -91,7 +93,8 @@ export function closePalette(): void {
 function selectPalette(i: number): void {
   const file = paletteResults[i]
   if (!file) return closePalette()
-  openFile(file.path.split('/'))
+  track<{ name: 'palette_select'; props: { path: string } }>('palette_select', { path: file.path })
+  openFile(file.path.split('/'), 'palette')
   if (!isCenterWorkspace()) setWorkspace('workspace')
   closePalette()
 }

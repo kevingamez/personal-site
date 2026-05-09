@@ -2,6 +2,8 @@
 // init sequence the original inline IIFE used to do at the bottom of the file.
 
 import './dev-editor-loader'
+import { bootstrapClient } from '../lib/init'
+import { track } from '../lib/analytics'
 import { PROJECT_NAME, pathDisplay, state } from './state'
 import { persistActive } from './persistence'
 import { initHeatmap } from './heatmap'
@@ -18,6 +20,10 @@ import { esc } from './highlight'
 function saveActive(): void {
   const r = persistActive(state.activeTab)
   if (!r.path) return
+  track<{ name: 'file_save'; props: { path: string; ok: boolean } }>('file_save', {
+    path: r.path,
+    ok: r.ok,
+  })
   if (r.ok) showToast('✓ saved · ' + r.path)
   else showToast('⚠ couldn’t save (storage blocked)')
   renderEditor()
@@ -25,8 +31,8 @@ function saveActive(): void {
 }
 
 function init(): void {
+  bootstrapClient()
   // Independent widgets first (no shared state).
-  initSparkline()
   initHeatmap()
   initRequestLog()
   initToast()
@@ -71,7 +77,7 @@ function init(): void {
     '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat README.md</span> · <span class="ac">tree</span>'
   )
   addLine('<span class="pr">' + esc(pathDisplay(state.cwd)) + ' $</span> <span class="cu"></span>')
-  openFile([PROJECT_NAME, 'README.md'])
+  openFile([PROJECT_NAME, 'README.md'], 'init')
 }
 
 if (document.readyState === 'loading') {
