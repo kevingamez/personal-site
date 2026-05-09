@@ -51,11 +51,11 @@
   align-items: center;
   gap: 8px;
   background: var(--coral-soft);
-  color: var(--coral);
+  color: var(--coral-strong);
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 18px;
 }
 .hello .wave {
@@ -186,7 +186,7 @@ h1.hero-title i {
   font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--coral);
+  color: var(--coral-strong);
 }
 .gol-frame {
   position: relative;
@@ -268,7 +268,7 @@ h1.hero-title i {
 .gol-stamp {
   padding: 5px 10px;
   border-radius: 999px;
-  background: rgba(250, 247, 240, 0.92);
+  background: var(--cream);
   border: 1px solid var(--line-2);
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;

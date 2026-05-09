@@ -14,7 +14,7 @@ footer {
     grid-template-columns: 1fr;
   }
 }
-.foot-grid h4 {
+.foot-grid h3 {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: rgba(250, 247, 240, 0.55);

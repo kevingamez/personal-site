@@ -32,3 +32,4 @@ pnpm-debug.log*
 .claude/
 test-results/
 playwright-report/
+.lighthouseci/
