@@ -4,7 +4,6 @@
 import './dev-editor-loader'
 import { PROJECT_NAME, pathDisplay, state } from './state'
 import { persistActive } from './persistence'
-import { initSparkline } from './sparkline'
 import { initHeatmap } from './heatmap'
 import { initRequestLog } from './request-log'
 import { initEditor, openFile, renderEditor, setExplorerHooks, updateStatusPos } from './editor'

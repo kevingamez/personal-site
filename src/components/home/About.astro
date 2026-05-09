@@ -19,7 +19,16 @@ const { t } = Astro.props
     </div>
     <div class="about-grid">
       <div>
-        <div class="portrait"><span class="badge">K. GÁMEZ · 2026</span></div>
+        <div class="portrait">
+          <img
+            src="/kevin.jpg"
+            alt="Kevin Gámez en frente de Royce Hall, UCLA"
+            width="1200"
+            height="1500"
+            loading="lazy"
+            decoding="async" />
+          <span class="badge">K. GÁMEZ · 2026</span>
+        </div>
       </div>
       <div class="about-prose">
         <p><Fragment set:html={t.p1Html} /></p>
