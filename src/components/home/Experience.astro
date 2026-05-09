@@ -1,0 +1,55 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["experience"]
+}
+
+const { t } = Astro.props
+---
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item now">
+        <div class="tl-year">{t.e1Year}</div>
+        <div class="tl-content">
+          <h3 class="tl-role">Founding engineer <span class="at">@ Enttor</span></h3>
+          <div class="tl-meta">{t.e1Meta}</div>
+          <p class="tl-desc">{t.e1Desc}</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">{t.e2Year}</div>
+        <div class="tl-content">
+          <h3 class="tl-role">Founding engineer <span class="at">@ Samsam</span></h3>
+          <div class="tl-meta">{t.e2Meta}</div>
+          <p class="tl-desc">{t.e2Desc}</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">{t.e3Year}</div>
+        <div class="tl-content">
+          <h3 class="tl-role"><Fragment set:html={t.e3RoleHtml} /></h3>
+          <div class="tl-meta">{t.e3Meta}</div>
+          <p class="tl-desc">{t.e3Desc}</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">{t.e4Year}</div>
+        <div class="tl-content">
+          <h3 class="tl-role"><Fragment set:html={t.e4RoleHtml} /></h3>
+          <div class="tl-meta">{t.e4Meta}</div>
+          <p class="tl-desc">{t.e4Desc}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

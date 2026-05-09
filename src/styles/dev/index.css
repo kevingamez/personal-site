@@ -1,0 +1,13 @@
+/* Aggregator for dev page styles. Order matters — cascade depends on it. */
+@import './base.css';
+@import './chrome.css';
+@import './activity-bar.css';
+@import './explorer.css';
+@import './center.css';
+@import './palette.css';
+@import './toast.css';
+@import './workspaces.css';
+@import './editor.css';
+@import './terminal.css';
+@import './sidebar.css';
+@import './statusbar.css';

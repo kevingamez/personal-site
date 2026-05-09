@@ -1,0 +1,62 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["work"]
+}
+
+const { t } = Astro.props
+---
+
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+    <div class="proj-grid">
+      <a href="https://www.enttor.ai/" class="proj featured" target="_blank" rel="noopener">
+        <div>
+          <div class="proj-num">
+            <span>{t.p1Featured}</span><span class="stack">TypeScript · Postgres · Anthropic · CF Workers</span>
+          </div>
+          <h3 class="proj-name"><Fragment set:html={t.p1NameHtml} /></h3>
+          <p class="proj-desc">{t.p1Desc}</p>
+          <span class="proj-link">{t.p1Link}</span>
+        </div>
+        <div class="proj-visual" style="color:var(--coral);background:#2c2925">enttor</div>
+      </a>
+
+      <a href="https://github.com/kevingamez" class="proj" target="_blank" rel="noopener">
+        <div class="proj-num"><span>02</span><span class="stack">Rust · WASM</span></div>
+        <h3 class="proj-name">automata-rs</h3>
+        <p class="proj-desc">{t.p2Desc}</p>
+        <span class="proj-link">github →</span>
+      </a>
+
+      <a href="https://github.com/kevingamez" class="proj" target="_blank" rel="noopener">
+        <div class="proj-num"><span>03</span><span class="stack">TypeScript · GLSL</span></div>
+        <h3 class="proj-name">fractal-atlas</h3>
+        <p class="proj-desc">{t.p3Desc}</p>
+        <span class="proj-link">live →</span>
+      </a>
+
+      <a href="https://github.com/kevingamez" class="proj" target="_blank" rel="noopener">
+        <div class="proj-num"><span>04</span><span class="stack">Python · numpy</span></div>
+        <h3 class="proj-name">primes-notebook</h3>
+        <p class="proj-desc">{t.p4Desc}</p>
+        <span class="proj-link">github →</span>
+      </a>
+
+      <a href="https://github.com/kevingamez/personal-site" class="proj" target="_blank" rel="noopener">
+        <div class="proj-num"><span>05</span><span class="stack">Astro · Preact</span></div>
+        <h3 class="proj-name">{t.p5Name}</h3>
+        <p class="proj-desc">{t.p5Desc}</p>
+        <span class="proj-link">github →</span>
+      </a>
+    </div>
+  </div>
+</section>

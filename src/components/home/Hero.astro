@@ -1,0 +1,50 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["hero"]
+}
+
+const { t } = Astro.props
+---
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="hello"><span class="wave">👋</span> {t.hello}</span>
+      <h1 class="hero-title"><Fragment set:html={t.titleHtml} /></h1>
+
+      <p class="hero-lede"><Fragment set:html={t.lede} /></p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#work">{t.btnSeeWork}</a>
+        <a class="btn btn-ghost" href="#contact">{t.btnGetInTouch}</a>
+      </div>
+      <div class="meta-row">
+        <span class="live">{t.available}</span>
+        <span>📍 Bogotá, CO</span>
+        <span>UTC-5</span>
+      </div>
+    </div>
+    <div class="gol-wrap" style="width:100%">
+      <div class="gol-frame">
+        <canvas id="gol"></canvas>
+        <div class="gol-controls">
+          <button class="gol-btn" id="gol-pause" title={t.pauseTitle}>⏸</button>
+          <button class="gol-btn" id="gol-reset" title={t.resetTitle}>↻</button>
+        </div>
+        <div class="gol-stamps">
+          <button class="gol-stamp on" data-stamp="glider">{t.stampGlider}</button>
+          <button class="gol-stamp" data-stamp="lwss">{t.stampLwss}</button>
+          <button class="gol-stamp" data-stamp="pulsar">{t.stampPulsar}</button>
+          <button class="gol-stamp" data-stamp="gun">{t.stampGun}</button>
+          <button class="gol-stamp" data-stamp="clear">{t.stampClear}</button>
+        </div>
+      </div>
+      <div class="gol-readout">
+        <span>{t.gen} <b id="gol-gen">0</b></span>
+        <span>{t.alive} <b id="gol-alive">0</b></span>
+        <span>{t.fps} <b id="gol-fps">0</b></span>
+      </div>
+    </div>
+  </div>
+</header>

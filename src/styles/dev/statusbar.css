@@ -1,0 +1,27 @@
+.statusbar {
+  height: 22px;
+  background: var(--coral);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
+.statusbar .l,
+.statusbar .r {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.statusbar .l span,
+.statusbar .r span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hidden {
+  display: none !important;
+}

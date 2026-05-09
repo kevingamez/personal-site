@@ -1,0 +1,59 @@
+<section class="terminal">
+  <div class="term-tabs">
+    <div class="tt on" data-term="zsh">zsh</div>
+    <div class="tt" data-term="build">build:watch</div>
+    <div class="tt" data-term="tail">tail -f prod.log</div>
+    <div class="grow"></div>
+    <div class="actions">⎘ split ⊕ new ↗ pop-out</div>
+  </div>
+  <div class="term-body" id="term">
+    <div class="ln">
+      <span class="gut">1</span><span class="txt"><span class="pr">~</span> <span class="cmd">whoami</span></span>
+    </div>
+    <div class="ln">
+      <span class="gut">2</span><span class="txt"
+        >kevin gámez · founder @ enttor.ai · <span class="ac">bogotá / utc-5</span></span
+      >
+    </div>
+    <div class="ln">
+      <span class="gut">3</span><span class="txt"
+        ><span class="pr">~</span> <span class="cmd">curl -s api.kevingamez.dev/now | jq</span></span
+      >
+    </div>
+    <div class="ln">
+      <span class="gut">4</span><span class="txt"
+        ><span class="gr">&#123;</span>
+        <span class="em">"available"</span>: <span class="ok">true</span>, <span class="em">"shipping"</span>: <span
+          class="ac">"eval-as-a-service v0.4"</span
+        >
+        <span class="gr">&#125;</span></span
+      >
+    </div>
+    <div class="ln">
+      <span class="gut">5</span><span class="txt"><span class="pr">~</span> <span class="cmd">help</span></span>
+    </div>
+    <div class="ln">
+      <span class="gut">6</span><span class="txt"
+        ><span class="gr">commands:</span>
+        <span class="ac">about</span>
+        <span class="ac">work</span>
+        <span class="ac">stack</span>
+        <span class="ac">repos</span>
+        <span class="ac">contact</span>
+        <span class="ac">life</span>
+        <span class="ac">vim</span>
+        <span class="ac">clear</span></span
+      >
+    </div>
+    <div class="ln">
+      <span class="gut">7</span><span class="txt"><span class="pr">~</span> <span class="cu"></span></span>
+    </div>
+  </div>
+  <div class="term-input">
+    <span class="pr" id="prompt">~ $</span>
+    <input id="cmd" placeholder="try ls, cat src/about.ts, vim README.md, help…" autocomplete="off" autofocus />
+    <span class="hint">↵ run · ↑ history · ⌃L clear</span>
+  </div>
+  <div class="term-body term-stream" id="term-build" hidden></div>
+  <div class="term-body term-stream" id="term-tail" hidden></div>
+</section>
