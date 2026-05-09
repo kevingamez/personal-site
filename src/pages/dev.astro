@@ -1621,6 +1621,13 @@ const buildId = "a7f3c91"
           "api/repos.ts": { dot: "warn" },
           "api/eval.ts": { badge: "M" },
         }
+        // hand-tuned outlines for files that benefit from nested entries (matches original design)
+        const OUTLINE_MAP = {
+          "src/stack.ts": [
+            { name: "stack", children: ["runtime", "languages", "storage", "models"] },
+            { name: "summary()", children: [] },
+          ],
+        }
         const folded = new Set(["kevin-gamez/tests"])
 
         const FS = _d({
@@ -2086,10 +2093,8 @@ lto       = true`
           return div
         }
         function walkDir(node, pathParts, depth, container) {
-          const entries = Object.entries(node.children).sort((a, b) => {
-            if (a[1].type !== b[1].type) return a[1].type === "dir" ? -1 : 1
-            return a[0].localeCompare(b[0])
-          })
+          // preserve declaration order — the FS is hand-authored to match the original design
+          const entries = Object.entries(node.children)
           for (const [name, child] of entries) {
             const childPath = [...pathParts, name]
             const key = childPath.join("/")
@@ -2120,6 +2125,24 @@ lto       = true`
           const name = activeTab.split("/").pop()
           outlineHdEl.textContent = "Outline · " + name
           outlineListEl.innerHTML = ""
+          // hand-tuned override?
+          if (OUTLINE_MAP[activeTab]) {
+            for (const sym of OUTLINE_MAP[activeTab]) {
+              const top = document.createElement("div")
+              top.className = "it indent"
+              top.textContent = "▸ " + sym.name
+              outlineListEl.appendChild(top)
+              if (sym.children) {
+                for (const c of sym.children) {
+                  const cd = document.createElement("div")
+                  cd.className = "it indent deep"
+                  cd.textContent = "▸ " + c
+                  outlineListEl.appendChild(cd)
+                }
+              }
+            }
+            return
+          }
           const node = getNode(["kevin-gamez", ...activeTab.split("/")])
           if (!node) return
           const ext = (name.split(".").pop() || "").toLowerCase()
