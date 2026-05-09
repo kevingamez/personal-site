@@ -367,6 +367,35 @@ const buildId = "a7f3c91"
       .tabsbar .tab {
         cursor: pointer;
       }
+      .term-tabs .tt[data-term] {
+        cursor: pointer;
+      }
+      .term-stream {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11.5px;
+        line-height: 1.7;
+      }
+      .term-stream .ln .ts {
+        color: var(--mute-2);
+      }
+      .term-stream .ln .lvl-info {
+        color: var(--green);
+      }
+      .term-stream .ln .lvl-warn {
+        color: var(--yellow);
+      }
+      .term-stream .ln .lvl-err {
+        color: var(--red);
+      }
+      .term-stream .ln .key {
+        color: var(--blue);
+      }
+      .term-stream .ln .vite {
+        color: #c47ad9;
+      }
+      .term-stream .ln .arrow {
+        color: var(--coral);
+      }
 
       /* Scratchpad */
       .scratchpad {
@@ -1140,9 +1169,9 @@ const buildId = "a7f3c91"
 
         <section class="terminal">
           <div class="term-tabs">
-            <div class="tt on">zsh</div>
-            <div class="tt">build:watch</div>
-            <div class="tt">tail -f prod.log</div>
+            <div class="tt on" data-term="zsh">zsh</div>
+            <div class="tt" data-term="build">build:watch</div>
+            <div class="tt" data-term="tail">tail -f prod.log</div>
             <div class="grow"></div>
             <div class="actions">⎘ split ⊕ new ↗ pop-out</div>
           </div>
@@ -1196,6 +1225,8 @@ const buildId = "a7f3c91"
             <input id="cmd" placeholder="try ls, cat src/about.ts, vim README.md, help…" autocomplete="off" autofocus />
             <span class="hint">↵ run · ↑ history · ⌃L clear</span>
           </div>
+          <div class="term-body term-stream" id="term-build" hidden></div>
+          <div class="term-body term-stream" id="term-tail" hidden></div>
         </section>
 
         <section class="scratchpad" hidden>
@@ -2334,6 +2365,194 @@ lto       = true`
           }
         })
 
+        // ─── Terminal tabs (zsh / build / tail) ───
+        const termTabs = document.querySelectorAll(".term-tabs .tt[data-term]")
+        const termBuildEl = document.getElementById("term-build")
+        const termTailEl = document.getElementById("term-tail")
+        const termInputEl = document.querySelector(".term-input")
+        let buildTimer = null
+        let tailTimer = null
+        let buildLineNum = 0
+        let tailLineNum = 0
+
+        function streamAdd(el, html, lineNum) {
+          const div = document.createElement("div")
+          div.className = "ln"
+          div.innerHTML = '<span class="gut">' + lineNum + '</span><span class="txt">' + html + "</span>"
+          el.appendChild(div)
+          // cap at 200 lines
+          while (el.children.length > 200) el.removeChild(el.firstChild)
+          el.scrollTop = el.scrollHeight
+        }
+
+        const VITE_FILES = [
+          "src/pages/index.astro",
+          "src/pages/dev.astro",
+          "src/pages/es/index.astro",
+          "src/middleware.ts",
+        ]
+        const VITE_CYCLES = [
+          (file) => [
+            {
+              delay: 0,
+              html:
+                '<span class="vite">[vite]</span> <span class="ts">' +
+                nowTs() +
+                '</span> file change detected: <span class="arrow">' +
+                file +
+                "</span>",
+            },
+            { delay: 220, html: '<span class="vite">[vite]</span> hmr update <span class="arrow">' + file + "</span>" },
+            {
+              delay: 480,
+              html:
+                '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> updated <span class="num">' +
+                (1 + Math.floor(Math.random() * 5)) +
+                '</span> modules in <span class="ts">' +
+                (8 + Math.floor(Math.random() * 30)) +
+                "ms</span>",
+            },
+          ],
+          (file) => [
+            {
+              delay: 0,
+              html:
+                '<span class="vite">[vite]</span> <span class="ts">' +
+                nowTs() +
+                '</span> page reload <span class="arrow">' +
+                file +
+                "</span>",
+            },
+            { delay: 280, html: '<span class="vite">[vite]</span> transforming…' },
+            {
+              delay: 540,
+              html:
+                '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> ready in <span class="ts">' +
+                (60 + Math.floor(Math.random() * 80)) +
+                "ms</span>",
+            },
+          ],
+          () => [
+            {
+              delay: 0,
+              html: '<span class="lvl-warn">[warn]</span> slow type-check on <span class="arrow">src/pages/dev.astro</span> · <span class="ts">820ms</span>',
+            },
+            { delay: 320, html: '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> diagnostics clean' },
+          ],
+        ]
+        function nowTs() {
+          const d = new Date()
+          const pad = (n) => String(n).padStart(2, "0")
+          return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds())
+        }
+        function startBuildLoop() {
+          if (buildTimer) return
+          if (!termBuildEl.children.length) {
+            // seed a couple of initial lines
+            streamAdd(
+              termBuildEl,
+              '<span class="vite">[vite]</span> dev server running at <span class="arrow">http://localhost:4321</span>',
+              ++buildLineNum
+            )
+            streamAdd(
+              termBuildEl,
+              '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> ready in <span class="ts">218ms</span>',
+              ++buildLineNum
+            )
+            streamAdd(termBuildEl, '<span class="lvl-info">watching</span> ./src for changes…', ++buildLineNum)
+          }
+          const cycle = () => {
+            const file = VITE_FILES[Math.floor(Math.random() * VITE_FILES.length)]
+            const steps = VITE_CYCLES[Math.floor(Math.random() * VITE_CYCLES.length)](file)
+            steps.forEach((s) => setTimeout(() => streamAdd(termBuildEl, s.html, ++buildLineNum), s.delay))
+          }
+          cycle()
+          buildTimer = setInterval(cycle, 2400)
+        }
+        function stopBuildLoop() {
+          if (buildTimer) {
+            clearInterval(buildTimer)
+            buildTimer = null
+          }
+        }
+
+        const TAIL_PATHS = [
+          "/",
+          "/dev",
+          "/es/",
+          "/api/now",
+          "/api/repos",
+          "/api/eval",
+          "/sitemap.xml",
+          "/favicon.svg",
+          "/robots.txt",
+        ]
+        function tailLine() {
+          const path = TAIL_PATHS[Math.floor(Math.random() * TAIL_PATHS.length)]
+          const ms = 18 + Math.floor(Math.random() * 240)
+          const r = Math.random()
+          let lvl, status
+          if (r > 0.97) {
+            lvl = "err"
+            status = 500
+          } else if (r > 0.92) {
+            lvl = "warn"
+            status = 404
+          } else {
+            lvl = "info"
+            status = 200
+          }
+          const ts = new Date().toISOString()
+          return (
+            '<span class="key">{</span>' +
+            '"<span class="key">t</span>":"<span class="ts">' +
+            ts +
+            '</span>",' +
+            '"<span class="key">lvl</span>":"<span class="lvl-' +
+            lvl +
+            '">' +
+            lvl +
+            '</span>",' +
+            '"<span class="key">path</span>":"<span class="arrow">' +
+            path +
+            '</span>",' +
+            '"<span class="key">ms</span>":<span class="num">' +
+            ms +
+            "</span>," +
+            '"<span class="key">status</span>":<span class="num">' +
+            status +
+            "</span>" +
+            '<span class="key">}</span>'
+          )
+        }
+        function startTailLoop() {
+          if (tailTimer) return
+          if (!termTailEl.children.length) {
+            for (let i = 0; i < 6; i++) streamAdd(termTailEl, tailLine(), ++tailLineNum)
+          }
+          tailTimer = setInterval(() => streamAdd(termTailEl, tailLine(), ++tailLineNum), 1100 + Math.random() * 900)
+        }
+        function stopTailLoop() {
+          if (tailTimer) {
+            clearInterval(tailTimer)
+            tailTimer = null
+          }
+        }
+
+        function setTerminal(name) {
+          termTabs.forEach((t) => t.classList.toggle("on", t.dataset.term === name))
+          term.hidden = name !== "zsh"
+          if (termInputEl) termInputEl.hidden = name !== "zsh"
+          termBuildEl.hidden = name !== "build"
+          termTailEl.hidden = name !== "tail"
+          if (name === "build") startBuildLoop()
+          else stopBuildLoop()
+          if (name === "tail") startTailLoop()
+          else stopTailLoop()
+          if (name === "zsh") setTimeout(() => input.focus(), 0)
+        }
+        termTabs.forEach((t) => t.addEventListener("click", () => setTerminal(t.dataset.term || "zsh")))
+
         // ─── Init ───
         // wipe any pre-rendered welcome lines and start fresh
         term.innerHTML = ""
@@ -2341,6 +2560,7 @@ lto       = true`
         updatePrompt()
         renderExplorer()
         setWorkspace("workspace")
+        setTerminal("zsh")
         addLine(
           '<span class="gr">welcome to ~/kevin-gamez · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
         )
