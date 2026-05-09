@@ -3,6 +3,7 @@
 // Stamp patterns (glider/lwss/pulsar/gun) live in `./stamps`.
 
 import { STAMPS, type Stamp } from './stamps'
+import { track } from '../lib/analytics'
 
 export function initConway(): void {
   const c = document.getElementById('gol') as HTMLCanvasElement | null
@@ -155,6 +156,7 @@ export function initConway(): void {
     const r = c.getBoundingClientRect()
     const x = Math.floor(((e.clientX - r.left) / r.width) * COLS)
     const y = Math.floor(((e.clientY - r.top) / r.height) * ROWS)
+    track<{ name: 'conway_seed'; props: { x: number; y: number } }>('conway_seed', { x, y })
     if (curStamp === 'clear') {
       grid.fill(0)
       trail.fill(0)
