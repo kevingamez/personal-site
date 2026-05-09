@@ -17,7 +17,8 @@ export type CommandMap = Record<string, CommandRunner>
 export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): CommandMap {
   const commands: CommandMap = {
     pwd: () => addLine(esc(pathDisplay(state.cwd))),
-    whoami: () => addLine('kevin · founder @ enttor.ai · <span class="ac">bogotá / utc-5</span>'),
+    whoami: () =>
+      addLine('kevin · founding engineer @ enttor · <span class="ac">bogotá / utc-5</span>'),
     date: () => addLine(esc(new Date().toString())),
     uname: () => addLine('Darwin ' + PROJECT_NAME + ' 25.4.0 arm64'),
     ls: (args) => {
@@ -205,29 +206,34 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       )
     },
     about: () => {
-      addLine('kevin gámez · founder @ enttor.ai · bogotá')
-      addLine('eng for 7 yrs, ceo for 2, math nerd for life')
+      addLine('kevin gámez · founding engineer @ enttor · bogotá')
+      addLine('b.sc. systems & computing + m.sc. info eng (deep learning) @ uniandes')
     },
     work: () => {
-      addLine('<span class="ac">enttor.ai</span>      → ad-creative pipelines at scale')
-      addLine('<span class="ac">automata-rs</span>    → wasm cellular automata · ★412')
-      addLine('<span class="ac">fractal-atlas</span>  → glsl deep-zoom · ★189')
+      addLine(
+        '<span class="ac">enttor</span>          → ai outbound · browser automation · openai pipelines'
+      )
+      addLine(
+        '<span class="ac">samsam</span>          → e-commerce · ts/react native/next/prisma/postgres'
+      )
+      addLine('<span class="ac">personal-site</span>   → astro · this page')
     },
     stack: () => {
-      addLine('<span class="di">runtime</span>   node 22 · bun 1.1 · cf workers')
-      addLine('<span class="di">storage</span>   postgres 16 · redis · r2')
-      addLine('<span class="di">models</span>    claude · openai · ollama')
+      addLine('<span class="di">frontend</span>  next.js · react · react native · astro · tailwind')
+      addLine('<span class="di">backend</span>   nestjs · postgres · prisma · supabase · inngest')
+      addLine('<span class="di">ai/ml</span>     openai · pytorch · opencv · browser automation')
     },
     repos: () => {
-      addLine('kevingamez/<span class="ac">automata-rs</span>      ★412')
-      addLine('kevingamez/<span class="ac">fractal-atlas</span>    ★189')
-      addLine('kevingamez/<span class="ac">primes-notebook</span>  ★33')
-      addLine('kevingamez/<span class="ac">personal-site</span>    ★64')
+      addLine('kevingamez/<span class="ac">personal-site</span>           typescript')
+      addLine('kevingamez/<span class="ac">AD_ASTRA2023-SpaceInvaders</span>  python')
+      addLine('kevingamez/<span class="ac">Palladium_Chat</span>          typescript')
+      addLine('kevingamez/<span class="ac">budget-app</span>              swift')
+      addLine('kevingamez/<span class="ac">GCP-CloudRun</span>            dockerfile')
     },
     contact: () => {
-      addLine('<span class="em">email</span>     hi@kevingamez.com')
+      addLine('<span class="em">email</span>     kevingamez.kg@gmail.com')
       addLine('<span class="em">github</span>    github.com/kevingamez')
-      addLine('<span class="em">x</span>         x.com/kevin_gamez')
+      addLine('<span class="em">linkedin</span>  linkedin.com/in/kevin-gamez')
     },
     life: () => addLine('↗ opening conway\'s game of life… see hero on <span class="ac">/</span>'),
   }
