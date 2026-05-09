@@ -1,0 +1,3 @@
+Contact: mailto:kgamez@enttor.ai
+Preferred-Languages: en, es
+Canonical: https://kevingamez.com/.well-known/security.txt
