@@ -90,6 +90,20 @@ export type DevState = {
   outlineMap: Record<string, Array<{ name: string; children?: string[] }>>
 }
 
+// Start with every github-repo subfolder collapsed and everything inside
+// `personal-site/src/pages/` collapsed too — vscode-style: only the workspace
+// root is expanded by default, the user clicks to drill in.
+function initialFolded(): Set<string> {
+  const folded = new Set<string>()
+  const userDir = FS.children[PROJECT_NAME]
+  if (userDir && userDir.type === 'dir') {
+    for (const [name, node] of Object.entries(userDir.children)) {
+      if (node.type === 'dir') folded.add(`${PROJECT_NAME}/${name}`)
+    }
+  }
+  return folded
+}
+
 export const state: DevState = {
   cwd: [PROJECT_NAME],
   lineNum: 0,
@@ -97,7 +111,7 @@ export const state: DevState = {
   historyIdx: 0,
   openTabs: [],
   activeTab: null,
-  folded: new Set(),
+  folded: initialFolded(),
   savedBodies: Object.create(null),
   fileMeta: {},
   outlineMap: {},
