@@ -6,12 +6,12 @@ Built with [Astro 5](https://astro.build) as a fully static site, deployed on [V
 
 ## Pages
 
-| Route       | Source                       | Description                                     |
-| ----------- | ---------------------------- | ----------------------------------------------- |
-| `/`         | `src/pages/index.astro`      | English home, Conway Game of Life hero          |
-| `/es/`      | `src/pages/es/index.astro`   | Spanish mirror                                  |
-| `/dev`      | `src/pages/dev.astro`        | Terminal/IDE view: CodeMirror, ⌘P, ⌘S, terminal |
-| `/404`      | `src/pages/404.astro`        | Themed not-found                                |
+| Route  | Source                     | Description                                     |
+| ------ | -------------------------- | ----------------------------------------------- |
+| `/`    | `src/pages/index.astro`    | English home, Conway Game of Life hero          |
+| `/es/` | `src/pages/es/index.astro` | Spanish mirror                                  |
+| `/dev` | `src/pages/dev.astro`      | Terminal/IDE view: CodeMirror, ⌘P, ⌘S, terminal |
+| `/404` | `src/pages/404.astro`      | Themed not-found                                |
 
 ## Project layout
 
