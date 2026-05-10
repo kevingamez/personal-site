@@ -54,7 +54,7 @@ export const travel: TravelPoint[] = [
     country: 'Colombia',
     countryCode: 'CO',
     lat: 3.4516,
-    lng: -76.5320,
+    lng: -76.532,
     weight: 25,
     photo: '/travel/cali.jpg',
   },

@@ -79,7 +79,11 @@ const mapStyle: google.maps.MapTypeStyle[] = [
     elementType: 'labels.text.stroke',
     stylers: [{ color: '#faf7f0' }, { weight: 3 }],
   },
-  { featureType: 'administrative.neighborhood', elementType: 'labels.text.fill', stylers: [{ color: '#6b6660' }] },
+  {
+    featureType: 'administrative.neighborhood',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#6b6660' }],
+  },
 
   // Landscape — keep the terrain shading enabled (mapTypeId: 'terrain' adds
   // hillshade automatically); we just tint the geometry layers.
