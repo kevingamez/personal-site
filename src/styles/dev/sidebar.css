@@ -163,10 +163,15 @@
 .hm-legend {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 9.5px;
   color: var(--mute);
   margin-top: 6px;
   font-family: 'JetBrains Mono', monospace;
+}
+.hm-legend .hm-total {
+  color: var(--ink-2);
+  font-weight: 600;
 }
 
 .repos {

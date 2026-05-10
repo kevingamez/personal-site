@@ -1,21 +1,59 @@
+---
+import { loadHomeStats } from "@/data/home-github"
+
+// Same source of truth as the public-facing GitHub section on / — counts,
+// language mix and top repos are all live from the GraphQL/REST API at
+// build time (with disk cache).
+const stats = await loadHomeStats()
+
+// Format "joined Apr 2019" from the ISO date.
+const joinedLabel = (() => {
+  if (!stats.joinedISO) return ""
+  const d = new Date(stats.joinedISO)
+  const month = d.toLocaleString("en-US", { month: "short" })
+  return `joined ${month} ${d.getFullYear()}`
+})()
+
+// Top language bars - height scales relative to the leading slice (so the
+// tallest bar is always 99%, rest scale down). Mirrors the spark mix shown
+// on the home page.
+const topLang = stats.languageMix[0]?.pct || 1
+const langBars = stats.languageMix.slice(0, 8).map((l) => ({
+  name: l.name,
+  pct: l.pct,
+  color: l.color,
+  height: Math.max(15, Math.round((l.pct / topLang) * 99)),
+}))
+
+// Top repos - link out to github.com. Limit to 4 to fit the sidebar.
+const featured = stats.topRepos.slice(0, 4).map((r) => {
+  const tag = r.language === "TypeScript" ? "TS" : r.language === "JavaScript" ? "JS" : r.language
+  return { name: r.name, color: r.color, tag, url: r.url }
+})
+---
+
 <aside class="sidebar">
   <div class="panel">
     <div class="ph"><b>github · @kevingamez</b><span class="pos">live</span></div>
     <div class="row2">
       <div class="metric">
-        <div class="vl">28<span> repos</span></div><div class="sub">14 followers · 11 following</div>
+        <div class="vl">{stats.publicRepos}<span> repos</span></div>
+        <div class="sub">{stats.followers} followers · {stats.following} following</div>
       </div>
-      <div class="metric"><div class="vl">7<span> yrs</span></div><div class="sub">joined Apr 2019</div></div>
+      <div class="metric">
+        <div class="vl">{stats.yearsOnGithub}<span> yrs</span></div>
+        <div class="sub">{joinedLabel}</div>
+      </div>
     </div>
     <div class="spark" id="spark" aria-label="Language mix across public repos">
-      <span style="height:99%" title="TypeScript 33%"></span>
-      <span style="height:81%" title="Python 27%"></span>
-      <span style="height:21%" title="Swift 7%"></span>
-      <span style="height:21%" title="JavaScript 7%"></span>
-      <span style="height:21%" title="Dart 7%"></span>
-      <span style="height:21%" title="Dockerfile 7%"></span>
-      <span style="height:21%" title="CSS 7%"></span>
-      <span style="height:15%" title="Jupyter 5%"></span>
+      {
+        langBars.map((l) => (
+          <span
+            style={`height:${l.height}%;background:${l.color}`}
+            title={`${l.name} ${l.pct}%`}
+          />
+        ))
+      }
     </div>
   </div>
 
@@ -55,25 +93,28 @@
 
   <div class="panel">
     <div class="ph"><b>contributions · 12mo</b><span class="pos">github</span></div>
-    <div class="hm" id="hm"></div>
-    <div class="hm-legend"><span>12mo ago</span><span>today</span></div>
+    <div class="hm" id="hm" data-contrib={JSON.stringify(stats.contribCalendar.days.map((d) => d.level))}></div>
+    <div class="hm-legend">
+      <span>12mo ago</span>
+      <span class="hm-total">{stats.contribCalendar.totalContributions.toLocaleString()} contributions</span>
+      <span>today</span>
+    </div>
   </div>
 
   <div class="panel">
     <div class="ph"><b>open source</b><span class="pos">@kevingamez</span></div>
     <div class="repos">
-      <a href="https://github.com/kevingamez/personal-site" target="_blank" rel="noopener"
-        ><span><span class="lg" style="background:#3178c6"></span>personal-site</span><span class="star">TS</span></a
-      >
-      <a href="https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders" target="_blank" rel="noopener"
-        ><span><span class="lg" style="background:#3572A5"></span>AD_ASTRA</span><span class="star">Python</span></a
-      >
-      <a href="https://github.com/kevingamez/Palladium_Chat" target="_blank" rel="noopener"
-        ><span><span class="lg" style="background:#3178c6"></span>Palladium_Chat</span><span class="star">TS</span></a
-      >
-      <a href="https://github.com/kevingamez/budget-app" target="_blank" rel="noopener"
-        ><span><span class="lg" style="background:#F05138"></span>budget-app</span><span class="star">Swift</span></a
-      >
+      {
+        featured.map((r) => (
+          <a href={r.url} target="_blank" rel="noopener">
+            <span>
+              <span class="lg" style={`background:${r.color}`} />
+              {r.name}
+            </span>
+            <span class="star">{r.tag}</span>
+          </a>
+        ))
+      }
     </div>
   </div>
 
