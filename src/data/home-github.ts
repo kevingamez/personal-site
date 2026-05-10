@@ -166,6 +166,88 @@ const LEVEL_MAP: Record<string, 0 | 1 | 2 | 3 | 4> = {
   FOURTH_QUARTILE: 4,
 }
 
+// Pulls every repo the viewer is involved in (owner public+private, plus org
+// repos / external repos they've contributed to), with languages-by-bytes
+// per repo, in a single GraphQL request. We use this for the inclusive
+// "repos / languages" counters and language mix; the `topRepos` list stays
+// public-only (handled separately) so we never display private names.
+type RepoWithLangs = {
+  name: string
+  isPrivate: boolean
+  langs: { name: string; size: number }[]
+}
+
+async function fetchAllAffiliationRepos(): Promise<RepoWithLangs[] | null> {
+  if (!process.env.GITHUB_TOKEN) return null
+  const query = `query AllRepos {
+    viewer {
+      repositories(
+        first: 100
+        isFork: false
+        ownerAffiliations: [OWNER]
+      ) {
+        nodes {
+          name
+          isPrivate
+          languages(first: 20, orderBy: { field: SIZE, direction: DESC }) {
+            edges { size node { name } }
+          }
+        }
+      }
+      repositoriesContributedTo(
+        first: 100
+        includeUserRepositories: false
+        contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]
+      ) {
+        nodes {
+          name
+          isPrivate
+          languages(first: 20, orderBy: { field: SIZE, direction: DESC }) {
+            edges { size node { name } }
+          }
+        }
+      }
+    }
+  }`
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ query }),
+  })
+  if (!res.ok) return null
+  type RepoNode = {
+    name: string
+    isPrivate: boolean
+    languages?: { edges: { size: number; node: { name: string } }[] }
+  }
+  const json = (await res.json()) as {
+    data?: {
+      viewer?: {
+        repositories?: { nodes: RepoNode[] }
+        repositoriesContributedTo?: { nodes: RepoNode[] }
+      }
+    }
+  }
+  const owned = json.data?.viewer?.repositories?.nodes ?? []
+  const contributed = json.data?.viewer?.repositoriesContributedTo?.nodes ?? []
+  // Dedupe (a contributed repo could in theory overlap with owned).
+  const map = new Map<string, RepoWithLangs>()
+  for (const r of [...owned, ...contributed]) {
+    if (!r) continue
+    const key = `${r.isPrivate ? 'priv' : 'pub'}::${r.name}`
+    if (map.has(key)) continue
+    map.set(key, {
+      name: r.name,
+      isPrivate: r.isPrivate,
+      langs: (r.languages?.edges ?? []).map((e) => ({
+        name: e.node.name,
+        size: e.size,
+      })),
+    })
+  }
+  return Array.from(map.values())
+}
+
 async function fetchContribCalendar(): Promise<ContribCalendar | null> {
   if (!process.env.GITHUB_TOKEN) return null
   const query = `query Contribs($login: String!) {
@@ -257,19 +339,35 @@ async function pMap<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>): Prom
 
 async function buildStats(): Promise<HomeStats | null> {
   try {
-    const [repos, profile, contribCalendar] = await Promise.all([
+    const [publicRepos, profile, contribCalendar, allRepos] = await Promise.all([
       fetchAllRepos(),
       fetchProfile(),
       fetchContribCalendar(),
+      fetchAllAffiliationRepos(),
     ])
-    if (!repos.length) return null
+    if (!publicRepos.length) return null
 
-    // Aggregate languages by bytes across all public repos
+    // Inclusive repo set (owner public+private + contributed orgs/external),
+    // when available; falls back to public-only if GraphQL didn't land.
+    const inclusiveRepos = allRepos ?? []
+    const reposCount = inclusiveRepos.length || publicRepos.length
+
+    // Aggregate languages by bytes. Prefer the GraphQL inclusive set; fall
+    // back to per-public-repo REST fetches when the token can't reach
+    // GraphQL.
     const langTotals: Record<string, number> = {}
-    const allLangs = await pMap(repos, 6, (r) => fetchRepoLanguages(r.full_name))
-    for (const langs of allLangs) {
-      for (const [name, bytes] of Object.entries(langs)) {
-        langTotals[name] = (langTotals[name] || 0) + (bytes as number)
+    if (inclusiveRepos.length) {
+      for (const r of inclusiveRepos) {
+        for (const l of r.langs) {
+          langTotals[l.name] = (langTotals[l.name] || 0) + l.size
+        }
+      }
+    } else {
+      const allLangs = await pMap(publicRepos, 6, (r) => fetchRepoLanguages(r.full_name))
+      for (const langs of allLangs) {
+        for (const [name, bytes] of Object.entries(langs)) {
+          langTotals[name] = (langTotals[name] || 0) + (bytes as number)
+        }
       }
     }
     const totalBytes = Object.values(langTotals).reduce((a, b) => a + b, 0) || 1
@@ -290,7 +388,8 @@ async function buildStats(): Promise<HomeStats | null> {
     }
 
     // Top repos by stars, falling back to most recently updated for the trailing slots.
-    const topRepos: RepoCard[] = repos
+    // Stays public-only on purpose so private/org repo names never leak.
+    const topRepos: RepoCard[] = publicRepos
       .slice()
       .sort(
         (a, b) =>
@@ -310,7 +409,7 @@ async function buildStats(): Promise<HomeStats | null> {
     const yearsOnGithub = Math.max(0, new Date().getFullYear() - created.getFullYear())
 
     return {
-      publicRepos: repos.length,
+      publicRepos: reposCount,
       languagesShipped: Object.keys(langTotals).length,
       yearsOnGithub,
       languageMix,
