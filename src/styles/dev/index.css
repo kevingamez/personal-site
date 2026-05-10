@@ -1,4 +1,4 @@
-/* Aggregator for dev page styles. Order matters — cascade depends on it. */
+/* Aggregator for dev page styles. Order matters - cascade depends on it. */
 @import './base.css';
 @import './chrome.css';
 @import './activity-bar.css';

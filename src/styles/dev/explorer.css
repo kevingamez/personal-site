@@ -38,7 +38,7 @@
 .explorer .it:hover {
   background: rgba(255, 255, 255, 0.04);
 }
-/* Chevron — real vscode-style chevron (>), rotates to v when expanded */
+/* Chevron - real vscode-style chevron (>), rotates to v when expanded */
 .explorer .it.fold::before {
   content: '';
   width: 16px;

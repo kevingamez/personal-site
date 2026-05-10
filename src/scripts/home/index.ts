@@ -1,4 +1,4 @@
-// Entry point for the home page (EN + ES share this — no string differences).
+// Entry point for the home page (EN + ES share this - no string differences).
 // Bundled by Astro and loaded with `<script>import '@/scripts/home/index.ts'`.
 
 import { bootstrapClient } from '../lib/init'
@@ -9,6 +9,7 @@ import { initGhStats } from './gh-stats'
 import { initConsole } from './console'
 import { initWriting } from './writing'
 import { initWanderings } from './wanderings'
+import { initVisibility } from './visibility'
 
 bootstrapClient()
 initConway()
@@ -17,6 +18,7 @@ initGhStats()
 initWriting()
 initConsole()
 initWanderings()
+initVisibility()
 
 const langLink = document.querySelector<HTMLAnchorElement>('a.lang')
 if (langLink) {

@@ -85,12 +85,12 @@ export type DevState = {
   // Map of saved file bodies (last persisted, used to compute dirty markers).
   savedBodies: Record<string, string>
   // Decorations the original FILE_META / OUTLINE_MAP populated. Empty by
-  // default — kept for forward compatibility with the original design.
+  // default - kept for forward compatibility with the original design.
   fileMeta: Record<string, { dot?: 'normal' | 'warn'; badge?: string }>
   outlineMap: Record<string, Array<{ name: string; children?: string[] }>>
 }
 
-// Start with the github-repo subfolders collapsed (visual noise — each only
+// Start with the github-repo subfolders collapsed (visual noise - each only
 // holds a README anyway) but keep `personal-site/` and its `src/` open so the
 // user lands seeing actual files, not just folder rows. Vscode-style.
 const LOCAL_PROJECT = 'personal-site'

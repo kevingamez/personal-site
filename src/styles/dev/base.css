@@ -32,7 +32,7 @@ body {
   font-size: 13px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  /* macOS Sierra default wallpaper — Lone Pine Peak alpenglow.
+  /* macOS Sierra default wallpaper - Lone Pine Peak alpenglow.
      2560×1440 JPEG q=80 (1.3MB). */
   background: #0a0a0d url('/dev-bg.jpg') center / cover no-repeat fixed;
   overflow: hidden;

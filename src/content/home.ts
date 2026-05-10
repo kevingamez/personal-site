@@ -1,4 +1,13 @@
 // Strongly typed strings for the home page (EN + ES share this shape).
+//
+// SECURITY INVARIANT — fields suffixed `*Html` (e.g. `titleHtml`, `p1Html`,
+// `lede`, `golCaptionHtml`) are rendered with Astro's `set:html` directive
+// because they contain trusted markup like <i>, <b>, <span>, <a>. These
+// strings MUST be authored statically in `home-en.ts` / `home-es.ts` and
+// never sourced from user input, the runtime API, or any other untrusted
+// channel. If you ever need dynamic HTML here, sanitize with a library
+// like DOMPurify before assigning. Plain-text fields (no `Html` suffix)
+// are safe for arbitrary content.
 
 export interface HomeStrings {
   meta: {

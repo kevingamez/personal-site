@@ -1,4 +1,4 @@
-// Terminal command map — `ls`, `cd`, `cat`, `vim`, etc. The map closure is
+// Terminal command map - `ls`, `cd`, `cat`, `vim`, etc. The map closure is
 // built once with injected output helpers so commands can write back to the
 // terminal without depending on the DOM directly.
 
@@ -246,7 +246,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
     if (!args[0]) return errFn('what manual page do you want?')
     if (commands[args[0]])
       addLine(
-        '<span class="gr">no man page — try just running</span> <span class="ac">' +
+        '<span class="gr">no man page - try just running</span> <span class="ac">' +
           esc(args[0]) +
           '</span>'
       )

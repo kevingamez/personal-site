@@ -1,5 +1,5 @@
 // Read real project files at build time so the dev-mode "explorer" reflects
-// the codebase. Order of LOCAL_FILE_PATHS matters — preserved in tree rendering.
+// the codebase. Order of LOCAL_FILE_PATHS matters - preserved in tree rendering.
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 

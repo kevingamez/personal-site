@@ -8,7 +8,7 @@ interface Props {
 
 const { t } = Astro.props
 
-// Stats computed at build time — no client logic needed for the bottom panel.
+// Stats computed at build time - no client logic needed for the bottom panel.
 const cities = travel.length
 const countries = new Set(travel.map((p) => p.countryCode)).size
 const firstYear = travel

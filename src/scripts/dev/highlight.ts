@@ -1,5 +1,5 @@
 // Lightweight syntax highlighter used by the terminal `cat` command.
-// CodeMirror handles the editor itself — this is for inline terminal output only.
+// CodeMirror handles the editor itself - this is for inline terminal output only.
 
 const KW_TS =
   /\b(import|export|const|let|var|type|interface|class|extends|implements|return|async|await|function|as|from|if|else|switch|case|break|true|false|null|undefined|new|this|satisfies|typeof|keyof|enum|public|private|protected|readonly|in|of|for|while|do)\b/g

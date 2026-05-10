@@ -22,7 +22,7 @@
   }
 }
 
-/* Bottom panel — “14 countries · 38 cities · since 2018” */
+/* Bottom panel - “14 countries · 38 cities · since 2018” */
 .map-bar {
   background: rgba(10, 10, 15, 0.72);
   backdrop-filter: blur(14px) saturate(160%);
@@ -53,7 +53,7 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* MapLibre overrides — match the editorial aesthetic */
+/* MapLibre overrides - match the editorial aesthetic */
 .maplibregl-ctrl-attrib {
   background: rgba(10, 10, 15, 0.6) !important;
   color: rgba(255, 255, 255, 0.6) !important;

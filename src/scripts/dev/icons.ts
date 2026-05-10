@@ -1,5 +1,5 @@
 // File / folder icon mapping for the explorer.
-// Uses the PKief Material Icon Theme assets served from jsDelivr — the same
+// Uses the PKief Material Icon Theme assets served from jsDelivr - the same
 // set VS Code ships with.
 
 export const ICON_BASE = 'https://cdn.jsdelivr.net/gh/PKief/vscode-material-icon-theme@main/icons/'
