@@ -15,7 +15,7 @@ const { t } = Astro.props
         <div class="sec-num console-secnum">{t.secNum}</div>
         <h2 class="sec-title console-title"><Fragment set:html={t.titleHtml} /></h2>
       </div>
-      <p class="sec-blurb console-blurb">{t.blurb}</p>
+      <p class="sec-blurb console-blurb" set:html={t.blurb} />
     </div>
 
     <div class="console-shell">

@@ -18,6 +18,8 @@ type TravelPoint = {
   lng: number
   weight: number
   firstYear?: number
+  photo?: string
+  photoAlt?: string
 }
 
 const REDUCE_MOTION =
@@ -205,8 +207,9 @@ async function mountMap(
     center: { lat: cLat, lng: cLng },
     zoom: 2,
     minZoom: 2,
-    maxZoom: 14,
-    backgroundColor: '#0d2040',
+    maxZoom: 16,
+    backgroundColor: '#a8c6d8',
+    mapTypeId: 'terrain',
     disableDefaultUI: true,
     zoomControl: true,
     zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_BOTTOM },
@@ -243,43 +246,105 @@ async function mountMap(
     dissipating: true,
   })
 
-  // Drop a small dot + visible label per city. Labels appear from zoom 4 up
-  // (continent → country → city), so the heatmap stays clean at world view
-  // and city names show up the moment you zoom in.
-  const labelMarkers = points.map((p) => {
-    const m = new google.maps.Marker({
-      position: { lat: p.lat, lng: p.lng },
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 3,
-        fillColor: '#ffffff',
-        fillOpacity: 0.9,
-        strokeColor: '#0d2040',
-        strokeWeight: 1.5,
-      },
-      label: {
-        text: p.city,
-        color: '#ffffff',
-        fontSize: '11px',
-        fontWeight: '600',
-        className: 'wanderings-marker-label',
-      },
-      title: `${p.city}, ${p.country}`,
-      optimized: false,
-      visible: false,
-      zIndex: 5,
+  // Photo-thumbnail pins, Google-Photos style. We avoid AdvancedMarkerElement
+  // because that path requires a Cloud-side `mapId` (which would also disable
+  // our inline `styles` array). Instead we drop a custom `OverlayView` per
+  // point — rendered as plain DOM, projected to the map's pixel coords on
+  // every draw, which keeps both the editorial style and the HTML thumbnails.
+  const lightbox = ensureLightbox()
+
+  const buildPin = (p: TravelPoint): HTMLElement => {
+    const wrap = document.createElement('button')
+    wrap.type = 'button'
+    wrap.className = p.photo ? 'wp-pin wp-pin-photo' : 'wp-pin wp-pin-dot'
+    wrap.title = `${p.city}, ${p.country}`
+    wrap.setAttribute('aria-label', `${p.city}, ${p.country}`)
+    if (p.photo) {
+      const img = document.createElement('img')
+      img.src = p.photo
+      img.alt = p.photoAlt || `${p.city}, ${p.country}`
+      img.loading = 'lazy'
+      img.decoding = 'async'
+      img.draggable = false
+      // If the photo 404s, swap to the dot variant gracefully.
+      img.addEventListener('error', () => {
+        wrap.classList.remove('wp-pin-photo')
+        wrap.classList.add('wp-pin-dot')
+        img.remove()
+      })
+      wrap.appendChild(img)
+    }
+    const cap = document.createElement('span')
+    cap.className = 'wp-pin-cap'
+    cap.textContent = p.city
+    wrap.appendChild(cap)
+    wrap.addEventListener('click', (e) => {
+      e.stopPropagation()
+      if (p.photo) lightbox.open(p)
     })
-    m.setMap(map)
-    return m
+    return wrap
+  }
+
+  class PhotoOverlay extends google.maps.OverlayView {
+    private latLng: google.maps.LatLng
+    private root: HTMLElement | null = null
+    constructor(
+      private content: HTMLElement,
+      lat: number,
+      lng: number
+    ) {
+      super()
+      this.latLng = new google.maps.LatLng(lat, lng)
+    }
+    onAdd(): void {
+      const root = document.createElement('div')
+      root.className = 'wp-pin-anchor'
+      root.appendChild(this.content)
+      const panes = this.getPanes()
+      if (panes) panes.overlayMouseTarget.appendChild(root)
+      this.root = root
+    }
+    draw(): void {
+      const proj = this.getProjection()
+      if (!proj || !this.root) return
+      const px = proj.fromLatLngToDivPixel(this.latLng)
+      if (!px) return
+      this.root.style.left = `${px.x}px`
+      this.root.style.top = `${px.y}px`
+    }
+    onRemove(): void {
+      if (this.root?.parentNode) this.root.parentNode.removeChild(this.root)
+      this.root = null
+    }
+    getContent(): HTMLElement {
+      return this.content
+    }
+  }
+
+  const pins = points.map((p) => {
+    const content = buildPin(p)
+    const overlay = new PhotoOverlay(content, p.lat, p.lng)
+    overlay.setMap(map)
+    return { content, hasPhoto: !!p.photo }
   })
 
-  const updateLabelVisibility = (): void => {
+  // Pin visibility tiers (so the world view doesn't feel empty):
+  //   z ≥ 2 (always): a small dot at every city — confirms the map is alive.
+  //   z ≥ 4 (continent): show the city caption alongside the dot.
+  //   z ≥ 6 (country/region): photo pins go full-size (48×48 with caption).
+  //   2-5  with a photo: photo renders as a tiny mini thumbnail (26×26).
+  const updatePinVisibility = (): void => {
     const z = map.getZoom() ?? 2
-    const show = z >= 4
-    for (const m of labelMarkers) m.setVisible(show)
+    const showCaption = z >= 4
+    const fullPhoto = z >= 6
+    for (const { content, hasPhoto } of pins) {
+      content.classList.add('on')
+      content.classList.toggle('show-cap', showCaption)
+      if (hasPhoto) content.classList.toggle('mini', !fullPhoto)
+    }
   }
-  updateLabelVisibility()
-  map.addListener('zoom_changed', updateLabelVisibility)
+  updatePinVisibility()
+  map.addListener('zoom_changed', updatePinVisibility)
 
   if (!REDUCE_MOTION) {
     // Subtle ambient zoom-in on first paint (Google Photos opens this way).
@@ -288,6 +353,62 @@ async function mountMap(
       map.setZoom(Math.min(z + 0.5, 4))
     }, 600)
   }
+}
+
+interface Lightbox {
+  open: (p: TravelPoint) => void
+  close: () => void
+}
+
+let lightboxSingleton: Lightbox | null = null
+
+function ensureLightbox(): Lightbox {
+  if (lightboxSingleton) return lightboxSingleton
+  const root = document.createElement('div')
+  root.className = 'wp-lightbox'
+  root.setAttribute('role', 'dialog')
+  root.setAttribute('aria-modal', 'true')
+  root.setAttribute('aria-label', 'Travel photo')
+  root.innerHTML = `
+    <div class="wp-lb-backdrop" data-close></div>
+    <button class="wp-lb-close" type="button" aria-label="Close" data-close>×</button>
+    <figure class="wp-lb-figure">
+      <img class="wp-lb-img" alt="" />
+      <figcaption class="wp-lb-caption">
+        <span class="wp-lb-city"></span>
+        <span class="wp-lb-country"></span>
+      </figcaption>
+    </figure>
+  `
+  document.body.appendChild(root)
+
+  const img = root.querySelector<HTMLImageElement>('.wp-lb-img')!
+  const cityEl = root.querySelector<HTMLElement>('.wp-lb-city')!
+  const countryEl = root.querySelector<HTMLElement>('.wp-lb-country')!
+
+  const close = (): void => {
+    root.classList.remove('on')
+    document.body.classList.remove('wp-lock')
+  }
+  const open = (p: TravelPoint): void => {
+    if (!p.photo) return
+    img.src = p.photo
+    img.alt = p.photoAlt || `${p.city}, ${p.country}`
+    cityEl.textContent = p.city
+    countryEl.textContent = p.country
+    root.classList.add('on')
+    document.body.classList.add('wp-lock')
+  }
+  root.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement
+    if (t.dataset.close !== undefined) close()
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && root.classList.contains('on')) close()
+  })
+
+  lightboxSingleton = { open, close }
+  return lightboxSingleton
 }
 
 export function initWanderings(): void {

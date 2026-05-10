@@ -13,11 +13,23 @@ export type TravelPoint = {
   lng: number
   weight: number
   firstYear?: number // optional, used for the "since YYYY" stat
+  /**
+   * Optional photo for the Google-Photos-style thumbnail pin. Drop the file
+   * at `public/travel/<slug>.jpg` (any size, square crop renders best) and
+   * point this at `/travel/<slug>.jpg`. If missing, the marker falls back to
+   * a labelled dot.
+   */
+  photo?: string
+  /** Optional alt text / lightbox caption when `photo` is set. */
+  photoAlt?: string
 }
 
 // Replace / extend with your own. Order doesn't matter (sorted at render time).
 export const travel: TravelPoint[] = [
   // ─── Colombia ────────────────────────────────────────────────
+  // Verified against DIVIPOLA / Wikipedia. Localities (Ciudad Bolívar,
+  // Aguablanca, El Paraíso) and unverified place names (Cachival, Candilejas)
+  // were dropped or rolled up into their parent municipio.
   {
     city: 'Bogotá',
     country: 'Colombia',
@@ -26,6 +38,7 @@ export const travel: TravelPoint[] = [
     lng: -74.0721,
     weight: 100,
     firstYear: 2001,
+    photo: '/travel/bogota.jpg',
   },
   {
     city: 'Medellín',
@@ -34,30 +47,16 @@ export const travel: TravelPoint[] = [
     lat: 6.2476,
     lng: -75.5658,
     weight: 40,
+    photo: '/travel/medellin.jpg',
   },
   {
-    city: 'Ciudad Bolívar',
-    country: 'Colombia',
-    countryCode: 'CO',
-    lat: 4.4929,
-    lng: -74.1576,
-    weight: 25,
-  },
-  {
-    city: 'El Paraíso',
-    country: 'Colombia',
-    countryCode: 'CO',
-    lat: 4.5601,
-    lng: -74.1305,
-    weight: 18,
-  },
-  {
-    city: 'Aguablanca',
+    city: 'Cali',
     country: 'Colombia',
     countryCode: 'CO',
     lat: 3.4516,
-    lng: -76.521,
-    weight: 18,
+    lng: -76.5320,
+    weight: 25,
+    photo: '/travel/cali.jpg',
   },
   {
     city: 'Cajicá',
@@ -66,6 +65,7 @@ export const travel: TravelPoint[] = [
     lat: 4.9176,
     lng: -74.0258,
     weight: 22,
+    photo: '/travel/cajica.jpg',
   },
   {
     city: 'Guatape',
@@ -74,6 +74,7 @@ export const travel: TravelPoint[] = [
     lat: 6.2333,
     lng: -75.15,
     weight: 22,
+    photo: '/travel/guatape.jpg',
   },
   {
     city: 'Guateque',
@@ -82,6 +83,7 @@ export const travel: TravelPoint[] = [
     lat: 5.0064,
     lng: -73.4783,
     weight: 18,
+    photo: '/travel/guateque.jpg',
   },
   {
     city: 'Salento',
@@ -90,6 +92,7 @@ export const travel: TravelPoint[] = [
     lat: 4.6376,
     lng: -75.5707,
     weight: 20,
+    photo: '/travel/salento.jpg',
   },
   {
     city: 'Doradal',
@@ -98,14 +101,16 @@ export const travel: TravelPoint[] = [
     lat: 5.7444,
     lng: -74.6981,
     weight: 18,
+    photo: '/travel/doradal.jpg',
   },
   {
-    city: 'Puente de Boyacá',
+    city: 'Tunja',
     country: 'Colombia',
     countryCode: 'CO',
-    lat: 5.4541,
-    lng: -73.4639,
-    weight: 15,
+    lat: 5.5353,
+    lng: -73.3678,
+    weight: 16,
+    photo: '/travel/tunja.jpg',
   },
   {
     city: 'Guadalajara de Buga',
@@ -114,6 +119,7 @@ export const travel: TravelPoint[] = [
     lat: 3.9012,
     lng: -76.2978,
     weight: 18,
+    photo: '/travel/guadalajara-de-buga.jpg',
   },
   {
     city: 'Los Patios',
@@ -122,14 +128,7 @@ export const travel: TravelPoint[] = [
     lat: 7.836,
     lng: -72.51,
     weight: 16,
-  },
-  {
-    city: 'Candilejas',
-    country: 'Colombia',
-    countryCode: 'CO',
-    lat: 1.71,
-    lng: -75.24,
-    weight: 12,
+    photo: '/travel/los-patios.jpg',
   },
   {
     city: 'Cachipay',
@@ -138,6 +137,7 @@ export const travel: TravelPoint[] = [
     lat: 4.7333,
     lng: -74.4333,
     weight: 12,
+    photo: '/travel/cachipay.jpg',
   },
 
   // ─── United States ───────────────────────────────────────────
@@ -149,6 +149,7 @@ export const travel: TravelPoint[] = [
     lng: -74.006,
     weight: 60,
     firstYear: 2024,
+    photo: '/travel/new-york.jpg',
   },
   {
     city: 'Jersey City',
@@ -157,6 +158,7 @@ export const travel: TravelPoint[] = [
     lat: 40.7178,
     lng: -74.0431,
     weight: 25,
+    photo: '/travel/jersey-city.jpg',
   },
   {
     city: 'Los Angeles',
@@ -165,6 +167,7 @@ export const travel: TravelPoint[] = [
     lat: 34.0522,
     lng: -118.2437,
     weight: 35,
+    photo: '/travel/los-angeles.jpg',
   },
   {
     city: 'West Hollywood',
@@ -173,6 +176,7 @@ export const travel: TravelPoint[] = [
     lat: 34.09,
     lng: -118.3617,
     weight: 22,
+    photo: '/travel/west-hollywood.jpg',
   },
   {
     city: 'Niagara Falls',
@@ -181,6 +185,7 @@ export const travel: TravelPoint[] = [
     lat: 43.0962,
     lng: -79.0377,
     weight: 18,
+    photo: '/travel/niagara-falls.jpg',
   },
 
   // ─── Canada ──────────────────────────────────────────────────
@@ -191,6 +196,7 @@ export const travel: TravelPoint[] = [
     lat: 43.6532,
     lng: -79.3832,
     weight: 30,
+    photo: '/travel/toronto.jpg',
   },
   {
     city: 'Mississauga',
@@ -199,6 +205,7 @@ export const travel: TravelPoint[] = [
     lat: 43.589,
     lng: -79.6441,
     weight: 22,
+    photo: '/travel/mississauga.jpg',
   },
   {
     city: 'St. Catharines',
@@ -207,6 +214,7 @@ export const travel: TravelPoint[] = [
     lat: 43.1594,
     lng: -79.2469,
     weight: 16,
+    photo: '/travel/st-catharines.jpg',
   },
 
   // ─── Denmark (extended stay) ─────────────────────────────────
@@ -217,6 +225,7 @@ export const travel: TravelPoint[] = [
     lat: 55.6761,
     lng: 12.5683,
     weight: 50,
+    photo: '/travel/copenhagen.jpg',
   },
   {
     city: 'Brøndby',
@@ -225,6 +234,7 @@ export const travel: TravelPoint[] = [
     lat: 55.6478,
     lng: 12.4115,
     weight: 28,
+    photo: '/travel/brondby.jpg',
   },
   {
     city: 'Brøndby Strand',
@@ -233,6 +243,7 @@ export const travel: TravelPoint[] = [
     lat: 55.6261,
     lng: 12.4108,
     weight: 28,
+    photo: '/travel/brondby-strand.jpg',
   },
   {
     city: 'Hedehusene',
@@ -241,6 +252,7 @@ export const travel: TravelPoint[] = [
     lat: 55.6536,
     lng: 12.1958,
     weight: 22,
+    photo: '/travel/hedehusene.jpg',
   },
   {
     city: 'Hvidovre',
@@ -249,6 +261,7 @@ export const travel: TravelPoint[] = [
     lat: 55.657,
     lng: 12.4733,
     weight: 22,
+    photo: '/travel/hvidovre.jpg',
   },
   {
     city: 'Roskilde',
@@ -257,6 +270,7 @@ export const travel: TravelPoint[] = [
     lat: 55.6415,
     lng: 12.0803,
     weight: 20,
+    photo: '/travel/roskilde.jpg',
   },
   {
     city: 'Helsingør',
@@ -265,6 +279,7 @@ export const travel: TravelPoint[] = [
     lat: 56.0361,
     lng: 12.6136,
     weight: 18,
+    photo: '/travel/helsingor.jpg',
   },
   {
     city: 'Kongens Lyngby',
@@ -273,6 +288,7 @@ export const travel: TravelPoint[] = [
     lat: 55.7704,
     lng: 12.5039,
     weight: 18,
+    photo: '/travel/kongens-lyngby.jpg',
   },
   {
     city: 'Klampenborg',
@@ -281,6 +297,7 @@ export const travel: TravelPoint[] = [
     lat: 55.7694,
     lng: 12.5953,
     weight: 16,
+    photo: '/travel/klampenborg.jpg',
   },
 
   // ─── United Kingdom ──────────────────────────────────────────
@@ -291,6 +308,7 @@ export const travel: TravelPoint[] = [
     lat: 51.5074,
     lng: -0.1278,
     weight: 28,
+    photo: '/travel/london.jpg',
   },
   {
     city: 'Beckenham',
@@ -299,6 +317,7 @@ export const travel: TravelPoint[] = [
     lat: 51.4081,
     lng: -0.0252,
     weight: 16,
+    photo: '/travel/beckenham.jpg',
   },
   {
     city: 'Edinburgh',
@@ -307,6 +326,7 @@ export const travel: TravelPoint[] = [
     lat: 55.9533,
     lng: -3.1883,
     weight: 18,
+    photo: '/travel/edinburgh.jpg',
   },
 
   // ─── France ──────────────────────────────────────────────────
@@ -317,6 +337,7 @@ export const travel: TravelPoint[] = [
     lat: 48.8566,
     lng: 2.3522,
     weight: 30,
+    photo: '/travel/paris.jpg',
   },
   {
     city: 'Versailles',
@@ -325,6 +346,7 @@ export const travel: TravelPoint[] = [
     lat: 48.8014,
     lng: 2.1301,
     weight: 16,
+    photo: '/travel/versailles.jpg',
   },
   {
     city: 'Gennevilliers',
@@ -333,6 +355,7 @@ export const travel: TravelPoint[] = [
     lat: 48.9335,
     lng: 2.294,
     weight: 14,
+    photo: '/travel/gennevilliers.jpg',
   },
 
   // ─── Italy + Vatican ─────────────────────────────────────────
@@ -343,6 +366,7 @@ export const travel: TravelPoint[] = [
     lat: 41.9028,
     lng: 12.4964,
     weight: 22,
+    photo: '/travel/rome.jpg',
   },
   {
     city: 'Vatican City',
@@ -351,6 +375,7 @@ export const travel: TravelPoint[] = [
     lat: 41.9029,
     lng: 12.4534,
     weight: 16,
+    photo: '/travel/vatican-city.jpg',
   },
   {
     city: 'Venice',
@@ -359,6 +384,7 @@ export const travel: TravelPoint[] = [
     lat: 45.4408,
     lng: 12.3155,
     weight: 18,
+    photo: '/travel/venice.jpg',
   },
 
   // ─── Germany ─────────────────────────────────────────────────
@@ -369,6 +395,7 @@ export const travel: TravelPoint[] = [
     lat: 52.52,
     lng: 13.405,
     weight: 22,
+    photo: '/travel/berlin.jpg',
   },
   {
     city: 'Hamburg',
@@ -377,6 +404,7 @@ export const travel: TravelPoint[] = [
     lat: 53.5511,
     lng: 9.9937,
     weight: 18,
+    photo: '/travel/hamburg.jpg',
   },
 
   // ─── Czechia / Hungary / Türkiye ─────────────────────────────
@@ -387,6 +415,7 @@ export const travel: TravelPoint[] = [
     lat: 50.0755,
     lng: 14.4378,
     weight: 18,
+    photo: '/travel/prague.jpg',
   },
   {
     city: 'Budapest',
@@ -395,6 +424,7 @@ export const travel: TravelPoint[] = [
     lat: 47.4979,
     lng: 19.0402,
     weight: 18,
+    photo: '/travel/budapest.jpg',
   },
   {
     city: 'Istanbul',
@@ -403,5 +433,6 @@ export const travel: TravelPoint[] = [
     lat: 41.0082,
     lng: 28.9784,
     weight: 18,
+    photo: '/travel/istanbul.jpg',
   },
 ]

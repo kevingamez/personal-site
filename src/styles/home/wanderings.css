@@ -70,14 +70,219 @@
   opacity: 0.4;
 }
 
-/* Custom city labels we drop at each travel point */
-.wanderings-marker-label {
-  /* Position the text just above the dot rather than overlapping it. */
-  transform: translateY(-12px);
-  text-shadow:
-    0 0 3px #0d2040,
-    0 0 6px #0d2040,
-    0 0 9px rgba(13, 32, 64, 0.9);
-  letter-spacing: 0.02em;
+/* ─── Photo-thumbnail pins ─── */
+/* Anchor: positioned absolutely by OverlayView at the lat/lng pixel.
+   We translate so the visual anchor (bottom of the dot / pin tip) sits on
+   the coordinate, not the top-left corner of the wrapping element. */
+.wp-pin-anchor {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+}
+
+.wp-pin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1.15),
+    opacity 0.2s ease;
+}
+.wp-pin.on {
+  /* Reserved for any future "loaded" stagger; visibility is on by default */
+  opacity: 1;
+}
+/* Caption only appears once we're zoomed past continent level. */
+.wp-pin .wp-pin-cap {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.wp-pin.show-cap .wp-pin-cap {
+  opacity: 1;
+  transform: translateY(0);
+}
+.wp-pin:focus-visible {
+  outline: none;
+}
+.wp-pin:focus-visible .wp-pin-cap {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* The thumbnail itself */
+.wp-pin-photo img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #faf7f0;
+  box-shadow:
+    0 4px 10px -2px rgba(31, 29, 26, 0.45),
+    0 2px 4px -1px rgba(31, 29, 26, 0.35);
+  transition:
+    width 0.25s ease,
+    height 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  will-change: transform;
+  background: #ebe3d4;
+}
+.wp-pin-photo:hover img {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow:
+    0 8px 18px -2px rgba(31, 29, 26, 0.5),
+    0 3px 6px -1px rgba(31, 29, 26, 0.4);
+}
+/* Mini state at intermediate zooms — small pin without caption noise. */
+.wp-pin-photo.mini img {
+  width: 26px;
+  height: 26px;
+  border-width: 1.5px;
+  border-radius: 6px;
+}
+
+/* Dot fallback when no photo is provided */
+.wp-pin-dot::before {
+  content: '';
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--coral);
+  border: 2px solid #faf7f0;
+  box-shadow: 0 0 0 1px rgba(31, 29, 26, 0.35);
+}
+
+.wp-pin-cap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #1f1d1a;
+  background: rgba(250, 247, 240, 0.92);
+  padding: 2px 7px;
+  border-radius: 999px;
   white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  letter-spacing: 0.02em;
+}
+.wp-pin-photo.mini .wp-pin-cap {
+  display: none;
+}
+
+/* ─── Lightbox ─── */
+.wp-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.wp-lightbox.on {
+  pointer-events: auto;
+  opacity: 1;
+}
+.wp-lock {
+  overflow: hidden;
+}
+.wp-lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 13, 11, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.wp-lb-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.15s;
+}
+.wp-lb-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.wp-lb-figure {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: min(92vw, 1100px);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  animation: wp-lb-in 0.25s cubic-bezier(0.2, 0.8, 0.3, 1.15) both;
+}
+@keyframes wp-lb-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+.wp-lb-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(88vh - 60px);
+  border-radius: 12px;
+  background: #1a1612;
+  box-shadow:
+    0 30px 60px -10px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  object-fit: contain;
+}
+.wp-lb-caption {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.wp-lb-city {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  letter-spacing: 0;
+  color: #fff;
+}
+.wp-lb-country::before {
+  content: '· ';
+  color: rgba(255, 255, 255, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-pin,
+  .wp-lb-figure {
+    animation: none;
+    transition: none;
+  }
 }
