@@ -1,0 +1,88 @@
+/* ─── Wanderings (travel map) ─── */
+#wanderings .map-frame {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+  background: #0a1830;
+  box-shadow:
+    7px 7px 0 var(--ink),
+    11px 11px 0 var(--coral);
+}
+
+#travel-map {
+  width: 100%;
+  height: 560px;
+  background: #0a1830;
+}
+@media (max-width: 700px) {
+  #travel-map {
+    height: 420px;
+  }
+}
+
+/* Bottom panel — “14 countries · 38 cities · since 2018” */
+.map-bar {
+  background: rgba(10, 10, 15, 0.72);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 14px 22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.map-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.map-bar-row b {
+  color: var(--coral);
+  font-weight: 600;
+}
+.map-bar-dot {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* MapLibre overrides — match the editorial aesthetic */
+.maplibregl-ctrl-attrib {
+  background: rgba(10, 10, 15, 0.6) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 10.5px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+.maplibregl-ctrl-attrib-button {
+  background-color: rgba(10, 10, 15, 0.7) !important;
+}
+
+/* Hover popup */
+.wanderings-popup .maplibregl-popup-content {
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid var(--coral);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+.wanderings-popup .maplibregl-popup-content b {
+  color: var(--coral);
+  font-weight: 600;
+}
+.wanderings-popup .maplibregl-popup-tip {
+  display: none;
+}

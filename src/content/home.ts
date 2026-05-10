@@ -168,8 +168,19 @@ export interface HomeStrings {
     blurb: string
     reactionsLabel: string
     commentsLabel: string
+    repostsLabel: string
     readOn: string
+    seeMore: string
+    seeLess: string
     more: string
+  }
+  wanderings: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    countries: string
+    cities: string
+    since: string
   }
   bookshelf: {
     secNum: string

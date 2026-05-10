@@ -7,12 +7,16 @@ import { initConway } from './conway'
 import { initContribGraph } from './contrib'
 import { initGhStats } from './gh-stats'
 import { initConsole } from './console'
+import { initWriting } from './writing'
+import { initWanderings } from './wanderings'
 
 bootstrapClient()
 initConway()
 initContribGraph()
 initGhStats()
+initWriting()
 initConsole()
+initWanderings()
 
 const langLink = document.querySelector<HTMLAnchorElement>('a.lang')
 if (langLink) {
