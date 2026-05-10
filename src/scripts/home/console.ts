@@ -1,4 +1,4 @@
-// Home-page console section. Default mode is a real shell — built-in
+// Home-page console section. Default mode is a real shell - built-in
 // commands run locally and instantly. The `kevin` / `ask` commands are
 // the bridge to the LLM: they POST to /api/chat and stream the reply
 // back into the same stream.
@@ -140,7 +140,7 @@ const HELP_LINES = [
 const ABOUT_LINES = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
-  '<b>now</b> · founding engineer at <span class="ac">enttor</span> — AI outbound, browser automation,',
+  '<b>now</b> · founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
   '       OpenAI pipelines on Next.js + NestJS + Postgres.',
   '<b>before</b> · founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
   '<b>school</b> · M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
@@ -181,7 +181,7 @@ const REPOS_LINES = [
 ]
 
 const NOW_LINES = [
-  'building   · <b>eval-as-a-service</b> at enttor — brand-fit evals over an API',
+  'building   · <b>eval-as-a-service</b> at enttor - brand-fit evals over an API',
   "reading    · <i>A Mathematician's Apology</i>, Hardy. Slim, beautiful.",
   'thinking   · knot invariants, specifically the Jones polynomial.',
 ]
@@ -341,7 +341,7 @@ const COMMANDS: Record<string, CommandFn> = {
       ' 1337  pts/0    00:00:00 ps',
     ])
   },
-  // file-mutating commands — keep the joke gentle; this site is read-only.
+  // file-mutating commands - keep the joke gentle; this site is read-only.
   mkdir: (a, r) => {
     const name = a[0] || ''
     if (!name) {
@@ -428,7 +428,7 @@ const MAN_PAGES: Record<string, string[]> = {
     '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, contact.',
   ],
   pwd: ['<b>PWD</b>(1)', '  print working directory. always /home/kevin.'],
-  cd: ['<b>CD</b>(1)', '  cd is mostly decorative — there’s nowhere else to go.'],
+  cd: ['<b>CD</b>(1)', '  cd is mostly decorative - there’s nowhere else to go.'],
   ps: ['<b>PS</b>(1)', '  list (fake) processes.'],
   mkdir: ['<b>MKDIR</b>(1)', '  this fs is read-only. mkdir always fails.'],
   rmdir: ['<b>RMDIR</b>(1)', '  this fs is read-only. rmdir always fails.'],
@@ -527,7 +527,7 @@ async function runChat(refs: Refs, history: ChatMessage[], question: string): Pr
     history.push({ role: 'assistant', content: acc })
   } catch {
     const fallback =
-      "the backend isn't wired in this preview (set `ANTHROPIC_API_KEY` in vercel). until then I'm just a shell — try `help`."
+      "the backend isn't wired in this preview (set `ANTHROPIC_API_KEY` in vercel). until then I'm just a shell - try `help`."
     if (REDUCE_MOTION) out.innerHTML = mdLite(fallback)
     else {
       const tokens = fallback.split(/(\s+)/)
@@ -562,7 +562,7 @@ function commonPrefix(strs: string[]): string {
 }
 
 function getCompletions(value: string): { matches: string[]; replaceFrom: number } {
-  // Determine word boundaries — last whitespace separates words.
+  // Determine word boundaries - last whitespace separates words.
   const m = /^(.*\s)?(\S*)$/.exec(value)
   const head = m?.[1] ?? ''
   const last = m?.[2] ?? value
@@ -708,7 +708,7 @@ export function initConsole(): void {
       e.preventDefault()
       return
     }
-    // readline-style line editing — only when Ctrl is held
+    // readline-style line editing - only when Ctrl is held
     if (e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
       const k = e.key.toLowerCase()
       if (k === 'l') {
