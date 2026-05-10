@@ -1,10 +1,20 @@
 ---
 import { loadHomeStats } from "@/data/home-github"
+import { loadRecentCommits } from "@/data/dev-github"
 
 // Same source of truth as the public-facing GitHub section on / — counts,
 // language mix and top repos are all live from the GraphQL/REST API at
 // build time (with disk cache).
 const stats = await loadHomeStats()
+
+// Real recent commits feed (PushEvents across public repos, 6h cache).
+const recentCommits = (await loadRecentCommits()).slice(0, 6)
+const tailTime = (iso: string): string => {
+  const d = new Date(iso)
+  const hh = String(d.getUTCHours()).padStart(2, "0")
+  const mm = String(d.getUTCMinutes()).padStart(2, "0")
+  return `${hh}:${mm}`
+}
 
 // Format "joined Apr 2019" from the ISO date.
 const joinedLabel = (() => {
@@ -99,24 +109,25 @@ const featured = stats.topRepos.slice(0, 4).map((r) => {
   </div>
 
   <div class="panel">
-    <div class="ph"><b>tail -f /var/log/access</b><span class="pos">synthetic</span></div>
-    <div class="reqs" id="reqs">
-      <div class="r">
-        <span class="m200">200</span><span class="ms">38ms</span><span class="pa">GET /api/now</span>
-      </div>
-      <div class="r">
-        <span class="m200">200</span><span class="ms">42ms</span><span class="pa">GET /api/repos</span>
-      </div>
-      <div class="r"><span class="m200">200</span><span class="ms">28ms</span><span class="pa">GET /</span></div>
-      <div class="r">
-        <span class="m4xx">404</span><span class="ms">11ms</span><span class="pa">GET /favicon.ico</span>
-      </div>
-      <div class="r">
-        <span class="m200">200</span><span class="ms">156ms</span><span class="pa">POST /api/outbound</span>
-      </div>
-      <div class="r">
-        <span class="m200">200</span><span class="ms">35ms</span><span class="pa">GET /life/state</span>
-      </div>
+    <div class="ph"><b>tail -f /var/log/commits</b><span class="pos">github · live</span></div>
+    <div class="reqs commit-tail" id="reqs">
+      {
+        recentCommits.length === 0 && (
+          <div class="r" style="color:var(--mute-2)">no recent push events</div>
+        )
+      }
+      {
+        recentCommits.map((c) => (
+          <a class="r commit-r" href={c.url} target="_blank" rel="noopener">
+            <span class="ts">{tailTime(c.ts)}</span>
+            <span class="sha">{c.shaShort}</span>
+            <span class="pa">
+              <span class="ct-repo">{c.repoShort}</span>
+              <span class="ct-msg">{c.message}</span>
+            </span>
+          </a>
+        ))
+      }
     </div>
   </div>
 
