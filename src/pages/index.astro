@@ -7,6 +7,7 @@ import Skills from "@/components/home/Skills.astro"
 import Experience from "@/components/home/Experience.astro"
 import Work from "@/components/home/Work.astro"
 import Github from "@/components/home/Github.astro"
+import Writing from "@/components/home/Writing.astro"
 import Now from "@/components/home/Now.astro"
 import Bookshelf from "@/components/home/Bookshelf.astro"
 import Console from "@/components/home/Console.astro"
@@ -31,6 +32,7 @@ const githubStats = await loadHomeStats()
   <Experience t={t.experience} />
   <Work t={t.work} />
   <Github t={t.github} stats={githubStats} />
+  <Writing t={t.writing} />
   <Now t={t.now} />
   <Bookshelf t={t.bookshelf} />
   <Console t={t.console} />
