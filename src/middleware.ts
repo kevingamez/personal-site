@@ -18,7 +18,7 @@ export const onRequest = defineMiddleware(async (_context, next) => {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https:",
-      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://tiles.openfreemap.org",
+      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://tiles.openfreemap.org https://elevation-tiles-prod.s3.amazonaws.com",
       "worker-src 'self' blob:",
       "frame-ancestors 'none'",
       "base-uri 'self'",
