@@ -1,0 +1,63 @@
+---
+// Personalized profile panel for the /dev activity bar. Shows Kevin's avatar,
+// current role, live Bogotá clock, build/session metadata and quick links.
+// Mirrors the spirit of GitHub's sidebar profile but tuned to dev-mode style.
+---
+
+<aside id="profile" class="profile-panel" hidden>
+  <header class="pf-head">
+    <div class="pf-avatar-wrap" aria-hidden="true">
+      <img class="pf-avatar" src="/kevin.jpg" alt="" />
+      <span class="pf-status" data-status="online"></span>
+    </div>
+    <div class="pf-id">
+      <div class="pf-name">Kevin <i>Gámez</i></div>
+      <div class="pf-role">Founding engineer <span class="pf-at">@ Enttor</span></div>
+      <div class="pf-status-line"><span class="pf-status-dot"></span>online — coding</div>
+    </div>
+  </header>
+
+  <section class="pf-block">
+    <div class="pf-block-label">Location</div>
+    <div class="pf-row">
+      <span class="material-symbols-outlined pf-ico">location_on</span>
+      <span>Bogotá, CO</span>
+    </div>
+    <div class="pf-row">
+      <span class="material-symbols-outlined pf-ico">schedule</span>
+      <span id="pf-clock">--:--</span>
+      <span class="pf-tz">UTC-5</span>
+    </div>
+  </section>
+
+  <section class="pf-block">
+    <div class="pf-block-label">Stack today</div>
+    <div class="pf-chips">
+      <span class="pf-chip">TypeScript</span>
+      <span class="pf-chip">Next.js</span>
+      <span class="pf-chip">NestJS</span>
+      <span class="pf-chip">Postgres</span>
+      <span class="pf-chip">OpenAI</span>
+    </div>
+  </section>
+
+  <section class="pf-block">
+    <div class="pf-block-label">Links</div>
+    <a class="pf-link" href="https://github.com/kevingamez" target="_blank" rel="noopener">
+      <span class="material-symbols-outlined pf-ico">code</span><span>github.com/kevingamez</span>
+    </a>
+    <a class="pf-link" href="https://www.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">
+      <span class="material-symbols-outlined pf-ico">badge</span><span>linkedin/kevin-gamez</span>
+    </a>
+    <a class="pf-link" href="mailto:kevingamez.kg@gmail.com">
+      <span class="material-symbols-outlined pf-ico">mail</span><span>kevingamez.kg@gmail.com</span>
+    </a>
+  </section>
+
+  <section class="pf-block pf-meta">
+    <div class="pf-block-label">Session</div>
+    <div class="pf-meta-row"><span>build</span><b id="pf-build">a7f3c91</b></div>
+    <div class="pf-meta-row"><span>uptime</span><b id="pf-uptime">0s</b></div>
+    <div class="pf-meta-row"><span>started</span><b id="pf-started">--</b></div>
+  </section>
+</aside>
