@@ -162,6 +162,15 @@ export interface HomeStrings {
     thinkingV: string
     thinkingSub: string
   }
+  writing: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    reactionsLabel: string
+    commentsLabel: string
+    readOn: string
+    more: string
+  }
   bookshelf: {
     secNum: string
     titleHtml: string

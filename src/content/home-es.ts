@@ -187,7 +187,7 @@ export const es: HomeStrings = {
     repoCloudDesc: 'Despliegues de servicios containerizados en Cloud Run.',
   },
   now: {
-    secNum: '§06 · Ahora',
+    secNum: '§07 · Ahora',
     titleHtml: 'Qué tengo en el escritorio <i>esta semana.</i>',
     blurb:
       'Una foto en vivo. Se actualiza cuando algo cambia; normalmente cada lunes en la mañana.',
@@ -206,13 +206,22 @@ export const es: HomeStrings = {
     thinkingSub:
       'Específicamente el polinomio de Jones. Sin aplicaciones aún, pero no me deja dormir.',
   },
+  writing: {
+    secNum: '§06 · Escritos',
+    titleHtml: 'Notas <i>desde la trinchera.</i>',
+    blurb: 'Ensayos cortos sobre ingeniería, startups y cómo se siente realmente sacar producto.',
+    reactionsLabel: 'reacciones',
+    commentsLabel: 'comentarios',
+    readOn: 'Leer en LinkedIn',
+    more: 'Ver todos en LinkedIn →',
+  },
   bookshelf: {
-    secNum: '§07 · Estantería',
+    secNum: '§08 · Estantería',
     titleHtml: 'Cuatro libros que <i>cambiaron cómo trabajo.</i>',
     blurb: 'No son el canon. Son los que sigo recomendando.',
   },
   console: {
-    secNum: '§08 · Consola',
+    secNum: '§09 · Consola',
     titleHtml: 'Una shell real. <i>Y una IA, si la llamas.</i>',
     blurb:
       'Escribe un comando — <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… ¿Quieres conversar? <span class="ac">kevin "tu pregunta"</span> abre la IA.',

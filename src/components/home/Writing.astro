@@ -1,0 +1,60 @@
+---
+import type { HomeStrings } from "@/content/home"
+import { posts } from "@/data/posts"
+
+interface Props {
+  t: HomeStrings["writing"]
+}
+
+const { t } = Astro.props
+---
+
+<section id="writing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+
+    <ul class="writing-list">
+      {
+        posts.map((p) => (
+          <li class="post">
+            <div class="post-side">
+              <div class="post-date">{p.date}</div>
+              <div class="post-stats">
+                <span class="post-stat" title={`${p.reactions} ${t.reactionsLabel}`}>
+                  ★ {p.reactions}
+                </span>
+                <span class="post-stat" title={`${p.comments} ${t.commentsLabel}`}>
+                  ◌ {p.comments}
+                </span>
+              </div>
+            </div>
+            <div class="post-body">
+              <a class="post-title" href={p.url} target="_blank" rel="noopener">
+                {p.title}
+              </a>
+              <p class="post-excerpt">{p.excerpt}</p>
+              <a class="post-link" href={p.url} target="_blank" rel="noopener">
+                {t.readOn} →
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      class="writing-more"
+      href="https://www.linkedin.com/in/kevin-gamez/recent-activity/all/"
+      target="_blank"
+      rel="noopener"
+    >
+      {t.more}
+    </a>
+  </div>
+</section>

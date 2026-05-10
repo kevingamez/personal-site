@@ -185,7 +185,7 @@ export const en: HomeStrings = {
     repoCloudDesc: 'Containerized service deploys on Cloud Run.',
   },
   now: {
-    secNum: '§06 · Now',
+    secNum: '§07 · Now',
     titleHtml: "What's on my desk <i>this week.</i>",
     blurb: 'A live snapshot. Updated when something changes; usually every Monday morning.',
     buildingK: 'Building',
@@ -202,13 +202,22 @@ export const en: HomeStrings = {
     thinkingV: 'Knot invariants',
     thinkingSub: 'Specifically the Jones polynomial. No applications yet, but it keeps me up.',
   },
+  writing: {
+    secNum: '§06 · Writing',
+    titleHtml: 'Notes from the <i>build.</i>',
+    blurb: 'Short essays on engineering, startups, and what shipping actually feels like.',
+    reactionsLabel: 'reactions',
+    commentsLabel: 'comments',
+    readOn: 'Read on LinkedIn',
+    more: 'See all on LinkedIn →',
+  },
   bookshelf: {
-    secNum: '§07 · Bookshelf',
+    secNum: '§08 · Bookshelf',
     titleHtml: 'Four books that <i>changed how I work.</i>',
     blurb: 'Not the canon. Just the ones I keep recommending.',
   },
   console: {
-    secNum: '§08 · Console',
+    secNum: '§09 · Console',
     titleHtml: 'A real shell. <i>And an AI, if you ask.</i>',
     blurb:
       'Type a command — <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… Need a real conversation? <span class="ac">kevin "your question"</span> opens the LLM.',
