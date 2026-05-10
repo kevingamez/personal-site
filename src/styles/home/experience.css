@@ -20,7 +20,7 @@
   display: grid;
   grid-template-columns: 170px 1fr;
   gap: 32px;
-  padding: 18px 0;
+  padding: 12px 0;
   position: relative;
 }
 @media (max-width: 700px) {
@@ -79,9 +79,9 @@
 }
 .tl-role {
   font-family: 'Instrument Serif', serif;
-  font-size: 24px;
-  line-height: 1.1;
-  margin: 0 0 4px;
+  font-size: 21px;
+  line-height: 1.15;
+  margin: 0 0 3px;
 }
 .tl-role .at {
   color: var(--coral-strong);
@@ -92,20 +92,20 @@
   font-size: 11px;
   color: var(--muted);
   letter-spacing: 0.04em;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .tl-desc {
-  font-size: 14.5px;
+  font-size: 13.5px;
   color: var(--ink-2);
-  line-height: 1.55;
+  line-height: 1.5;
   margin: 0;
-  max-width: 60ch;
+  max-width: 56ch;
 }
 
 /* ─── Honors & certifications ─── */
 .achievements {
-  margin-top: 64px;
-  padding-top: 40px;
+  margin-top: 40px;
+  padding-top: 28px;
   border-top: 1px solid var(--line);
 }
 .achievements-head {
@@ -153,7 +153,7 @@
   display: grid;
   grid-template-columns: 170px 1fr;
   gap: 32px;
-  padding: 16px 0;
+  padding: 10px 0;
   border-bottom: 1px dashed var(--line);
 }
 .achievement:last-child {
@@ -183,9 +183,9 @@
 .ach-title {
   font-family: 'Instrument Serif', serif;
   font-weight: 400;
-  font-size: 22px;
-  line-height: 1.1;
-  margin: 0 0 4px;
+  font-size: 19px;
+  line-height: 1.15;
+  margin: 0 0 3px;
 }
 .ach-title i {
   font-style: italic;
@@ -196,12 +196,12 @@
   font-size: 11px;
   color: var(--muted);
   letter-spacing: 0.04em;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 .ach-desc {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink-2);
-  line-height: 1.55;
+  line-height: 1.5;
   margin: 0;
-  max-width: 62ch;
+  max-width: 60ch;
 }
