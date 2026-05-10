@@ -7,6 +7,22 @@ interface Props {
 }
 
 const { t } = Astro.props
+
+// Highest-engagement first; tie-break with comments + reposts.
+const orderedPosts = [...posts].sort((a, b) => {
+  const score = (p: (typeof posts)[number]): number => p.reactions + (p.comments ?? 0) + (p.reposts ?? 0)
+  return score(b) - score(a)
+})
+
+// Char-based preview - predictable across cards regardless of paragraph
+// breaks, and lets us know whether the post was actually truncated.
+const PREVIEW = 360
+function preview(text: string): { text: string; truncated: boolean } {
+  const trimmed = text.replace(/\n+$/, "")
+  if (trimmed.length <= PREVIEW) return { text: trimmed, truncated: false }
+  const cut = trimmed.lastIndexOf(" ", PREVIEW)
+  return { text: trimmed.slice(0, cut > 100 ? cut : PREVIEW) + "…", truncated: true }
+}
 ---
 
 <section id="writing">
@@ -19,34 +35,130 @@ const { t } = Astro.props
       <p class="sec-blurb">{t.blurb}</p>
     </div>
 
-    <ul class="writing-list">
-      {
-        posts.map((p) => (
-          <li class="post">
-            <div class="post-side">
-              <div class="post-date">{p.date}</div>
-              <div class="post-stats">
-                <span class="post-stat" title={`${p.reactions} ${t.reactionsLabel}`}>
-                  ★ {p.reactions}
-                </span>
-                <span class="post-stat" title={`${p.comments} ${t.commentsLabel}`}>
-                  ◌ {p.comments}
-                </span>
+    <div class="feed-wrap">
+      <button class="feed-nav prev" type="button" aria-label="Previous post" data-feed-prev hidden>‹</button>
+
+      <div class="feed" id="writing-feed" tabindex="0" aria-label="LinkedIn posts carousel">
+        {
+          orderedPosts.map((p) => (
+            <article class="post-card">
+              <header class="pc-head">
+                <img class="pc-avatar" src="/kevin.jpg" alt="" width="48" height="48" />
+                <div class="pc-author">
+                  <div class="pc-name">
+                    Kevin Gamez{" "}
+                    <span class="pc-badge" aria-label="LinkedIn">
+                      in
+                    </span>{" "}
+                    <span class="pc-degree">· 1st</span>
+                  </div>
+                  <div class="pc-headline">Founding Engineer @ Enttor</div>
+                  <div class="pc-meta">
+                    {p.date} <span class="pc-dot">·</span>{" "}
+                    <span class="pc-globe" aria-hidden="true">
+                      🌎
+                    </span>
+                  </div>
+                </div>
+                <a class="pc-open" href={p.url} target="_blank" rel="noopener" aria-label="Open on LinkedIn">
+                  ⋯
+                </a>
+              </header>
+
+              <div class="pc-body">
+                <div class="pc-text">
+                  {preview(p.body)
+                    .text.split(/\n\n+/)
+                    .map((para) => (
+                      <p>{para}</p>
+                    ))}
+                </div>
+                {preview(p.body).truncated && (
+                  <a class="pc-more" href={p.url} target="_blank" rel="noopener">
+                    {t.seeMore}
+                  </a>
+                )}
               </div>
-            </div>
-            <div class="post-body">
-              <a class="post-title" href={p.url} target="_blank" rel="noopener">
-                {p.title}
-              </a>
-              <p class="post-excerpt">{p.excerpt}</p>
-              <a class="post-link" href={p.url} target="_blank" rel="noopener">
-                {t.readOn} →
-              </a>
-            </div>
-          </li>
+
+              {p.images && p.images.length > 0 && (
+                <a class={`pc-imgs n-${Math.min(p.images.length, 4)}`} href={p.url} target="_blank" rel="noopener">
+                  {p.images.slice(0, 4).map((img, i) => (
+                    <span class="pc-img-cell">
+                      <img class="pc-img" src={img.src} alt={img.alt || ""} loading="lazy" decoding="async" />
+                      {i === 3 && p.images && p.images.length > 4 && (
+                        <span class="pc-img-more">+{p.images.length - 4}</span>
+                      )}
+                    </span>
+                  ))}
+                </a>
+              )}
+
+              <footer class="pc-foot">
+                <span class="pc-reactions">
+                  <span class="pc-reax-stack" aria-hidden="true">
+                    <span class="pc-reax like">
+                      <svg viewBox="0 0 24 24" width="11" height="11">
+                        <path
+                          fill="currentColor"
+                          d="M2 21V9h4v12H2zm20-9.5c0-.83-.67-1.5-1.5-1.5h-5.92l.9-4.32.03-.32c0-.41-.17-.79-.44-1.06L14.17 3 7.59 9.59C7.22 9.95 7 10.45 7 11v9c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.5z"
+                        />
+                      </svg>
+                    </span>
+                    <span class="pc-reax love">
+                      <svg viewBox="0 0 24 24" width="11" height="11">
+                        <path
+                          fill="currentColor"
+                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        />
+                      </svg>
+                    </span>
+                    <span class="pc-reax insight">
+                      <svg viewBox="0 0 24 24" width="11" height="11">
+                        <path
+                          fill="currentColor"
+                          d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                  <span class="pc-reax-num">{p.reactions}</span>
+                </span>
+                <span class="pc-meta-right">
+                  <span class="pc-meta-item">
+                    {p.comments} <span class="pc-meta-label">{t.commentsLabel}</span>
+                  </span>
+                  {p.reposts ? (
+                    <>
+                      <span class="pc-meta-sep" aria-hidden="true">
+                        ·
+                      </span>
+                      <span class="pc-meta-item">
+                        {p.reposts} <span class="pc-meta-label">{t.repostsLabel}</span>
+                      </span>
+                    </>
+                  ) : null}
+                </span>
+              </footer>
+            </article>
+          ))
+        }
+      </div>
+
+      <button class="feed-nav next" type="button" aria-label="Next post" data-feed-next>›</button>
+    </div>
+
+    <div class="feed-dots" role="tablist" aria-label="Post indicators">
+      {
+        orderedPosts.map((_, i) => (
+          <button
+            class={`feed-dot${i === 0 ? " on" : ""}`}
+            type="button"
+            data-dot-index={i}
+            aria-label={`Go to post ${i + 1}`}
+          />
         ))
       }
-    </ul>
+    </div>
 
     <a
       class="writing-more"

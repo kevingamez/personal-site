@@ -1,4 +1,4 @@
-/* Aggregator for home page styles. Order matters — cascade depends on it. */
+/* Aggregator for home page styles. Order matters - cascade depends on it. */
 @import './base.css';
 @import './nav.css';
 @import './section-frame.css';
