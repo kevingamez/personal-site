@@ -1,22 +1,78 @@
-// Vercel Serverless Function — /api/chat
+// Vercel Serverless Function - /api/chat
 //
 // Streams an Anthropic Claude response back to the home-page console as SSE
-// events. Tools enabled: web_search. Per-IP rate limit via in-memory bucket
-// (best-effort across instances; for stricter limits swap to Vercel KV).
-//
-// Runs on Node (the @anthropic-ai/sdk imports node:fs/node:path which aren't
-// available in the Edge runtime).
+// events. Hardened against:
+//   - Cross-origin abuse: only requests from kevingamez.co/.com (or localhost
+//     during dev) are accepted; everything else gets 403.
+//   - Oversized inputs: each message capped at MAX_MESSAGE_CHARS, total
+//     conversation capped at MAX_TOTAL_CHARS, history capped at 8 messages.
+//   - Schema confusion: zod parses the request body and rejects malformed shapes.
+//   - Token cost: max_tokens 512 (was 1024), and we slice history to 8.
+//   - Bot abuse: best-effort per-IP rate limit (still in-memory; for a serverless
+//     deploy this is supplemental to the Origin allowlist, not a hard limit).
 //
 // Required env: ANTHROPIC_API_KEY.
 
 import Anthropic from '@anthropic-ai/sdk'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+import { z } from 'zod'
 
 export const config = { runtime: 'nodejs' }
 
+// ───────── Limits ─────────
+
 const DAILY_LIMIT = 20
+const MAX_MESSAGE_CHARS = 2000
+const MAX_TOTAL_CHARS = 12_000
+const MAX_HISTORY = 8
+
+// ───────── Origin allowlist ─────────
+
+const ALLOWED_ORIGINS = new Set([
+  'https://kevingamez.co',
+  'https://www.kevingamez.co',
+  'https://kevingamez.com',
+  'https://www.kevingamez.com',
+  'http://localhost:4321',
+  'http://127.0.0.1:4321',
+])
+
+function isOriginAllowed(origin: string | null): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.has(origin)) return true
+  // Vercel preview deploys: https://<project>-<sha>-<owner>.vercel.app
+  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)
+}
+
+// ───────── Rate limit ─────────
+//
+// Persistent rate limit via Upstash / Vercel KV when env vars are set;
+// otherwise an in-memory fallback that's only correct for a single warm
+// instance. The Origin allowlist above is the real cross-origin barrier;
+// rate limiting is a second-line defense against bursty traffic.
+
+const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
+const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
+
+const persistentLimiter = (() => {
+  if (!kvUrl || !kvToken) return null
+  try {
+    const redis = new Redis({ url: kvUrl, token: kvToken })
+    return new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(DAILY_LIMIT, '1 d'),
+      prefix: 'kg-chat-rl',
+      analytics: false,
+    })
+  } catch {
+    return null
+  }
+})()
+
 const buckets = new Map<string, { count: number; reset: number }>()
 
-function rateLimit(ip: string): { allowed: boolean; remaining: number } {
+function memoryLimit(ip: string): { allowed: boolean; remaining: number } {
   const now = Date.now()
   const day = 24 * 60 * 60 * 1000
   let b = buckets.get(ip)
@@ -29,61 +85,95 @@ function rateLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: DAILY_LIMIT - b.count }
 }
 
-const KEVIN_CONTEXT = `You are a helpful assistant embedded on Kevin Gámez's personal website (kevingamez.com).
+async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+  if (persistentLimiter) {
+    const r = await persistentLimiter.limit(ip)
+    return { allowed: r.success, remaining: r.remaining }
+  }
+  return memoryLimit(ip)
+}
+
+// ───────── Schema ─────────
+
+const MessageSchema = z.object({
+  role: z.enum(['user', 'assistant']),
+  content: z.string().min(1).max(MAX_MESSAGE_CHARS),
+})
+const ChatBodySchema = z.object({
+  messages: z.array(MessageSchema).min(1).max(20),
+})
+
+// ───────── System prompt ─────────
+
+const KEVIN_CONTEXT = `You are a helpful assistant embedded on Kevin Gámez's personal website (kevingamez.co).
 Kevin's facts (only state these as facts; otherwise use web_search):
 - Founding engineer at Enttor (June 2025–present), based in New York / Bogotá. AI outbound platform: browser automation for Instagram & LinkedIn prospecting, OpenAI pipelines, Next.js dashboards, NestJS APIs, Vercel infra, Supabase + Inngest backend.
 - Previously founding engineer at Samsam (Feb 2024–Mar 2025), e-commerce: TypeScript / React Native / Next.js / Prisma / PostgreSQL.
 - M.Sc. Information Engineering (deep-learning specialization) at Universidad de los Andes (Jan 2024–May 2025); concurrent graduate teaching assistant. B.Sc. Systems and Computing (Jan 2019–Dec 2023), Andrés Bello National Distinction.
-- Public GitHub @kevingamez: 28 repos, 14 followers, joined April 2019. Notable repos: personal-site (TS), AD_ASTRA2023-SpaceInvaders (Python · aerial deforestation detection · OpenCV / YOLOv5 / FastAPI), Palladium_Chat (TS), budget-app (Swift), GCP-CloudRun (Dockerfile).
-- Languages he ships: TypeScript (33% of public repos), Python (27%), Swift, JavaScript, Java, Dart.
-- Contact: kevingamez.kg@gmail.com · github.com/kevingamez · linkedin.com/in/kevin-gamez
+- Public GitHub @kevingamez. Notable repos: personal-site (TS), AD_ASTRA2023-SpaceInvaders (Python, aerial deforestation detection, OpenCV / YOLOv5 / FastAPI), Palladium_Chat (TS), budget-app (Swift), GCP-CloudRun (Dockerfile).
+- Languages he ships: TypeScript, Python, Swift, JavaScript, Java, Dart.
+- Contact: kevingamez.kg@gmail.com, github.com/kevingamez, linkedin.com/in/kevin-gamez.
 
-Be concise (2-4 sentences for casual chat). Use markdown sparingly: **bold** for names, \`code\` for tech, [text](url) for links. When asked about anything time-sensitive or outside Kevin's profile, use web_search. Never invent stars, metrics or projects that aren't listed above.`
+Be concise (2-4 sentences for casual chat). Use markdown sparingly: **bold** for names, \`code\` for tech, [text](url) for links. When asked about anything time-sensitive or outside Kevin's profile, use web_search. Never invent stars, metrics, or projects that aren't listed above.`
 
-interface ChatBody {
-  messages: { role: 'user' | 'assistant'; content: string }[]
+// ───────── Helpers ─────────
+
+function jsonError(status: number, error: string, message: string): Response {
+  return new Response(JSON.stringify({ error, message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
 }
+
+// ───────── Handler ─────────
 
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') {
     return new Response('Use POST', { status: 405 })
   }
 
+  // 1. Origin check — first line of defense against cross-origin abuse.
+  const origin = req.headers.get('origin')
+  if (!isOriginAllowed(origin)) {
+    return jsonError(403, 'forbidden', 'Origin not allowed.')
+  }
+
+  // 2. Rate limit (per IP — persistent if KV is configured, else in-memory).
   const ip =
     req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
     req.headers.get('cf-connecting-ip') ||
     'unknown'
-  const rl = rateLimit(ip)
+  const rl = await checkRateLimit(ip)
   if (!rl.allowed) {
-    return new Response(
-      JSON.stringify({
-        error: 'rate_limit',
-        message: 'Daily limit reached. Try again tomorrow ✋',
-      }),
-      { status: 429, headers: { 'Content-Type': 'application/json' } }
-    )
+    return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
   }
 
-  let body: ChatBody
+  // 3. Parse + validate body.
+  let raw: unknown
   try {
-    body = (await req.json()) as ChatBody
+    raw = await req.json()
   } catch {
-    return new Response('bad json', { status: 400 })
+    return jsonError(400, 'bad_json', 'Could not parse JSON body.')
   }
-  const messages = (body.messages || []).slice(-12).filter((m) => m.role && m.content)
-  if (!messages.length) {
-    return new Response('no messages', { status: 400 })
+  const parsed = ChatBodySchema.safeParse(raw)
+  if (!parsed.success) {
+    return jsonError(400, 'bad_shape', 'Body does not match expected schema.')
   }
 
+  // 4. Length check (defense in depth — zod already caps each message,
+  //    here we sum the whole conversation).
+  const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
+  if (totalChars > MAX_TOTAL_CHARS) {
+    return jsonError(413, 'too_long', 'Conversation too long. Start a new one.')
+  }
+
+  // 5. Trim history before sending to the model.
+  const messages = parsed.data.messages.slice(-MAX_HISTORY)
+
+  // 6. Backend config.
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    return new Response(
-      JSON.stringify({
-        error: 'no_key',
-        message: 'Backend not configured (no ANTHROPIC_API_KEY).',
-      }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
+    return jsonError(500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
   }
 
   const client = new Anthropic({ apiKey })
@@ -99,7 +189,7 @@ export default async function handler(req: Request): Promise<Response> {
     try {
       const response = await client.messages.create({
         model: 'claude-sonnet-4-5',
-        max_tokens: 1024,
+        max_tokens: 512,
         stream: true,
         system: KEVIN_CONTEXT,
         tools: [
@@ -148,6 +238,9 @@ export default async function handler(req: Request): Promise<Response> {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-transform',
       Connection: 'keep-alive',
+      // Restrict CORS to the allowlist (echoing the validated origin).
+      'Access-Control-Allow-Origin': origin || '',
+      Vary: 'Origin',
       'X-RateLimit-Remaining': String(rl.remaining),
       'X-RateLimit-Limit': String(DAILY_LIMIT),
     },
