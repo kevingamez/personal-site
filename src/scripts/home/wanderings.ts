@@ -30,54 +30,146 @@ let mounted = false
 // teal land, slightly different desert tone, white labels.
 // Reference: https://mapstyle.withgoogle.com (using "Aubergine" as base then
 // hand-tuned the colors to match the reference screenshots).
+// Editorial cartography style — keeps Google's terrain shading, road network
+// and points of interest, but warms the palette toward the cream + coral
+// brand. Inspired by National Geographic prints and the Google Photos travel
+// timeline (which is dark, but warm). Land tiers go from sage-cream
+// (lowlands) → soft amber (deserts/highlands), water is pacific blue, roads
+// are muted off-white so they read as context, not noise.
 const mapStyle: google.maps.MapTypeStyle[] = [
-  { elementType: 'geometry', stylers: [{ color: '#3d6864' }] }, // muted teal land
-  { elementType: 'labels.text.fill', stylers: [{ color: '#e8eef7' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#0d2040' }, { weight: 2 }] },
-  { featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: 'off' }] },
+  // Base label colors (overridden per feature below).
+  { elementType: 'labels.text.fill', stylers: [{ color: '#3a352f' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#faf7f0' }, { weight: 2 }] },
+
+  // Country: clear sepia border + dark name, this is the strongest tier.
   {
     featureType: 'administrative.country',
     elementType: 'geometry.stroke',
-    stylers: [{ color: '#ffffff' }, { weight: 0.4 }, { visibility: 'on' }],
+    stylers: [{ color: '#8b6f55' }, { weight: 0.9 }],
   },
   {
     featureType: 'administrative.country',
     elementType: 'labels.text.fill',
-    stylers: [{ color: '#ffffff' }],
+    stylers: [{ color: '#1f1d1a' }, { weight: 700 }],
   },
+
+  // Province / state: thinner sepia border, mid-tone label.
   {
     featureType: 'administrative.province',
     elementType: 'geometry.stroke',
-    stylers: [{ color: '#ffffff' }, { weight: 0.2 }],
+    stylers: [{ color: '#a08770' }, { weight: 0.4 }],
+  },
+  {
+    featureType: 'administrative.province',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#3a352f' }],
+  },
+
+  // City names: visible at all zoom levels with a strong cream halo so they
+  // pop on top of the heatmap blooms.
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#1f1d1a' }],
   },
   {
     featureType: 'administrative.locality',
-    elementType: 'labels',
-    stylers: [{ visibility: 'off' }],
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#faf7f0' }, { weight: 3 }],
   },
-  { featureType: 'administrative.neighborhood', stylers: [{ visibility: 'off' }] },
-  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-  { featureType: 'road', stylers: [{ visibility: 'off' }] },
-  // Landscape (forests, parks, deserts)
+  { featureType: 'administrative.neighborhood', elementType: 'labels.text.fill', stylers: [{ color: '#6b6660' }] },
+
+  // Landscape — keep the terrain shading enabled (mapTypeId: 'terrain' adds
+  // hillshade automatically); we just tint the geometry layers.
+  { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#f3ede2' }] },
   {
     featureType: 'landscape.natural.terrain',
     elementType: 'geometry',
-    stylers: [{ color: '#5a5b6e' }],
+    stylers: [{ color: '#e8d9c1' }],
   },
   {
     featureType: 'landscape.natural.landcover',
     elementType: 'geometry',
-    stylers: [{ color: '#3d6864' }],
+    stylers: [{ color: '#dbe6d4' }],
   },
-  { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#3d6864' }] },
-  // Water
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d2040' }] },
-  { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#8cafd7' }] },
+  { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#ebe3d4' }] },
+
+  // Parks / natural features — subtle sage so they read as parks, not roads.
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ color: '#c5d8b8' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#4a6a3a' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#faf7f0' }, { weight: 2 }],
+  },
+
+  // Other POIs (restaurants, shops, etc.) — muted, only visible far in.
+  { featureType: 'poi.business', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.medical', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.school', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi.sports_complex', stylers: [{ visibility: 'off' }] },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#a14a2a' }],
+  },
+  { featureType: 'poi.attraction', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+
+  // Roads — visible but quiet. Highways slightly darker, locals barely there.
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{ color: '#ffffff' }, { weight: 0.6 }],
+  },
+  { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+  { featureType: 'road.local', stylers: [{ visibility: 'simplified' }] },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: '#f0d090' }, { weight: 1.2 }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#6b5030' }],
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'geometry',
+    stylers: [{ color: '#ffffff' }],
+  },
+
+  // Transit — keep rail lines (nice for travel context) but hide stations.
+  { featureType: 'transit.station', stylers: [{ visibility: 'off' }] },
+  {
+    featureType: 'transit.line',
+    elementType: 'geometry',
+    stylers: [{ color: '#c2a085' }, { weight: 0.5 }],
+  },
+
+  // Water — pacific blue with depth gradient, soft cream label halo.
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#a8c6d8' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#3a5570' }, { weight: 500 }],
+  },
   {
     featureType: 'water',
     elementType: 'labels.text.stroke',
-    stylers: [{ color: '#0d2040' }, { weight: 1.5 }],
+    stylers: [{ color: '#a8c6d8' }, { weight: 2 }],
   },
 ]
 
@@ -113,10 +205,11 @@ async function mountMap(
     center: { lat: cLat, lng: cLng },
     zoom: 2,
     minZoom: 2,
-    maxZoom: 8,
+    maxZoom: 14,
     backgroundColor: '#0d2040',
     disableDefaultUI: true,
-    zoomControl: false,
+    zoomControl: true,
+    zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_BOTTOM },
     keyboardShortcuts: false,
     gestureHandling: 'greedy',
     clickableIcons: false,
@@ -145,10 +238,48 @@ async function mountMap(
     map,
     data: heatmapData,
     radius: 35,
-    opacity: 0.85,
+    opacity: 0.78,
     gradient,
     dissipating: true,
   })
+
+  // Drop a small dot + visible label per city. Labels appear from zoom 4 up
+  // (continent → country → city), so the heatmap stays clean at world view
+  // and city names show up the moment you zoom in.
+  const labelMarkers = points.map((p) => {
+    const m = new google.maps.Marker({
+      position: { lat: p.lat, lng: p.lng },
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 3,
+        fillColor: '#ffffff',
+        fillOpacity: 0.9,
+        strokeColor: '#0d2040',
+        strokeWeight: 1.5,
+      },
+      label: {
+        text: p.city,
+        color: '#ffffff',
+        fontSize: '11px',
+        fontWeight: '600',
+        className: 'wanderings-marker-label',
+      },
+      title: `${p.city}, ${p.country}`,
+      optimized: false,
+      visible: false,
+      zIndex: 5,
+    })
+    m.setMap(map)
+    return m
+  })
+
+  const updateLabelVisibility = (): void => {
+    const z = map.getZoom() ?? 2
+    const show = z >= 4
+    for (const m of labelMarkers) m.setVisible(show)
+  }
+  updateLabelVisibility()
+  map.addListener('zoom_changed', updateLabelVisibility)
 
   if (!REDUCE_MOTION) {
     // Subtle ambient zoom-in on first paint (Google Photos opens this way).

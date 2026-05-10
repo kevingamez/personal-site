@@ -31,6 +31,6 @@ export function initDevTransition(): void {
 
     window.setTimeout(() => {
       window.location.href = href
-    }, 650)
+    }, 1500)
   })
 }

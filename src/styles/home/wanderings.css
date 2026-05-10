@@ -69,3 +69,15 @@
 #travel-map img[alt='Google'] {
   opacity: 0.4;
 }
+
+/* Custom city labels we drop at each travel point */
+.wanderings-marker-label {
+  /* Position the text just above the dot rather than overlapping it. */
+  transform: translateY(-12px);
+  text-shadow:
+    0 0 3px #0d2040,
+    0 0 6px #0d2040,
+    0 0 9px rgba(13, 32, 64, 0.9);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
