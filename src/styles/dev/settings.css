@@ -1,6 +1,6 @@
 /* ─── Settings panel ─── */
 .settings-panel {
-  grid-area: explorer;
+  grid-column: 2;
   background: var(--panel);
   border-right: 1px solid var(--line);
   overflow-y: auto;

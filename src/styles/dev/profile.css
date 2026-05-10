@@ -1,6 +1,9 @@
 /* ─── Profile panel ─── */
 .profile-panel {
-  grid-area: explorer;
+  /* Claim the same grid column as Explorer / SourceControl (col 2 in
+     chrome.css). Without an explicit column, auto-flow would push us into
+     col 3 and break the layout. */
+  grid-column: 2;
   background: var(--panel);
   border-right: 1px solid var(--line);
   overflow-y: auto;

@@ -101,8 +101,12 @@ function applyTheme(name: Theme): void {
 
 function applyFontSize(px: number): void {
   document.documentElement.style.setProperty('--editor-font-size', `${px}px`)
-  document.body.style.setProperty('--editor-font-size', `${px}px`)
-  document.body.style.fontSize = `${px}px`
+  // CodeMirror sets its own font-size inline via the theme, so we also push
+  // a sized style on the .cm-editor + .cm-content + gutters to override it.
+  const sel = '.cm-editor, .cm-editor .cm-scroller, .cm-content, .cm-gutters'
+  document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+    el.style.fontSize = `${px}px`
+  })
 }
 
 function applyCursor(style: Cursor): void {

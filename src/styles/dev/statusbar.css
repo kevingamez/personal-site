@@ -22,6 +22,14 @@
   gap: 4px;
 }
 
+.statusbar .synthetic em {
+  font-style: italic;
+  opacity: 0.65;
+  margin-left: 4px;
+  letter-spacing: 0.08em;
+  font-size: 9.5px;
+}
+
 .hidden {
   display: none !important;
 }

@@ -74,7 +74,8 @@ export function submit(v: string): void {
   state.history.push(v)
   state.historyIdx = state.history.length
   run(v.trim())
-  addLine('<span class="pr">' + esc(pathDisplay(state.cwd)) + ' $</span> <span class="cu"></span>')
+  // No trailing prompt-with-cursor in the history. The interactive input row
+  // below already shows the active prompt; doubling it reads as two terminals.
   input.value = ''
   renderExplorer()
   renderOutline()
