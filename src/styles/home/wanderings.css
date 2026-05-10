@@ -55,9 +55,9 @@
 
 /* Google Maps overrides - hide their default UI chrome */
 #travel-map .gm-style-cc,
-#travel-map a[href^="https://maps.google.com/maps"],
-#travel-map button[title="Toggle fullscreen view"],
-#travel-map button[aria-label="Keyboard shortcuts"] {
+#travel-map a[href^='https://maps.google.com/maps'],
+#travel-map button[title='Toggle fullscreen view'],
+#travel-map button[aria-label='Keyboard shortcuts'] {
   display: none !important;
 }
 #travel-map .gmnoprint a,
@@ -66,6 +66,6 @@
   display: none !important;
 }
 /* Soften the Google logo & terms text */
-#travel-map img[alt="Google"] {
+#travel-map img[alt='Google'] {
   opacity: 0.4;
 }
