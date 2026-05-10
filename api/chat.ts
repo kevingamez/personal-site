@@ -1,15 +1,17 @@
-// Vercel Edge Function — /api/chat
+// Vercel Serverless Function — /api/chat
 //
 // Streams an Anthropic Claude response back to the home-page console as SSE
-// events. Tools enabled: web_search, kevin_repos (lookup public repos),
-// calc (eval simple math). Per-IP rate limit via in-memory bucket (best-effort
-// across Edge instances; for stricter limits swap to Vercel KV).
+// events. Tools enabled: web_search. Per-IP rate limit via in-memory bucket
+// (best-effort across instances; for stricter limits swap to Vercel KV).
+//
+// Runs on Node (the @anthropic-ai/sdk imports node:fs/node:path which aren't
+// available in the Edge runtime).
 //
 // Required env: ANTHROPIC_API_KEY.
 
 import Anthropic from '@anthropic-ai/sdk'
 
-export const config = { runtime: 'edge' }
+export const config = { runtime: 'nodejs' }
 
 const DAILY_LIMIT = 20
 const buckets = new Map<string, { count: number; reset: number }>()
