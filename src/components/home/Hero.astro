@@ -20,7 +20,6 @@ const { t } = Astro.props
         <a class="btn btn-ghost" href="#contact">{t.btnGetInTouch}</a>
       </div>
       <div class="meta-row">
-        <span class="live">{t.available}</span>
         <span>📍 Bogotá, CO</span>
         <span>UTC-5</span>
       </div>
@@ -45,6 +44,7 @@ const { t } = Astro.props
         <span>{t.alive} <b id="gol-alive">0</b></span>
         <span>{t.fps} <b id="gol-fps">0</b></span>
       </div>
+      <p class="gol-note"><Fragment set:html={t.golCaptionHtml} /></p>
     </div>
   </div>
 </header>
