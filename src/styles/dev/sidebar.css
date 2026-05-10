@@ -206,3 +206,108 @@
   color: var(--mute);
   font-size: 11px;
 }
+
+/* ── in-flight log ── three rows of "what I'm actually shipping right now",
+   each linkable to the real project. Reads like a launch checklist. */
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.flight-row {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: start;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    transform 0.15s;
+}
+.flight-row:hover {
+  border-color: var(--coral);
+  background: rgba(217, 105, 68, 0.06);
+  transform: translateX(2px);
+}
+.fl-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--coral);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding-top: 2px;
+}
+.fl-body {
+  min-width: 0;
+}
+.fl-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fl-where {
+  color: var(--mute);
+  font-weight: 400;
+}
+.fl-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+  margin-top: 3px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fl-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  align-self: center;
+  white-space: nowrap;
+}
+.fl-status.fl-live {
+  background: rgba(63, 185, 80, 0.16);
+  color: var(--green);
+  position: relative;
+}
+.fl-status.fl-live::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  margin-right: 5px;
+  vertical-align: 1px;
+  animation: fl-pulse 1.8s ease-in-out infinite;
+}
+@keyframes fl-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+.fl-status.fl-ship {
+  background: rgba(122, 152, 196, 0.15);
+  color: var(--blue);
+}
+.fl-status.fl-research {
+  background: rgba(196, 122, 217, 0.14);
+  color: var(--purple);
+}
