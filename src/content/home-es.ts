@@ -227,11 +227,6 @@ export const es: HomeStrings = {
     cities: 'ciudades',
     since: 'desde',
   },
-  bookshelf: {
-    secNum: '§09 · Estantería',
-    titleHtml: 'Cuatro libros que <i>cambiaron cómo trabajo.</i>',
-    blurb: 'No son el canon. Son los que sigo recomendando.',
-  },
   console: {
     secNum: '§09 · Consola',
     titleHtml: 'Una shell real. <i>Y una IA, si la llamas.</i>',

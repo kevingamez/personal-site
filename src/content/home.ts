@@ -191,11 +191,6 @@ export interface HomeStrings {
     cities: string
     since: string
   }
-  bookshelf: {
-    secNum: string
-    titleHtml: string
-    blurb: string
-  }
   console: {
     secNum: string
     titleHtml: string

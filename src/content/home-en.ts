@@ -223,11 +223,6 @@ export const en: HomeStrings = {
     cities: 'cities',
     since: 'since',
   },
-  bookshelf: {
-    secNum: '§09 · Bookshelf',
-    titleHtml: 'Four books that <i>changed how I work.</i>',
-    blurb: 'Not the canon. Just the ones I keep recommending.',
-  },
   console: {
     secNum: '§09 · Console',
     titleHtml: 'A real shell. <i>And an AI, if you ask.</i>',
