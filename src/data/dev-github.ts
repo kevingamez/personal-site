@@ -123,6 +123,111 @@ export async function loadGithubRepos(): Promise<Repo[]> {
 
 const fmtDate = (iso: string) => new Date(iso).toISOString().slice(0, 10)
 
+// ─── Recent commits (GitHub Events API) ──────────────────────────────────
+// Used by the Source Control panel in /dev. One call returns push events
+// across ALL the user's public repos, each with a commits[] payload.
+export type RecentCommit = {
+  sha: string
+  shaShort: string
+  message: string
+  repo: string // "kevingamez/personal-site"
+  repoShort: string // "personal-site"
+  branch: string // "main"
+  url: string
+  ts: string // ISO date
+}
+
+const commitsCacheFile = join(projectRoot, '.cache', 'github-commits.json')
+const COMMIT_CACHE_TTL = 6 * 60 * 60 * 1000 // 6h
+
+function readCommitCache(): RecentCommit[] {
+  try {
+    if (!existsSync(commitsCacheFile)) return []
+    const data = JSON.parse(readFileSync(commitsCacheFile, 'utf-8')) as RecentCommit[]
+    return Array.isArray(data) ? data : []
+  } catch {
+    return []
+  }
+}
+function writeCommitCache(rows: RecentCommit[]) {
+  try {
+    mkdirSync(dirname(commitsCacheFile), { recursive: true })
+    writeFileSync(commitsCacheFile, JSON.stringify(rows, null, 2))
+  } catch {
+    // ignore cache write failures
+  }
+}
+function commitCacheAgeMs(): number {
+  try {
+    return Date.now() - statSync(commitsCacheFile).mtimeMs
+  } catch {
+    return Infinity
+  }
+}
+
+type RawEvent = {
+  type: string
+  repo: { name: string }
+  created_at: string
+  payload?: {
+    ref?: string
+    commits?: Array<{ sha: string; message: string; url: string }>
+  }
+}
+
+async function fetchRecentCommits(): Promise<RecentCommit[]> {
+  try {
+    const headers: Record<string, string> = {
+      'User-Agent': 'personal-site-build',
+      Accept: 'application/vnd.github+json',
+    }
+    if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
+
+    const res = await fetch(
+      `https://api.github.com/users/${GH_USER}/events/public?per_page=100`,
+      { headers }
+    )
+    if (!res.ok) return []
+    const events = (await res.json()) as RawEvent[]
+    if (!Array.isArray(events)) return []
+
+    const rows: RecentCommit[] = []
+    for (const e of events) {
+      if (e.type !== 'PushEvent' || !e.payload?.commits) continue
+      const branch = (e.payload.ref || 'refs/heads/main').replace('refs/heads/', '')
+      for (const c of e.payload.commits) {
+        const repoShort = e.repo.name.split('/')[1] || e.repo.name
+        rows.push({
+          sha: c.sha,
+          shaShort: c.sha.slice(0, 7),
+          message: (c.message || '').split('\n')[0].slice(0, 100),
+          repo: e.repo.name,
+          repoShort,
+          branch,
+          url: `https://github.com/${e.repo.name}/commit/${c.sha}`,
+          ts: e.created_at,
+        })
+        if (rows.length >= 30) break
+      }
+      if (rows.length >= 30) break
+    }
+    return rows
+  } catch {
+    return []
+  }
+}
+
+export async function loadRecentCommits(): Promise<RecentCommit[]> {
+  const cached = readCommitCache()
+  if (cached.length && commitCacheAgeMs() < COMMIT_CACHE_TTL) return cached
+  const fresh = await fetchRecentCommits()
+  if (fresh.length) {
+    writeCommitCache(fresh)
+    return fresh
+  }
+  return cached
+}
+
 export function generateOverview(repos: Repo[]): string {
   const ls: string[] = []
   ls.push(`# ${GH_USER} · public repos`)

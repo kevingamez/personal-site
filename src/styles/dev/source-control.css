@@ -1,0 +1,224 @@
+/* Source Control panel (vscode-style git side pane). Sits in the same grid
+   slot as .explorer; activity-bar.ts toggles which one is hidden. */
+.sc-panel {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+}
+.sc-panel[hidden] {
+  display: none;
+}
+
+.sc-head {
+  padding: 14px 20px 8px;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sc-actions {
+  display: flex;
+  gap: 8px;
+  color: var(--mute-2);
+  cursor: default;
+}
+.sc-actions .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.sc-msg-row {
+  padding: 4px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sc-msg {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  outline: none;
+}
+.sc-msg::placeholder {
+  color: var(--mute-2);
+}
+.sc-commit {
+  background: #176f4d;
+  color: #fff;
+  border: 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.sc-branch {
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+}
+.sc-branch b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.sc-branch .sc-up {
+  color: var(--mute-2);
+  margin-left: 6px;
+}
+.sc-branch .sc-grow {
+  flex: 1;
+}
+.sc-branch .sc-sync {
+  color: var(--mute-2);
+  cursor: pointer;
+  user-select: none;
+}
+.sc-branch .material-symbols-outlined {
+  font-size: 14px;
+  color: var(--accent, #d96944);
+}
+
+.sc-section {
+  border-bottom: 1px solid var(--line);
+}
+.sc-section > summary {
+  padding: 6px 14px;
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--mute);
+  user-select: none;
+}
+.sc-section > summary::-webkit-details-marker {
+  display: none;
+}
+.sc-section .sc-caret {
+  display: inline-block;
+  font-size: 9px;
+  color: var(--mute-2);
+  transition: transform 120ms;
+}
+.sc-section:not([open]) .sc-caret {
+  transform: rotate(-90deg);
+}
+.sc-section .sc-count {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink-2);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.sc-file {
+  padding: 3px 14px 3px 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.sc-file:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.sc-fpath {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink-2);
+  direction: rtl;
+  text-align: left;
+}
+.sc-st {
+  font-size: 10px;
+  font-weight: 700;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.sc-st-M {
+  color: #c89a4f;
+}
+.sc-st-A {
+  color: #65a85d;
+}
+.sc-st-D {
+  color: #c8584f;
+}
+
+.sc-commits {
+  padding: 4px 0 12px;
+}
+.sc-commit-row {
+  padding: 6px 14px 6px 24px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  text-decoration: none;
+  color: var(--ink-2);
+  font-family: 'JetBrains Mono', monospace;
+}
+.sc-commit-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.sc-sha {
+  grid-row: 1 / 3;
+  align-self: center;
+  font-size: 10.5px;
+  color: var(--accent, #d96944);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.sc-msg-text {
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sc-meta {
+  font-size: 10.5px;
+  color: var(--mute-2);
+  display: flex;
+  gap: 8px;
+}
+.sc-repo {
+  color: var(--mute);
+}
+.sc-empty {
+  padding: 16px;
+  color: var(--mute-2);
+  font-style: italic;
+  font-size: 12px;
+  text-align: center;
+}
