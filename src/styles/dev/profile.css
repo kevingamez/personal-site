@@ -33,12 +33,6 @@
   border-radius: 50%;
   padding: 2px;
   background: conic-gradient(from 220deg, var(--coral), var(--purple), var(--blue), var(--coral));
-  animation: pf-ring 14s linear infinite;
-}
-@keyframes pf-ring {
-  to {
-    transform: rotate(360deg);
-  }
 }
 .pf-avatar {
   width: 100%;
