@@ -50,22 +50,42 @@ const mapStyle: google.maps.MapTypeStyle[] = [
     elementType: 'geometry.stroke',
     stylers: [{ color: '#ffffff' }, { weight: 0.2 }],
   },
-  { featureType: 'administrative.locality', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels',
+    stylers: [{ visibility: 'off' }],
+  },
   { featureType: 'administrative.neighborhood', stylers: [{ visibility: 'off' }] },
   { featureType: 'poi', stylers: [{ visibility: 'off' }] },
   { featureType: 'transit', stylers: [{ visibility: 'off' }] },
   { featureType: 'road', stylers: [{ visibility: 'off' }] },
   // Landscape (forests, parks, deserts)
-  { featureType: 'landscape.natural.terrain', elementType: 'geometry', stylers: [{ color: '#5a5b6e' }] },
-  { featureType: 'landscape.natural.landcover', elementType: 'geometry', stylers: [{ color: '#3d6864' }] },
+  {
+    featureType: 'landscape.natural.terrain',
+    elementType: 'geometry',
+    stylers: [{ color: '#5a5b6e' }],
+  },
+  {
+    featureType: 'landscape.natural.landcover',
+    elementType: 'geometry',
+    stylers: [{ color: '#3d6864' }],
+  },
   { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#3d6864' }] },
   // Water
   { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d2040' }] },
   { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#8cafd7' }] },
-  { featureType: 'water', elementType: 'labels.text.stroke', stylers: [{ color: '#0d2040' }, { weight: 1.5 }] },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#0d2040' }, { weight: 1.5 }],
+  },
 ]
 
-async function mountMap(container: HTMLElement, points: TravelPoint[], apiKey: string): Promise<void> {
+async function mountMap(
+  container: HTMLElement,
+  points: TravelPoint[],
+  apiKey: string
+): Promise<void> {
   if (mounted) return
   mounted = true
 

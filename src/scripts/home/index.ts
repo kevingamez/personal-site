@@ -10,6 +10,7 @@ import { initConsole } from './console'
 import { initWriting } from './writing'
 import { initWanderings } from './wanderings'
 import { initVisibility } from './visibility'
+import { initDevTransition } from './dev-transition'
 
 bootstrapClient()
 initConway()
@@ -19,6 +20,7 @@ initWriting()
 initConsole()
 initWanderings()
 initVisibility()
+initDevTransition()
 
 const langLink = document.querySelector<HTMLAnchorElement>('a.lang')
 if (langLink) {
