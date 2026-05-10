@@ -37,7 +37,6 @@ export interface HomeStrings {
     lede: string // raw HTML allowed (b tags)
     btnSeeWork: string
     btnGetInTouch: string
-    available: string
     pauseTitle: string
     resetTitle: string
     stampGlider: string
@@ -48,6 +47,7 @@ export interface HomeStrings {
     gen: string
     alive: string
     fps: string
+    golCaptionHtml: string
   }
   about: {
     secNum: string
@@ -99,6 +99,9 @@ export interface HomeStrings {
     e4RoleHtml: string
     e4Meta: string
     e4Desc: string
+    achievementsTitle: string
+    achievementsBlurb: string
+    achievements: { year: string; titleHtml: string; meta: string; desc: string }[]
   }
   work: {
     secNum: string

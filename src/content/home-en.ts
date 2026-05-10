@@ -37,10 +37,9 @@ export const en: HomeStrings = {
   hero: {
     hello: "Hi, I'm Kevin",
     titleHtml: 'I build software<br />that <i>compounds.</i>',
-    lede: 'Founding engineer at <b>enttor.ai</b>, building AI outbound at scale · browser automation, OpenAI pipelines,\n            Instagram/LinkedIn prospecting. Previously founding engineer at Samsam. M.Sc. in deep learning at Uniandes.',
+    lede: "I'm the founding engineer at <b>Enttor</b>, where we use AI and browser automation to make outbound marketing\n            actually work. Before that, I shipped an e-commerce platform at <b>Samsam</b>. M.Sc. in deep learning from\n            Universidad de los Andes.",
     btnSeeWork: 'See work →',
     btnGetInTouch: 'Get in touch',
-    available: 'Available · Q2',
     pauseTitle: 'pause/play',
     resetTitle: 'random reseed',
     stampGlider: 'glider',
@@ -51,6 +50,8 @@ export const en: HomeStrings = {
     gen: 'gen',
     alive: 'alive',
     fps: 'fps',
+    golCaptionHtml:
+      '<b>Conway\'s Game of Life</b> · a zero-player cellular automaton. Each cell lives, dies, or is born from the count of its 8 neighbors (B3/S23). Simple rules, surprising patterns. Click to seed a stamp. <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener">read more →</a>',
   },
   about: {
     secNum: '§01 · About',
@@ -58,11 +59,11 @@ export const en: HomeStrings = {
     blurb:
       'Founding engineer, full-stack, deep-learning grad. Short version below; long version over coffee.',
     p1Html:
-      "I'm a software engineer from Bogotá. As <b>founding engineer at Enttor</b> I built the AI outbound engine and\n              browser automation flows for Instagram/LinkedIn prospecting, the Next.js dashboards, the NestJS APIs, and the\n              Supabase + Inngest plumbing that holds it together.",
+      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound engine from the ground up — the\n              browser automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them,\n              the Next.js dashboards where it all lives, and the NestJS APIs and Inngest queues holding it together.",
     p2Html:
-      'Before that I was founding engineer at <b>Samsam</b>, an e-commerce platform · shopper and merchant apps\n              in TypeScript, React Native, Next.js, Prisma and PostgreSQL. Earlier work crossed data analytics (SQL\n              models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and\n              environmental risk detection.',
+      'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace — a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
     p3Html:
-      'I finished a B.Sc. in Systems and Computing and an M.Sc. in Information Engineering at <b\n                >Universidad de los Andes</b\n              >, with a specialization in deep learning and a minor in Management. The Game of Life on the right has\n              been alive since 1970; I just gave it a frame.',
+      'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and a minor in management. The Game of Life on the right has been\n              alive since 1970; I just gave it a frame.',
     qfBased: 'Based',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Role',
@@ -96,21 +97,43 @@ export const en: HomeStrings = {
     e1Year: 'Jun 2025 · now',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
-      'AI outbound engine · browser automation and OpenAI pipelines for Instagram/LinkedIn prospecting,\n                filtering and automated DMs at scale. Full-stack platform: Next.js dashboards, NestJS APIs, Vercel\n                infra. IG/X/Twitter prospecting on Supabase + Inngest with duplicate-detection logic.',
+      'I built the system that finds the right prospects on Instagram and LinkedIn, qualifies them with AI, and\n                starts real conversations — at scale. Full-stack: Next.js dashboards, NestJS APIs, Inngest queues, all\n                running on Vercel and Supabase.',
     e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · e-commerce platform',
     e2Desc:
-      'Built shopper and merchant apps in TypeScript, React Native, Next.js, Prisma and PostgreSQL. Refactored\n                core services for ~10% lower response times and shipped an alert routing system that pushed\n                critical-error visibility +70%.',
+      'Shipped both sides of a marketplace: a React Native app for shoppers, a Next.js dashboard for merchants.\n                Cut backend response times by 10% and built an alert system that surfaced critical errors 70% faster.',
     e3Year: 'Jan 2024 · May 2025',
     e3RoleHtml: 'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
-    e3Meta: 'Specialization in deep learning · concurrent graduate TA',
+    e3Meta: 'Deep-learning specialization · graduate TA',
     e3Desc:
-      'Deep learning, computer vision, applied ML · including satellite imagery for cropland and environmental\n                risk detection. Worked as a graduate teaching assistant designing labs and course materials in parallel.',
+      'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Taught\n                as a graduate TA in parallel — designed labs, ran office hours, helped underclassmen ship their first\n                models.',
     e4Year: 'Jan 2019 · Dec 2023',
     e4RoleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
-    e4Meta: 'Minor in Management · Andrés Bello National Distinction',
+    e4Meta: 'Minor in management',
     e4Desc:
-      'Five years across systems, algorithms, ML and a management minor. Side projects in Python, TypeScript,\n                Java and Swift; certifications in AWS Cloud Foundations and Cloud Developing along the way.',
+      'Five years on the foundations: systems, algorithms, applied ML, plus a minor in management. Side\n                projects in Python, TypeScript, Java, and Swift along the way.',
+    achievementsTitle: 'Honors &amp; certifications',
+    achievementsBlurb: 'A few stamps along the way.',
+    achievements: [
+      {
+        year: '2018',
+        titleHtml: 'Andrés Bello <i>National Distinction</i>',
+        meta: 'Ministry of Education · Colombia',
+        desc: 'Awarded for ranking in the top tier of the country’s national high-school exit exam (Saber 11). One of Colombia’s top student honors.',
+      },
+      {
+        year: '2022',
+        titleHtml: 'AWS Academy <i>Cloud Developing</i>',
+        meta: 'Certification · Amazon Web Services',
+        desc: 'Building, deploying, and scaling cloud-native apps on AWS — IAM, Lambda, DynamoDB, S3, the rest of the toolbox.',
+      },
+      {
+        year: '2021',
+        titleHtml: 'AWS Academy <i>Cloud Foundations</i>',
+        meta: 'Certification · Amazon Web Services',
+        desc: 'AWS fundamentals: services, security, architecture, and the billing model that decides which of those you actually use.',
+      },
+    ],
   },
   work: {
     secNum: '§04 · Selected work',

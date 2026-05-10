@@ -37,10 +37,9 @@ export const es: HomeStrings = {
   hero: {
     hello: 'Hola, soy Kevin',
     titleHtml: 'Construyo software<br />que <i>se compone.</i>',
-    lede: 'Founding engineer en <b>enttor.ai</b>, construyendo outbound con IA a escala · automatización de navegador,\n            pipelines de OpenAI y prospecting en Instagram/LinkedIn. Antes founding engineer en Samsam. Maestría en deep\n            learning en Uniandes.',
+    lede: 'Soy founding engineer en <b>Enttor</b>, donde usamos IA y automatización de navegador para que el outbound\n            de marketing realmente funcione. Antes lancé una plataforma de e-commerce en <b>Samsam</b>. Maestría en\n            deep learning en la Universidad de los Andes.',
     btnSeeWork: 'Ver proyectos →',
     btnGetInTouch: 'Hablemos',
-    available: 'Disponible · Q2',
     pauseTitle: 'pausar / reproducir',
     resetTitle: 're-sembrar aleatorio',
     stampGlider: 'planeador',
@@ -51,6 +50,8 @@ export const es: HomeStrings = {
     gen: 'gen',
     alive: 'vivas',
     fps: 'fps',
+    golCaptionHtml:
+      '<b>Juego de la vida de Conway</b> · un autómata celular de cero jugadores. Cada celda vive, muere o nace según el número de sus 8 vecinas (B3/S23). Reglas simples, patrones sorprendentes. Click para sembrar un patrón. <a href="https://es.wikipedia.org/wiki/Juego_de_la_vida" target="_blank" rel="noopener">más info →</a>',
   },
   about: {
     secNum: '§01 · Sobre mí',
@@ -58,11 +59,11 @@ export const es: HomeStrings = {
     blurb:
       'Founding engineer, full-stack, recién egresado de deep learning. La corta abajo; la larga, con café.',
     p1Html:
-      'Soy ingeniero de software, de Bogotá. Como <b>founding engineer en Enttor</b> construí el motor de outbound\n              con IA y los flujos de browser automation para prospecting en Instagram/LinkedIn, los dashboards en Next.js,\n              las APIs en NestJS, y la plomería de Supabase + Inngest que lo sostiene.',
+      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero — la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
     p2Html:
-      'Antes fui founding engineer en <b>Samsam</b>, una plataforma de e-commerce · apps de comprador y\n              comerciante en TypeScript, React Native, Next.js, Prisma y PostgreSQL. Trabajos previos cruzaron analítica\n              de datos (modelos SQL, Power BI para reportes ejecutivos en HR / riesgo / operaciones) y deep learning\n              sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
+      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce — una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
     p3Html:
-      'Terminé el pregrado en Ingeniería de Sistemas y Computación y la maestría en Ingeniería de Información en\n              la <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El\n              Juego de la vida de la derecha está vivo desde 1970; yo solo le puse marco.',
+      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El Juego\n              de la vida de la derecha está vivo desde 1970; yo solo le puse marco.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
@@ -96,23 +97,45 @@ export const es: HomeStrings = {
     e1Year: 'Jun 2025 · hoy',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
-      'Motor de outbound con IA · browser automation y pipelines de OpenAI para prospecting en\n                Instagram/LinkedIn, filtrado y DMs automáticos a escala. Plataforma full-stack: dashboards en Next.js,\n                APIs en NestJS, infra en Vercel. Sistema de prospecting en IG/X/Twitter sobre Supabase + Inngest con\n                lógica de detección de duplicados.',
+      'Construí el sistema que encuentra los prospectos correctos en Instagram y LinkedIn, los califica con IA y\n                arranca conversaciones reales — a escala. Full-stack: dashboards en Next.js, APIs en NestJS, colas en\n                Inngest, todo sobre Vercel y Supabase.',
     e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · plataforma de e-commerce',
     e2Desc:
-      'Apps de comprador y comerciante en TypeScript, React Native, Next.js, Prisma y PostgreSQL. Refactoricé\n                servicios core para reducir ~10% los tiempos de respuesta y desplegué un sistema de alertas con\n                asignación que aumentó +70% la visibilidad de errores críticos.',
+      'Lancé los dos lados del marketplace: una app en React Native para compradores y un panel en Next.js para\n                comerciantes. Bajé los tiempos de respuesta del backend un 10% y construí un sistema de alertas que\n                hizo visibles los errores críticos un 70% más rápido.',
     e3Year: 'Ene 2024 · May 2025',
     e3RoleHtml:
       'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
-    e3Meta: 'Especialización en deep learning · TA de posgrado en paralelo',
+    e3Meta: 'Especialización en deep learning · TA de posgrado',
     e3Desc:
-      'Deep learning, visión por computador y ML aplicado · incluyendo imágenes satelitales para detección de\n                cultivos y riesgo ambiental. En paralelo trabajé como teaching assistant de posgrado diseñando labs y\n                materiales de curso.',
+      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo trabajé como teaching assistant de posgrado — diseñé labs, abrí horarios de consulta y ayudé a\n                pregrados a sacar sus primeros modelos.',
     e4Year: 'Ene 2019 · Dic 2023',
     e4RoleHtml:
       'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
-    e4Meta: 'Minor en Management · Distinción Andrés Bello categoría nacional',
+    e4Meta: 'Minor en Management',
     e4Desc:
-      'Cinco años entre sistemas, algoritmos, ML y un minor en Management. Side projects en Python, TypeScript,\n                Java y Swift; certificaciones AWS Cloud Foundations y Cloud Developing en el camino.',
+      'Cinco años en los fundamentos: sistemas, algoritmos, ML aplicado y un minor en Management. Side projects\n                en Python, TypeScript, Java y Swift en el camino.',
+    achievementsTitle: 'Honores y certificaciones',
+    achievementsBlurb: 'Algunos sellos en el camino.',
+    achievements: [
+      {
+        year: '2018',
+        titleHtml: 'Distinción <i>Andrés Bello</i>',
+        meta: 'Ministerio de Educación · Colombia · categoría nacional',
+        desc: 'Otorgada por estar entre los mejores puntajes del examen Saber 11 a nivel nacional. Uno de los reconocimientos estudiantiles más altos del país.',
+      },
+      {
+        year: '2022',
+        titleHtml: 'AWS Academy <i>Cloud Developing</i>',
+        meta: 'Certificación · Amazon Web Services',
+        desc: 'Construir, desplegar y escalar apps cloud-native en AWS — IAM, Lambda, DynamoDB, S3 y el resto del kit.',
+      },
+      {
+        year: '2021',
+        titleHtml: 'AWS Academy <i>Cloud Foundations</i>',
+        meta: 'Certificación · Amazon Web Services',
+        desc: 'Fundamentos de AWS: servicios, seguridad, arquitectura y el modelo de billing que decide cuáles de esos terminas usando.',
+      },
+    ],
   },
   work: {
     secNum: '§04 · Proyectos seleccionados',
