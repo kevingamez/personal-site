@@ -42,6 +42,8 @@ interface Refs {
   form: HTMLFormElement
   input: HTMLInputElement
   suggest: HTMLElement
+  cmdHistory: string[]
+  bootTime: number
 }
 
 function getRefs(): Refs | null {
@@ -50,7 +52,7 @@ function getRefs(): Refs | null {
   const input = document.getElementById('console-msg') as HTMLInputElement | null
   const suggest = document.getElementById('console-suggest')
   if (!stream || !form || !input || !suggest) return null
-  return { stream, form, input, suggest }
+  return { stream, form, input, suggest, cmdHistory: [], bootTime: Date.now() }
 }
 
 function tokenize(line: string): string[] {
@@ -102,21 +104,37 @@ function printLines(stream: HTMLElement, lines: string[]): void {
 // ───────── Built-in commands ─────────
 
 const HELP_LINES = [
-  '<b>built-ins</b>',
-  '  <span class="ac">help</span>           &nbsp;&nbsp;list commands',
-  '  <span class="ac">whoami</span>         &nbsp;&nbsp;one-line bio',
-  '  <span class="ac">about</span>          &nbsp;&nbsp;the long version',
-  '  <span class="ac">experience</span>     &nbsp;&nbsp;trajectory · roles · dates',
-  '  <span class="ac">stack</span>          &nbsp;&nbsp;tools I actually reach for',
-  '  <span class="ac">repos</span>          &nbsp;&nbsp;public github repos',
-  '  <span class="ac">now</span>            &nbsp;&nbsp;what I’m working on this week',
-  '  <span class="ac">contact</span>        &nbsp;&nbsp;email + socials',
-  '  <span class="ac">date</span>           &nbsp;&nbsp;current date',
-  '  <span class="ac">clear</span>          &nbsp;&nbsp;clear the screen',
+  '<b>info</b>',
+  '  <span class="ac">whoami</span>          one-line bio',
+  '  <span class="ac">about</span>           the long version',
+  '  <span class="ac">experience</span>      trajectory · roles · dates',
+  '  <span class="ac">stack</span>           tools I actually reach for',
+  '  <span class="ac">repos</span>           public github repos',
+  '  <span class="ac">now</span>             what I’m working on this week',
+  '  <span class="ac">contact</span>         email + socials',
+  '',
+  '<b>files</b>',
+  '  <span class="ac">ls</span>              list available "files"',
+  '  <span class="ac">cat</span> &lt;name&gt;      print a file (try <span class="ac">cat about</span>)',
+  '  <span class="ac">pwd</span>             print working directory',
+  '  <span class="ac">cd</span> &lt;dir&gt;        change directory (sort of)',
+  '',
+  '<b>system</b>',
+  '  <span class="ac">date</span>            current date',
+  '  <span class="ac">uname</span>           kernel info',
+  '  <span class="ac">uptime</span>          how long this tab has been alive',
+  '  <span class="ac">history</span>         your command history',
+  '  <span class="ac">which</span> &lt;cmd&gt;     where a command lives',
+  '  <span class="ac">man</span> &lt;cmd&gt;       what a command does',
+  '  <span class="ac">ps</span>              fake processes',
+  '  <span class="ac">echo</span> &lt;text&gt;     repeat back',
+  '  <span class="ac">clear</span>           clear the screen (also <kbd>Ctrl-L</kbd>)',
   '',
   '<b>ai</b>',
-  '  <span class="ac">kevin</span> &lt;question&gt;  &nbsp;ask the LLM (powered by Claude)',
-  '  <span class="ac">ask</span> &lt;question&gt;    &nbsp;alias for <span class="ac">kevin</span>',
+  '  <span class="ac">kevin</span> &lt;question&gt;  ask the LLM (powered by Claude)',
+  '  <span class="ac">ask</span>   &lt;question&gt;  alias for <span class="ac">kevin</span>',
+  '',
+  '<span class="muted">tip · <kbd>Tab</kbd> autocompletes · <kbd>↑</kbd>/<kbd>↓</kbd> for history · <kbd>Ctrl-W/U/K</kbd> to edit · <kbd>Ctrl-C</kbd> to cancel</span>',
 ]
 
 const ABOUT_LINES = [
@@ -249,18 +267,184 @@ const COMMANDS: Record<string, CommandFn> = {
     }
     printLines(r.stream, lines)
   },
+  pwd: (_a, r) => {
+    printOut(r.stream, '/home/kevin')
+  },
+  cd: (a, r) => {
+    const target = (a[0] || '~').replace(/^~/, '/home/kevin')
+    if (target === '/home/kevin' || target === '~' || target === '/' || target === '.') {
+      printOut(r.stream, '<span class="muted">already there.</span>')
+      return
+    }
+    printOut(
+      r.stream,
+      `cd: <span class="muted">${escape(a[0] || '')}</span> · this site is mostly read-only. try <span class="ac">ls</span>.`,
+      'err'
+    )
+  },
+  uname: (_a, r) => {
+    printOut(r.stream, 'Darwin kevingamez.local 25.4.0 arm64')
+  },
+  uptime: (_a, r) => {
+    const ms = Date.now() - r.bootTime
+    const m = Math.floor(ms / 60000)
+    const s = Math.floor((ms % 60000) / 1000)
+    printOut(
+      r.stream,
+      `up ${m}m ${s}s · 1 user · load avg: 0.42, 0.42, 0.42 <span class="muted">(it's a static site)</span>`
+    )
+  },
+  history: (_a, r) => {
+    if (!r.cmdHistory.length) {
+      printOut(r.stream, '<span class="muted">(empty)</span>')
+      return
+    }
+    printLines(
+      r.stream,
+      r.cmdHistory.map((c, i) => `  ${String(i + 1).padStart(4, ' ')}  ${escape(c)}`)
+    )
+  },
+  which: (a, r) => {
+    const c = (a[0] || '').toLowerCase()
+    if (!c) {
+      printOut(r.stream, 'which: missing operand', 'err')
+      return
+    }
+    if (COMMANDS[c]) {
+      printOut(r.stream, `/usr/local/bin/${escape(c)}`)
+    } else {
+      printOut(r.stream, `which: ${escape(c)}: not found`, 'err')
+    }
+  },
+  man: (a, r) => {
+    const c = (a[0] || '').toLowerCase()
+    if (!c) {
+      printOut(r.stream, 'man: missing operand · what page do you want?', 'err')
+      return
+    }
+    const page = MAN_PAGES[c]
+    if (!page) {
+      printOut(r.stream, `No manual entry for ${escape(c)}`, 'err')
+      return
+    }
+    printLines(r.stream, page)
+  },
+  ps: (_a, r) => {
+    printLines(r.stream, [
+      '<span class="muted">  PID  TTY      TIME     CMD</span>',
+      '    1  ?        00:00:00 next-server',
+      '   42  ?        00:00:00 nestjs-api',
+      '  108  ?        00:01:12 inngest-worker',
+      '  253  ?        00:00:42 puppeteer-instagram',
+      '  254  ?        00:00:38 puppeteer-linkedin',
+      '  789  pts/0    00:00:00 zsh',
+      ' 1337  pts/0    00:00:00 ps',
+    ])
+  },
+  // file-mutating commands — keep the joke gentle; this site is read-only.
+  mkdir: (a, r) => {
+    const name = a[0] || ''
+    if (!name) {
+      printOut(r.stream, 'mkdir: missing operand', 'err')
+      return
+    }
+    printOut(
+      r.stream,
+      `mkdir: cannot create directory ‘${escape(name)}’: <span class="muted">read-only file system. this is a static site, friend.</span>`,
+      'err'
+    )
+  },
+  rmdir: (a, r) => {
+    printOut(r.stream, `rmdir: ‘${escape(a[0] || '')}’: read-only file system.`, 'err')
+  },
+  touch: (a, r) => {
+    printOut(
+      r.stream,
+      `touch: cannot touch ‘${escape(a[0] || '')}’: <span class="muted">read-only. but the thought counts.</span>`,
+      'err'
+    )
+  },
+  rm: (a, r) => {
+    if (a[0] === '-rf' && (a[1] === '/' || a[1] === '/*')) {
+      printOut(
+        r.stream,
+        '<span class="muted">nice try. running on someone else’s machine.</span>',
+        'err'
+      )
+      return
+    }
+    printOut(
+      r.stream,
+      `rm: cannot remove ‘${escape(a.slice(-1)[0] || '')}’: <span class="muted">read-only file system.</span>`,
+      'err'
+    )
+  },
+  mv: (_a, r) => {
+    printOut(r.stream, 'mv: <span class="muted">read-only file system.</span>', 'err')
+  },
+  cp: (_a, r) => {
+    printOut(r.stream, 'cp: <span class="muted">read-only file system.</span>', 'err')
+  },
   sudo: (_a, r) => {
     printOut(
       r.stream,
-      '<span class="muted">nice try.</span> kevin is not in the sudoers file.',
+      '<span class="muted">nice try.</span> kevin is not in the sudoers file. <span class="muted">this incident will be reported.</span>',
       'err'
     )
   },
   exit: (_a, r) => {
     printOut(r.stream, '<span class="muted">there is no exit. you live here now.</span>')
   },
+  logout: (_a, r) => {
+    printOut(r.stream, '<span class="muted">there is no exit. you live here now.</span>')
+  },
   kevin: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'kevin')),
   ask: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'ask')),
+}
+
+const MAN_PAGES: Record<string, string[]> = {
+  help: ['<b>HELP</b>(1)', '  list every command this shell knows.'],
+  whoami: ['<b>WHOAMI</b>(1)', '  print a one-line bio.'],
+  about: ['<b>ABOUT</b>(1)', '  print the longer bio (~6 lines).'],
+  experience: ['<b>EXPERIENCE</b>(1)', '  print the trajectory: roles, dates, education.'],
+  stack: ['<b>STACK</b>(1)', '  print the tools I actually reach for.'],
+  repos: ['<b>REPOS</b>(1)', '  list public github repos.'],
+  now: ['<b>NOW</b>(1)', '  what I’m building / reading / thinking about.'],
+  contact: ['<b>CONTACT</b>(1)', '  email + social links.'],
+  date: ['<b>DATE</b>(1)', '  print the current date.'],
+  uname: ['<b>UNAME</b>(1)', '  print system identity (it lies).'],
+  uptime: ['<b>UPTIME</b>(1)', '  how long this tab has been open.'],
+  history: ['<b>HISTORY</b>(1)', '  list the commands you’ve typed in this session.'],
+  which: [
+    '<b>WHICH</b>(1)',
+    '  which &lt;cmd&gt;  · where a command lives. (always /usr/local/bin/X.)',
+  ],
+  man: ['<b>MAN</b>(1)', '  man &lt;cmd&gt;  · short docs for a command.'],
+  clear: ['<b>CLEAR</b>(1)', '  clear the screen. <kbd>Ctrl-L</kbd> does the same.'],
+  echo: ['<b>ECHO</b>(1)', '  echo &lt;text&gt;  · print text back.'],
+  ls: ['<b>LS</b>(1)', '  list available "files" in this fake fs.'],
+  cat: [
+    '<b>CAT</b>(1)',
+    '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, contact.',
+  ],
+  pwd: ['<b>PWD</b>(1)', '  print working directory. always /home/kevin.'],
+  cd: ['<b>CD</b>(1)', '  cd is mostly decorative — there’s nowhere else to go.'],
+  ps: ['<b>PS</b>(1)', '  list (fake) processes.'],
+  mkdir: ['<b>MKDIR</b>(1)', '  this fs is read-only. mkdir always fails.'],
+  rmdir: ['<b>RMDIR</b>(1)', '  this fs is read-only. rmdir always fails.'],
+  touch: ['<b>TOUCH</b>(1)', '  this fs is read-only. touch always fails.'],
+  rm: ['<b>RM</b>(1)', '  this fs is read-only. rm always fails (mercifully).'],
+  mv: ['<b>MV</b>(1)', '  this fs is read-only.'],
+  cp: ['<b>CP</b>(1)', '  this fs is read-only.'],
+  sudo: ['<b>SUDO</b>(1)', '  not on my watch.'],
+  exit: ['<b>EXIT</b>(1)', '  there is no exit.'],
+  logout: ['<b>LOGOUT</b>(1)', '  there is no exit.'],
+  kevin: [
+    '<b>KEVIN</b>(1)',
+    '  kevin &lt;question&gt;  · POST your question to /api/chat and stream back a Claude reply.',
+    '  example: <span class="ac">kevin "what does enttor do?"</span>',
+  ],
+  ask: ['<b>ASK</b>(1)', '  alias for <span class="ac">kevin</span>.'],
 }
 
 function stripHead(raw: string, head: string): string {
@@ -483,7 +667,6 @@ export function initConsole(): void {
   if (!refs) return
 
   const history: ChatMessage[] = []
-  const cmdHistory: string[] = []
   let cmdIdx = 0
 
   refs.form.addEventListener('submit', (e) => {
@@ -491,8 +674,8 @@ export function initConsole(): void {
     const text = refs.input.value
     if (!text.trim()) return
     refs.input.value = ''
-    cmdHistory.push(text)
-    cmdIdx = cmdHistory.length
+    refs.cmdHistory.push(text)
+    cmdIdx = refs.cmdHistory.length
     void dispatch(refs, history, text)
   })
 
@@ -507,19 +690,19 @@ export function initConsole(): void {
     if (e.key === 'ArrowUp') {
       if (cmdIdx > 0) {
         cmdIdx--
-        refs.input.value = cmdHistory[cmdIdx]
+        refs.input.value = refs.cmdHistory[cmdIdx]
         moveToEnd(refs.input)
         e.preventDefault()
       }
       return
     }
     if (e.key === 'ArrowDown') {
-      if (cmdIdx < cmdHistory.length - 1) {
+      if (cmdIdx < refs.cmdHistory.length - 1) {
         cmdIdx++
-        refs.input.value = cmdHistory[cmdIdx]
+        refs.input.value = refs.cmdHistory[cmdIdx]
         moveToEnd(refs.input)
       } else {
-        cmdIdx = cmdHistory.length
+        cmdIdx = refs.cmdHistory.length
         refs.input.value = ''
       }
       e.preventDefault()
