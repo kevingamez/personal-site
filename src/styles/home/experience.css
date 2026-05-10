@@ -79,9 +79,9 @@
 }
 .tl-role {
   font-family: 'Instrument Serif', serif;
-  font-size: 21px;
-  line-height: 1.15;
-  margin: 0 0 3px;
+  font-size: 24px;
+  line-height: 1.1;
+  margin: 0 0 4px;
 }
 .tl-role .at {
   color: var(--coral-strong);
@@ -95,11 +95,11 @@
   margin-bottom: 6px;
 }
 .tl-desc {
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-2);
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
-  max-width: 56ch;
+  max-width: 60ch;
 }
 
 /* ─── Honors & certifications ─── */
@@ -142,50 +142,42 @@
   margin: 0;
   max-width: 50ch;
 }
+/* 2-col grid so honors take ~half the vertical space without shrinking text */
 .achievements-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 4px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 40px;
 }
-.achievement {
-  display: grid;
-  grid-template-columns: 170px 1fr;
-  gap: 32px;
-  padding: 10px 0;
-  border-bottom: 1px dashed var(--line);
-}
-.achievement:last-child {
-  border-bottom: none;
-}
-@media (max-width: 700px) {
-  .achievement {
+@media (max-width: 900px) {
+  .achievements-list {
     grid-template-columns: 1fr;
-    gap: 4px;
   }
 }
+.achievement {
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.achievement:last-child,
+.achievement:nth-last-child(2):nth-child(odd) {
+  border-bottom: none;
+}
 .ach-year {
+  display: block;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   color: var(--muted);
-  padding-top: 4px;
-  padding-right: 20px;
-  text-align: right;
+  margin-bottom: 4px;
   white-space: nowrap;
-}
-@media (max-width: 700px) {
-  .ach-year {
-    text-align: left;
-    padding-right: 0;
-  }
 }
 .ach-title {
   font-family: 'Instrument Serif', serif;
   font-weight: 400;
-  font-size: 19px;
-  line-height: 1.15;
-  margin: 0 0 3px;
+  font-size: 22px;
+  line-height: 1.1;
+  margin: 0 0 4px;
 }
 .ach-title i {
   font-style: italic;
@@ -199,9 +191,9 @@
   margin-bottom: 5px;
 }
 .ach-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink-2);
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
-  max-width: 60ch;
+  max-width: 62ch;
 }
