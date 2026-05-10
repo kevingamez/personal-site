@@ -7,26 +7,120 @@ interface Props {
 
 const { meta } = Astro.props
 
-const jsonLd = `{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Kevin Gámez",
-  "url": "https://kevingamez.com",
-  "jobTitle": "Founding Engineer",
-  "worksFor": { "@type": "Organization", "name": "enttor.ai", "url": "https://www.enttor.ai/" },
-  "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universidad de los Andes" },
-  "knowsAbout": [
-    "Browser Automation",
-    "AI Outbound",
-    "TypeScript",
-    "Next.js",
-    "NestJS",
-    "Prisma",
-    "PostgreSQL",
-    "Deep Learning"
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://kevingamez.com/#kevin',
+      name: 'Kevin Gámez',
+      givenName: 'Kevin',
+      familyName: 'Gámez',
+      alternateName: 'Kevin Gamez',
+      url: 'https://kevingamez.com',
+      image: 'https://kevingamez.com/kevin.jpg',
+      jobTitle: 'Founding Engineer',
+      description:
+        'Founding engineer at Enttor (AI-powered outbound: browser automation, OpenAI pipelines). M.Sc. in deep learning, Universidad de los Andes.',
+      email: 'mailto:kevingamez.kg@gmail.com',
+      worksFor: {
+        '@type': 'Organization',
+        '@id': 'https://www.enttor.ai/#org',
+        name: 'Enttor',
+        url: 'https://www.enttor.ai/',
+        description: 'AI-powered outbound platform · browser automation, LLM pipelines.',
+      },
+      hasOccupation: [
+        {
+          '@type': 'Occupation',
+          name: 'Founding Engineer',
+          occupationLocation: { '@type': 'City', name: 'New York' },
+          skills:
+            'TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI, browser automation, LLM pipelines',
+        },
+      ],
+      knowsAbout: [
+        'AI outbound',
+        'Browser automation',
+        'LLM pipelines',
+        'TypeScript',
+        'Next.js',
+        'NestJS',
+        'Prisma',
+        'PostgreSQL',
+        'Python',
+        'Deep learning',
+        'Computer vision',
+        'OpenCV',
+        'YOLOv5',
+        'FastAPI',
+        'Cellular automata',
+      ],
+      knowsLanguage: [
+        { '@type': 'Language', name: 'Spanish', alternateName: 'es' },
+        { '@type': 'Language', name: 'English', alternateName: 'en' },
+      ],
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Bogotá',
+        addressRegion: 'Cundinamarca',
+        addressCountry: 'CO',
+      },
+      homeLocation: {
+        '@type': 'Place',
+        name: 'Bogotá, Colombia',
+        geo: { '@type': 'GeoCoordinates', latitude: 4.711, longitude: -74.0721 },
+      },
+      alumniOf: [
+        {
+          '@type': 'CollegeOrUniversity',
+          name: 'Universidad de los Andes',
+          url: 'https://uniandes.edu.co/',
+          department:
+            'M.Sc. Information Engineering (deep-learning specialization), 2024–2025; B.Sc. Systems and Computing, 2019–2023; Minor in Management',
+        },
+      ],
+      award: [
+        'Andrés Bello National Distinction',
+        'AWS Academy Cloud Foundations',
+        'AWS Academy Cloud Developing',
+      ],
+      sameAs: [
+        'https://www.linkedin.com/in/kevin-gamez/',
+        'https://github.com/kevingamez',
+        'https://kevingamez.co',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://kevingamez.com/#site',
+      url: 'https://kevingamez.com/',
+      name: 'Kevin Gámez',
+      inLanguage: ['en', 'es'],
+      publisher: { '@id': 'https://kevingamez.com/#kevin' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://kevingamez.com/?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': meta.canonical + '#page',
+      url: meta.canonical,
+      inLanguage: meta.htmlLang,
+      name: meta.ogTitle,
+      description: meta.ogDescription,
+      isPartOf: { '@id': 'https://kevingamez.com/#site' },
+      about: { '@id': 'https://kevingamez.com/#kevin' },
+      mainEntity: { '@id': 'https://kevingamez.com/#kevin' },
+      speakable: {
+        '@type': 'SpeakableSpecification',
+        cssSelector: ['h1', '.hero-lede', '.about-prose'],
+      },
+    },
   ],
-  "sameAs": ["https://www.linkedin.com/in/kevin-gamez/", "https://github.com/kevingamez"]
-}`
+})
 ---
 
 <!doctype html>
@@ -37,8 +131,22 @@ const jsonLd = `{
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     <meta name="author" content="Kevin Gámez" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#d96944" />
+    <meta name="color-scheme" content="light" />
+
+    <!-- Geo / local SEO -->
+    <meta name="geo.region" content="CO-CUN" />
+    <meta name="geo.placename" content="Bogotá" />
+    <meta name="geo.position" content="4.711;-74.0721" />
+    <meta name="ICBM" content="4.711, -74.0721" />
+
+    <!-- Identity / authority -->
+    <link rel="me" href="https://www.linkedin.com/in/kevin-gamez/" />
+    <link rel="me" href="https://github.com/kevingamez" />
+    <link rel="me" href="mailto:kevingamez.kg@gmail.com" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="canonical" href={meta.canonical} />
