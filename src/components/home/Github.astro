@@ -77,6 +77,12 @@ const { t, stats } = Astro.props
             {t.dows.map((d, i) => <span class={i % 2 === 0 ? "hide" : ""}>{d}</span>)}
           </div>
           <div class="contrib" id="contrib-graph"></div>
+          <script
+            id="contrib-data"
+            type="application/json"
+            is:inline
+            set:html={JSON.stringify(stats.contribCalendar)}
+          />
         </div>
         <div class="contrib-legend">
           <span>{t.less}</span>
