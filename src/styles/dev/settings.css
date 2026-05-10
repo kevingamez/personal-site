@@ -1,0 +1,267 @@
+/* ─── Settings panel ─── */
+.settings-panel {
+  grid-area: explorer;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 18px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--ink-2);
+}
+.settings-panel[hidden] {
+  display: none;
+}
+
+.st-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.st-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+}
+.st-sub {
+  font-size: 10.5px;
+  color: var(--mute);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.st-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.st-label {
+  font-size: 10px;
+  color: var(--mute-2);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+/* Theme picker — 4 visual swatches */
+.st-themes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.st-theme {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+  text-align: left;
+}
+.st-theme:hover {
+  border-color: var(--mute);
+  transform: translateY(-1px);
+}
+.st-theme.on {
+  border-color: var(--coral);
+  background: var(--coral-soft);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--coral);
+}
+.st-swatch {
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Range slider */
+.st-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.st-row input[type='range'] {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.st-row input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--coral);
+  border: 2px solid var(--panel);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--coral);
+}
+.st-row input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--coral);
+  border: 2px solid var(--panel);
+  cursor: pointer;
+}
+.st-row output {
+  font-size: 11px;
+  color: var(--ink-2);
+  min-width: 38px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Segmented control */
+.st-segment {
+  display: flex;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+.st-seg {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--mute);
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.st-seg:hover {
+  color: var(--ink-2);
+}
+.st-seg.on {
+  background: var(--coral);
+  color: #fff;
+}
+
+/* Toggle switch */
+.st-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+  user-select: none;
+}
+.st-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.st-switch-track {
+  width: 32px;
+  height: 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.18s ease;
+}
+.st-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--mute);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+}
+.st-switch input:checked + .st-switch-track {
+  background: var(--coral);
+}
+.st-switch input:checked + .st-switch-track .st-switch-thumb {
+  transform: translateX(14px);
+  background: #fff;
+}
+.st-switch-text {
+  flex: 1;
+}
+
+/* Shortcuts */
+.st-shortcuts {
+  border-top: 1px dashed var(--line);
+  padding-top: 14px;
+}
+.st-kbd-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.st-kbd-row kbd {
+  font-family: inherit;
+  font-size: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Reset button */
+.st-reset {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--mute);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.st-reset:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.st-reset .material-symbols-outlined {
+  font-size: 14px;
+}
+
+/* Cursor preference hook — applied via document data-cursor attr. Used by
+   the CodeMirror caret style override (see editor.css). */
+:root[data-cursor='bar'] .cm-cursor {
+  border-left-width: 2px;
+}
+:root[data-cursor='block'] .cm-cursor {
+  border-left-width: 8px;
+  background: var(--coral);
+  opacity: 0.6;
+}
+:root[data-cursor='underline'] .cm-cursor {
+  border-left-width: 8px;
+  border-bottom: 2px solid var(--coral);
+}

@@ -5,18 +5,17 @@ import { openPalette } from './palette'
 
 export function initActivityBar(): void {
   const items = document.querySelectorAll<HTMLButtonElement>('.activity-bar .ab-item')
-  const explorer = document.querySelector<HTMLElement>('.explorer')
-  const sourceControl = document.querySelector<HTMLElement>('#source-control')
+  const panels: Record<string, HTMLElement | null> = {
+    explorer: document.querySelector<HTMLElement>('.explorer'),
+    'source-control': document.querySelector<HTMLElement>('#source-control'),
+    profile: document.querySelector<HTMLElement>('#profile'),
+    settings: document.querySelector<HTMLElement>('#settings'),
+  }
 
-  function showPanel(id: string) {
-    if (!explorer || !sourceControl) return
-    if (id === 'source-control') {
-      explorer.hidden = true
-      sourceControl.hidden = false
-    } else {
-      // Default: explorer
-      explorer.hidden = false
-      sourceControl.hidden = true
+  function showPanel(id: string): void {
+    for (const [key, el] of Object.entries(panels)) {
+      if (!el) continue
+      el.hidden = key !== id
     }
   }
 
@@ -27,8 +26,9 @@ export function initActivityBar(): void {
         openPalette()
         return
       }
+      if (id === 'extensions') return // no dedicated panel yet
       items.forEach((b) => b.classList.toggle('on', b === item))
-      showPanel(id)
+      showPanel(id in panels ? id : 'explorer')
     })
   })
 }

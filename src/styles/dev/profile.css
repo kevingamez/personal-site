@@ -1,0 +1,188 @@
+/* ─── Profile panel ─── */
+.profile-panel {
+  grid-area: explorer;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 18px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--ink-2);
+}
+.profile-panel[hidden] {
+  display: none;
+}
+
+.pf-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.pf-avatar-wrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(from 220deg, var(--coral), var(--purple), var(--blue), var(--coral));
+  animation: pf-ring 14s linear infinite;
+}
+@keyframes pf-ring {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.pf-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--panel-2);
+  display: block;
+  object-fit: cover;
+}
+.pf-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+  border: 2.5px solid var(--panel);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.pf-id {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pf-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.pf-name i {
+  font-style: italic;
+  color: var(--coral);
+}
+.pf-role {
+  font-size: 11.5px;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+}
+.pf-role .pf-at {
+  color: var(--coral);
+}
+.pf-status-line {
+  font-size: 10.5px;
+  color: var(--mute);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pf-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pf-pulse 2s ease-in-out infinite;
+}
+@keyframes pf-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pf-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pf-block-label {
+  font-size: 10px;
+  color: var(--mute-2);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  margin-bottom: 2px;
+}
+.pf-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.pf-ico {
+  font-size: 14px;
+  color: var(--coral);
+  width: 16px;
+  text-align: center;
+}
+.pf-tz {
+  margin-left: auto;
+  color: var(--mute);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+}
+
+.pf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.pf-chip {
+  font-size: 10.5px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.pf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 6px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s;
+}
+.pf-link:hover {
+  color: var(--coral);
+}
+
+.pf-meta {
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+.pf-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--mute);
+  letter-spacing: 0.06em;
+  padding: 3px 0;
+}
+.pf-meta-row b {
+  color: var(--ink-2);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}

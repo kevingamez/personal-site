@@ -3,6 +3,8 @@ import Titlebar from "@/components/dev/Titlebar.astro"
 import ActivityBar from "@/components/dev/ActivityBar.astro"
 import Explorer from "@/components/dev/Explorer.astro"
 import SourceControl from "@/components/dev/SourceControl.astro"
+import Profile from "@/components/dev/Profile.astro"
+import Settings from "@/components/dev/Settings.astro"
 import EditorPanel from "@/components/dev/EditorPanel.astro"
 import TerminalPanel from "@/components/dev/TerminalPanel.astro"
 import Workspaces from "@/components/dev/Workspaces.astro"
@@ -139,6 +141,8 @@ const devDataJson = serializeDevData(await buildDevData())
           <ActivityBar />
           <Explorer />
           <SourceControl />
+          <Profile />
+          <Settings />
 
           <main class="center">
             <EditorPanel />
