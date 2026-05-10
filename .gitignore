@@ -33,3 +33,9 @@ pnpm-debug.log*
 test-results/
 playwright-report/
 .lighthouseci/
+
+# playwright screenshots used during development
+*.png
+!public/**/*.png
+!public/**/*.jpeg
+!public/**/*.jpg
