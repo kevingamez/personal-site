@@ -224,7 +224,7 @@ export const es: HomeStrings = {
     blurb:
       'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo; Bogotá brilla por algo.',
     countries: 'países',
-    cities: 'ciudades',
+    cities: 'lugares',
     since: 'desde',
   },
   console: {

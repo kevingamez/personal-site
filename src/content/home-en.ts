@@ -220,7 +220,7 @@ export const en: HomeStrings = {
     blurb:
       'Pan, zoom, hover. Heat blooms scale with how long I spent there; Bogotá glows for a reason.',
     countries: 'countries',
-    cities: 'cities',
+    cities: 'places',
     since: 'since',
   },
   console: {
