@@ -135,6 +135,180 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
       }
     }
 
+    // OpenFreeMap's dark style only ships landcover for wood + ice + glacier,
+    // so at world zoom the Sahara, outback, Middle East all look identical to
+    // Europe. To replicate the reference's dual-tone topographic feel, we
+    // overlay a raster-dem hillshade on top of the base teal - this paints
+    // mountains and arid relief darker / lighter naturally, giving the same
+    // "textured" continents you see in Google Photos.
+    if (!map.getSource('terrain-dem')) {
+      try {
+        map.addSource('terrain-dem', {
+          type: 'raster-dem',
+          tiles: ['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],
+          encoding: 'terrarium',
+          tileSize: 256,
+          maxzoom: 12,
+          attribution: '',
+        })
+        map.addLayer(
+          {
+            id: 'hillshade',
+            type: 'hillshade',
+            source: 'terrain-dem',
+            paint: {
+              'hillshade-exaggeration': 0.85,
+              'hillshade-shadow-color': '#08111f',
+              'hillshade-highlight-color': '#9aabbe',
+              'hillshade-accent-color': '#6d6680', // dusty purple - mimics arid tone in mountains
+              'hillshade-illumination-direction': 335,
+            },
+          },
+          map.getLayer('landcover_wood') ? 'landcover_wood' : undefined
+        )
+      } catch {
+        // DEM tiles may be blocked by CSP in prod - silently skip.
+      }
+    }
+
+    // The Google Photos reference shows arid regions (Sahara, Arabian
+    // Peninsula, Australian outback, US southwest) in a distinctly different
+    // dusty-purple tone vs. the teal-vegetated continents. OpenFreeMap doesn't
+    // expose those landcover classes at world zoom, so we overlay a small
+    // hand-curated GeoJSON of those biomes at low alpha. Total weight: ~0.5KB.
+    const aridRegions: GeoJSON.Feature[] = [
+      // Sahara + Sahel transition
+      {
+        type: 'Feature',
+        properties: { name: 'sahara' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [-17, 14],
+              [-17, 30],
+              [35, 32],
+              [50, 27],
+              [50, 18],
+              [38, 12],
+              [22, 10],
+              [0, 12],
+              [-17, 14],
+            ],
+          ],
+        },
+      },
+      // Arabian Peninsula
+      {
+        type: 'Feature',
+        properties: { name: 'arabia' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [35, 13],
+              [35, 32],
+              [60, 30],
+              [60, 22],
+              [56, 17],
+              [44, 12],
+              [35, 13],
+            ],
+          ],
+        },
+      },
+      // Iran / Central Asia steppe
+      {
+        type: 'Feature',
+        properties: { name: 'persia' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [44, 27],
+              [44, 42],
+              [80, 47],
+              [80, 35],
+              [62, 25],
+              [44, 27],
+            ],
+          ],
+        },
+      },
+      // Australian outback
+      {
+        type: 'Feature',
+        properties: { name: 'outback' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [115, -32],
+              [115, -19],
+              [145, -19],
+              [145, -32],
+              [138, -36],
+              [120, -35],
+              [115, -32],
+            ],
+          ],
+        },
+      },
+      // US Southwest (Mojave / Sonoran / Chihuahuan)
+      {
+        type: 'Feature',
+        properties: { name: 'us-southwest' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [-120, 31],
+              [-120, 41],
+              [-103, 41],
+              [-103, 28],
+              [-110, 26],
+              [-118, 30],
+              [-120, 31],
+            ],
+          ],
+        },
+      },
+      // Atacama / Patagonia steppe
+      {
+        type: 'Feature',
+        properties: { name: 'south-america-arid' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [-72, -50],
+              [-72, -22],
+              [-65, -22],
+              [-65, -50],
+              [-72, -50],
+            ],
+          ],
+        },
+      },
+    ]
+    if (!map.getSource('arid')) {
+      map.addSource('arid', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: aridRegions },
+      })
+      map.addLayer(
+        {
+          id: 'arid-fill',
+          type: 'fill',
+          source: 'arid',
+          paint: { 'fill-color': LAND_ARID, 'fill-opacity': 0.55 },
+        },
+        map.getLayer('hillshade') ? 'hillshade' : undefined
+      )
+    }
+
+    ;(window as unknown as { __wmap?: typeof map }).__wmap = map
+
     // Heatmap source + layer
     map.addSource('travel', {
       type: 'geojson',
