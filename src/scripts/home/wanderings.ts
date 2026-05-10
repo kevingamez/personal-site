@@ -47,15 +47,14 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
 
   const map = new maplibre.Map({
     container,
-    // OpenFreeMap dark style — closest match to the Google Photos screenshot
-    // (deep navy ocean, teal land, pale labels). MapLibre fetches the style
-    // JSON, then the vector tiles, all from openfreemap's free CDN.
+    // OpenFreeMap dark vector tiles. We recolor every layer below to match
+    // the Google Photos travel-heatmap reference (deep navy ocean, teal land).
     style: 'https://tiles.openfreemap.org/styles/dark',
     center: [centerLng, centerLat],
     zoom: 1.4,
     minZoom: 0.8,
     maxZoom: 8,
-    attributionControl: { compact: true },
+    attributionControl: false, // hidden — we acknowledge in /humans.txt instead
     pitchWithRotate: false,
     dragRotate: false,
     touchPitch: false,
@@ -65,17 +64,62 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
   map.touchZoomRotate.disableRotation()
 
   map.on('load', () => {
-    // Override a few colors from the dark style so it leans into our palette
-    // (slightly bluer ocean, less saturated land — keeps coral as the only
-    // warm accent on the page).
-    try {
-      map.setPaintProperty('background', 'background-color', '#0a1830')
-      const waterLayers = ['water', 'water_lines', 'water_ocean']
-      for (const id of waterLayers) {
-        if (map.getLayer(id)) map.setPaintProperty(id, 'fill-color', '#0a1830')
+    // Recolor the entire base map to match the Google-Photos reference:
+    // deep navy ocean (#0a1c34), teal-green land (#1d4a3f → #2d6555 range),
+    // pale labels, dashed-white country borders.
+    const OCEAN = '#0a1c34'
+    const LAND = '#1f4f44'
+    const LAND_LIGHT = '#2d6553'
+    const LAND_PARK = '#1a4438'
+    const BORDER = 'rgba(255, 255, 255, 0.18)'
+    const BORDER_BOLD = 'rgba(255, 255, 255, 0.28)'
+    const TEXT_FILL = 'rgba(220, 230, 245, 0.92)'
+    const TEXT_HALO = 'rgba(10, 28, 52, 0.85)'
+
+    const style = map.getStyle()
+    for (const layer of style.layers) {
+      const id = layer.id
+      const type = layer.type
+      try {
+        // Background / land / parks / landuse — paint teal-green
+        if (id === 'background') {
+          map.setPaintProperty(id, 'background-color', LAND)
+        } else if (type === 'fill') {
+          if (/water|ocean|sea|lake|river|stream/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', OCEAN)
+          } else if (/park|wood|forest|grass|nature_reserve|cemetery|farmland/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', LAND_PARK)
+          } else if (/sand|beach|desert|residential|industrial|landuse|landcover/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', LAND_LIGHT)
+          } else if (/building/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', 'rgba(255,255,255,0.04)')
+          }
+        } else if (type === 'line') {
+          if (/boundary|admin/.test(id)) {
+            const isBold = /country|0|1/.test(id)
+            map.setPaintProperty(id, 'line-color', isBold ? BORDER_BOLD : BORDER)
+            map.setPaintProperty(id, 'line-width', isBold ? 0.7 : 0.4)
+          } else if (/water|river|stream|coast/.test(id)) {
+            map.setPaintProperty(id, 'line-color', OCEAN)
+          } else if (/road|street|highway|motorway|transportation|tunnel|bridge/.test(id)) {
+            // Hide all roads — too noisy for a heatmap context
+            map.setLayoutProperty(id, 'visibility', 'none')
+          } else if (/rail|aero|ferry|path|footway/.test(id)) {
+            map.setLayoutProperty(id, 'visibility', 'none')
+          }
+        } else if (type === 'symbol') {
+          // Labels — country/state/city only, hide POIs/streets
+          if (/poi|housenumber|street|road|highway|transit/.test(id)) {
+            map.setLayoutProperty(id, 'visibility', 'none')
+          } else {
+            map.setPaintProperty(id, 'text-color', TEXT_FILL)
+            map.setPaintProperty(id, 'text-halo-color', TEXT_HALO)
+            map.setPaintProperty(id, 'text-halo-width', 1.2)
+          }
+        }
+      } catch {
+        // Layer may not support that paint property — skip silently.
       }
-    } catch {
-      // Style might not have those exact layer ids; skip silently.
     }
 
     // Heatmap source + layer
