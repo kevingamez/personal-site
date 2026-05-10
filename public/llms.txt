@@ -1,0 +1,52 @@
+# Kevin Gámez
+
+> Founding engineer at Enttor (AI-powered outbound platform). Based in Bogotá, Colombia. M.Sc. in deep learning at Universidad de los Andes. Builds in TypeScript, Python and Swift.
+
+## Identity
+
+- **Full name:** Kevin Gámez
+- **Role:** Founding Engineer
+- **Company:** [Enttor](https://www.enttor.ai/) (AI outbound platform · browser automation, OpenAI pipelines)
+- **Location:** Bogotá, Colombia (UTC-5)
+- **Languages:** Spanish (native), English (professional)
+- **Education:** M.Sc. Information Engineering (deep-learning specialization) and B.Sc. Systems and Computing - both at Universidad de los Andes. Minor in Management. Andrés Bello National Distinction.
+
+## Current work (Enttor, Jun 2025–present)
+
+Built the AI outbound engine and browser-automation flows for Instagram and LinkedIn prospecting, automated DMs at scale, Next.js dashboards, NestJS APIs, Vercel infra, and the Supabase + Inngest backend that holds it together.
+
+Stack: TypeScript · Next.js · NestJS · Prisma · PostgreSQL · Supabase · Inngest · Vercel · OpenAI
+
+## Past
+
+- **Samsam** (Feb 2024 – Mar 2025) · Founding engineer at an e-commerce platform. Shopper and merchant apps in TypeScript, React Native, Next.js, Prisma, PostgreSQL. Refactored core services for ~10% lower response times; shipped alert-routing system that pushed critical-error visibility +70%.
+- **Universidad de los Andes** (Jan 2024 – Jul 2025) · Graduate teaching assistant in parallel with the M.Sc.
+- Earlier work crossed data analytics (SQL models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and environmental risk detection.
+
+## Notable open-source repos (github.com/kevingamez)
+
+- [personal-site](https://github.com/kevingamez/personal-site) - this site, TypeScript / Astro
+- [AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders) - aerial object detection for Amazon deforestation events (Python · OpenCV · YOLOv5 · FastAPI)
+- [Palladium_Chat](https://github.com/kevingamez/Palladium_Chat) - chat experiment in TypeScript
+- [budget-app](https://github.com/kevingamez/budget-app) - personal-finance app in Swift
+- [GCP-CloudRun](https://github.com/kevingamez/GCP-CloudRun) - containerized service deploys on Cloud Run
+
+## Stack
+
+- **Languages:** TypeScript, Python, Swift, JavaScript, Java, Dart, SQL, Bash
+- **Frontend:** React, Next.js, React Native, Astro, Tailwind, SwiftUI, Flutter
+- **Backend & infra:** PostgreSQL, Prisma, NestJS, Node.js, Supabase, Inngest, FastAPI, Docker, Vercel, AWS, GCP
+- **AI / ML:** OpenAI, Anthropic SDK, browser automation, PyTorch, OpenCV, YOLO
+- **Data:** SQL modeling, Power BI, ETL pipelines
+
+## Contact
+
+- Email: kevingamez.kg@gmail.com
+- GitHub: [github.com/kevingamez](https://github.com/kevingamez)
+- LinkedIn: [linkedin.com/in/kevin-gamez](https://www.linkedin.com/in/kevin-gamez/)
+- Personal site (English): [kevingamez.com](https://kevingamez.com/)
+- Personal site (Español): [kevingamez.com/es](https://kevingamez.com/es/)
+
+## More detail
+
+- [Full content for LLMs](/llms-full.txt)
