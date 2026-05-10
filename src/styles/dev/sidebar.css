@@ -136,6 +136,47 @@
   color: var(--blue);
 }
 
+/* ── tail -f /var/log/commits — real recent commits from github ── */
+.commit-tail {
+  max-height: 168px;
+  overflow: hidden;
+  line-height: 1.7;
+}
+.commit-r {
+  display: grid;
+  grid-template-columns: 38px 50px 1fr;
+  gap: 8px;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 1px 0;
+  border-radius: 3px;
+  transition: background 0.12s;
+}
+.commit-r:hover {
+  background: rgba(217, 105, 68, 0.06);
+}
+.commit-r .ts {
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+.commit-r .sha {
+  color: var(--coral);
+}
+.commit-r .pa {
+  color: var(--ink-2);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.commit-r .ct-repo {
+  color: var(--blue);
+  margin-right: 6px;
+}
+.commit-r .ct-msg {
+  color: var(--ink-2);
+}
+
 .hm {
   display: grid;
   grid-template-columns: repeat(26, 1fr);
