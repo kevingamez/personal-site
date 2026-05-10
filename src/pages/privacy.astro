@@ -1,0 +1,193 @@
+---
+import Layout from "@/components/Layout.astro"
+import { en } from "@/content/home-en"
+import "@/styles/home/index.css"
+
+const meta = {
+  ...en.meta,
+  title: "Privacy · Kevin Gámez",
+  ogTitle: "Privacy · Kevin Gámez",
+  twitterTitle: "Privacy · Kevin Gámez",
+  description: "What kevingamez.com collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
+  ogDescription: "What kevingamez.com collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
+  twitterDescription:
+    "What kevingamez.com collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
+  canonical: "https://kevingamez.com/privacy",
+  ogUrl: "https://kevingamez.com/privacy",
+  includeJsonLd: false,
+}
+---
+
+<Layout meta={meta}>
+  <main class="privacy-page">
+    <article class="wrap privacy-article">
+      <header>
+        <p class="kicker">Privacy</p>
+        <h1>What this site collects</h1>
+        <p class="lede">
+          Plain-language list of every piece of data <a href="/">kevingamez.com</a> sees, why, and how to opt out. Last updated
+          2026-05.
+        </p>
+      </header>
+
+      <h2>The short version</h2>
+      <ul>
+        <li>No accounts, no logins, no marketing emails.</li>
+        <li>Aggregate analytics — page views, sections viewed, device, country — never tied to you.</li>
+        <li>
+          Heatmaps and session replays via Microsoft Clarity (cursor moves, clicks, scroll). Form fields are masked by
+          default.
+        </li>
+        <li>
+          The <code>/api/chat</code> Claude console keeps your IP only for daily rate limiting (20 messages / IP / day) and
+          forgets it within 24 hours.
+        </li>
+        <li>Nothing is sold or shared with third parties beyond the analytics vendors below.</li>
+      </ul>
+
+      <h2>Vendors and what they receive</h2>
+
+      <h3>Google Analytics 4 (gtag)</h3>
+      <p>
+        Anonymous page-view counts and event names (e.g. <code>section_view</code>, <code>cta_click</code>), coarse
+        country/device, referrer. IPs are anonymized at edge by Google before they hit the analytics dashboard.
+      </p>
+
+      <h3>Vercel Analytics + Speed Insights</h3>
+      <p>
+        First-party, cookieless. Records page paths, Core Web Vitals (LCP, INP, CLS) and country at country level. No
+        persistent identifier.
+      </p>
+
+      <h3>Microsoft Clarity</h3>
+      <p>
+        Heatmaps and session replays. Records cursor movement, clicks, and scrolling on kevingamez.com. <strong
+          >All input fields, including the live console, are masked</strong
+        > — I see <em>that</em> you typed, not <em>what</em>. Clarity sets a session cookie scoped to this domain.
+      </p>
+
+      <h3>Anthropic (Claude · /api/chat)</h3>
+      <p>
+        When you use the live console, your message and the conversation history of that session are sent to Anthropic's
+        API to generate a reply. Your IP is hashed in memory at the Vercel edge for rate-limiting and discarded at the
+        end of each day. Conversations are not stored on the server.
+      </p>
+
+      <h2>How to opt out</h2>
+      <ul>
+        <li>
+          <strong>Block analytics.</strong> Most browser tracker-blockers (uBlock Origin, Brave Shields, Privacy Badger, Safari
+          ITP) already block Google Analytics, Vercel and Clarity by default. The site still works fully.
+        </li>
+        <li>
+          <strong>Honor Do-Not-Track / Global Privacy Control.</strong> If your browser sends DNT or GPC, plan is to skip
+          Clarity loading. (Coming next; until then, use a blocker.)
+        </li>
+        <li>
+          <strong>Don't use the console.</strong> If you don't type anything in <code>/#console</code>, nothing reaches
+          Anthropic. Browsing the rest of the site doesn't trigger any LLM call.
+        </li>
+        <li>
+          <strong>Ask for deletion.</strong> Email <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>
+          and I'll wipe what I can (heatmap recordings tied to a session ID, GA event log).
+        </li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <ul>
+        <li><code>_ga</code>, <code>_ga_*</code> — Google Analytics, ~1 year.</li>
+        <li><code>_clck</code>, <code>_clsk</code> — Microsoft Clarity, session + 1 year.</li>
+      </ul>
+      <p>That's it. No third-party advertising cookies, no remarketing pixels.</p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions or a deletion request: <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>.
+      </p>
+
+      <p class="back"><a href="/">← Back to home</a></p>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .privacy-page {
+    background: var(--cream);
+    min-height: 100vh;
+    padding: 80px 0 120px;
+  }
+  .privacy-article {
+    max-width: 720px;
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .privacy-article header {
+    margin-bottom: 48px;
+  }
+  .privacy-article .kicker {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--coral-strong);
+    margin: 0 0 12px;
+  }
+  .privacy-article h1 {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0 0 18px;
+  }
+  .privacy-article .lede {
+    font-size: 17px;
+    color: var(--ink-2);
+    max-width: 56ch;
+    margin: 0;
+  }
+  .privacy-article h2 {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 40px 0 12px;
+  }
+  .privacy-article h3 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral-strong);
+    margin: 24px 0 8px;
+  }
+  .privacy-article p,
+  .privacy-article ul {
+    margin: 0 0 14px;
+  }
+  .privacy-article ul {
+    padding-left: 20px;
+  }
+  .privacy-article li {
+    margin-bottom: 6px;
+  }
+  .privacy-article a {
+    color: var(--coral-strong);
+    border-bottom: 1px dashed currentColor;
+  }
+  .privacy-article code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    background: var(--cream-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .privacy-article .back {
+    margin-top: 48px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+  }
+</style>
