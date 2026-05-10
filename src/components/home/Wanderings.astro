@@ -1,0 +1,43 @@
+---
+import type { HomeStrings } from "@/content/home"
+import { travel } from "@/content/travel"
+
+interface Props {
+  t: HomeStrings["wanderings"]
+}
+
+const { t } = Astro.props
+
+// Stats computed at build time — no client logic needed for the bottom panel.
+const cities = travel.length
+const countries = new Set(travel.map((p) => p.countryCode)).size
+const firstYear = travel
+  .map((p) => p.firstYear)
+  .filter((y): y is number => typeof y === "number")
+  .reduce((min, y) => Math.min(min, y), new Date().getFullYear())
+---
+
+<section id="wanderings">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+
+    <div class="map-frame">
+      <div id="travel-map" data-travel={JSON.stringify(travel)}></div>
+      <div class="map-bar">
+        <div class="map-bar-row">
+          <span><b>{countries}</b> {t.countries}</span>
+          <span class="map-bar-dot">·</span>
+          <span><b>{cities}</b> {t.cities}</span>
+          <span class="map-bar-dot">·</span>
+          <span>{t.since} <b>{firstYear}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

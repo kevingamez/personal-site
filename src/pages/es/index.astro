@@ -9,6 +9,7 @@ import Work from "@/components/home/Work.astro"
 import Github from "@/components/home/Github.astro"
 import Writing from "@/components/home/Writing.astro"
 import Now from "@/components/home/Now.astro"
+import Wanderings from "@/components/home/Wanderings.astro"
 import Bookshelf from "@/components/home/Bookshelf.astro"
 import Console from "@/components/home/Console.astro"
 import Contact from "@/components/home/Contact.astro"
@@ -34,6 +35,7 @@ const githubStats = await loadHomeStats()
   <Github t={t.github} stats={githubStats} />
   <Writing t={t.writing} />
   <Now t={t.now} />
+  <Wanderings t={t.wanderings} />
   <Bookshelf t={t.bookshelf} />
   <Console t={t.console} />
   <Contact t={t.contact} />
