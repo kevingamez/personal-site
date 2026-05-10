@@ -51,5 +51,28 @@ const { t } = Astro.props
         </div>
       </div>
     </div>
+
+    <div class="achievements">
+      <div class="achievements-head">
+        <h3 class="achievements-title"><Fragment set:html={t.achievementsTitle} /></h3>
+        <p class="achievements-blurb">{t.achievementsBlurb}</p>
+      </div>
+      <ul class="achievements-list">
+        {
+          t.achievements.map((a) => (
+            <li class="achievement">
+              <div class="ach-year">{a.year}</div>
+              <div class="ach-content">
+                <h4 class="ach-title">
+                  <Fragment set:html={a.titleHtml} />
+                </h4>
+                <div class="ach-meta">{a.meta}</div>
+                <p class="ach-desc">{a.desc}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
