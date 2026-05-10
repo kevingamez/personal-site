@@ -33,6 +33,9 @@ export type HomeStats = {
   publicRepos: number
   languagesShipped: number
   yearsOnGithub: number
+  followers: number
+  following: number
+  joinedISO: string // ISO date of GitHub account creation
   languageMix: LangSlice[]
   topRepos: RepoCard[]
   contribCalendar: ContribCalendar
@@ -125,7 +128,11 @@ type RawRepo = {
   fork: boolean
   archived: boolean
 }
-type RawProfile = { created_at: string }
+type RawProfile = {
+  created_at: string
+  followers: number
+  following: number
+}
 
 async function fetchAllRepos(): Promise<RawRepo[]> {
   // Owner type, public only, paginated. Personal-account ceiling is rarely past
@@ -482,6 +489,9 @@ async function buildStats(): Promise<HomeStats | null> {
       publicRepos: reposCount,
       languagesShipped: Object.keys(langTotals).length,
       yearsOnGithub,
+      followers: profile.followers,
+      following: profile.following,
+      joinedISO: profile.created_at,
       languageMix,
       topRepos,
       contribCalendar: contribCalendar ?? emptyCalendar(),
@@ -512,6 +522,9 @@ export async function loadHomeStats(): Promise<HomeStats> {
     publicRepos: 0,
     languagesShipped: 0,
     yearsOnGithub: 0,
+    followers: 0,
+    following: 0,
+    joinedISO: '',
     languageMix: [],
     topRepos: [],
     contribCalendar: emptyCalendar(),
