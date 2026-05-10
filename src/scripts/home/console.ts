@@ -363,6 +363,104 @@ async function runChat(refs: Refs, history: ChatMessage[], question: string): Pr
   }
 }
 
+// ───────── Tab completion ─────────
+
+const CAT_FILES = ['about', 'experience', 'stack', 'repos', 'now', 'contact']
+
+function commonPrefix(strs: string[]): string {
+  if (!strs.length) return ''
+  let p = strs[0]
+  for (const s of strs) {
+    while (!s.startsWith(p)) p = p.slice(0, -1)
+    if (!p) return ''
+  }
+  return p
+}
+
+function getCompletions(value: string): { matches: string[]; replaceFrom: number } {
+  // Determine word boundaries — last whitespace separates words.
+  const m = /^(.*\s)?(\S*)$/.exec(value)
+  const head = m?.[1] ?? ''
+  const last = m?.[2] ?? value
+  const replaceFrom = head.length
+
+  // First word → complete from command list.
+  if (!head.trim()) {
+    const matches = Object.keys(COMMANDS)
+      .filter((k) => k.startsWith(last.toLowerCase()))
+      .sort()
+    return { matches, replaceFrom }
+  }
+
+  // Second word for `cat` → file list.
+  const firstTok = head.trim().split(/\s+/)[0].toLowerCase()
+  if (firstTok === 'cat') {
+    const matches = CAT_FILES.filter((f) => f.startsWith(last.toLowerCase()))
+    return { matches, replaceFrom }
+  }
+
+  // No completion for everything else (e.g. kevin <free text>).
+  return { matches: [], replaceFrom }
+}
+
+function applyCompletion(refs: Refs): void {
+  const value = refs.input.value
+  const { matches, replaceFrom } = getCompletions(value)
+  if (!matches.length) return
+  if (matches.length === 1) {
+    const completed = value.slice(0, replaceFrom) + matches[0] + ' '
+    refs.input.value = completed
+    refs.input.setSelectionRange(completed.length, completed.length)
+    return
+  }
+  const prefix = commonPrefix(matches)
+  const lastWord = value.slice(replaceFrom)
+  if (prefix && prefix.length > lastWord.length) {
+    const partial = value.slice(0, replaceFrom) + prefix
+    refs.input.value = partial
+    refs.input.setSelectionRange(partial.length, partial.length)
+    return
+  }
+  // Multiple matches with no further common prefix → list them.
+  appendCmdLine(refs.stream, value || '')
+  printOut(refs.stream, matches.map((m) => `<span class="ac">${escape(m)}</span>`).join('  '))
+  // Re-show the prompt with the user's input untouched.
+  // (input keeps its value; user can keep typing.)
+}
+
+// ───────── Line editing (readline-style) ─────────
+
+function killWordBeforeCursor(input: HTMLInputElement): void {
+  const v = input.value
+  const c = input.selectionStart ?? v.length
+  const before = v.slice(0, c)
+  const after = v.slice(c)
+  // Strip trailing whitespace, then strip the word.
+  const stripped = before.replace(/\s*\S*$/, '')
+  input.value = stripped + after
+  input.setSelectionRange(stripped.length, stripped.length)
+}
+
+function killLine(input: HTMLInputElement): void {
+  input.value = ''
+  input.setSelectionRange(0, 0)
+}
+
+function killToEnd(input: HTMLInputElement): void {
+  const c = input.selectionStart ?? 0
+  input.value = input.value.slice(0, c)
+  input.setSelectionRange(c, c)
+}
+
+function moveToStart(input: HTMLInputElement): void {
+  input.setSelectionRange(0, 0)
+}
+
+function moveToEnd(input: HTMLInputElement): void {
+  const e = input.value.length
+  input.setSelectionRange(e, e)
+}
+
 // ───────── Dispatcher + history ─────────
 
 function dispatch(refs: Refs, history: ChatMessage[], raw: string): void | Promise<void> {
@@ -399,24 +497,62 @@ export function initConsole(): void {
   })
 
   refs.input.addEventListener('keydown', (e) => {
+    // Tab → completion
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      applyCompletion(refs)
+      return
+    }
+    // History
     if (e.key === 'ArrowUp') {
       if (cmdIdx > 0) {
         cmdIdx--
         refs.input.value = cmdHistory[cmdIdx]
+        moveToEnd(refs.input)
         e.preventDefault()
       }
-    } else if (e.key === 'ArrowDown') {
+      return
+    }
+    if (e.key === 'ArrowDown') {
       if (cmdIdx < cmdHistory.length - 1) {
         cmdIdx++
         refs.input.value = cmdHistory[cmdIdx]
+        moveToEnd(refs.input)
       } else {
         cmdIdx = cmdHistory.length
         refs.input.value = ''
       }
       e.preventDefault()
-    } else if (e.key === 'l' && e.ctrlKey) {
-      e.preventDefault()
-      refs.stream.innerHTML = ''
+      return
+    }
+    // readline-style line editing — only when Ctrl is held
+    if (e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+      const k = e.key.toLowerCase()
+      if (k === 'l') {
+        e.preventDefault()
+        refs.stream.innerHTML = ''
+      } else if (k === 'a') {
+        e.preventDefault()
+        moveToStart(refs.input)
+      } else if (k === 'e') {
+        e.preventDefault()
+        moveToEnd(refs.input)
+      } else if (k === 'w') {
+        e.preventDefault()
+        killWordBeforeCursor(refs.input)
+      } else if (k === 'u') {
+        e.preventDefault()
+        killLine(refs.input)
+      } else if (k === 'k') {
+        e.preventDefault()
+        killToEnd(refs.input)
+      } else if (k === 'c') {
+        e.preventDefault()
+        if (refs.input.value) {
+          appendCmdLine(refs.stream, refs.input.value + '^C')
+          refs.input.value = ''
+        }
+      }
     }
   })
 
