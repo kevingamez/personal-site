@@ -1,0 +1,19 @@
+/* TEAM */
+  Founder, designer, developer: Kevin Gámez
+  Site: kevingamez.com
+  Github: @kevingamez
+  Twitter: @kevingamez
+  From: Bogotá, Colombia
+
+/* THANKS */
+  Anthropic - Claude · powers the live console
+  PKief / vscode-material-icon-theme - file tree icons in dev mode
+  Conway, John Horton - for the game on the hero
+
+/* SITE */
+  Last update: 2026
+  Standards: HTML5, CSS3, ES2024, TypeScript
+  Built with: Astro 5, Preact, Vercel
+  Components: Hero with Conway's Game of Life, animated GitHub stats,
+              live Claude console, Warp-style /dev terminal view.
+  Languages: English, Español
