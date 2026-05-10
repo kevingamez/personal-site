@@ -54,7 +54,7 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
     zoom: 1.4,
     minZoom: 0.8,
     maxZoom: 8,
-    attributionControl: false, // hidden — we acknowledge in /humans.txt instead
+    attributionControl: false, // hidden - we acknowledge in /humans.txt instead
     pitchWithRotate: false,
     dragRotate: false,
     touchPitch: false,
@@ -64,32 +64,42 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
   map.touchZoomRotate.disableRotation()
 
   map.on('load', () => {
-    // Recolor the entire base map to match the Google-Photos reference:
-    // deep navy ocean (#0a1c34), teal-green land (#1d4a3f → #2d6555 range),
-    // pale labels, dashed-white country borders.
-    const OCEAN = '#0a1c34'
-    const LAND = '#1f4f44'
-    const LAND_LIGHT = '#2d6553'
-    const LAND_PARK = '#1a4438'
-    const BORDER = 'rgba(255, 255, 255, 0.18)'
-    const BORDER_BOLD = 'rgba(255, 255, 255, 0.28)'
-    const TEXT_FILL = 'rgba(220, 230, 245, 0.92)'
-    const TEXT_HALO = 'rgba(10, 28, 52, 0.85)'
+    // Match the Google-Photos travel-timeline reference exactly:
+    //  - deep navy ocean with subtle glow (not black)
+    //  - muted teal as default land (Europe / Asia / Americas vegetated)
+    //  - dusty purple-grey for arid land (Sahara, Middle East, outback)
+    //  - light blue-grey for ice / Greenland
+    //  - white country labels, soft sky-blue ocean labels
+    //  - faint dashed country borders
+    const OCEAN = '#0d2040'
+    const LAND = '#3d6864' // muted teal - default continents
+    const LAND_LIGHT = '#4f6f6c' // slightly lighter teal for grass/farmland
+    const LAND_ARID = '#5a5b6e' // dusty purple-grey for sand/desert/rock
+    const LAND_PARK = '#2d5552' // darker teal for wood/forest/park
+    const GLACIER = '#8095ad' // light blue-grey for ice/snow (Greenland)
+    const BORDER = 'rgba(255, 255, 255, 0.20)'
+    const BORDER_BOLD = 'rgba(255, 255, 255, 0.30)'
+    const TEXT_FILL = 'rgba(235, 240, 248, 0.92)'
+    const TEXT_HALO = 'rgba(13, 32, 64, 0.85)'
+    const OCEAN_LABEL = 'rgba(140, 175, 215, 0.85)' // soft sky-blue for ocean/sea names
 
     const style = map.getStyle()
     for (const layer of style.layers) {
       const id = layer.id
       const type = layer.type
       try {
-        // Background / land / parks / landuse — paint teal-green
         if (id === 'background') {
           map.setPaintProperty(id, 'background-color', LAND)
         } else if (type === 'fill') {
-          if (/water|ocean|sea|lake|river|stream/.test(id)) {
+          if (/water|ocean|sea|lake|river|stream|reservoir/.test(id)) {
             map.setPaintProperty(id, 'fill-color', OCEAN)
-          } else if (/park|wood|forest|grass|nature_reserve|cemetery|farmland/.test(id)) {
+          } else if (/ice|glacier|snow/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', GLACIER)
+          } else if (/sand|desert|beach|rock|bare/.test(id)) {
+            map.setPaintProperty(id, 'fill-color', LAND_ARID)
+          } else if (/wood|forest|park|nature_reserve|cemetery/.test(id)) {
             map.setPaintProperty(id, 'fill-color', LAND_PARK)
-          } else if (/sand|beach|desert|residential|industrial|landuse|landcover/.test(id)) {
+          } else if (/grass|farmland|crop|meadow|scrub|landcover|landuse/.test(id)) {
             map.setPaintProperty(id, 'fill-color', LAND_LIGHT)
           } else if (/building/.test(id)) {
             map.setPaintProperty(id, 'fill-color', 'rgba(255,255,255,0.04)')
@@ -102,15 +112,18 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
           } else if (/water|river|stream|coast/.test(id)) {
             map.setPaintProperty(id, 'line-color', OCEAN)
           } else if (/road|street|highway|motorway|transportation|tunnel|bridge/.test(id)) {
-            // Hide all roads — too noisy for a heatmap context
             map.setLayoutProperty(id, 'visibility', 'none')
           } else if (/rail|aero|ferry|path|footway/.test(id)) {
             map.setLayoutProperty(id, 'visibility', 'none')
           }
         } else if (type === 'symbol') {
-          // Labels — country/state/city only, hide POIs/streets
           if (/poi|housenumber|street|road|highway|transit/.test(id)) {
             map.setLayoutProperty(id, 'visibility', 'none')
+          } else if (/water_name|ocean|marine|sea_|water/.test(id)) {
+            // Ocean / sea labels - sky-blue tone like the reference
+            map.setPaintProperty(id, 'text-color', OCEAN_LABEL)
+            map.setPaintProperty(id, 'text-halo-color', OCEAN)
+            map.setPaintProperty(id, 'text-halo-width', 0.6)
           } else {
             map.setPaintProperty(id, 'text-color', TEXT_FILL)
             map.setPaintProperty(id, 'text-halo-color', TEXT_HALO)
@@ -118,7 +131,7 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
           }
         }
       } catch {
-        // Layer may not support that paint property — skip silently.
+        // Layer may not support that paint property - skip silently.
       }
     }
 
@@ -137,16 +150,8 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
         // Heat intensity scaled by the point's weight property
         'heatmap-weight': ['interpolate', ['linear'], ['get', 'weight'], 0, 0, 100, 1],
         // Density falloff scales with zoom so blooms stay readable when zoomed in
-        'heatmap-intensity': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          0,
-          1,
-          6,
-          3,
-        ],
-        // Coral palette — purple → coral → bright orange like the screenshot
+        'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 6, 3],
+        // Coral palette - purple → coral → bright orange like the screenshot
         'heatmap-color': [
           'interpolate',
           ['linear'],
@@ -165,17 +170,7 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
           'rgba(255, 200, 120, 1)', // hot center
         ],
         // Bigger blooms at higher zooms
-        'heatmap-radius': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          0,
-          14,
-          3,
-          28,
-          6,
-          70,
-        ],
+        'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 14, 3, 28, 6, 70],
         // Fade heatmap when zoomed in close (cities show as dots instead)
         'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0.85, 5, 0.9, 6, 0.5, 8, 0],
       },
@@ -196,7 +191,7 @@ async function mountMap(container: HTMLElement, points: TravelPoint[]): Promise<
       },
     })
 
-    // Tooltip on hover (city — country)
+    // Tooltip on hover (city - country)
     const popup = new maplibre.Popup({
       closeButton: false,
       closeOnClick: false,
@@ -235,7 +230,7 @@ export function initWanderings(): void {
   }
   if (!points.length) return
 
-  // Lazy mount when the section scrolls into view — saves ~280KB on first paint
+  // Lazy mount when the section scrolls into view - saves ~280KB on first paint
   // for users who never scroll there.
   if (typeof IntersectionObserver === 'undefined') {
     void mountMap(container, points)
