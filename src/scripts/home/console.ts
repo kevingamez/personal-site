@@ -1,5 +1,7 @@
-// Live console section · streams a Claude agent's output as terminal-style
-// blocks. Falls back to a friendly mock when /api/chat is unreachable (dev).
+// Home-page console section. Default mode is a real shell — built-in
+// commands run locally and instantly. The `kevin` / `ask` commands are
+// the bridge to the LLM: they POST to /api/chat and stream the reply
+// back into the same stream.
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -25,7 +27,6 @@ function escape(s: string): string {
 }
 
 function mdLite(s: string): string {
-  // Light markdown: **bold**, `code`, [link](url) → safe HTML.
   let out = escape(s)
   out = out.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
   out = out.replace(/`([^`]+)`/g, '<code>$1</code>')
@@ -34,43 +35,6 @@ function mdLite(s: string): string {
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
   )
   return out
-}
-
-const MOCK_REPLIES: Record<string, string> = {
-  building:
-    'founding engineer at **enttor** since jun 2025 — ai outbound at scale. browser automation for instagram & linkedin prospecting, openai pipelines for filtering and dm drafting. stack: `next.js` + `nestjs` + `postgres`, `supabase` for auth/storage, `inngest` for queues, deployed on `vercel`.',
-  recent:
-    'most-recent public repos:\n  • personal-site (typescript) · 2026-04-04\n  • kevingamez (config) · 2026-03-04\n  • budget-app (swift) · 2026-03-01\n  • palladium_chat (typescript) · 2025-05-17\n  • router (typescript) · 2025-05-11',
-  compare:
-    '`typescript` is ~33% of his public repos and the language of choice at enttor (next.js, nestjs, prisma).\n`python` is ~27%, used in his m.sc. work on satellite imagery (`opencv`, `yolov5`, `fastapi`) and earlier coursework.\nrule of thumb: ts to ship, python to research.',
-  search:
-    "i'd hit `web_search` for that — but in this preview the backend isn't wired yet. once anthropic_api_key is set in vercel, you'll see live results with citations.",
-}
-
-function mockReply(prompt: string): string {
-  const p = prompt.toLowerCase()
-  if (/build|now|enttor|working|qu[ée]/.test(p)) return MOCK_REPLIES.building
-  if (/recent|repo|github|new|listar|nuevo/.test(p)) return MOCK_REPLIES.recent
-  if (/compare|typescript|python|stack|compara|ts vs/.test(p)) return MOCK_REPLIES.compare
-  if (/search|web|outbound|startup|busca/.test(p)) return MOCK_REPLIES.search
-  return "interesting query — once `anthropic_api_key` is set in vercel, i'll respond for real. for now it's mock replies."
-}
-
-async function streamMockReply(target: HTMLElement, full: string): Promise<void> {
-  if (REDUCE_MOTION) {
-    target.innerHTML = mdLite(full)
-    return
-  }
-  target.classList.add('cm-streaming')
-  const tokens = full.split(/(\s+)/)
-  let acc = ''
-  for (const tok of tokens) {
-    acc += tok
-    target.innerHTML = mdLite(acc)
-    await new Promise((r) => setTimeout(r, 14 + Math.random() * 18))
-  }
-  target.classList.remove('cm-streaming')
-  target.innerHTML = mdLite(full)
 }
 
 interface Refs {
@@ -89,9 +53,27 @@ function getRefs(): Refs | null {
   return { stream, form, input, suggest }
 }
 
-function appendBlock(stream: HTMLElement, command: string): HTMLElement {
-  const block = el('div', 'cs-block')
+function tokenize(line: string): string[] {
+  const out: string[] = []
+  let cur = ''
+  let quote: '"' | "'" | null = null
+  for (const ch of line) {
+    if (quote) {
+      if (ch === quote) quote = null
+      else cur += ch
+    } else if (ch === '"' || ch === "'") {
+      quote = ch
+    } else if (/\s/.test(ch)) {
+      if (cur) (out.push(cur), (cur = ''))
+    } else {
+      cur += ch
+    }
+  }
+  if (cur) out.push(cur)
+  return out
+}
 
+function appendCmdLine(stream: HTMLElement, command: string): void {
   const cmdLine = el('div', 'cs-line cs-cmd')
   const host = el('span', 'ci-host', 'kevin@gamez')
   const sep = el('span', 'ci-sep', '~')
@@ -101,32 +83,206 @@ function appendBlock(stream: HTMLElement, command: string): HTMLElement {
   cmdLine.appendChild(sep)
   cmdLine.appendChild(prompt)
   cmdLine.appendChild(text)
-  block.appendChild(cmdLine)
-
-  const out = el('div', 'cs-line cs-out')
-  block.appendChild(out)
-
-  stream.appendChild(block)
-  stream.scrollTop = stream.scrollHeight
-  return out
-}
-
-function appendTool(stream: HTMLElement, label: string): void {
-  const tool = el('div', 'cs-line cs-tool')
-  tool.innerHTML = `<span class="cs-tool-tag">[${escape(label.split(' · ')[0])}]</span> ${escape(
-    label.split(' · ').slice(1).join(' · ')
-  )}`
-  stream.appendChild(tool)
+  stream.appendChild(cmdLine)
   stream.scrollTop = stream.scrollHeight
 }
 
-async function run(refs: Refs, text: string, history: ChatMessage[]): Promise<void> {
+function printOut(stream: HTMLElement, html: string, kind: 'out' | 'err' = 'out'): HTMLElement {
+  const line = el('div', 'cs-line cs-' + kind)
+  line.innerHTML = html
+  stream.appendChild(line)
+  stream.scrollTop = stream.scrollHeight
+  return line
+}
+
+function printLines(stream: HTMLElement, lines: string[]): void {
+  for (const l of lines) printOut(stream, l)
+}
+
+// ───────── Built-in commands ─────────
+
+const HELP_LINES = [
+  '<b>built-ins</b>',
+  '  <span class="ac">help</span>           &nbsp;&nbsp;list commands',
+  '  <span class="ac">whoami</span>         &nbsp;&nbsp;one-line bio',
+  '  <span class="ac">about</span>          &nbsp;&nbsp;the long version',
+  '  <span class="ac">experience</span>     &nbsp;&nbsp;trajectory · roles · dates',
+  '  <span class="ac">stack</span>          &nbsp;&nbsp;tools I actually reach for',
+  '  <span class="ac">repos</span>          &nbsp;&nbsp;public github repos',
+  '  <span class="ac">now</span>            &nbsp;&nbsp;what I’m working on this week',
+  '  <span class="ac">contact</span>        &nbsp;&nbsp;email + socials',
+  '  <span class="ac">date</span>           &nbsp;&nbsp;current date',
+  '  <span class="ac">clear</span>          &nbsp;&nbsp;clear the screen',
+  '',
+  '<b>ai</b>',
+  '  <span class="ac">kevin</span> &lt;question&gt;  &nbsp;ask the LLM (powered by Claude)',
+  '  <span class="ac">ask</span> &lt;question&gt;    &nbsp;alias for <span class="ac">kevin</span>',
+]
+
+const ABOUT_LINES = [
+  "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
+  '',
+  '<b>now</b> · founding engineer at <span class="ac">enttor</span> — AI outbound, browser automation,',
+  '       OpenAI pipelines on Next.js + NestJS + Postgres.',
+  '<b>before</b> · founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
+  '<b>school</b> · M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
+  '',
+  'Type <span class="ac">experience</span> for the full timeline, or',
+  '<span class="ac">kevin "your question"</span> to chat with the AI.',
+]
+
+const EXPERIENCE_LINES = [
+  '<span class="muted">Jun 2025 · now</span>      Founding engineer <span class="at">@ Enttor</span>',
+  '                       AI outbound · browser automation · OpenAI pipelines',
+  '',
+  '<span class="muted">Feb 2024 · Mar 2025</span> Founding engineer <span class="at">@ Samsam</span>',
+  '                       E-commerce marketplace · React Native · Next.js',
+  '',
+  '<span class="muted">Jan 2024 · May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
+  '                       Deep-learning specialization · graduate TA',
+  '',
+  '<span class="muted">Jan 2019 · Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
+  '                       Andrés Bello National Distinction · AWS certs',
+]
+
+const STACK_LINES = [
+  '<b>frontend</b>   next.js · react · react native · astro · tailwind',
+  '<b>backend </b>   nestjs · postgres · prisma · supabase · inngest',
+  '<b>ai / ml </b>   openai · pytorch · opencv · browser automation',
+  '<b>infra   </b>   vercel · aws · cloud run · docker',
+]
+
+const REPOS_LINES = [
+  'kevingamez/<span class="ac">personal-site</span>            <span class="muted">typescript · this page</span>',
+  'kevingamez/<span class="ac">AD_ASTRA2023-SpaceInvaders</span>  <span class="muted">python · aerial deforestation, opencv + yolov5</span>',
+  'kevingamez/<span class="ac">Palladium_Chat</span>           <span class="muted">typescript</span>',
+  'kevingamez/<span class="ac">budget-app</span>               <span class="muted">swift</span>',
+  'kevingamez/<span class="ac">GCP-CloudRun</span>             <span class="muted">dockerfile</span>',
+  '',
+  '→ <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a> · 28 public repos',
+]
+
+const NOW_LINES = [
+  'building   · <b>eval-as-a-service</b> at enttor — brand-fit evals over an API',
+  "reading    · <i>A Mathematician's Apology</i>, Hardy. Slim, beautiful.",
+  'thinking   · knot invariants, specifically the Jones polynomial.',
+]
+
+const CONTACT_LINES = [
+  '<b>email   </b>  <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>',
+  '<b>github  </b>  <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>',
+  '<b>linkedin</b>  <a href="https://www.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">linkedin.com/in/kevin-gamez</a>',
+  '<b>x       </b>  <a href="https://x.com/kevin_gamez" target="_blank" rel="noopener">x.com/kevin_gamez</a>',
+]
+
+type CommandFn = (
+  args: string[],
+  refs: Refs,
+  history: ChatMessage[],
+  raw: string
+) => void | Promise<void>
+
+const COMMANDS: Record<string, CommandFn> = {
+  help: (_a, r) => {
+    printLines(r.stream, HELP_LINES)
+  },
+  whoami: (_a, r) => {
+    printOut(
+      r.stream,
+      'kevin · founding engineer @ <span class="ac">enttor</span> · <span class="muted">bogotá / utc-5</span>'
+    )
+  },
+  about: (_a, r) => {
+    printLines(r.stream, ABOUT_LINES)
+  },
+  experience: (_a, r) => {
+    printLines(r.stream, EXPERIENCE_LINES)
+  },
+  cv: (_a, r) => {
+    printLines(r.stream, EXPERIENCE_LINES)
+  },
+  stack: (_a, r) => {
+    printLines(r.stream, STACK_LINES)
+  },
+  repos: (_a, r) => {
+    printLines(r.stream, REPOS_LINES)
+  },
+  now: (_a, r) => {
+    printLines(r.stream, NOW_LINES)
+  },
+  contact: (_a, r) => {
+    printLines(r.stream, CONTACT_LINES)
+  },
+  date: (_a, r) => {
+    printOut(r.stream, escape(new Date().toString()))
+  },
+  clear: (_a, r) => {
+    r.stream.innerHTML = ''
+  },
+  echo: (a, r) => {
+    printOut(r.stream, escape(a.join(' ')))
+  },
+  ls: (_a, r) => {
+    printOut(
+      r.stream,
+      'about  experience  stack  repos  now  contact  <span class="muted">(try `cat about`)</span>'
+    )
+  },
+  cat: (a, r) => {
+    const f = (a[0] || '').toLowerCase()
+    const map: Record<string, string[]> = {
+      about: ABOUT_LINES,
+      experience: EXPERIENCE_LINES,
+      stack: STACK_LINES,
+      repos: REPOS_LINES,
+      now: NOW_LINES,
+      contact: CONTACT_LINES,
+    }
+    if (!f) {
+      printOut(r.stream, 'cat: missing operand · try `cat about`', 'err')
+      return
+    }
+    const lines = map[f.replace(/\.txt$|\.md$/, '')]
+    if (!lines) {
+      printOut(r.stream, `cat: ${escape(f)}: no such file`, 'err')
+      return
+    }
+    printLines(r.stream, lines)
+  },
+  sudo: (_a, r) => {
+    printOut(
+      r.stream,
+      '<span class="muted">nice try.</span> kevin is not in the sudoers file.',
+      'err'
+    )
+  },
+  exit: (_a, r) => {
+    printOut(r.stream, '<span class="muted">there is no exit. you live here now.</span>')
+  },
+  kevin: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'kevin')),
+  ask: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'ask')),
+}
+
+function stripHead(raw: string, head: string): string {
+  return raw
+    .slice(head.length)
+    .trim()
+    .replace(/^["']|["']$/g, '')
+}
+
+// ───────── AI bridge ─────────
+
+async function runChat(refs: Refs, history: ChatMessage[], question: string): Promise<void> {
+  if (!question) {
+    printOut(refs.stream, '<span class="muted">usage: kevin "your question"</span>', 'err')
+    return
+  }
   refs.input.disabled = true
   refs.input.classList.add('cs-input-busy')
 
-  const out = appendBlock(refs.stream, text)
+  const out = printOut(refs.stream, '', 'out')
   out.classList.add('cm-streaming')
-  history.push({ role: 'user', content: text })
+  history.push({ role: 'user', content: question })
 
   try {
     const res = await fetch('/api/chat', {
@@ -169,8 +325,6 @@ async function run(refs: Refs, text: string, history: ChatMessage[]): Promise<vo
             out.innerHTML = mdLite(acc)
             refs.stream.scrollTop = refs.stream.scrollHeight
           } else if (evt.type === 'tool_use' && evt.name) {
-            const lbl = `${evt.name} · ${evt.input?.query ? `"${evt.input.query}"` : '...'}`
-            // Insert tool call BEFORE current output line
             const tool = el('div', 'cs-line cs-tool')
             tool.innerHTML = `<span class="cs-tool-tag">[${escape(evt.name)}]</span> ${escape(
               evt.input?.query || '...'
@@ -182,15 +336,25 @@ async function run(refs: Refs, text: string, history: ChatMessage[]): Promise<vo
             out.innerHTML = mdLite(acc)
           }
         } catch {
-          /* ignore malformed events */
+          /* ignore */
         }
       }
     }
     history.push({ role: 'assistant', content: acc })
   } catch {
-    const reply = mockReply(text)
-    await streamMockReply(out, reply)
-    history.push({ role: 'assistant', content: reply })
+    const fallback =
+      "the backend isn't wired in this preview (set `ANTHROPIC_API_KEY` in vercel). until then I'm just a shell — try `help`."
+    if (REDUCE_MOTION) out.innerHTML = mdLite(fallback)
+    else {
+      const tokens = fallback.split(/(\s+)/)
+      let acc = ''
+      for (const tok of tokens) {
+        acc += tok
+        out.innerHTML = mdLite(acc)
+        await new Promise((r) => setTimeout(r, 14 + Math.random() * 18))
+      }
+    }
+    history.push({ role: 'assistant', content: fallback })
   } finally {
     out.classList.remove('cm-streaming')
     refs.input.disabled = false
@@ -199,27 +363,70 @@ async function run(refs: Refs, text: string, history: ChatMessage[]): Promise<vo
   }
 }
 
+// ───────── Dispatcher + history ─────────
+
+function dispatch(refs: Refs, history: ChatMessage[], raw: string): void | Promise<void> {
+  const trimmed = raw.trim()
+  if (!trimmed) return
+  appendCmdLine(refs.stream, trimmed)
+  const [head, ...args] = tokenize(trimmed)
+  if (!head) return
+  const fn = COMMANDS[head.toLowerCase()]
+  if (fn) return fn(args, refs, history, trimmed)
+  printOut(
+    refs.stream,
+    `zsh: command not found: ${escape(head)} · try <span class="ac">help</span>`,
+    'err'
+  )
+}
+
 export function initConsole(): void {
   const refs = getRefs()
   if (!refs) return
 
   const history: ChatMessage[] = []
+  const cmdHistory: string[] = []
+  let cmdIdx = 0
 
   refs.form.addEventListener('submit', (e) => {
     e.preventDefault()
-    const text = refs.input.value.trim()
-    if (!text) return
+    const text = refs.input.value
+    if (!text.trim()) return
     refs.input.value = ''
-    void run(refs, text, history)
+    cmdHistory.push(text)
+    cmdIdx = cmdHistory.length
+    void dispatch(refs, history, text)
+  })
+
+  refs.input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      if (cmdIdx > 0) {
+        cmdIdx--
+        refs.input.value = cmdHistory[cmdIdx]
+        e.preventDefault()
+      }
+    } else if (e.key === 'ArrowDown') {
+      if (cmdIdx < cmdHistory.length - 1) {
+        cmdIdx++
+        refs.input.value = cmdHistory[cmdIdx]
+      } else {
+        cmdIdx = cmdHistory.length
+        refs.input.value = ''
+      }
+      e.preventDefault()
+    } else if (e.key === 'l' && e.ctrlKey) {
+      e.preventDefault()
+      refs.stream.innerHTML = ''
+    }
   })
 
   refs.suggest.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement
-    const btn = target.closest<HTMLButtonElement>('button')
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button')
     if (!btn) return
-    const prompt = btn.getAttribute('data-prompt') || btn.textContent?.replace(/^↳\s*/, '') || ''
-    if (!prompt) return
-    void run(refs, prompt, history)
+    const cmd = btn.getAttribute('data-cmd') || btn.textContent?.replace(/^[↳$]\s*/, '') || ''
+    if (!cmd) return
+    refs.input.value = cmd
+    refs.form.requestSubmit()
   })
 
   document.addEventListener('keydown', (e) => {

@@ -27,14 +27,14 @@ const { t } = Astro.props
       </div>
 
       <div class="cs-stream" id="console-stream" aria-live="polite">
-        <pre class="cs-line cs-out">{t.greeting}</pre>
+        <pre class="cs-line cs-out" set:html={t.greeting} />
       </div>
 
-      <div class="cs-suggest" id="console-suggest" aria-label="Preset queries">
-        <button type="button" data-prompt={t.suggest1}>↳ {t.suggest1}</button>
-        <button type="button" data-prompt={t.suggest2}>↳ {t.suggest2}</button>
-        <button type="button" data-prompt={t.suggest3}>↳ {t.suggest3}</button>
-        <button type="button" data-prompt={t.suggest4}>↳ {t.suggest4}</button>
+      <div class="cs-suggest" id="console-suggest" aria-label="Quick commands">
+        <button type="button" data-cmd={t.suggest1}>$ {t.suggest1}</button>
+        <button type="button" data-cmd={t.suggest2}>$ {t.suggest2}</button>
+        <button type="button" data-cmd={t.suggest3}>$ {t.suggest3}</button>
+        <button type="button" data-cmd={t.suggest4}>$ {t.suggest4}</button>
       </div>
 
       <form class="cs-input" id="console-form" autocomplete="off">
