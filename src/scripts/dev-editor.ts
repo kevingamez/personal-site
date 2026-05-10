@@ -182,7 +182,7 @@ function baseExtensions(name: string): Extension[] {
     ]),
     vscodeDark,
     coralTheme,
-    EditorView.contentAttributes.of({ 'aria-label': `Code editor — ${name}` }),
+    EditorView.contentAttributes.of({ 'aria-label': `Code editor - ${name}` }),
   ]
 }
 

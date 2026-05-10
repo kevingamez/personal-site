@@ -1,4 +1,4 @@
-// Conway's Game of Life — hero canvas on the home page.
+// Conway's Game of Life - hero canvas on the home page.
 // Identical behaviour to the original inline IIFE; just typed and module-scoped.
 // Stamp patterns (glider/lwss/pulsar/gun) live in `./stamps`.
 

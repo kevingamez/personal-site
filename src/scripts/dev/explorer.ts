@@ -15,7 +15,7 @@ export function initExplorer(): void {
   outlineListEl = document.getElementById('outline-list')
 }
 
-// Each level of nesting indents by this many pixels — vscode's default.
+// Each level of nesting indents by this many pixels - vscode's default.
 const INDENT_STEP = 8
 
 function setIndent(el: HTMLElement, depth: number): void {
@@ -32,7 +32,7 @@ function makeFolderItem(name: string, key: string, depth: number): HTMLElement {
   div.className = cls
   setIndent(div, depth)
   // The workspace root renders as a section header (uppercase, no folder icon,
-  // just chevron + bold name) — matches the "KEVINGAMEZ" line in vscode.
+  // just chevron + bold name) - matches the "KEVINGAMEZ" line in vscode.
   if (depth > 0) {
     div.appendChild(makeIcon(name, true, isOpen))
   }

@@ -3,14 +3,49 @@
 
 import { logger } from './logger'
 import { pageView, track } from './analytics'
+import { inject as injectVercelAnalytics } from '@vercel/analytics'
+import { injectSpeedInsights } from '@vercel/speed-insights'
 
 const log = logger('boot')
 
 let installed = false
 
+const CLARITY_ID = (import.meta as ImportMeta & { env: Record<string, string> }).env
+  ?.PUBLIC_CLARITY_ID
+
+function loadClarity(id: string): void {
+  if (!id || typeof window === 'undefined') return
+  if (window.clarity) return
+  // Standard Clarity bootstrap (https://clarity.microsoft.com).
+  // Casts narrow the inline IIFE to a typed shape without `any`.
+  const w = window as unknown as { clarity?: unknown }
+  ;(function (c: typeof w, l: Document, a: string, r: string, i: string) {
+    type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[] }
+    const clarityFn: ClarityFn = function (...args: unknown[]): void {
+      ;(clarityFn.q = clarityFn.q || []).push(args)
+    }
+    c.clarity = clarityFn
+    const t = l.createElement(a) as HTMLScriptElement
+    t.async = true
+    t.src = 'https://www.clarity.ms/tag/' + i
+    const y = l.getElementsByTagName(r)[0]
+    y.parentNode?.insertBefore(t, y)
+  })(w, document, 'script', 'head', id)
+}
+
 export function bootstrapClient(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
+
+  // Privacy-first first-party analytics. Both run cookieless by default.
+  try {
+    injectVercelAnalytics()
+    injectSpeedInsights()
+  } catch (e) {
+    log.warn('vercel analytics inject failed', e)
+  }
+
+  if (CLARITY_ID) loadClarity(CLARITY_ID)
 
   window.addEventListener('error', (e) => {
     log.error('uncaught error', e.error ?? e.message)

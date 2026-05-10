@@ -39,7 +39,7 @@
   margin-bottom: 32px;
 }
 
-/* The terminal — dark translucent glass floating on cream */
+/* The terminal - dark translucent glass floating on cream */
 .console-shell {
   position: relative;
   background: rgba(20, 18, 28, 0.78);
@@ -230,7 +230,7 @@
   }
 }
 
-/* Suggestions row — looks like CLI hints */
+/* Suggestions row - looks like CLI hints */
 .cs-suggest {
   display: flex;
   gap: 6px;

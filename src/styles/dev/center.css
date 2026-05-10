@@ -6,7 +6,7 @@
   position: relative;
   isolation: isolate;
 }
-/* Ambient gradient behind the editor — gives the liquid glass blur
+/* Ambient gradient behind the editor - gives the liquid glass blur
    something to refract. Subtle coral + cool tint. */
 .center::before {
   content: '';

@@ -59,9 +59,9 @@ export const en: HomeStrings = {
     blurb:
       'Founding engineer, full-stack, deep-learning grad. Short version below; long version over coffee.',
     p1Html:
-      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound engine from the ground up — the\n              browser automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them,\n              the Next.js dashboards where it all lives, and the NestJS APIs and Inngest queues holding it together.",
+      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound engine from the ground up: the\n              browser automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them,\n              the Next.js dashboards where it all lives, and the NestJS APIs and Inngest queues holding it together.",
     p2Html:
-      'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace — a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
+      'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace with a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
     p3Html:
       'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and a minor in management. The Game of Life on the right has been\n              alive since 1970; I just gave it a frame.',
     qfBased: 'Based',
@@ -97,7 +97,7 @@ export const en: HomeStrings = {
     e1Year: 'Jun 2025 · now',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
-      'I built the system that finds the right prospects on Instagram and LinkedIn, qualifies them with AI, and\n                starts real conversations — at scale. Full-stack: Next.js dashboards, NestJS APIs, Inngest queues, all\n                running on Vercel and Supabase.',
+      'I built the system that finds the right prospects on Instagram and LinkedIn, qualifies them with AI, and\n                starts real conversations, at scale. Full-stack: Next.js dashboards, NestJS APIs, Inngest queues, all\n                running on Vercel and Supabase.',
     e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · e-commerce platform',
     e2Desc:
@@ -106,7 +106,7 @@ export const en: HomeStrings = {
     e3RoleHtml: 'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
     e3Meta: 'Deep-learning specialization · graduate TA',
     e3Desc:
-      'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Taught\n                as a graduate TA in parallel — designed labs, ran office hours, helped underclassmen ship their first\n                models.',
+      'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Taught\n                as a graduate TA in parallel; designed labs, ran office hours, helped underclassmen ship their first\n                models.',
     e4Year: 'Jan 2019 · Dec 2023',
     e4RoleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
     e4Meta: 'Minor in management',
@@ -125,7 +125,7 @@ export const en: HomeStrings = {
         year: '2022',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
         meta: 'Certification · Amazon Web Services',
-        desc: 'Building, deploying, and scaling cloud-native apps on AWS — IAM, Lambda, DynamoDB, S3, the rest of the toolbox.',
+        desc: 'Building, deploying, and scaling cloud-native apps on AWS: IAM, Lambda, DynamoDB, S3, the rest of the toolbox.',
       },
       {
         year: '2021',
@@ -218,7 +218,7 @@ export const en: HomeStrings = {
     secNum: '§08 · Wanderings',
     titleHtml: 'A small heatmap of <i>where I’ve been.</i>',
     blurb:
-      'Pan, zoom, hover. Heat blooms scale with how long I spent there — Bogotá glows for a reason.',
+      'Pan, zoom, hover. Heat blooms scale with how long I spent there; Bogotá glows for a reason.',
     countries: 'countries',
     cities: 'cities',
     since: 'since',
@@ -232,7 +232,7 @@ export const en: HomeStrings = {
     secNum: '§09 · Console',
     titleHtml: 'A real shell. <i>And an AI, if you ask.</i>',
     blurb:
-      'Type a command — <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… Need a real conversation? <span class="ac">kevin "your question"</span> opens the LLM.',
+      'Type a command: <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… Need a real conversation? <span class="ac">kevin "your question"</span> opens the LLM.',
     promptLabel: 'kevin@gamez · ~',
     streaming: 'ready',
     greeting:

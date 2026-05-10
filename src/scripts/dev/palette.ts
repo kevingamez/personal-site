@@ -1,4 +1,4 @@
-// ⌘P command palette — fuzzy file search across the virtual FS.
+// ⌘P command palette - fuzzy file search across the virtual FS.
 
 import { FS, PROJECT_NAME, type DirNode } from './state'
 import { fuzzyScore } from './fuzzy'

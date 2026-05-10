@@ -1,4 +1,4 @@
-/* Now grid styles (legacy — unimported, kept to satisfy formatter). */
+/* Now grid styles (legacy - unimported, kept to satisfy formatter). */
 .now-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

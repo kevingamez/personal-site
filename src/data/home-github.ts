@@ -189,7 +189,10 @@ async function buildStats(): Promise<HomeStats | null> {
     // Top repos by stars, falling back to most recently updated for the trailing slots.
     const topRepos: RepoCard[] = repos
       .slice()
-      .sort((a, b) => b.stargazers_count - a.stargazers_count || b.updated_at.localeCompare(a.updated_at))
+      .sort(
+        (a, b) =>
+          b.stargazers_count - a.stargazers_count || b.updated_at.localeCompare(a.updated_at)
+      )
       .slice(0, 5)
       .map((r) => ({
         name: r.name,
@@ -215,7 +218,7 @@ async function buildStats(): Promise<HomeStats | null> {
   }
 }
 
-// Public entry point — used by frontmatter in src/pages/index.astro and
+// Public entry point - used by frontmatter in src/pages/index.astro and
 // src/pages/es/index.astro. Returns cached stats if recent, refetches and
 // rewrites cache when stale, falls back to stale cache if the refetch fails.
 export async function loadHomeStats(): Promise<HomeStats> {
@@ -227,7 +230,7 @@ export async function loadHomeStats(): Promise<HomeStats> {
   }
   if (cached) return cached
   // Last-resort fallback so the build never fails. Counters animate to 0 if
-  // none of the network paths land — visually the section just goes quiet.
+  // none of the network paths land - visually the section just goes quiet.
   return {
     publicRepos: 0,
     languagesShipped: 0,

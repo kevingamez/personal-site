@@ -59,9 +59,9 @@ export const es: HomeStrings = {
     blurb:
       'Founding engineer, full-stack, recién egresado de deep learning. La corta abajo; la larga, con café.',
     p1Html:
-      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero — la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
+      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero: la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
     p2Html:
-      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce — una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
+      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
     p3Html:
       'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El Juego\n              de la vida de la derecha está vivo desde 1970; yo solo le puse marco.',
     qfBased: 'Ubicación',
@@ -97,7 +97,7 @@ export const es: HomeStrings = {
     e1Year: 'Jun 2025 · hoy',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
-      'Construí el sistema que encuentra los prospectos correctos en Instagram y LinkedIn, los califica con IA y\n                arranca conversaciones reales — a escala. Full-stack: dashboards en Next.js, APIs en NestJS, colas en\n                Inngest, todo sobre Vercel y Supabase.',
+      'Construí el sistema que encuentra los prospectos correctos en Instagram y LinkedIn, los califica con IA y\n                arranca conversaciones reales, a escala. Full-stack: dashboards en Next.js, APIs en NestJS, colas en\n                Inngest, todo sobre Vercel y Supabase.',
     e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · plataforma de e-commerce',
     e2Desc:
@@ -107,7 +107,7 @@ export const es: HomeStrings = {
       'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
     e3Meta: 'Especialización en deep learning · TA de posgrado',
     e3Desc:
-      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo trabajé como teaching assistant de posgrado — diseñé labs, abrí horarios de consulta y ayudé a\n                pregrados a sacar sus primeros modelos.',
+      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo trabajé como teaching assistant de posgrado; diseñé labs, abrí horarios de consulta y ayudé a\n                pregrados a sacar sus primeros modelos.',
     e4Year: 'Ene 2019 · Dic 2023',
     e4RoleHtml:
       'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
@@ -127,7 +127,7 @@ export const es: HomeStrings = {
         year: '2022',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
         meta: 'Certificación · Amazon Web Services',
-        desc: 'Construir, desplegar y escalar apps cloud-native en AWS — IAM, Lambda, DynamoDB, S3 y el resto del kit.',
+        desc: 'Construir, desplegar y escalar apps cloud-native en AWS: IAM, Lambda, DynamoDB, S3 y el resto del kit.',
       },
       {
         year: '2021',
@@ -222,7 +222,7 @@ export const es: HomeStrings = {
     secNum: '§08 · Andanzas',
     titleHtml: 'Un pequeño mapa de <i>donde he estado.</i>',
     blurb:
-      'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo — Bogotá brilla por algo.',
+      'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo; Bogotá brilla por algo.',
     countries: 'países',
     cities: 'ciudades',
     since: 'desde',
@@ -236,7 +236,7 @@ export const es: HomeStrings = {
     secNum: '§09 · Consola',
     titleHtml: 'Una shell real. <i>Y una IA, si la llamas.</i>',
     blurb:
-      'Escribe un comando — <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… ¿Quieres conversar? <span class="ac">kevin "tu pregunta"</span> abre la IA.',
+      'Escribe un comando: <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… ¿Quieres conversar? <span class="ac">kevin "tu pregunta"</span> abre la IA.',
     promptLabel: 'kevin@gamez · ~',
     streaming: 'listo',
     greeting:

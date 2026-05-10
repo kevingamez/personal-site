@@ -1,6 +1,6 @@
 // Tiny markdown→html renderer used for CHANGELOG / README rendering in the
 // non-editor workspaces. Supports h1/h2/h3, unordered lists, paragraphs and
-// inline `code` spans — that's all the dev page needs.
+// inline `code` spans - that's all the dev page needs.
 
 import { esc } from './highlight'
 
