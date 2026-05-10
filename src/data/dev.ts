@@ -1,7 +1,14 @@
 // Composes the JSON payload that the dev-mode page hands off to the client
 // runtime via the `<script id="dev-data">` carrier.
 import { loadLocalFiles, type LocalFiles } from './dev-files'
-import { GH_USER, generateOverview, loadGithubRepos, type Repo } from './dev-github'
+import {
+  GH_USER,
+  generateOverview,
+  loadGithubRepos,
+  loadRecentCommits,
+  type Repo,
+  type RecentCommit,
+} from './dev-github'
 
 export interface DevData {
   user: string
@@ -17,17 +24,21 @@ export interface DevData {
     readme: string
   }>
   overview: string
+  recentCommits: RecentCommit[]
 }
 
 export async function buildDevData(): Promise<DevData> {
   const localFiles = loadLocalFiles()
-  const githubRepos: Repo[] = await loadGithubRepos()
+  const [githubRepos, recentCommits] = await Promise.all([
+    loadGithubRepos(),
+    loadRecentCommits(),
+  ])
   const overview = generateOverview(githubRepos)
   return {
     user: GH_USER,
     localProjectName: 'personal-site',
     localFiles,
-    githubRepos: githubRepos.map((r) => ({
+    githubRepos: githubRepos.map((r: Repo) => ({
       name: r.name,
       description: r.description,
       url: r.url,
@@ -37,6 +48,7 @@ export async function buildDevData(): Promise<DevData> {
       readme: r.readme,
     })),
     overview,
+    recentCommits,
   }
 }
 

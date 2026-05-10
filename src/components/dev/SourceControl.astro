@@ -1,0 +1,105 @@
+---
+import { loadRecentCommits } from "@/data/dev-github"
+
+// Build-time fetch of recent commits across all public repos via GitHub
+// Events API. Cached 6h. Falls back to empty list if unreachable.
+const commits = await loadRecentCommits()
+
+const fmtRel = (iso: string): string => {
+  const diff = Date.now() - new Date(iso).getTime()
+  const m = Math.round(diff / 60000)
+  if (m < 1) return "now"
+  if (m < 60) return `${m}m`
+  const h = Math.round(m / 60)
+  if (h < 24) return `${h}h`
+  const d = Math.round(h / 24)
+  if (d < 30) return `${d}d`
+  return `${Math.round(d / 30)}mo`
+}
+
+// Synthetic "Changes" section - the working-tree dirty files. Shows the
+// real personal-site files we've been editing in this session, so it feels
+// believable even though they're hardcoded.
+const changes = [
+  { path: "src/scripts/home/dev-transition.ts", status: "M" },
+  { path: "src/styles/home/dev-transition.css", status: "M" },
+  { path: "src/components/dev/SourceControl.astro", status: "A" },
+]
+const staged = [{ path: "src/data/dev-github.ts", status: "M" }]
+---
+
+<aside class="sc-panel" id="source-control" hidden>
+  <div class="sc-head">
+    <span class="sc-title">SOURCE CONTROL</span>
+    <span class="sc-actions"
+      ><span class="material-symbols-outlined" title="Refresh">refresh</span><span
+        class="material-symbols-outlined"
+        title="More">more_horiz</span
+      ></span
+    >
+  </div>
+
+  <div class="sc-msg-row">
+    <input class="sc-msg" placeholder="Message (⌘Enter to commit on 'main')" disabled />
+    <button class="sc-commit" disabled>✓ Commit</button>
+  </div>
+
+  <div class="sc-branch">
+    <span class="material-symbols-outlined">commit</span>
+    <span><b>main</b><span class="sc-up">↑1 ↓0</span></span>
+    <span class="sc-grow"></span>
+    <span class="sc-sync" title="Sync changes">⟳</span>
+  </div>
+
+  <details class="sc-section" open>
+    <summary>
+      <span class="sc-caret">▾</span>Staged Changes <span class="sc-count">{staged.length}</span>
+    </summary>
+    {
+      staged.map((f) => (
+        <div class="sc-file">
+          <span class="sc-fpath">{f.path}</span>
+          <span class={`sc-st sc-st-${f.status}`}>{f.status}</span>
+        </div>
+      ))
+    }
+  </details>
+
+  <details class="sc-section" open>
+    <summary>
+      <span class="sc-caret">▾</span>Changes <span class="sc-count">{changes.length}</span>
+    </summary>
+    {
+      changes.map((f) => (
+        <div class="sc-file">
+          <span class="sc-fpath">{f.path}</span>
+          <span class={`sc-st sc-st-${f.status}`}>{f.status}</span>
+        </div>
+      ))
+    }
+  </details>
+
+  <details class="sc-section" open>
+    <summary>
+      <span class="sc-caret">▾</span>Recent Commits <span class="sc-count">{commits.length}</span>
+    </summary>
+    <div class="sc-commits">
+      {
+        commits.length === 0 ? (
+          <div class="sc-empty">No public push events in the last 90 days.</div>
+        ) : (
+          commits.map((c) => (
+            <a class="sc-commit-row" href={c.url} target="_blank" rel="noopener">
+              <span class="sc-sha">{c.shaShort}</span>
+              <span class="sc-msg-text">{c.message}</span>
+              <span class="sc-meta">
+                <span class="sc-repo">{c.repoShort}</span>
+                <span class="sc-time">{fmtRel(c.ts)}</span>
+              </span>
+            </a>
+          ))
+        )
+      }
+    </div>
+  </details>
+</aside>
