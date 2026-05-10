@@ -78,7 +78,8 @@ function init(): void {
   addLine(
     '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat README.md</span> · <span class="ac">tree</span>'
   )
-  addLine('<span class="pr">' + esc(pathDisplay(state.cwd)) + ' $</span> <span class="cu"></span>')
+  // No trailing $-with-cursor line: the live input bar below already plays
+  // that role. Two visual prompts read like duplicate terminals.
   openFile([PROJECT_NAME, 'README.md'], 'init')
 }
 
