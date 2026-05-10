@@ -13,10 +13,12 @@ import Console from "@/components/home/Console.astro"
 import Contact from "@/components/home/Contact.astro"
 import Footer from "@/components/home/Footer.astro"
 import { en } from "@/content/home-en"
+import { loadHomeStats } from "@/data/home-github"
 import "@/styles/home/index.css"
 
 const buildId = "a7f3c91"
 const t = en
+const githubStats = await loadHomeStats()
 ---
 
 <Layout meta={t.meta}>
@@ -28,7 +30,7 @@ const t = en
   <Skills t={t.skills} />
   <Experience t={t.experience} />
   <Work t={t.work} />
-  <Github t={t.github} />
+  <Github t={t.github} stats={githubStats} />
   <Now t={t.now} />
   <Bookshelf t={t.bookshelf} />
   <Console t={t.console} />

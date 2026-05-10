@@ -1,11 +1,14 @@
 ---
 import type { HomeStrings } from "@/content/home"
+import type { HomeStats } from "@/data/home-github"
+import { GH_USER } from "@/data/dev-github"
 
 interface Props {
   t: HomeStrings["github"]
+  stats: HomeStats
 }
 
-const { t } = Astro.props
+const { t, stats } = Astro.props
 ---
 
 <section id="github">
@@ -21,17 +24,17 @@ const { t } = Astro.props
       <div class="gh-banner-cap">{t.snapshot}</div>
       <div class="gh-stats-row">
         <div class="gh-stat">
-          <div class="gh-stat-num" data-target="28" data-format="plain">0</div>
+          <div class="gh-stat-num" data-target={stats.publicRepos} data-format="plain">0</div>
           <div class="gh-stat-lbl">{t.publicRepos}</div>
           <div class="gh-stat-sub">{t.publicReposSub}</div>
         </div>
         <div class="gh-stat">
-          <div class="gh-stat-num" data-target="8" data-format="plain">0</div>
+          <div class="gh-stat-num" data-target={stats.languagesShipped} data-format="plain">0</div>
           <div class="gh-stat-lbl">{t.languagesShipped}</div>
           <div class="gh-stat-sub">{t.languagesShippedSub}</div>
         </div>
         <div class="gh-stat">
-          <div class="gh-stat-num" data-target="7" data-format="plain">0</div>
+          <div class="gh-stat-num" data-target={stats.yearsOnGithub} data-format="plain">0</div>
           <div class="gh-stat-lbl">{t.yearsOnGithub}</div>
           <div class="gh-stat-sub">{t.yearsOnGithubSub}</div>
         </div>
@@ -42,24 +45,21 @@ const { t } = Astro.props
           <span><b>{t.acrossPublicRepos}</b></span>
         </div>
         <div class="gh-langbar-track">
-          <span class="gh-langbar-seg" data-pct="33" style="background:#3178c6"></span>
-          <span class="gh-langbar-seg" data-pct="27" style="background:#3572A5"></span>
-          <span class="gh-langbar-seg" data-pct="7" style="background:#F05138"></span>
-          <span class="gh-langbar-seg" data-pct="7" style="background:#f1e05a"></span>
-          <span class="gh-langbar-seg" data-pct="7" style="background:#00B4AB"></span>
-          <span class="gh-langbar-seg" data-pct="7" style="background:#384d54"></span>
-          <span class="gh-langbar-seg" data-pct="7" style="background:#563d7c"></span>
-          <span class="gh-langbar-seg" data-pct="5" style="background:#DA5B0B"></span>
+          {
+            stats.languageMix.map((l) => (
+              <span class="gh-langbar-seg" data-pct={l.pct} style={`background:${l.color}`} />
+            ))
+          }
         </div>
         <div class="gh-langbar-legend">
-          <span><i style="background:#3178c6"></i>TypeScript · 33%</span>
-          <span><i style="background:#3572A5"></i>Python · 27%</span>
-          <span><i style="background:#F05138"></i>Swift · 7%</span>
-          <span><i style="background:#f1e05a"></i>JavaScript · 7%</span>
-          <span><i style="background:#00B4AB"></i>Dart · 7%</span>
-          <span><i style="background:#384d54"></i>Dockerfile · 7%</span>
-          <span><i style="background:#563d7c"></i>CSS · 7%</span>
-          <span><i style="background:#DA5B0B"></i>Jupyter · 5%</span>
+          {
+            stats.languageMix.map((l) => (
+              <span>
+                <i style={`background:${l.color}`} />
+                {l.name} · {l.pct}%
+              </span>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -106,56 +106,25 @@ const { t } = Astro.props
       </div>
       <div>
         <div class="repos">
-          <a class="repo" href="https://github.com/kevingamez/personal-site" target="_blank" rel="noopener">
-            <div>
-              <div class="nm">kevingamez / personal-site</div>
-              <div class="desc">{t.repoSiteDesc}</div>
-            </div>
-            <div class="stat">
-              <span><span class="lang" style="background:#3178c6"></span>TypeScript</span>
-            </div>
-          </a>
-          <a
-            href="https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders"
-            class="repo"
-            target="_blank"
-            rel="noopener"
-          >
-            <div>
-              <div class="nm">kevingamez / AD_ASTRA2023-SpaceInvaders</div>
-              <div class="desc">{t.repoSpaceDesc}</div>
-            </div>
-            <div class="stat">
-              <span><span class="lang" style="background:#3572A5"></span>Python</span>
-            </div>
-          </a>
-          <a href="https://github.com/kevingamez/Palladium_Chat" class="repo" target="_blank" rel="noopener">
-            <div>
-              <div class="nm">kevingamez / Palladium_Chat</div>
-              <div class="desc">{t.repoChatDesc}</div>
-            </div>
-            <div class="stat">
-              <span><span class="lang" style="background:#3178c6"></span>TypeScript</span>
-            </div>
-          </a>
-          <a href="https://github.com/kevingamez/budget-app" class="repo" target="_blank" rel="noopener">
-            <div>
-              <div class="nm">kevingamez / budget-app</div>
-              <div class="desc">{t.repoBudgetDesc}</div>
-            </div>
-            <div class="stat">
-              <span><span class="lang" style="background:#F05138"></span>Swift</span>
-            </div>
-          </a>
-          <a href="https://github.com/kevingamez/GCP-CloudRun" class="repo" target="_blank" rel="noopener">
-            <div>
-              <div class="nm">kevingamez / GCP-CloudRun</div>
-              <div class="desc">{t.repoCloudDesc}</div>
-            </div>
-            <div class="stat">
-              <span><span class="lang" style="background:#384d54"></span>Dockerfile</span>
-            </div>
-          </a>
+          {
+            stats.topRepos.map((r) => (
+              <a class="repo" href={r.url} target="_blank" rel="noopener">
+                <div>
+                  <div class="nm">
+                    {GH_USER} / {r.name}
+                  </div>
+                  <div class="desc">{r.description}</div>
+                </div>
+                <div class="stat">
+                  {r.stars > 0 && <span>★ {r.stars}</span>}
+                  <span>
+                    <span class="lang" style={`background:${r.color}`} />
+                    {r.language}
+                  </span>
+                </div>
+              </a>
+            ))
+          }
         </div>
       </div>
     </div>
