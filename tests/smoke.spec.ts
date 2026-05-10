@@ -6,12 +6,32 @@ const routes = [
   { path: '/dev', title: /Kevin G[áa]mez|dev/i },
 ]
 
+// Ignore noise that's expected when running against the preview server:
+// - third-party analytics scripts (Vercel, Clarity, GA) that need real
+//   prod hosts to respond, and 404 on file:// preview / static deploys.
+// - the dev console hits /api/chat which isn't routed by `astro preview`.
+// - missing favicons / og-image variants in dev.
+// We only care about real JS errors from our own code.
+function isThirdPartyResourceError(text: string): boolean {
+  return (
+    text.includes('Failed to load resource') ||
+    text.includes('vercel-scripts.com') ||
+    text.includes('clarity.ms') ||
+    text.includes('google-analytics.com') ||
+    text.includes('googletagmanager.com') ||
+    text.includes('/api/chat')
+  )
+}
+
 for (const { path, title } of routes) {
   test(`${path} renders without console errors`, async ({ page }) => {
     const errors: string[] = []
-    page.on('pageerror', (e) => errors.push(e.message))
+    page.on('pageerror', (e) => errors.push(`[pageerror] ${e.message}`))
     page.on('console', (msg) => {
-      if (msg.type() === 'error') errors.push(msg.text())
+      if (msg.type() !== 'error') return
+      const text = msg.text()
+      if (isThirdPartyResourceError(text)) return
+      errors.push(text)
     })
 
     const response = await page.goto(path)

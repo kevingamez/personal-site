@@ -15,6 +15,11 @@ const firstYear = travel
   .map((p) => p.firstYear)
   .filter((y): y is number => typeof y === "number")
   .reduce((min, y) => Math.min(min, y), new Date().getFullYear())
+
+// Google Maps API key - HTTP-referrer restricted in Google Cloud Console so
+// it's safe to embed in client HTML. Falls back to empty string at build time
+// if not set, in which case the map silently falls back to a static gradient.
+const gmapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY ?? ""
 ---
 
 <section id="wanderings">
@@ -28,7 +33,7 @@ const firstYear = travel
     </div>
 
     <div class="map-frame">
-      <div id="travel-map" data-travel={JSON.stringify(travel)}></div>
+      <div id="travel-map" data-travel={JSON.stringify(travel)} data-gmaps-key={gmapsKey}></div>
       <div class="map-bar">
         <div class="map-bar-row">
           <span><b>{countries}</b> {t.countries}</span>
