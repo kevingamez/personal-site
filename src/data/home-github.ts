@@ -179,25 +179,20 @@ type RepoWithLangs = {
 
 async function fetchAllAffiliationRepos(): Promise<RepoWithLangs[] | null> {
   if (!process.env.GITHUB_TOKEN) return null
-  const query = `query AllRepos {
+  // PUBLIC + OWNED only. Notes:
+  //   - We ignore private repos for the language mix because the fine-grained
+  //     PAT can't see Kevin's work orgs (Enttor / Samsam) so private bytes are
+  //     dominated by old school projects (Jupyter notebooks etc.) and skew the
+  //     mix in a way that doesn't represent his actual "shipping voice".
+  //   - We also exclude `repositoriesContributedTo` for the same reason: PRs
+  //     to external repos pull in foreign code.
+  const query = `query OwnedPublic {
     viewer {
       repositories(
         first: 100
         isFork: false
         ownerAffiliations: [OWNER]
-      ) {
-        nodes {
-          name
-          isPrivate
-          languages(first: 20, orderBy: { field: SIZE, direction: DESC }) {
-            edges { size node { name } }
-          }
-        }
-      }
-      repositoriesContributedTo(
-        first: 100
-        includeUserRepositories: false
-        contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]
+        privacy: PUBLIC
       ) {
         nodes {
           name
@@ -221,38 +216,45 @@ async function fetchAllAffiliationRepos(): Promise<RepoWithLangs[] | null> {
     languages?: { edges: { size: number; node: { name: string } }[] }
   }
   const json = (await res.json()) as {
-    data?: {
-      viewer?: {
-        repositories?: { nodes: RepoNode[] }
-        repositoriesContributedTo?: { nodes: RepoNode[] }
-      }
-    }
+    data?: { viewer?: { repositories?: { nodes: RepoNode[] } } }
   }
   const owned = json.data?.viewer?.repositories?.nodes ?? []
-  const contributed = json.data?.viewer?.repositoriesContributedTo?.nodes ?? []
-  // Dedupe (a contributed repo could in theory overlap with owned).
-  const map = new Map<string, RepoWithLangs>()
-  for (const r of [...owned, ...contributed]) {
-    if (!r) continue
-    const key = `${r.isPrivate ? 'priv' : 'pub'}::${r.name}`
-    if (map.has(key)) continue
-    map.set(key, {
-      name: r.name,
-      isPrivate: r.isPrivate,
-      langs: (r.languages?.edges ?? []).map((e) => ({
-        name: e.node.name,
-        size: e.size,
-      })),
-    })
-  }
-  return Array.from(map.values())
+  return owned.map((r) => ({
+    name: r.name,
+    isPrivate: r.isPrivate,
+    langs: (r.languages?.edges ?? []).map((e) => ({ name: e.node.name, size: e.size })),
+  }))
 }
 
-async function fetchContribCalendar(): Promise<ContribCalendar | null> {
+function streaksOf(days: ContribDay[]): { longest: number; current: number } {
+  let longest = 0
+  let run = 0
+  for (const d of days) {
+    if (d.count > 0) {
+      run++
+      if (run > longest) longest = run
+    } else {
+      run = 0
+    }
+  }
+  let current = 0
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].count > 0) current++
+    else break
+  }
+  return { longest, current }
+}
+
+async function fetchContribCalendarGraphQL(): Promise<ContribCalendar | null> {
   if (!process.env.GITHUB_TOKEN) return null
-  const query = `query Contribs($login: String!) {
+  // Explicit window: last 12 months ending today. Without `from`/`to` GitHub
+  // returns the calendar year, which is shorter early in the year.
+  const to = new Date()
+  const from = new Date(to.getTime() - 365 * 24 * 60 * 60 * 1000)
+  const query = `query Contribs($login: String!, $from: DateTime!, $to: DateTime!) {
     user(login: $login) {
-      contributionsCollection {
+      contributionsCollection(from: $from, to: $to) {
+        restrictedContributionsCount
         contributionCalendar {
           totalContributions
           weeks {
@@ -269,13 +271,17 @@ async function fetchContribCalendar(): Promise<ContribCalendar | null> {
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: authHeaders({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ query, variables: { login: GH_USER } }),
+    body: JSON.stringify({
+      query,
+      variables: { login: GH_USER, from: from.toISOString(), to: to.toISOString() },
+    }),
   })
   if (!res.ok) return null
   const json = (await res.json()) as {
     data?: {
       user?: {
         contributionsCollection?: {
+          restrictedContributionsCount?: number
           contributionCalendar?: {
             totalContributions: number
             weeks: {
@@ -290,7 +296,8 @@ async function fetchContribCalendar(): Promise<ContribCalendar | null> {
       }
     }
   }
-  const cal = json.data?.user?.contributionsCollection?.contributionCalendar
+  const cc = json.data?.user?.contributionsCollection
+  const cal = cc?.contributionCalendar
   if (!cal) return null
   const days: ContribDay[] = cal.weeks.flatMap((w) =>
     w.contributionDays.map((d) => ({
@@ -299,28 +306,83 @@ async function fetchContribCalendar(): Promise<ContribCalendar | null> {
       level: LEVEL_MAP[d.contributionLevel] ?? 0,
     }))
   )
-  // Streaks (current = trailing run of >0; longest = max run anywhere).
-  let longest = 0
-  let run = 0
-  for (const d of days) {
-    if (d.count > 0) {
-      run++
-      if (run > longest) longest = run
-    } else {
-      run = 0
+  // `totalContributions` only counts what the *viewer* can see. If the token
+  // can't reach private repos, `restrictedContributionsCount` is the number
+  // of commits hidden from the calendar but real on the profile page. Adding
+  // it gets us closer to GitHub's own visible count.
+  const total = cal.totalContributions + (cc?.restrictedContributionsCount ?? 0)
+  const { longest, current } = streaksOf(days)
+  return { totalContributions: total, days, longestStreak: longest, currentStreak: current }
+}
+
+// Public-profile scraper used when the token can't see private contributions.
+// GitHub serves the calendar as static HTML at /users/<user>/contributions —
+// each cell is `<td class="ContributionCalendar-day" data-date="YYYY-MM-DD"
+// data-level="0..4">` plus an adjacent `<tool-tip>N contributions on Mon Day,
+// Year</tool-tip>`. We parse counts from the tooltip when present and fall
+// back to a level-derived approximation.
+async function fetchContribCalendarPublic(): Promise<ContribCalendar | null> {
+  try {
+    const res = await fetch(`https://github.com/users/${GH_USER}/contributions`, {
+      headers: { 'User-Agent': 'personal-site-build', Accept: 'text/html' },
+    })
+    if (!res.ok) return null
+    const html = await res.text()
+    // GitHub's order varies (`data-date` may come before or after `id`), so
+    // extract each cell tag, then read attributes individually.
+    const cellRe = /<td\b[^>]*class="[^"]*ContributionCalendar-day[^"]*"[^>]*>/g
+    const cells: { id: string | null; date: string; level: 0 | 1 | 2 | 3 | 4 }[] = []
+    let m: RegExpExecArray | null
+    while ((m = cellRe.exec(html)) !== null) {
+      const tag = m[0]
+      const date = tag.match(/data-date="([\d-]+)"/)?.[1]
+      const level = tag.match(/data-level="(\d)"/)?.[1]
+      const id = tag.match(/\sid="([^"]+)"/)?.[1] || null
+      if (!date || !level) continue
+      const lvl = parseInt(level, 10) as 0 | 1 | 2 | 3 | 4
+      cells.push({ id, date, level: lvl })
     }
+    if (!cells.length) return null
+    // Tooltips: `<tool-tip ... for="cellId">N contributions on …</tool-tip>`
+    // (or "No contributions on …"). Build id → count.
+    const tipRe = /<tool-tip\b[^>]*\sfor="([^"]+)"[^>]*>([^<]+)<\/tool-tip>/g
+    const counts = new Map<string, number>()
+    while ((m = tipRe.exec(html)) !== null) {
+      const id = m[1]
+      const text = m[2]
+      const num = text.match(/^(\d+|No)\s+contribution/i)
+      counts.set(id, num ? (num[1].toLowerCase() === 'no' ? 0 : parseInt(num[1], 10)) : 0)
+    }
+    const days: ContribDay[] = cells.map((c) => {
+      const known = c.id ? counts.get(c.id) : undefined
+      // Level → approximate count if no tooltip matched (shouldn't happen on
+      // current GitHub but covers HTML-shape changes).
+      const fallback = c.level === 0 ? 0 : c.level * 2
+      return { date: c.date, count: known ?? fallback, level: c.level }
+    })
+    days.sort((a, b) => a.date.localeCompare(b.date))
+    const total = days.reduce((s, d) => s + d.count, 0)
+    const { longest, current } = streaksOf(days)
+    return { totalContributions: total, days, longestStreak: longest, currentStreak: current }
+  } catch {
+    return null
   }
-  let current = 0
-  for (let i = days.length - 1; i >= 0; i--) {
-    if (days[i].count > 0) current++
-    else break
-  }
-  return {
-    totalContributions: cal.totalContributions,
-    days,
-    longestStreak: longest,
-    currentStreak: current,
-  }
+}
+
+async function fetchContribCalendar(): Promise<ContribCalendar | null> {
+  // Prefer the public-profile scrape because it reflects what GitHub actually
+  // shows on github.com/<user>: public contributions + private contributions
+  // when the user enabled "Include private contributions on my profile".
+  // GraphQL via fine-grained PATs only counts repos the token can read, so it
+  // systematically undercounts (e.g. work repos at Enttor/Samsam).
+  // GraphQL stays as a fallback when the HTML scrape can't reach GitHub
+  // (network blocked, layout change, etc).
+  const [pub, gql] = await Promise.all([
+    fetchContribCalendarPublic(),
+    fetchContribCalendarGraphQL(),
+  ])
+  if (pub && pub.days.length) return pub
+  return gql
 }
 
 // Tiny concurrency limiter so we don't fan-out 50 fetches at once.
@@ -347,18 +409,25 @@ async function buildStats(): Promise<HomeStats | null> {
     ])
     if (!publicRepos.length) return null
 
-    // Inclusive repo set (owner public+private + contributed orgs/external),
-    // when available; falls back to public-only if GraphQL didn't land.
+    // Repo count: strictly the public, non-fork count from REST. The
+    // inclusive GraphQL set is used only for byte aggregation.
     const inclusiveRepos = allRepos ?? []
-    const reposCount = inclusiveRepos.length || publicRepos.length
+    const reposCount = publicRepos.length
 
-    // Aggregate languages by bytes. Prefer the GraphQL inclusive set; fall
-    // back to per-public-repo REST fetches when the token can't reach
-    // GraphQL.
+    // Aggregate languages by bytes. Prefer the GraphQL set (only OWNED PUBLIC
+    // because it carries per-repo language sizes in one round-trip), fall
+    // back to per-repo REST fetches if the token can't reach GraphQL.
+    //
+    // We exclude Jupyter Notebook from the mix: GitHub measures notebooks by
+    // raw byte size, but most of those bytes are base64-encoded output cells
+    // (images, dataframes), not the actual code Kevin writes. Including it
+    // makes a single ML notebook drown out a year of TypeScript.
+    const SKIP_LANGS = new Set(['Jupyter Notebook'])
     const langTotals: Record<string, number> = {}
     if (inclusiveRepos.length) {
       for (const r of inclusiveRepos) {
         for (const l of r.langs) {
+          if (SKIP_LANGS.has(l.name)) continue
           langTotals[l.name] = (langTotals[l.name] || 0) + l.size
         }
       }
@@ -366,6 +435,7 @@ async function buildStats(): Promise<HomeStats | null> {
       const allLangs = await pMap(publicRepos, 6, (r) => fetchRepoLanguages(r.full_name))
       for (const langs of allLangs) {
         for (const [name, bytes] of Object.entries(langs)) {
+          if (SKIP_LANGS.has(name)) continue
           langTotals[name] = (langTotals[name] || 0) + (bytes as number)
         }
       }
