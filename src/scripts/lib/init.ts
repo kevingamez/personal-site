@@ -15,6 +15,9 @@ const CLARITY_ID = (import.meta as ImportMeta & { env: Record<string, string> })
 
 function loadClarity(id: string): void {
   if (!id || typeof window === 'undefined') return
+  // Reject the placeholder value shipped in `.env.example` so we don't
+  // 400-bomb against clarity.ms before the user wires the real ID.
+  if (id === 'replace-me-10chars' || id.startsWith('replace-')) return
   if (window.clarity) return
   // Standard Clarity bootstrap (https://clarity.microsoft.com).
   // Casts narrow the inline IIFE to a typed shape without `any`.
