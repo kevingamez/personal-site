@@ -53,36 +53,19 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
-/* MapLibre overrides - match the editorial aesthetic */
-.maplibregl-ctrl-attrib {
-  background: rgba(10, 10, 15, 0.6) !important;
-  color: rgba(255, 255, 255, 0.6) !important;
-  font-size: 10.5px !important;
-  font-family: 'JetBrains Mono', monospace !important;
+/* Google Maps overrides - hide their default UI chrome */
+#travel-map .gm-style-cc,
+#travel-map a[href^="https://maps.google.com/maps"],
+#travel-map button[title="Toggle fullscreen view"],
+#travel-map button[aria-label="Keyboard shortcuts"] {
+  display: none !important;
 }
-.maplibregl-ctrl-attrib a {
-  color: rgba(255, 255, 255, 0.7) !important;
+#travel-map .gmnoprint a,
+#travel-map .gmnoprint span,
+#travel-map .gm-style-cc {
+  display: none !important;
 }
-.maplibregl-ctrl-attrib-button {
-  background-color: rgba(10, 10, 15, 0.7) !important;
-}
-
-/* Hover popup */
-.wanderings-popup .maplibregl-popup-content {
-  background: var(--ink);
-  color: var(--cream);
-  border: 1px solid var(--coral);
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-}
-.wanderings-popup .maplibregl-popup-content b {
-  color: var(--coral);
-  font-weight: 600;
-}
-.wanderings-popup .maplibregl-popup-tip {
-  display: none;
+/* Soften the Google logo & terms text */
+#travel-map img[alt="Google"] {
+  opacity: 0.4;
 }
