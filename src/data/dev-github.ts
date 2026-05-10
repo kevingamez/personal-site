@@ -183,10 +183,9 @@ async function fetchRecentCommits(): Promise<RecentCommit[]> {
     }
     if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
 
-    const res = await fetch(
-      `https://api.github.com/users/${GH_USER}/events/public?per_page=100`,
-      { headers }
-    )
+    const res = await fetch(`https://api.github.com/users/${GH_USER}/events/public?per_page=100`, {
+      headers,
+    })
     if (!res.ok) return []
     const events = (await res.json()) as RawEvent[]
     if (!Array.isArray(events)) return []

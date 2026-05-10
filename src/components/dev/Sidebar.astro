@@ -46,14 +46,7 @@ const featured = stats.topRepos.slice(0, 4).map((r) => {
       </div>
     </div>
     <div class="spark" id="spark" aria-label="Language mix across public repos">
-      {
-        langBars.map((l) => (
-          <span
-            style={`height:${l.height}%;background:${l.color}`}
-            title={`${l.name} ${l.pct}%`}
-          />
-        ))
-      }
+      {langBars.map((l) => <span style={`height:${l.height}%;background:${l.color}`} title={`${l.name} ${l.pct}%`} />)}
     </div>
   </div>
 

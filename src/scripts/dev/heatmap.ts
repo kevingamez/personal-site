@@ -41,7 +41,12 @@ export function initHeatmap(): void {
   // align so last cell is today. Layout is column-major (week-by-week).
   const tail = levels.slice(-total)
   // Pad front with 0s if the calendar returned fewer days than expected.
-  const grid: number[] = tail.length < total ? Array(total - tail.length).fill(0).concat(tail) : tail
+  const grid: number[] =
+    tail.length < total
+      ? Array(total - tail.length)
+          .fill(0)
+          .concat(tail)
+      : tail
 
   // Render column-major: for each col, render 7 days (top to bottom = sun..sat).
   const cells: number[] = []

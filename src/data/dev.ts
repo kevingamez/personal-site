@@ -29,10 +29,7 @@ export interface DevData {
 
 export async function buildDevData(): Promise<DevData> {
   const localFiles = loadLocalFiles()
-  const [githubRepos, recentCommits] = await Promise.all([
-    loadGithubRepos(),
-    loadRecentCommits(),
-  ])
+  const [githubRepos, recentCommits] = await Promise.all([loadGithubRepos(), loadRecentCommits()])
   const overview = generateOverview(githubRepos)
   return {
     user: GH_USER,
