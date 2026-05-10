@@ -22,12 +22,20 @@ export type RepoCard = {
   stars: number
   url: string
 }
+export type ContribDay = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }
+export type ContribCalendar = {
+  totalContributions: number
+  days: ContribDay[] // ~365 entries, oldest first
+  longestStreak: number
+  currentStreak: number
+}
 export type HomeStats = {
   publicRepos: number
   languagesShipped: number
   yearsOnGithub: number
   languageMix: LangSlice[]
   topRepos: RepoCard[]
+  contribCalendar: ContribCalendar
 }
 
 // GitHub-canonical language colors (subset most likely in this repo set).
@@ -142,6 +150,97 @@ async function fetchRepoLanguages(fullName: string): Promise<Record<string, numb
   return (await res.json()) as Record<string, number>
 }
 
+// Pulls the real contribution calendar via GitHub's GraphQL API. Includes
+// contributions to public AND private repos (and org repos) when the
+// authenticated user is the same as GH_USER and the token carries `repo` +
+// `read:user` scope. Without a token the API rejects unauthenticated GraphQL,
+// so we return null and the page falls back to the placeholder calendar.
+//
+// GraphQL's contributionLevel comes as an enum (NONE / FIRST_QUARTILE / ...)
+// which we collapse to 0-4.
+const LEVEL_MAP: Record<string, 0 | 1 | 2 | 3 | 4> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+}
+
+async function fetchContribCalendar(): Promise<ContribCalendar | null> {
+  if (!process.env.GITHUB_TOKEN) return null
+  const query = `query Contribs($login: String!) {
+    user(login: $login) {
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+              contributionLevel
+            }
+          }
+        }
+      }
+    }
+  }`
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: authHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ query, variables: { login: GH_USER } }),
+  })
+  if (!res.ok) return null
+  const json = (await res.json()) as {
+    data?: {
+      user?: {
+        contributionsCollection?: {
+          contributionCalendar?: {
+            totalContributions: number
+            weeks: {
+              contributionDays: {
+                date: string
+                contributionCount: number
+                contributionLevel: string
+              }[]
+            }[]
+          }
+        }
+      }
+    }
+  }
+  const cal = json.data?.user?.contributionsCollection?.contributionCalendar
+  if (!cal) return null
+  const days: ContribDay[] = cal.weeks.flatMap((w) =>
+    w.contributionDays.map((d) => ({
+      date: d.date,
+      count: d.contributionCount,
+      level: LEVEL_MAP[d.contributionLevel] ?? 0,
+    }))
+  )
+  // Streaks (current = trailing run of >0; longest = max run anywhere).
+  let longest = 0
+  let run = 0
+  for (const d of days) {
+    if (d.count > 0) {
+      run++
+      if (run > longest) longest = run
+    } else {
+      run = 0
+    }
+  }
+  let current = 0
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].count > 0) current++
+    else break
+  }
+  return {
+    totalContributions: cal.totalContributions,
+    days,
+    longestStreak: longest,
+    currentStreak: current,
+  }
+}
+
 // Tiny concurrency limiter so we don't fan-out 50 fetches at once.
 async function pMap<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length)
@@ -158,7 +257,11 @@ async function pMap<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>): Prom
 
 async function buildStats(): Promise<HomeStats | null> {
   try {
-    const [repos, profile] = await Promise.all([fetchAllRepos(), fetchProfile()])
+    const [repos, profile, contribCalendar] = await Promise.all([
+      fetchAllRepos(),
+      fetchProfile(),
+      fetchContribCalendar(),
+    ])
     if (!repos.length) return null
 
     // Aggregate languages by bytes across all public repos
@@ -212,10 +315,15 @@ async function buildStats(): Promise<HomeStats | null> {
       yearsOnGithub,
       languageMix,
       topRepos,
+      contribCalendar: contribCalendar ?? emptyCalendar(),
     }
   } catch {
     return null
   }
+}
+
+function emptyCalendar(): ContribCalendar {
+  return { totalContributions: 0, days: [], longestStreak: 0, currentStreak: 0 }
 }
 
 // Public entry point - used by frontmatter in src/pages/index.astro and
@@ -237,5 +345,6 @@ export async function loadHomeStats(): Promise<HomeStats> {
     yearsOnGithub: 0,
     languageMix: [],
     topRepos: [],
+    contribCalendar: emptyCalendar(),
   }
 }
