@@ -8,115 +8,107 @@ interface Props {
 const { meta } = Astro.props
 
 const jsonLd = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@graph': [
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      '@type': 'Person',
-      '@id': 'https://kevingamez.com/#kevin',
-      name: 'Kevin Gámez',
-      givenName: 'Kevin',
-      familyName: 'Gámez',
-      alternateName: 'Kevin Gamez',
-      url: 'https://kevingamez.com',
-      image: 'https://kevingamez.com/kevin.jpg',
-      jobTitle: 'Founding Engineer',
+      "@type": "Person",
+      "@id": "https://kevingamez.com/#kevin",
+      name: "Kevin Gámez",
+      givenName: "Kevin",
+      familyName: "Gámez",
+      alternateName: "Kevin Gamez",
+      url: "https://kevingamez.com",
+      image: "https://kevingamez.com/kevin.jpg",
+      jobTitle: "Founding Engineer",
       description:
-        'Founding engineer at Enttor (AI-powered outbound: browser automation, OpenAI pipelines). M.Sc. in deep learning, Universidad de los Andes.',
-      email: 'mailto:kevingamez.kg@gmail.com',
+        "Founding engineer at Enttor (AI-powered outbound: browser automation, OpenAI pipelines). M.Sc. in deep learning, Universidad de los Andes.",
+      email: "mailto:kevingamez.kg@gmail.com",
       worksFor: {
-        '@type': 'Organization',
-        '@id': 'https://www.enttor.ai/#org',
-        name: 'Enttor',
-        url: 'https://www.enttor.ai/',
-        description: 'AI-powered outbound platform · browser automation, LLM pipelines.',
+        "@type": "Organization",
+        "@id": "https://www.enttor.ai/#org",
+        name: "Enttor",
+        url: "https://www.enttor.ai/",
+        description: "AI-powered outbound platform · browser automation, LLM pipelines.",
       },
       hasOccupation: [
         {
-          '@type': 'Occupation',
-          name: 'Founding Engineer',
-          occupationLocation: { '@type': 'City', name: 'New York' },
+          "@type": "Occupation",
+          name: "Founding Engineer",
+          occupationLocation: { "@type": "City", name: "New York" },
           skills:
-            'TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI, browser automation, LLM pipelines',
+            "TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI, browser automation, LLM pipelines",
         },
       ],
       knowsAbout: [
-        'AI outbound',
-        'Browser automation',
-        'LLM pipelines',
-        'TypeScript',
-        'Next.js',
-        'NestJS',
-        'Prisma',
-        'PostgreSQL',
-        'Python',
-        'Deep learning',
-        'Computer vision',
-        'OpenCV',
-        'YOLOv5',
-        'FastAPI',
-        'Cellular automata',
+        "AI outbound",
+        "Browser automation",
+        "LLM pipelines",
+        "TypeScript",
+        "Next.js",
+        "NestJS",
+        "Prisma",
+        "PostgreSQL",
+        "Python",
+        "Deep learning",
+        "Computer vision",
+        "OpenCV",
+        "YOLOv5",
+        "FastAPI",
+        "Cellular automata",
       ],
       knowsLanguage: [
-        { '@type': 'Language', name: 'Spanish', alternateName: 'es' },
-        { '@type': 'Language', name: 'English', alternateName: 'en' },
+        { "@type": "Language", name: "Spanish", alternateName: "es" },
+        { "@type": "Language", name: "English", alternateName: "en" },
       ],
       address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Bogotá',
-        addressRegion: 'Cundinamarca',
-        addressCountry: 'CO',
+        "@type": "PostalAddress",
+        addressLocality: "Bogotá",
+        addressRegion: "Cundinamarca",
+        addressCountry: "CO",
       },
       homeLocation: {
-        '@type': 'Place',
-        name: 'Bogotá, Colombia',
-        geo: { '@type': 'GeoCoordinates', latitude: 4.711, longitude: -74.0721 },
+        "@type": "Place",
+        name: "Bogotá, Colombia",
+        geo: { "@type": "GeoCoordinates", latitude: 4.711, longitude: -74.0721 },
       },
       alumniOf: [
         {
-          '@type': 'CollegeOrUniversity',
-          name: 'Universidad de los Andes',
-          url: 'https://uniandes.edu.co/',
+          "@type": "CollegeOrUniversity",
+          name: "Universidad de los Andes",
+          url: "https://uniandes.edu.co/",
           department:
-            'M.Sc. Information Engineering (deep-learning specialization), 2024–2025; B.Sc. Systems and Computing, 2019–2023; Minor in Management',
+            "M.Sc. Information Engineering (deep-learning specialization), 2024–2025; B.Sc. Systems and Computing, 2019–2023; Minor in Management",
         },
       ],
-      award: [
-        'Andrés Bello National Distinction',
-        'AWS Academy Cloud Foundations',
-        'AWS Academy Cloud Developing',
-      ],
-      sameAs: [
-        'https://www.linkedin.com/in/kevin-gamez/',
-        'https://github.com/kevingamez',
-        'https://kevingamez.co',
-      ],
+      award: ["Andrés Bello National Distinction", "AWS Academy Cloud Foundations", "AWS Academy Cloud Developing"],
+      sameAs: ["https://www.linkedin.com/in/kevin-gamez/", "https://github.com/kevingamez", "https://kevingamez.co"],
     },
     {
-      '@type': 'WebSite',
-      '@id': 'https://kevingamez.com/#site',
-      url: 'https://kevingamez.com/',
-      name: 'Kevin Gámez',
-      inLanguage: ['en', 'es'],
-      publisher: { '@id': 'https://kevingamez.com/#kevin' },
+      "@type": "WebSite",
+      "@id": "https://kevingamez.com/#site",
+      url: "https://kevingamez.com/",
+      name: "Kevin Gámez",
+      inLanguage: ["en", "es"],
+      publisher: { "@id": "https://kevingamez.com/#kevin" },
       potentialAction: {
-        '@type': 'SearchAction',
-        target: 'https://kevingamez.com/?q={search_term_string}',
-        'query-input': 'required name=search_term_string',
+        "@type": "SearchAction",
+        target: "https://kevingamez.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string",
       },
     },
     {
-      '@type': 'ProfilePage',
-      '@id': meta.canonical + '#page',
+      "@type": "ProfilePage",
+      "@id": meta.canonical + "#page",
       url: meta.canonical,
       inLanguage: meta.htmlLang,
       name: meta.ogTitle,
       description: meta.ogDescription,
-      isPartOf: { '@id': 'https://kevingamez.com/#site' },
-      about: { '@id': 'https://kevingamez.com/#kevin' },
-      mainEntity: { '@id': 'https://kevingamez.com/#kevin' },
+      isPartOf: { "@id": "https://kevingamez.com/#site" },
+      about: { "@id": "https://kevingamez.com/#kevin" },
+      mainEntity: { "@id": "https://kevingamez.com/#kevin" },
       speakable: {
-        '@type': 'SpeakableSpecification',
-        cssSelector: ['h1', '.hero-lede', '.about-prose'],
+        "@type": "SpeakableSpecification",
+        cssSelector: ["h1", ".hero-lede", ".about-prose"],
       },
     },
   ],
@@ -154,7 +146,7 @@ const jsonLd = JSON.stringify({
     <link rel="alternate" hreflang="es" href="https://kevingamez.com/es/" />
     <link rel="alternate" hreflang="x-default" href="https://kevingamez.com/" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
     <meta property="og:url" content={meta.ogUrl} />
     <meta property="og:title" content={meta.ogTitle} />
     <meta property="og:description" content={meta.ogDescription} />
@@ -162,14 +154,20 @@ const jsonLd = JSON.stringify({
     <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Kevin Gámez · founding engineer at Enttor" />
     <meta property="og:locale" content={meta.ogLocale} />
     <meta property="og:locale:alternate" content={meta.ogLocaleAlternate} />
     <meta property="og:site_name" content="Kevin Gámez" />
+    <meta property="profile:first_name" content="Kevin" />
+    <meta property="profile:last_name" content="Gámez" />
+    <meta property="profile:username" content="kevingamez" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={meta.twitterTitle} />
     <meta name="twitter:description" content={meta.twitterDescription} />
     <meta name="twitter:image" content="https://kevingamez.com/og-image.svg" />
+    <meta name="twitter:image:alt" content="Kevin Gámez · founding engineer at Enttor" />
+    <meta name="twitter:creator" content="@kevingamez" />
 
     {meta.includeJsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
 
