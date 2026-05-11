@@ -8,7 +8,9 @@
     <meta charset="utf-8" />
     <meta name="robots" content="noindex,nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>500 - Kevin Gámez</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -181,8 +183,8 @@
       <h1>5<i>0</i>0</h1>
       <h2>Something <i>misbehaved.</i></h2>
       <p>
-        An error slipped through. The site didn't plan for this one. Try again, head home,
-        or refresh and pretend nothing happened.
+        An error slipped through. The site didn't plan for this one. Try again, head home, or refresh and pretend
+        nothing happened.
       </p>
       <div class="ctas">
         <a class="btn btn-primary" href="/">← Back home</a>
@@ -191,11 +193,21 @@
       </div>
 
       <div class="console" role="presentation">
-        <div class="ln"><span class="nm">1</span><span><span class="key">$</span> <span class="mute">curl -i kevingamez.com</span></span></div>
+        <div class="ln">
+          <span class="nm">1</span><span
+            ><span class="key">$</span> <span class="mute">curl -i kevingamez.com</span></span
+          >
+        </div>
         <div class="ln"><span class="nm">2</span><span class="err">HTTP/1.1 500 Internal Server Error</span></div>
-        <div class="ln"><span class="nm">3</span><span class="mute">x-trace-id: <span id="ref">———————</span></span></div>
+        <div class="ln">
+          <span class="nm">3</span><span class="mute">x-trace-id: <span id="ref">———————</span></span>
+        </div>
         <div class="ln"><span class="nm">4</span><span class="mute">x-build: a7f3c91 · static · vercel</span></div>
-        <div class="ln"><span class="nm">5</span><span><span class="key">$</span> <span class="mute">retry --backoff exponential</span></span></div>
+        <div class="ln">
+          <span class="nm">5</span><span
+            ><span class="key">$</span> <span class="mute">retry --backoff exponential</span></span
+          >
+        </div>
         <div class="ln"><span class="nm">6</span><span class="ok">… or just go home, life is short.</span></div>
       </div>
     </div>
@@ -203,12 +215,12 @@
     <script>
       // Cheap pseudo trace-id so the console doesn't feel static. Not real
       // telemetry — just a friendly nod for the curious tab-opener.
-      const el = document.getElementById('ref')
+      const el = document.getElementById("ref")
       if (el) {
         const hex = (n: number) =>
           Math.floor(Math.random() * Math.pow(16, n))
             .toString(16)
-            .padStart(n, '0')
+            .padStart(n, "0")
         el.textContent = `${hex(8)}-${hex(4)}-${hex(4)}`
       }
     </script>
