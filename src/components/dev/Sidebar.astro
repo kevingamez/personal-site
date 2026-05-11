@@ -113,7 +113,9 @@ const featured = stats.topRepos.slice(0, 4).map((r) => {
     <div class="reqs commit-tail" id="reqs">
       {
         recentCommits.length === 0 && (
-          <div class="r" style="color:var(--mute-2)">no recent push events</div>
+          <div class="r" style="color:var(--mute-2)">
+            no recent push events
+          </div>
         )
       }
       {
