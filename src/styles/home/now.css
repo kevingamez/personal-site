@@ -1,4 +1,4 @@
-/* Now grid styles (legacy - unimported, kept to satisfy formatter). */
+/* Now grid styles (imported via styles/home/index.css). */
 .now-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -7,6 +7,12 @@
 @media (max-width: 700px) {
   .now-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 400px) {
+  /* Two cells no longer fit on the narrowest phones (notably longer ES copy). */
+  .now-grid {
+    grid-template-columns: 1fr;
   }
 }
 .now-cell {
