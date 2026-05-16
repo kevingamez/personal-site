@@ -3,17 +3,17 @@ import type { HomeStrings } from './home'
 export const en: HomeStrings = {
   meta: {
     htmlLang: 'en',
-    title: 'Kevin Gámez · software, math, small worlds',
+    title: 'Kevin Gámez — Founding Engineer at Enttor',
     description:
       'Kevin Gámez is the founding engineer at Enttor, based in Bogotá. AI outbound, browser automation, OpenAI pipelines, Next.js / NestJS / Postgres.',
     canonical: 'https://kevingamez.com/',
     ogUrl: 'https://kevingamez.com/',
-    ogTitle: 'Kevin Gámez · software, math, small worlds',
+    ogTitle: 'Kevin Gámez — Founding Engineer at Enttor',
     ogDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
-    twitterTitle: 'Kevin Gámez · software, math, small worlds',
+    twitterTitle: 'Kevin Gámez — Founding Engineer at Enttor',
     twitterDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     includeJsonLd: true,
