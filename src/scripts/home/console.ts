@@ -23,7 +23,10 @@ function el<K extends keyof HTMLElementTagNameMap>(
 }
 
 function escape(s: string): string {
-  return s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] || c)
+  return s.replace(
+    /[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c
+  )
 }
 
 function mdLite(s: string): string {

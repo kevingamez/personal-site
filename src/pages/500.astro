@@ -188,7 +188,7 @@
       </p>
       <div class="ctas">
         <a class="btn btn-primary" href="/">← Back home</a>
-        <button class="btn btn-ghost" type="button" onclick="window.location.reload()">↻ Refresh</button>
+        <button class="btn btn-ghost" type="button" id="refresh-btn">↻ Refresh</button>
         <a class="btn btn-ghost" href="/dev/">Open dev mode</a>
       </div>
 
@@ -212,17 +212,6 @@
       </div>
     </div>
 
-    <script>
-      // Cheap pseudo trace-id so the console doesn't feel static. Not real
-      // telemetry — just a friendly nod for the curious tab-opener.
-      const el = document.getElementById("ref")
-      if (el) {
-        const hex = (n: number) =>
-          Math.floor(Math.random() * Math.pow(16, n))
-            .toString(16)
-            .padStart(n, "0")
-        el.textContent = `${hex(8)}-${hex(4)}-${hex(4)}`
-      }
-    </script>
+    <script src="/error-page.js" defer is:inline></script>
   </body>
 </html>

@@ -174,14 +174,7 @@ const jsonLd = JSON.stringify({
     {meta.includeJsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2EK3T4PNNY" is:inline></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag("js", new Date())
-      gtag("config", "G-2EK3T4PNNY")
-    </script>
+    <script src="/head-init.js" defer is:inline></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -189,7 +182,6 @@ const jsonLd = JSON.stringify({
       rel="preload"
       as="style"
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
       <link

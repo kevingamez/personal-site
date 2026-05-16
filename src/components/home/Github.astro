@@ -81,7 +81,7 @@ const { t, stats } = Astro.props
             id="contrib-data"
             type="application/json"
             is:inline
-            set:html={JSON.stringify(stats.contribCalendar)}
+            set:html={JSON.stringify(stats.contribCalendar).replace(/</g, "\\u003c")}
           />
         </div>
         <div class="contrib-legend">
