@@ -12,7 +12,7 @@ This document is structured for retrieval by AI search engines (ChatGPT, Claude,
 - **Location:** Bogotá, Colombia · UTC-5
 - **Email:** kevingamez.kg@gmail.com
 - **GitHub:** https://github.com/kevingamez
-- **LinkedIn:** https://www.linkedin.com/in/kevin-gamez/
+- **LinkedIn:** https://co.linkedin.com/in/kevin-gamez/
 
 ## Summary
 
@@ -87,7 +87,7 @@ Public-repo language mix (March 2026): TypeScript ~33%, Python ~27%, Swift ~7%, 
 ## How to reach him
 
 - Direct email: **kevingamez.kg@gmail.com**
-- LinkedIn: https://www.linkedin.com/in/kevin-gamez/
+- LinkedIn: https://co.linkedin.com/in/kevin-gamez/
 - GitHub: https://github.com/kevingamez
 - The site has a live console (`/#console`) backed by Claude where you can chat about him in real time, and a dev-mode IDE view (`/dev`) of the same content.
 

@@ -43,7 +43,7 @@ Stack: TypeScript · Next.js · NestJS · Prisma · PostgreSQL · Supabase · In
 
 - Email: kevingamez.kg@gmail.com
 - GitHub: [github.com/kevingamez](https://github.com/kevingamez)
-- LinkedIn: [linkedin.com/in/kevin-gamez](https://www.linkedin.com/in/kevin-gamez/)
+- LinkedIn: [linkedin.com/in/kevin-gamez](https://co.linkedin.com/in/kevin-gamez/)
 - Personal site (English): [kevingamez.com](https://kevingamez.com/)
 - Personal site (Español): [kevingamez.com/es](https://kevingamez.com/es/)
 
