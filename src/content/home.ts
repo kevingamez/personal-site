@@ -32,11 +32,9 @@ export interface HomeStrings {
   }
   nav: {
     about: string
-    skills: string
     experience: string
     work: string
     github: string
-    now: string
     devMode: string
     sayHi: string
   }
@@ -73,22 +71,6 @@ export interface HomeStrings {
     qfStackV: string
     qfObsessed: string
     qfObsessedV: string
-  }
-  skills: {
-    secNum: string
-    titleHtml: string
-    blurb: string
-    languages: string
-    frontend: string
-    backend: string
-    ai: string
-    data: string
-    chips: {
-      // chip names that differ between locales
-      llmPipelines: string
-      sqlModeling: string
-      etlPipelines: string
-    }
   }
   experience: {
     secNum: string
@@ -153,23 +135,6 @@ export interface HomeStrings {
     repoChatDesc: string
     repoBudgetDesc: string
     repoCloudDesc: string
-  }
-  now: {
-    secNum: string
-    titleHtml: string
-    blurb: string
-    buildingK: string
-    buildingV: string
-    buildingSub: string
-    readingK: string
-    readingV: string
-    readingSub: string
-    listeningK: string
-    listeningV: string
-    listeningSub: string
-    thinkingK: string
-    thinkingV: string
-    thinkingSub: string
   }
   writing: {
     secNum: string

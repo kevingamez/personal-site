@@ -3,12 +3,10 @@ import Layout from "@/components/Layout.astro"
 import Nav from "@/components/home/Nav.astro"
 import Hero from "@/components/home/Hero.astro"
 import About from "@/components/home/About.astro"
-import Skills from "@/components/home/Skills.astro"
 import Experience from "@/components/home/Experience.astro"
 import Work from "@/components/home/Work.astro"
 import Github from "@/components/home/Github.astro"
 import Writing from "@/components/home/Writing.astro"
-import Now from "@/components/home/Now.astro"
 import Wanderings from "@/components/home/Wanderings.astro"
 import Console from "@/components/home/Console.astro"
 import Contact from "@/components/home/Contact.astro"
@@ -28,12 +26,10 @@ const githubStats = await loadHomeStats()
   <Nav meta={t.meta} t={t.nav} />
   <Hero t={t.hero} />
   <About t={t.about} />
-  <Skills t={t.skills} />
   <Experience t={t.experience} />
   <Work t={t.work} />
   <Github t={t.github} stats={githubStats} />
   <Writing t={t.writing} />
-  <Now t={t.now} />
   <Wanderings t={t.wanderings} />
   <Console t={t.console} />
   <Contact t={t.contact} />

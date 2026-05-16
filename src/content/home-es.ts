@@ -26,11 +26,9 @@ export const es: HomeStrings = {
   },
   nav: {
     about: 'Sobre mí',
-    skills: 'Stack',
     experience: 'Experiencia',
     work: 'Proyectos',
     github: 'GitHub',
-    now: 'Ahora',
     devMode: 'Modo dev',
     sayHi: 'Saludar →',
   },
@@ -72,22 +70,6 @@ export const es: HomeStrings = {
     qfStackV: 'TypeScript · Next.js · Postgres',
     qfObsessed: 'Obsesión actual',
     qfObsessedV: 'Browser automation &amp; pipelines de LLM',
-  },
-  skills: {
-    secNum: '§02 · Herramientas',
-    titleHtml: 'El kit, y a qué <i>de verdad</i> recurro.',
-    blurb:
-      'Todo lo que he usado en producción. Los chips coral son los que escogería hoy si pudiera.',
-    languages: 'Lenguajes',
-    frontend: 'Frontend',
-    backend: 'Backend e infra',
-    ai: 'IA / ML',
-    data: 'Datos y analítica',
-    chips: {
-      llmPipelines: 'Pipelines de LLM',
-      sqlModeling: 'Modelado SQL',
-      etlPipelines: 'Pipelines ETL',
-    },
   },
   experience: {
     secNum: '§03 · Trayectoria',
@@ -185,26 +167,6 @@ export const es: HomeStrings = {
     repoChatDesc: 'Experimento de chat en TypeScript.',
     repoBudgetDesc: 'App de finanzas personales en Swift.',
     repoCloudDesc: 'Despliegues de servicios containerizados en Cloud Run.',
-  },
-  now: {
-    secNum: '§07 · Ahora',
-    titleHtml: 'Qué tengo en el escritorio <i>esta semana.</i>',
-    blurb:
-      'Una foto en vivo. Se actualiza cuando algo cambia; normalmente cada lunes en la mañana.',
-    buildingK: 'Construyendo',
-    buildingV: '<i>Eval-as-a-service</i>',
-    buildingSub:
-      'Una API para que otros equipos enchufen las evals de marca de enttor en sus propios pipelines.',
-    readingK: 'Leyendo',
-    readingV: "A Mathematician's Apology",
-    readingSub: 'Hardy. Delgado, hermoso, ligeramente desgarrador. Lo releo cada diciembre.',
-    listeningK: 'Escuchando',
-    listeningV: '<i>Caribou</i>',
-    listeningSub: '"Honey" en loop. Sirve para shippear a las 2am.',
-    thinkingK: 'Pensando en',
-    thinkingV: 'Invariantes de nudos',
-    thinkingSub:
-      'Específicamente el polinomio de Jones. Sin aplicaciones aún, pero no me deja dormir.',
   },
   writing: {
     secNum: '§06 · Escritos',
