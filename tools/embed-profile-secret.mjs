@@ -16,10 +16,9 @@ const END = '--END KG SIGNATURE--'
 
 // Caesar shift +3 on letters only; digits, punctuation and accents pass through.
 const caesar = (s, k = 3) =>
-  s.replace(/[a-z]/g, (c) => String.fromCharCode(((c.charCodeAt(0) - 97 + k) % 26) + 97)).replace(
-    /[A-Z]/g,
-    (c) => String.fromCharCode(((c.charCodeAt(0) - 65 + k) % 26) + 65)
-  )
+  s
+    .replace(/[a-z]/g, (c) => String.fromCharCode(((c.charCodeAt(0) - 97 + k) % 26) + 97))
+    .replace(/[A-Z]/g, (c) => String.fromCharCode(((c.charCodeAt(0) - 65 + k) % 26) + 65))
 
 // Conway glider — spaced so each line is >=4 printable chars (so `strings`
 // shows it) and left as-is (Caesar only touches letters), so it stays legible.
