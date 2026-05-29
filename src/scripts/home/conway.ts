@@ -147,7 +147,7 @@ export function initConway(): void {
         grid.fill(0)
         trail.fill(0)
         gen = 0
-        if (mq.matches) draw()
+        if (rafId === null) draw()
       }
     })
   })
@@ -161,7 +161,7 @@ export function initConway(): void {
       grid.fill(0)
       trail.fill(0)
       gen = 0
-      if (mq.matches) draw()
+      if (rafId === null) draw()
       return
     }
     const pat = STAMPS[curStamp]
@@ -171,7 +171,7 @@ export function initConway(): void {
       const yy = (y + dy + ROWS) % ROWS
       grid[(((yy % ROWS) + ROWS) % ROWS) * COLS + (((xx % COLS) + COLS) % COLS)] = 1
     }
-    if (mq.matches) draw()
+    if (rafId === null) draw()
   })
 
   const pauseBtn = document.getElementById('gol-pause')
@@ -183,20 +183,49 @@ export function initConway(): void {
     })
   }
   const resetBtn = document.getElementById('gol-reset')
-  if (resetBtn) resetBtn.addEventListener('click', seed)
+  if (resetBtn)
+    resetBtn.addEventListener('click', () => {
+      seed()
+      if (rafId === null) draw() // re-seed must repaint when the loop is paused
+    })
+
+  // The simulation should run only when motion is allowed AND the canvas is
+  // on-screen AND the tab is visible. Otherwise we burn the main thread
+  // repainting a 64×64 grid nobody can see.
+  let onScreen = true
+  function shouldRun(): boolean {
+    return !mq.matches && onScreen && !document.hidden
+  }
+  function sync(): void {
+    if (shouldRun()) start()
+    else {
+      stop()
+      draw() // keep a correct static frame whenever we're not animating
+    }
+  }
 
   resize()
-  window.addEventListener('resize', resize)
-  seed()
-  if (!mq.matches) start()
-  else draw()
-
-  mq.addEventListener('change', () => {
-    if (mq.matches) {
-      stop()
-      draw()
-    } else {
-      start()
-    }
+  // Redraw on resize even while stopped: reassigning canvas width/height clears
+  // the backing store, so a paused (reduced-motion / off-screen) canvas would
+  // otherwise go permanently blank.
+  window.addEventListener('resize', () => {
+    resize()
+    if (rafId === null) draw()
   })
+  seed()
+  sync()
+
+  mq.addEventListener('change', sync)
+  document.addEventListener('visibilitychange', sync)
+
+  if (typeof IntersectionObserver !== 'undefined') {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) onScreen = e.isIntersecting
+        sync()
+      },
+      { rootMargin: '120px 0px' }
+    )
+    io.observe(c)
+  }
 }
