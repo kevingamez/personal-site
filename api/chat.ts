@@ -8,8 +8,9 @@
 //     conversation capped at MAX_TOTAL_CHARS, history capped at 8 messages.
 //   - Schema confusion: zod parses the request body and rejects malformed shapes.
 //   - Token cost: max_tokens 512 (was 1024), and we slice history to 8.
-//   - Bot abuse: best-effort per-IP rate limit (still in-memory; for a serverless
-//     deploy this is supplemental to the Origin allowlist, not a hard limit).
+//   - Bot abuse: per-IP daily rate limit, keyed on the Vercel-set client IP
+//     (persistent via KV when configured, in-memory otherwise). The body is
+//     validated before a token is spent so junk requests can't drain the quota.
 //
 // Required env: ANTHROPIC_API_KEY.
 
@@ -38,19 +39,31 @@ const ALLOWED_ORIGINS = new Set([
   'http://127.0.0.1:4321',
 ])
 
+// Vercel injects the canonical production + branch hostnames at run time; trust
+// those exactly. We also allow this project's own preview deploys, whose
+// hostnames always start with the project name ("personal-site-…"). This is far
+// tighter than a blanket `*.vercel.app` rule, which would accept any project.
+const VERCEL_ORIGINS = new Set(
+  [process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL]
+    .filter((h): h is string => Boolean(h))
+    .map((h) => `https://${h}`)
+)
+
+const PREVIEW_ORIGIN_RE = /^https:\/\/personal-site-[a-z0-9-]+\.vercel\.app$/
+
 function isOriginAllowed(origin: string | null): boolean {
   if (!origin) return false
   if (ALLOWED_ORIGINS.has(origin)) return true
-  // Vercel preview deploys: https://<project>-<sha>-<owner>.vercel.app
-  return /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)
+  if (VERCEL_ORIGINS.has(origin)) return true
+  return PREVIEW_ORIGIN_RE.test(origin)
 }
 
 // ───────── Rate limit ─────────
 //
-// Persistent rate limit via Upstash / Vercel KV when env vars are set;
-// otherwise an in-memory fallback that's only correct for a single warm
-// instance. The Origin allowlist above is the real cross-origin barrier;
-// rate limiting is a second-line defense against bursty traffic.
+// Per-IP daily cap. Persistent via Upstash / Vercel KV when configured, with an
+// in-memory fallback (correct only per warm instance) when KV is absent or
+// momentarily unreachable. The IP comes from Vercel-set headers only, so it
+// can't be spoofed or rotated by the client (see clientIp in the handler).
 
 const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
 const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
@@ -87,8 +100,13 @@ function memoryLimit(ip: string): { allowed: boolean; remaining: number } {
 
 async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
   if (persistentLimiter) {
-    const r = await persistentLimiter.limit(ip)
-    return { allowed: r.success, remaining: r.remaining }
+    try {
+      const r = await persistentLimiter.limit(ip)
+      return { allowed: r.success, remaining: r.remaining }
+    } catch {
+      // Redis hiccup: degrade to the in-memory limiter instead of 500-ing.
+      return memoryLimit(ip)
+    }
   }
   return memoryLimit(ip)
 }
@@ -127,28 +145,31 @@ function jsonError(status: number, error: string, message: string): Response {
 
 // ───────── Handler ─────────
 
+// Resolve the client IP from Vercel-controlled headers only. `x-forwarded-for`
+// is appended-to by the platform, so its left-most value is whatever the client
+// sent — never trust it for rate-limit keys. `x-real-ip` / `x-vercel-forwarded-for`
+// are set by Vercel's proxy and overwrite anything the client supplies.
+function clientIp(req: Request): string | null {
+  const real = req.headers.get('x-real-ip')
+  if (real) return real.trim()
+  const vff = req.headers.get('x-vercel-forwarded-for')
+  if (vff) return vff.split(',')[0].trim()
+  return null
+}
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') {
     return new Response('Use POST', { status: 405 })
   }
 
-  // 1. Origin check — first line of defense against cross-origin abuse.
+  // 1. Origin check — the first line of defense against cross-origin abuse.
   const origin = req.headers.get('origin')
   if (!isOriginAllowed(origin)) {
     return jsonError(403, 'forbidden', 'Origin not allowed.')
   }
 
-  // 2. Rate limit (per IP — persistent if KV is configured, else in-memory).
-  const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-    req.headers.get('cf-connecting-ip') ||
-    'unknown'
-  const rl = await checkRateLimit(ip)
-  if (!rl.allowed) {
-    return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
-  }
-
-  // 3. Parse + validate body.
+  // 2. Parse + validate body BEFORE spending a rate-limit token, so malformed
+  //    requests can't drain an IP's daily quota.
   let raw: unknown
   try {
     raw = await req.json()
@@ -160,21 +181,30 @@ export default async function handler(req: Request): Promise<Response> {
     return jsonError(400, 'bad_shape', 'Body does not match expected schema.')
   }
 
-  // 4. Length check (defense in depth — zod already caps each message,
-  //    here we sum the whole conversation).
+  // 3. Length check (defense in depth — zod already caps each message; here we
+  //    sum the whole conversation).
   const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
   if (totalChars > MAX_TOTAL_CHARS) {
     return jsonError(413, 'too_long', 'Conversation too long. Start a new one.')
   }
 
-  // 5. Trim history before sending to the model.
-  const messages = parsed.data.messages.slice(-MAX_HISTORY)
-
-  // 6. Backend config.
+  // 4. Backend config.
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     return jsonError(500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
   }
+
+  // 5. Rate limit (per IP, only for well-formed requests). When no trusted IP
+  //    is resolvable (e.g. local dev) we use a single per-instance in-memory
+  //    bucket rather than keying on spoofable input.
+  const ip = clientIp(req)
+  const rl = await checkRateLimit(ip ?? 'local')
+  if (!rl.allowed) {
+    return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
+  }
+
+  // 6. Trim history before sending to the model.
+  const messages = parsed.data.messages.slice(-MAX_HISTORY)
 
   const client = new Anthropic({ apiKey })
 
@@ -182,25 +212,37 @@ export default async function handler(req: Request): Promise<Response> {
   const writer = stream.writable.getWriter()
   const enc = new TextEncoder()
 
-  const send = (event: Record<string, unknown>): Promise<void> =>
-    writer.write(enc.encode(`data: ${JSON.stringify(event)}\n\n`))
+  // Writes never throw out of the streaming task: once the client disconnects
+  // the writer rejects, and we just stop instead of crashing the detached IIFE.
+  const send = async (event: Record<string, unknown>): Promise<void> => {
+    try {
+      await writer.write(enc.encode(`data: ${JSON.stringify(event)}\n\n`))
+    } catch {
+      /* client disconnected — nothing to do */
+    }
+  }
 
   ;(async () => {
     try {
-      const response = await client.messages.create({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 512,
-        stream: true,
-        system: KEVIN_CONTEXT,
-        tools: [
-          {
-            type: 'web_search_20250305',
-            name: 'web_search',
-            max_uses: 3,
-          } as unknown as Anthropic.Tool,
-        ],
-        messages: messages as Anthropic.MessageParam[],
-      })
+      const response = await client.messages.create(
+        {
+          model: 'claude-sonnet-4-5',
+          max_tokens: 512,
+          stream: true,
+          system: KEVIN_CONTEXT,
+          tools: [
+            {
+              type: 'web_search_20250305',
+              name: 'web_search',
+              max_uses: 3,
+            } as unknown as Anthropic.Tool,
+          ],
+          messages: messages as Anthropic.MessageParam[],
+        },
+        // Propagate client disconnects so we stop generating (and billing) the
+        // moment the browser goes away.
+        { signal: req.signal }
+      )
 
       for await (const event of response as unknown as AsyncIterable<{
         type: string
@@ -212,7 +254,8 @@ export default async function handler(req: Request): Promise<Response> {
           await send({ type: 'text_delta', text: event.delta.text || '' })
         } else if (
           event.type === 'content_block_start' &&
-          event.content_block?.type === 'tool_use'
+          (event.content_block?.type === 'tool_use' ||
+            event.content_block?.type === 'server_tool_use')
         ) {
           await send({
             type: 'tool_use',
@@ -222,14 +265,21 @@ export default async function handler(req: Request): Promise<Response> {
         }
       }
       await send({ type: 'done' })
-      await writer.write(enc.encode('data: [DONE]\n\n'))
+      try {
+        await writer.write(enc.encode('data: [DONE]\n\n'))
+      } catch {
+        /* client disconnected */
+      }
     } catch (err) {
-      await send({
-        type: 'error',
-        message: err instanceof Error ? err.message : String(err),
-      })
+      // A client abort is expected, not an error — don't log it or try to write
+      // to a stream that's already gone. For anything else, log the real cause
+      // server-side and hand the client a generic message (never leak internals).
+      if (!req.signal?.aborted) {
+        console.error('[api/chat] stream error:', err)
+        await send({ type: 'error', message: 'Sorry, something went wrong generating a reply.' })
+      }
     } finally {
-      await writer.close()
+      await writer.close().catch(() => {})
     }
   })()
 
