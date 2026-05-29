@@ -6,6 +6,7 @@ import { _d, getNode, pathDisplay, resolvePath, state, PROJECT_NAME } from './st
 import type { DirNode, FileNode } from './state'
 import { esc, highlight } from './highlight'
 import { openFile } from './editor'
+import { forgetSaved, renameSaved } from './persistence'
 
 type AddLine = (html: string) => void
 type Err = (msg: string) => void
@@ -13,6 +14,13 @@ type Clear = () => void
 
 export type CommandRunner = (args: string[]) => void
 export type CommandMap = Record<string, CommandRunner>
+
+// Mutations are sandboxed to the workspace (~/<PROJECT_NAME>). Paths that
+// escape it via `..`, `/`, or `~` resolve to a first segment other than
+// PROJECT_NAME (or to []), and are rejected. `relOf` strips the leading
+// PROJECT_NAME segment to get the localStorage-edit key.
+const inWorkspace = (parts: string[]): boolean => parts[0] === PROJECT_NAME
+const relOf = (parts: string[]): string => parts.slice(1).join('/')
 
 export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): CommandMap {
   const commands: CommandMap = {
@@ -82,6 +90,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       if (!args[0]) return errFn('mkdir: missing operand')
       const target = resolvePath(args[0])
       if (!target.length) return errFn('mkdir: invalid path')
+      if (!inWorkspace(target)) return errFn('mkdir: cannot create outside ~/' + PROJECT_NAME)
       const parent = getNode(target.slice(0, -1))
       const name = target[target.length - 1]
       if (!parent || parent.type !== 'dir')
@@ -92,6 +101,8 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
     touch: (args) => {
       if (!args[0]) return errFn('touch: missing operand')
       const target = resolvePath(args[0])
+      if (!target.length || !inWorkspace(target))
+        return errFn('touch: cannot create outside ~/' + PROJECT_NAME)
       const parent = getNode(target.slice(0, -1))
       const name = target[target.length - 1]
       if (!parent || parent.type !== 'dir') return errFn('touch: ' + args[0] + ': cannot create')
@@ -120,6 +131,10 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const recursive = flags.some((f) => /r/.test(f))
       for (const t of targets) {
         const tp = resolvePath(t)
+        if (!inWorkspace(tp)) {
+          errFn('rm: ' + t + ': outside ~/' + PROJECT_NAME)
+          continue
+        }
         const parent = getNode(tp.slice(0, -1))
         const name = tp[tp.length - 1]
         if (!parent || parent.type !== 'dir' || !(parent as DirNode).children[name]) {
@@ -132,11 +147,13 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
           continue
         }
         delete (parent as DirNode).children[name]
+        forgetSaved(relOf(tp))
       }
     },
     rmdir: (args) => {
       if (!args[0]) return errFn('rmdir: missing operand')
       const tp = resolvePath(args[0])
+      if (!inWorkspace(tp)) return errFn('rmdir: ' + args[0] + ': outside ~/' + PROJECT_NAME)
       const parent = getNode(tp.slice(0, -1))
       const name = tp[tp.length - 1]
       if (!parent || parent.type !== 'dir') return errFn('rmdir: ' + args[0] + ': not a directory')
@@ -145,11 +162,21 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       if (Object.keys(node.children).length)
         return errFn('rmdir: ' + args[0] + ': directory not empty')
       delete (parent as DirNode).children[name]
+      forgetSaved(relOf(tp))
     },
     mv: (args) => {
       if (args.length < 2) return errFn('mv: missing operand')
       const src = resolvePath(args[0])
       const dst = resolvePath(args[1])
+      if (!inWorkspace(src) || !inWorkspace(dst))
+        return errFn('mv: cannot move outside ~/' + PROJECT_NAME)
+      // Refuse to move a directory into itself or its own descendant — that
+      // would create a cycle (src.children.x === src) and hang the explorer
+      // walk on the next render.
+      const srcKey = src.join('/')
+      const dstKey = dst.join('/')
+      if (dstKey === srcKey || dstKey.startsWith(srcKey + '/'))
+        return errFn('mv: cannot move ' + args[0] + ' into itself')
       const sParent = getNode(src.slice(0, -1))
       const sName = src[src.length - 1]
       if (!sParent || sParent.type !== 'dir' || !(sParent as DirNode).children[sName])
@@ -159,6 +186,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       if (!dParent || dParent.type !== 'dir') return errFn('mv: ' + args[1] + ': no such directory')
       ;(dParent as DirNode).children[dName] = (sParent as DirNode).children[sName]
       delete (sParent as DirNode).children[sName]
+      renameSaved(relOf(src), relOf(dst))
     },
     echo: (args) => addLine(esc(args.join(' '))),
     tree: () => {

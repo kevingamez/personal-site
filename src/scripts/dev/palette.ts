@@ -18,6 +18,7 @@ let paletteResults: FileEntry[] = []
 let paletteOpen = false
 
 function flattenFiles(node: DirNode | { type: 'file' }, parts: string[], out: FileEntry[]): void {
+  if (parts.length > 24) return // defensive: bail out of any pathological cycle
   if (node.type === 'file') {
     out.push({ path: parts.join('/'), name: parts[parts.length - 1] })
   } else {

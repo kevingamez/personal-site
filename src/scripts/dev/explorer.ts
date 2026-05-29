@@ -98,6 +98,7 @@ function makeFileItem(name: string, pathParts: string[], depth: number): HTMLEle
 }
 
 function walkDir(node: DirNode, pathParts: string[], depth: number, container: HTMLElement): void {
+  if (depth > 20) return // defensive: never recurse into a pathological cycle
   // VS Code rhythm: folders first (case-insensitive alphabetical),
   // then files (case-insensitive alphabetical). README.md naturally lands
   // near the end of the file group.
