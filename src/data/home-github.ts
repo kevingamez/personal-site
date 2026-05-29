@@ -224,8 +224,14 @@ async function fetchAllAffiliationRepos(): Promise<RepoWithLangs[] | null> {
   }
   const json = (await res.json()) as {
     data?: { viewer?: { repositories?: { nodes: RepoNode[] } } }
+    errors?: unknown[]
   }
-  const owned = json.data?.viewer?.repositories?.nodes ?? []
+  // GraphQL returns HTTP 200 even on partial failure: a top-level `errors`
+  // array (rate limit, missing scope, partial nulls) or a null viewer means
+  // `data` can't be trusted. Bail to null so buildStats falls back to the
+  // per-repo REST language path instead of reporting "0 languages".
+  if ((json.errors && json.errors.length) || !json.data?.viewer) return null
+  const owned = json.data.viewer.repositories?.nodes ?? []
   return owned.map((r) => ({
     name: r.name,
     isPrivate: r.isPrivate,
@@ -245,7 +251,12 @@ function streaksOf(days: ContribDay[]): { longest: number; current: number } {
     }
   }
   let current = 0
-  for (let i = days.length - 1; i >= 0; i--) {
+  // Skip the most recent day when it's empty: "today" usually has no commits
+  // yet early in the day, and that shouldn't zero out a streak that ran through
+  // yesterday.
+  let start = days.length - 1
+  if (start >= 0 && days[start].count === 0) start--
+  for (let i = start; i >= 0; i--) {
     if (days[i].count > 0) current++
     else break
   }
@@ -357,8 +368,13 @@ async function fetchContribCalendarPublic(): Promise<ContribCalendar | null> {
     while ((m = tipRe.exec(html)) !== null) {
       const id = m[1]
       const text = m[2]
-      const num = text.match(/^(\d+|No)\s+contribution/i)
-      counts.set(id, num ? (num[1].toLowerCase() === 'no' ? 0 : parseInt(num[1], 10)) : 0)
+      // Counts of 1000+ render with a thousands separator ("1,234 contributions"),
+      // so allow commas in the match and strip them before parsing.
+      const num = text.match(/^([\d,]+|No)\s+contribution/i)
+      counts.set(
+        id,
+        num ? (num[1].toLowerCase() === 'no' ? 0 : parseInt(num[1].replace(/,/g, ''), 10)) : 0
+      )
     }
     const days: ContribDay[] = cells.map((c) => {
       const known = c.id ? counts.get(c.id) : undefined
@@ -483,7 +499,12 @@ async function buildStats(): Promise<HomeStats | null> {
       }))
 
     const created = new Date(profile.created_at)
-    const yearsOnGithub = Math.max(0, new Date().getFullYear() - created.getFullYear())
+    // Elapsed *full* years, not a calendar-year subtraction (which overstates
+    // tenure by up to a year, most visibly every January).
+    const yearsOnGithub = Math.max(
+      0,
+      Math.floor((Date.now() - created.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+    )
 
     return {
       publicRepos: reposCount,
@@ -508,14 +529,24 @@ function emptyCalendar(): ContribCalendar {
 // Public entry point - used by frontmatter in src/pages/index.astro and
 // src/pages/es/index.astro. Returns cached stats if recent, refetches and
 // rewrites cache when stale, falls back to stale cache if the refetch fails.
+// A result that has public repos but no language mix is degraded (a transient
+// GraphQL/REST language-fetch failure). Don't let it overwrite a good prior
+// snapshot for a full day.
+function isComplete(s: HomeStats): boolean {
+  return !(s.publicRepos > 0 && s.languageMix.length === 0)
+}
+
 export async function loadHomeStats(): Promise<HomeStats> {
   const cached = readCache()
   const fresh = !cached || cacheAgeMs() > ONE_DAY ? await buildStats() : null
-  if (fresh) {
+  if (fresh && isComplete(fresh)) {
     writeCache(fresh)
     return fresh
   }
+  // Fresh-but-degraded: prefer the (complete) stale cache; fall back to the
+  // degraded result without caching it so the next build retries.
   if (cached) return cached
+  if (fresh) return fresh
   // Last-resort fallback so the build never fails. Counters animate to 0 if
   // none of the network paths land - visually the section just goes quiet.
   return {
