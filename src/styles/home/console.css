@@ -115,8 +115,13 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ct-led {
+  .ct-led,
+  .cm-streaming::after,
+  .cs-block {
     animation: none;
+  }
+  .cs-stream {
+    scroll-behavior: auto;
   }
 }
 

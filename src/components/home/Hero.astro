@@ -28,8 +28,8 @@ const { t } = Astro.props
       <div class="gol-frame">
         <canvas id="gol"></canvas>
         <div class="gol-controls">
-          <button class="gol-btn" id="gol-pause" title={t.pauseTitle}>⏸</button>
-          <button class="gol-btn" id="gol-reset" title={t.resetTitle}>↻</button>
+          <button class="gol-btn" id="gol-pause" title={t.pauseTitle} aria-label={t.pauseTitle}>⏸</button>
+          <button class="gol-btn" id="gol-reset" title={t.resetTitle} aria-label={t.resetTitle}>↻</button>
         </div>
         <div class="gol-stamps">
           <button class="gol-stamp on" data-stamp="glider">{t.stampGlider}</button>

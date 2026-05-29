@@ -99,3 +99,15 @@ a {
   background: var(--coral);
   color: #fff;
 }
+
+/* Reduced-motion: silence the always-on infinite animations across the dev
+   chrome (status LEDs, the flight-log live dot, the terminal cursor). Each
+   element's static end-state reads fine without the loop. */
+@media (prefers-reduced-motion: reduce) {
+  .titlebar .led,
+  .pf-status-dot,
+  .fl-status.fl-live::before,
+  .cu {
+    animation: none;
+  }
+}

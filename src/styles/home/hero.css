@@ -173,6 +173,12 @@ h1.hero-title i {
     opacity: 0.4;
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .hello .wave,
+  .meta-row .live::before {
+    animation: none;
+  }
+}
 
 /* GoL frame */
 .gol-wrap {

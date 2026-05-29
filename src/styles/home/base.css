@@ -22,7 +22,12 @@ body {
   padding: 0;
 }
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 body {
   background: var(--cream);

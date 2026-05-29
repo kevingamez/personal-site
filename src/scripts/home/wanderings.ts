@@ -10,7 +10,10 @@
 // API key is HTTP-referrer-restricted in Google Cloud Console - safe to embed
 // client-side. Set PUBLIC_GOOGLE_MAPS_API_KEY in .env.
 
-type TravelPoint = {
+import { mapStyle } from './wanderings-style'
+import { ensureLightbox } from './wanderings-lightbox'
+
+export type TravelPoint = {
   city: string
   country: string
   countryCode: string
@@ -26,158 +29,6 @@ const REDUCE_MOTION =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 let mounted = false
-
-// Dark "Google Photos travel timeline" style. This is the closest free
-// approximation to the proprietary internal style - deep navy ocean, muted
-// teal land, slightly different desert tone, white labels.
-// Reference: https://mapstyle.withgoogle.com (using "Aubergine" as base then
-// hand-tuned the colors to match the reference screenshots).
-// Editorial cartography style — keeps Google's terrain shading, road network
-// and points of interest, but warms the palette toward the cream + coral
-// brand. Inspired by National Geographic prints and the Google Photos travel
-// timeline (which is dark, but warm). Land tiers go from sage-cream
-// (lowlands) → soft amber (deserts/highlands), water is pacific blue, roads
-// are muted off-white so they read as context, not noise.
-const mapStyle: google.maps.MapTypeStyle[] = [
-  // Base label colors (overridden per feature below).
-  { elementType: 'labels.text.fill', stylers: [{ color: '#3a352f' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#faf7f0' }, { weight: 2 }] },
-
-  // Country: clear sepia border + dark name, this is the strongest tier.
-  {
-    featureType: 'administrative.country',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#8b6f55' }, { weight: 0.9 }],
-  },
-  {
-    featureType: 'administrative.country',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#1f1d1a' }, { weight: 700 }],
-  },
-
-  // Province / state: thinner sepia border, mid-tone label.
-  {
-    featureType: 'administrative.province',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#a08770' }, { weight: 0.4 }],
-  },
-  {
-    featureType: 'administrative.province',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#3a352f' }],
-  },
-
-  // City names: visible at all zoom levels with a strong cream halo so they
-  // pop on top of the heatmap blooms.
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#1f1d1a' }],
-  },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#faf7f0' }, { weight: 3 }],
-  },
-  {
-    featureType: 'administrative.neighborhood',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#6b6660' }],
-  },
-
-  // Landscape — keep the terrain shading enabled (mapTypeId: 'terrain' adds
-  // hillshade automatically); we just tint the geometry layers.
-  { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#f3ede2' }] },
-  {
-    featureType: 'landscape.natural.terrain',
-    elementType: 'geometry',
-    stylers: [{ color: '#e8d9c1' }],
-  },
-  {
-    featureType: 'landscape.natural.landcover',
-    elementType: 'geometry',
-    stylers: [{ color: '#dbe6d4' }],
-  },
-  { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: '#ebe3d4' }] },
-
-  // Parks / natural features — subtle sage so they read as parks, not roads.
-  {
-    featureType: 'poi.park',
-    elementType: 'geometry',
-    stylers: [{ color: '#c5d8b8' }],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#4a6a3a' }],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#faf7f0' }, { weight: 2 }],
-  },
-
-  // Other POIs (restaurants, shops, etc.) — muted, only visible far in.
-  { featureType: 'poi.business', stylers: [{ visibility: 'off' }] },
-  { featureType: 'poi.medical', stylers: [{ visibility: 'off' }] },
-  { featureType: 'poi.school', stylers: [{ visibility: 'off' }] },
-  { featureType: 'poi.sports_complex', stylers: [{ visibility: 'off' }] },
-  {
-    featureType: 'poi.attraction',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#a14a2a' }],
-  },
-  { featureType: 'poi.attraction', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-
-  // Roads — visible but quiet. Highways slightly darker, locals barely there.
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{ color: '#ffffff' }, { weight: 0.6 }],
-  },
-  { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-  { featureType: 'road.local', stylers: [{ visibility: 'simplified' }] },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{ color: '#f0d090' }, { weight: 1.2 }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#6b5030' }],
-  },
-  {
-    featureType: 'road.arterial',
-    elementType: 'geometry',
-    stylers: [{ color: '#ffffff' }],
-  },
-
-  // Transit — keep rail lines (nice for travel context) but hide stations.
-  { featureType: 'transit.station', stylers: [{ visibility: 'off' }] },
-  {
-    featureType: 'transit.line',
-    elementType: 'geometry',
-    stylers: [{ color: '#c2a085' }, { weight: 0.5 }],
-  },
-
-  // Water — pacific blue with depth gradient, soft cream label halo.
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{ color: '#a8c6d8' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#3a5570' }, { weight: 500 }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#a8c6d8' }, { weight: 2 }],
-  },
-]
 
 async function mountMap(
   container: HTMLElement,
@@ -357,62 +208,6 @@ async function mountMap(
       map.setZoom(Math.min(z + 0.5, 4))
     }, 600)
   }
-}
-
-interface Lightbox {
-  open: (p: TravelPoint) => void
-  close: () => void
-}
-
-let lightboxSingleton: Lightbox | null = null
-
-function ensureLightbox(): Lightbox {
-  if (lightboxSingleton) return lightboxSingleton
-  const root = document.createElement('div')
-  root.className = 'wp-lightbox'
-  root.setAttribute('role', 'dialog')
-  root.setAttribute('aria-modal', 'true')
-  root.setAttribute('aria-label', 'Travel photo')
-  root.innerHTML = `
-    <div class="wp-lb-backdrop" data-close></div>
-    <button class="wp-lb-close" type="button" aria-label="Close" data-close>×</button>
-    <figure class="wp-lb-figure">
-      <img class="wp-lb-img" alt="" />
-      <figcaption class="wp-lb-caption">
-        <span class="wp-lb-city"></span>
-        <span class="wp-lb-country"></span>
-      </figcaption>
-    </figure>
-  `
-  document.body.appendChild(root)
-
-  const img = root.querySelector<HTMLImageElement>('.wp-lb-img')!
-  const cityEl = root.querySelector<HTMLElement>('.wp-lb-city')!
-  const countryEl = root.querySelector<HTMLElement>('.wp-lb-country')!
-
-  const close = (): void => {
-    root.classList.remove('on')
-    document.body.classList.remove('wp-lock')
-  }
-  const open = (p: TravelPoint): void => {
-    if (!p.photo) return
-    img.src = p.photo
-    img.alt = p.photoAlt || `${p.city}, ${p.country}`
-    cityEl.textContent = p.city
-    countryEl.textContent = p.country
-    root.classList.add('on')
-    document.body.classList.add('wp-lock')
-  }
-  root.addEventListener('click', (e) => {
-    const t = e.target as HTMLElement
-    if (t.dataset.close !== undefined) close()
-  })
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && root.classList.contains('on')) close()
-  })
-
-  lightboxSingleton = { open, close }
-  return lightboxSingleton
 }
 
 export function initWanderings(): void {
