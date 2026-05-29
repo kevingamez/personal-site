@@ -137,60 +137,74 @@ const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
 export function makeBuildLoop(termBuildEl: HTMLElement): { start(): void; stop(): void } {
   let timer: ReturnType<typeof setInterval> | null = null
   let buildLineNum = 0
+  // Each cycle schedules a few delayed appends; track them so stop() can cancel
+  // any still in flight (otherwise they fire into a hidden/stopped pane).
+  let timeouts: Array<ReturnType<typeof setTimeout>> = []
   function cycle(): void {
+    // Prior cycle's timeouts have all fired (max delay << the 2400ms interval).
+    timeouts = []
     const file = VITE_FILES[Math.floor(Math.random() * VITE_FILES.length)]
     const steps = VITE_CYCLES[Math.floor(Math.random() * VITE_CYCLES.length)](file)
-    steps.forEach((s) => setTimeout(() => streamAdd(termBuildEl, s.html, ++buildLineNum), s.delay))
+    steps.forEach((s) =>
+      timeouts.push(setTimeout(() => streamAdd(termBuildEl, s.html, ++buildLineNum), s.delay))
+    )
   }
-  return {
-    start(): void {
-      if (timer) return
-      if (!termBuildEl.children.length) {
-        streamAdd(
-          termBuildEl,
-          '<span class="vite">[vite]</span> dev server running at <span class="arrow">http://localhost:4321</span>',
-          ++buildLineNum
-        )
-        streamAdd(
-          termBuildEl,
-          '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> ready in <span class="ts">218ms</span>',
-          ++buildLineNum
-        )
-        streamAdd(
-          termBuildEl,
-          '<span class="lvl-info">watching</span> ./src for changes…',
-          ++buildLineNum
-        )
-      }
-      if (reduce.matches) return
-      cycle()
-      timer = setInterval(cycle, 2400)
-    },
-    stop(): void {
-      if (timer) clearInterval(timer)
-      timer = null
-    },
+  function stop(): void {
+    if (timer) clearInterval(timer)
+    timer = null
+    for (const id of timeouts) clearTimeout(id)
+    timeouts = []
   }
+  function start(): void {
+    if (timer) return
+    if (!termBuildEl.children.length) {
+      streamAdd(
+        termBuildEl,
+        '<span class="vite">[vite]</span> dev server running at <span class="arrow">http://localhost:4321</span>',
+        ++buildLineNum
+      )
+      streamAdd(
+        termBuildEl,
+        '<span class="vite">[vite]</span> <span class="lvl-info">✓</span> ready in <span class="ts">218ms</span>',
+        ++buildLineNum
+      )
+      streamAdd(
+        termBuildEl,
+        '<span class="lvl-info">watching</span> ./src for changes…',
+        ++buildLineNum
+      )
+    }
+    if (reduce.matches) return
+    cycle()
+    timer = setInterval(cycle, 2400)
+  }
+  // Stop immediately if the user opts into reduced motion mid-session.
+  reduce.addEventListener('change', () => {
+    if (reduce.matches) stop()
+  })
+  return { start, stop }
 }
 
 export function makeTailLoop(termTailEl: HTMLElement): { start(): void; stop(): void } {
   let timer: ReturnType<typeof setInterval> | null = null
   let tailLineNum = 0
-  return {
-    start(): void {
-      if (timer) return
-      if (!termTailEl.children.length) {
-        for (let i = 0; i < 6; i++) streamAdd(termTailEl, tailLine(), ++tailLineNum)
-      }
-      if (reduce.matches) return
-      timer = setInterval(
-        () => streamAdd(termTailEl, tailLine(), ++tailLineNum),
-        1100 + Math.random() * 900
-      )
-    },
-    stop(): void {
-      if (timer) clearInterval(timer)
-      timer = null
-    },
+  function stop(): void {
+    if (timer) clearInterval(timer)
+    timer = null
   }
+  function start(): void {
+    if (timer) return
+    if (!termTailEl.children.length) {
+      for (let i = 0; i < 6; i++) streamAdd(termTailEl, tailLine(), ++tailLineNum)
+    }
+    if (reduce.matches) return
+    timer = setInterval(
+      () => streamAdd(termTailEl, tailLine(), ++tailLineNum),
+      1100 + Math.random() * 900
+    )
+  }
+  reduce.addEventListener('change', () => {
+    if (reduce.matches) stop()
+  })
+  return { start, stop }
 }

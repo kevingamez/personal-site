@@ -267,6 +267,13 @@ function bogotaTime(): string {
   return new Intl.DateTimeFormat('en-GB', opt).format(new Date())
 }
 
+// Reduced-motion gating + stored handles, mirroring the other dev widgets. The
+// values still render once (a static frame) for reduce users; only the ticking
+// is suppressed, and the handles stay clearable.
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+let uptimeTimer: ReturnType<typeof setInterval> | null = null
+let clockTimer: ReturnType<typeof setInterval> | null = null
+
 function startUptime(startedAt: number): void {
   const el = document.getElementById('pf-uptime')
   if (!el) return
@@ -279,7 +286,8 @@ function startUptime(startedAt: number): void {
     else el.textContent = `${s}s`
   }
   tick()
-  setInterval(tick, 1000)
+  if (uptimeTimer) clearInterval(uptimeTimer)
+  uptimeTimer = reduceMotion.matches ? null : setInterval(tick, 1000)
 }
 
 function startClock(): void {
@@ -289,7 +297,8 @@ function startClock(): void {
     el.textContent = bogotaTime()
   }
   tick()
-  setInterval(tick, 30 * 1000)
+  if (clockTimer) clearInterval(clockTimer)
+  clockTimer = reduceMotion.matches ? null : setInterval(tick, 30 * 1000)
 }
 
 function setStartedAt(): void {
@@ -305,9 +314,17 @@ function setStartedAt(): void {
 export function initProfileSettings(): void {
   // Profile widgets always run, even when the panel is hidden — the data is
   // ready the moment the user clicks Profile in the activity bar.
+  const startedAt = Date.now()
   startClock()
   setStartedAt()
-  startUptime(Date.now())
+  startUptime(startedAt)
+
+  // React to a runtime reduced-motion toggle: re-arm (or stop) the ticking
+  // timers. Each start* call renders one current value and re-checks the query.
+  reduceMotion.addEventListener('change', () => {
+    startClock()
+    startUptime(startedAt)
+  })
 
   // Settings bindings — restore from localStorage first, then attach.
   bindThemeButtons()
