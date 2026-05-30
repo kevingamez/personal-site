@@ -27,6 +27,12 @@ const DAILY_LIMIT = 20
 const MAX_MESSAGE_CHARS = 2000
 const MAX_TOTAL_CHARS = 12_000
 const MAX_HISTORY = 8
+// Hard ceiling on the request body we buffer. The largest valid payload is
+// ~12k chars of messages plus JSON overhead; 64 KB is generous.
+const MAX_BODY_BYTES = 64 * 1024
+// Global daily cap across ALL IPs — a backstop against distributed abuse that a
+// per-IP limit can't bound. Only enforced when KV/Upstash is configured.
+const GLOBAL_DAILY_LIMIT = 1000
 
 // ───────── Origin allowlist ─────────
 
@@ -68,20 +74,43 @@ function isOriginAllowed(origin: string | null): boolean {
 const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
 const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
 
-const persistentLimiter = (() => {
+const redis = (() => {
   if (!kvUrl || !kvToken) return null
   try {
-    const redis = new Redis({ url: kvUrl, token: kvToken })
-    return new Ratelimit({
+    return new Redis({ url: kvUrl, token: kvToken })
+  } catch {
+    return null
+  }
+})()
+
+const persistentLimiter = redis
+  ? new Ratelimit({
       redis,
       limiter: Ratelimit.fixedWindow(DAILY_LIMIT, '1 d'),
       prefix: 'kg-chat-rl',
       analytics: false,
     })
+  : null
+
+// Global backstop: caps total daily requests across every IP, so IP rotation
+// can't run up an unbounded model bill.
+const globalLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(GLOBAL_DAILY_LIMIT, '1 d'),
+      prefix: 'kg-chat-global',
+      analytics: false,
+    })
+  : null
+
+async function checkGlobalLimit(): Promise<boolean> {
+  if (!globalLimiter) return true
+  try {
+    return (await globalLimiter.limit('all')).success
   } catch {
-    return null
+    return true // KV hiccup: don't hard-fail; the per-IP limit still applies.
   }
-})()
+}
 
 const buckets = new Map<string, { count: number; reset: number }>()
 
@@ -168,7 +197,13 @@ export default async function handler(req: Request): Promise<Response> {
     return jsonError(403, 'forbidden', 'Origin not allowed.')
   }
 
-  // 2. Parse + validate body BEFORE spending a rate-limit token, so malformed
+  // 2. Reject oversized bodies before buffering them into memory.
+  const contentLength = Number(req.headers.get('content-length') || 0)
+  if (contentLength > MAX_BODY_BYTES) {
+    return jsonError(413, 'too_large', 'Request body too large.')
+  }
+
+  // 3. Parse + validate body BEFORE spending a rate-limit token, so malformed
   //    requests can't drain an IP's daily quota.
   let raw: unknown
   try {
@@ -181,20 +216,20 @@ export default async function handler(req: Request): Promise<Response> {
     return jsonError(400, 'bad_shape', 'Body does not match expected schema.')
   }
 
-  // 3. Length check (defense in depth — zod already caps each message; here we
+  // 4. Length check (defense in depth — zod already caps each message; here we
   //    sum the whole conversation).
   const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
   if (totalChars > MAX_TOTAL_CHARS) {
     return jsonError(413, 'too_long', 'Conversation too long. Start a new one.')
   }
 
-  // 4. Backend config.
+  // 5. Backend config.
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     return jsonError(500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
   }
 
-  // 5. Rate limit (per IP, only for well-formed requests). When no trusted IP
+  // 6. Rate limit (per IP, only for well-formed requests). When no trusted IP
   //    is resolvable (e.g. local dev) we use a single per-instance in-memory
   //    bucket rather than keying on spoofable input.
   const ip = clientIp(req)
@@ -202,8 +237,12 @@ export default async function handler(req: Request): Promise<Response> {
   if (!rl.allowed) {
     return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
   }
+  // Global backstop across all IPs (bounds total cost under IP rotation).
+  if (!(await checkGlobalLimit())) {
+    return jsonError(429, 'busy', 'The assistant is busy right now. Try again later.')
+  }
 
-  // 6. Trim history before sending to the model.
+  // 7. Trim history before sending to the model.
   const messages = parsed.data.messages.slice(-MAX_HISTORY)
 
   const client = new Anthropic({ apiKey })

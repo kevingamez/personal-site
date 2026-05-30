@@ -10,6 +10,7 @@ export const onRequest = defineMiddleware(async (_context, next) => {
   res.headers.set('X-Content-Type-Options', 'nosniff')
   res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  res.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
   res.headers.set(
     'Content-Security-Policy',
     [
@@ -20,6 +21,7 @@ export const onRequest = defineMiddleware(async (_context, next) => {
       "img-src 'self' data: blob: https:",
       "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.clarity.ms https://c.bing.com https://maps.googleapis.com https://maps.gstatic.com",
       "worker-src 'self' blob:",
+      "object-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
