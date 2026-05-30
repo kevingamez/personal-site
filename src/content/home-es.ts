@@ -16,13 +16,18 @@ export const es: HomeStrings = {
     twitterTitle: 'Kevin Gámez — Founding Engineer en Enttor',
     twitterDescription:
       'Founding engineer en enttor.ai. Outbound con IA, automatización de navegador, pipelines de LLM.',
-    includeJsonLd: false,
+    includeJsonLd: true,
     brandHref: '/es/',
     langSwitchHref: '/',
     langSwitchHreflang: 'en',
     langSwitchAriaLabel: 'Switch to English',
     langSwitchLabelHtml: 'EN · <b>ES</b>',
     skip: 'Saltar al contenido',
+    hreflang: [
+      { lang: 'en', href: 'https://kevingamez.com/' },
+      { lang: 'es', href: 'https://kevingamez.com/es/' },
+      { lang: 'x-default', href: 'https://kevingamez.com/' },
+    ],
   },
   nav: {
     about: 'Sobre mí',
@@ -56,6 +61,7 @@ export const es: HomeStrings = {
     titleHtml: 'Ingeniero primero, nerd de matemáticas <i>de cerca</i>.',
     blurb:
       'Founding engineer, full-stack, recién egresado de deep learning. La corta abajo; la larga, con café.',
+    portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
     p1Html:
       'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero: la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
     p2Html:

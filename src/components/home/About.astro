@@ -20,14 +20,7 @@ const { t } = Astro.props
     <div class="about-grid">
       <div>
         <div class="portrait">
-          <img
-            src="/kevin.jpg"
-            alt="Kevin Gámez en frente de Royce Hall, UCLA"
-            width="1200"
-            height="1500"
-            loading="lazy"
-            decoding="async"
-          />
+          <img src="/kevin.jpg" alt={t.portraitAlt} width="1200" height="1500" loading="lazy" decoding="async" />
           <span class="badge">K. GÁMEZ · 2026</span>
         </div>
       </div>

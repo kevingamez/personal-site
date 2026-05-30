@@ -23,6 +23,11 @@ export const en: HomeStrings = {
     langSwitchAriaLabel: 'Cambiar a español',
     langSwitchLabelHtml: '<b>EN</b> · ES',
     skip: 'Skip to content',
+    hreflang: [
+      { lang: 'en', href: 'https://kevingamez.com/' },
+      { lang: 'es', href: 'https://kevingamez.com/es/' },
+      { lang: 'x-default', href: 'https://kevingamez.com/' },
+    ],
   },
   nav: {
     about: 'About',
@@ -56,6 +61,7 @@ export const en: HomeStrings = {
     titleHtml: 'A small studio of <i>one</i>, mostly happy.',
     blurb:
       'Founding engineer, full-stack, deep-learning grad. Short version below; long version over coffee.',
+    portraitAlt: 'Kevin Gámez in front of Royce Hall, UCLA',
     p1Html:
       "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound engine from the ground up: the\n              browser automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them,\n              the Next.js dashboards where it all lives, and the NestJS APIs and Inngest queues holding it together.",
     p2Html:

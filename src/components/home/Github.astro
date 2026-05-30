@@ -9,6 +9,17 @@ interface Props {
 }
 
 const { t, stats } = Astro.props
+
+// Localized, curated descriptions for the well-known repos, keyed by GitHub
+// repo name. Falls back to the live API description for anything else, so the
+// ES page shows Spanish copy for these instead of the English API text.
+const repoDesc: Record<string, string> = {
+  "personal-site": t.repoSiteDesc,
+  "AD_ASTRA2023-SpaceInvaders": t.repoSpaceDesc,
+  Palladium_Chat: t.repoChatDesc,
+  "budget-app": t.repoBudgetDesc,
+  "GCP-CloudRun": t.repoCloudDesc,
+}
 ---
 
 <section id="github">
@@ -119,7 +130,7 @@ const { t, stats } = Astro.props
                   <div class="nm">
                     {GH_USER} / {r.name}
                   </div>
-                  <div class="desc">{r.description}</div>
+                  <div class="desc">{repoDesc[r.name] ?? r.description}</div>
                 </div>
                 <div class="stat">
                   {r.stars > 0 && <span>★ {r.stars}</span>}

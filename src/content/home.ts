@@ -29,6 +29,10 @@ export interface HomeStrings {
     langSwitchAriaLabel: string
     langSwitchLabelHtml: string // contains <b>EN</b> · ES or EN · <b>ES</b>
     skip: string
+    // hreflang alternates for this page. Bilingual home pages list en/es/
+    // x-default; single-language pages (e.g. privacy) pass an empty array so
+    // they don't falsely advertise a translation.
+    hreflang: { lang: string; href: string }[]
   }
   nav: {
     about: string
@@ -60,6 +64,7 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
+    portraitAlt: string
     p1Html: string
     p2Html: string
     p3Html: string
