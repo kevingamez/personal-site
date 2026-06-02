@@ -39,7 +39,7 @@ export const en: HomeStrings = {
   },
   hero: {
     hello: "Hi, I'm Kevin",
-    titleHtml: 'I build software<br />that <i>compounds.</i>',
+    titleHtml: 'I build things,<br />mostly <i>software.</i>',
     lede: "I'm the founding engineer at <b>Enttor</b>, where we use AI and browser automation to make outbound marketing\n            actually work. Before that, I shipped an e-commerce platform at <b>Samsam</b>. M.Sc. in deep learning from\n            Universidad de los Andes.",
     btnSeeWork: 'See work →',
     btnGetInTouch: 'Get in touch',

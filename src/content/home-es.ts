@@ -39,7 +39,7 @@ export const es: HomeStrings = {
   },
   hero: {
     hello: 'Hola, soy Kevin',
-    titleHtml: 'Construyo software<br />que <i>se compone.</i>',
+    titleHtml: 'Construyo cosas,<br />casi siempre <i>software.</i>',
     lede: 'Soy founding engineer en <b>Enttor</b>, donde usamos IA y automatización de navegador para que el outbound\n            de marketing realmente funcione. Antes lancé una plataforma de e-commerce en <b>Samsam</b>. Maestría en\n            deep learning en la Universidad de los Andes.',
     btnSeeWork: 'Ver proyectos →',
     btnGetInTouch: 'Hablemos',
