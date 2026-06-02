@@ -213,8 +213,8 @@ export const es: HomeStrings = {
     errorMsg: 'algo falló. intenta de nuevo o recarga.',
   },
   contact: {
-    titleHtml: '¿Quieres construir algo que <i>se componga</i>?',
-    body: 'Tomo un par de proyectos de consultoría al año, más alguna colaboración ocasional. Si algo aquí te resonó, el\n          inbox está abierto.',
+    titleHtml: 'Un gusto <i>conocerte</i>.',
+    body: 'Este es solo un rincón de internet para que me conozcas un poco. Si algo de aquí te resonó y quieres\n          saludar, el inbox está abierto.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnDev: 'Abrir modo dev',
   },

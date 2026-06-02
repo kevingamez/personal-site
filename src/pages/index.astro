@@ -7,7 +7,6 @@ import Experience from "@/components/home/Experience.astro"
 import Work from "@/components/home/Work.astro"
 import Github from "@/components/home/Github.astro"
 import Writing from "@/components/home/Writing.astro"
-import Wanderings from "@/components/home/Wanderings.astro"
 import Console from "@/components/home/Console.astro"
 import Contact from "@/components/home/Contact.astro"
 import Footer from "@/components/home/Footer.astro"
@@ -30,7 +29,6 @@ const githubStats = await loadHomeStats()
   <Work t={t.work} />
   <Github t={t.github} stats={githubStats} />
   <Writing t={t.writing} />
-  <Wanderings t={t.wanderings} />
   <Console t={t.console} />
   <Contact t={t.contact} />
   <Footer t={t.footer} buildId={buildId} />

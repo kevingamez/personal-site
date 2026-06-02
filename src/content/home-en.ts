@@ -211,8 +211,8 @@ export const en: HomeStrings = {
     errorMsg: 'something broke. try again or refresh.',
   },
   contact: {
-    titleHtml: 'Want to build something <i>compounding</i>?',
-    body: 'I take on a small number of consulting projects per year, plus the occasional collaboration. If something here\n          resonates, the inbox is open.',
+    titleHtml: 'Nice to <i>meet you</i>.',
+    body: 'This is just a corner of the internet where you can get to know me a little. If something here resonates and\n          you want to say hello, the inbox is open.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnDev: 'Open dev mode',
   },

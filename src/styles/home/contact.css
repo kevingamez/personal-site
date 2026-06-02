@@ -38,10 +38,16 @@
   font-size: 12.5px;
 }
 .contact-channels a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: var(--ink-2);
   border-bottom: 1px dashed var(--line-2);
   padding-bottom: 2px;
   transition: all 0.2s;
+}
+.contact-channels a svg {
+  flex-shrink: 0;
 }
 .contact-channels a:hover {
   color: var(--coral-strong);
