@@ -8,7 +8,6 @@ import { initContribGraph } from './contrib'
 import { initGhStats } from './gh-stats'
 import { initConsole } from './console'
 import { initWriting } from './writing'
-import { initWanderings } from './wanderings'
 import { initVisibility } from './visibility'
 import { initDevTransition } from './dev-transition'
 
@@ -18,7 +17,6 @@ initContribGraph()
 initGhStats()
 initWriting()
 initConsole()
-initWanderings()
 initVisibility()
 initDevTransition()
 

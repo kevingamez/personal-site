@@ -15,11 +15,11 @@ export const onRequest = defineMiddleware(async (_context, next) => {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms https://maps.googleapis.com https://maps.gstatic.com",
+      "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://www.clarity.ms https://*.clarity.ms",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https:",
-      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.clarity.ms https://c.bing.com https://maps.googleapis.com https://maps.gstatic.com",
+      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.clarity.ms https://c.bing.com",
       "worker-src 'self' blob:",
       "object-src 'none'",
       "frame-ancestors 'none'",
