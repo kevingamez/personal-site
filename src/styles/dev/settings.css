@@ -47,7 +47,7 @@
   letter-spacing: 0.16em;
 }
 
-/* Theme picker — 4 visual swatches */
+/* Theme picker - 4 visual swatches */
 .st-themes {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -251,7 +251,7 @@
   font-size: 14px;
 }
 
-/* Cursor preference hook — applied via document data-cursor attr. Used by
+/* Cursor preference hook - applied via document data-cursor attr. Used by
    the CodeMirror caret style override (see editor.css). */
 :root[data-cursor='bar'] .cm-cursor {
   border-left-width: 2px;

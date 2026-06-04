@@ -170,7 +170,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const dst = resolvePath(args[1])
       if (!inWorkspace(src) || !inWorkspace(dst))
         return errFn('mv: cannot move outside ~/' + PROJECT_NAME)
-      // Refuse to move a directory into itself or its own descendant — that
+      // Refuse to move a directory into itself or its own descendant - that
       // would create a cycle (src.children.x === src) and hang the explorer
       // walk on the next render.
       const srcKey = src.join('/')

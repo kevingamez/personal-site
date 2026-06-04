@@ -1,4 +1,4 @@
-// Real GitHub contribution heatmap. Reads `data-contrib` from #hm — a JSON
+// Real GitHub contribution heatmap. Reads `data-contrib` from #hm - a JSON
 // array of per-day level values (0..4) populated at build time from the
 // GraphQL contributionCalendar (same source as the home page graph).
 // Falls back to a randomized mock if the attribute is missing.

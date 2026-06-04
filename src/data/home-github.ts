@@ -334,7 +334,7 @@ async function fetchContribCalendarGraphQL(): Promise<ContribCalendar | null> {
 }
 
 // Public-profile scraper used when the token can't see private contributions.
-// GitHub serves the calendar as static HTML at /users/<user>/contributions —
+// GitHub serves the calendar as static HTML at /users/<user>/contributions -
 // each cell is `<td class="ContributionCalendar-day" data-date="YYYY-MM-DD"
 // data-level="0..4">` plus an adjacent `<tool-tip>N contributions on Mon Day,
 // Year</tool-tip>`. We parse counts from the tooltip when present and fall

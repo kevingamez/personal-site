@@ -3,7 +3,7 @@
 // the refresh button.
 
 // Cheap pseudo trace-id so the console doesn't feel static. Not real telemetry
-// — just a friendly nod for the curious tab-opener.
+// - just a friendly nod for the curious tab-opener.
 var el = document.getElementById('ref')
 if (el) {
   var hex = function (n) {

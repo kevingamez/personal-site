@@ -234,7 +234,7 @@ export function initConsole(): void {
       return
     }
     // Ctrl-C cancels an in-flight chat stream. runChat disables the input while
-    // a request runs, so the input's own keydown can't fire — handle it here.
+    // a request runs, so the input's own keydown can't fire - handle it here.
     // Don't preventDefault, and skip when text is selected, so Ctrl-C still
     // copies normally; cancelChat() is a no-op when nothing is streaming.
     if (

@@ -28,8 +28,8 @@ The full list is in `CLAUDE.md`. Highlights:
 - **No `<script is:inline>`** for anything beyond JSON-LD, GA, or small JSON data carriers. Put logic in `src/scripts/<area>/*.ts`.
 - Every animation must respect `prefers-reduced-motion`.
 - Security headers live in **both** `vercel.json` (canonical, served at the edge) and `src/middleware.ts` (fallback). Update both when adding a new third-party host.
-- Run `npm run format` before opening a PR — Prettier config is enforced in CI.
+- Run `npm run format` before opening a PR - Prettier config is enforced in CI.
 
 ## License
 
-Personal project; all rights reserved. The code is public for reference, not a permissive license — please don't ship a clone of the design.
+Personal project; all rights reserved. The code is public for reference, not a permissive license - please don't ship a clone of the design.

@@ -136,7 +136,7 @@
   color: var(--blue);
 }
 
-/* ── tail -f /var/log/commits — real recent commits from github ── */
+/* ── tail -f /var/log/commits - real recent commits from github ── */
 .commit-tail {
   max-height: 168px;
   overflow: hidden;

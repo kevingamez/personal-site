@@ -13,7 +13,7 @@ type Cursor = 'block' | 'bar' | 'underline'
 
 const THEME_VARS: Record<Theme, Record<string, string>> = {
   cream: {
-    // Default — the cream/coral editorial palette.
+    // Default - the cream/coral editorial palette.
     '--bg': '#0a0a0d',
     '--panel': '#10101a',
     '--panel-2': '#16161e',
@@ -312,7 +312,7 @@ function setStartedAt(): void {
 }
 
 export function initProfileSettings(): void {
-  // Profile widgets always run, even when the panel is hidden — the data is
+  // Profile widgets always run, even when the panel is hidden - the data is
   // ready the moment the user clicks Profile in the activity bar.
   const startedAt = Date.now()
   startClock()
@@ -326,7 +326,7 @@ export function initProfileSettings(): void {
     startUptime(startedAt)
   })
 
-  // Settings bindings — restore from localStorage first, then attach.
+  // Settings bindings - restore from localStorage first, then attach.
   bindThemeButtons()
   bindFontSize()
   bindCursor()

@@ -3,7 +3,7 @@
 Older event-marker history that used to live at the bottom of [CHANGELOG.md](./CHANGELOG.md).
 See [CHANGELOG-archive.md](./CHANGELOG-archive.md) for the earlier slice.
 
-## v1.0.0 — mid markers (2025-11-15 → 2025-11-24)
+## v1.0.0 - mid markers (2025-11-15 → 2025-11-24)
 
   <!-- 2025-11-15-7 -->
   <!-- 2025-11-15-8 -->

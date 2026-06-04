@@ -2,7 +2,7 @@
 import { loadHomeStats } from "@/data/home-github"
 import { loadRecentCommits } from "@/data/dev-github"
 
-// Same source of truth as the public-facing GitHub section on / — counts,
+// Same source of truth as the public-facing GitHub section on / - counts,
 // language mix and top repos are all live from the GraphQL/REST API at
 // build time (with disk cache).
 const stats = await loadHomeStats()
@@ -68,7 +68,7 @@ const featured = stats.topRepos.slice(0, 4).map((r) => {
         href="https://www.enttor.ai/"
         target="_blank"
         rel="noopener"
-        title="Enttor — ai outbound platform"
+        title="Enttor - ai outbound platform"
       >
         <span class="fl-num">01</span>
         <div class="fl-body">

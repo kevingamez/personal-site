@@ -5,7 +5,7 @@ Split out so every file in the repo stays under the 300-line cap (CLAUDE.md rule
 
 See [CHANGELOG-archive-2.md](./CHANGELOG-archive-2.md) for entries between 2025-11-15 and 2025-11-24.
 
-## v1.0.0 — early markers (2025-11-03 → 2025-11-14)
+## v1.0.0 - early markers (2025-11-03 → 2025-11-14)
 
   <!-- 4 -->
   <!-- update 6 -->
