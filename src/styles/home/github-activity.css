@@ -106,34 +106,22 @@
   transform: scale(1);
 }
 .contrib .day.l1 {
-  background: #f5cdb8;
+  background: #9be9a8;
 }
 .contrib .day.l2 {
-  background: #ec9978;
+  background: #40c463;
 }
 .contrib .day.l3 {
-  background: #df764f;
+  background: #30a14e;
 }
 .contrib .day.l4 {
-  background: var(--coral);
+  background: #216e39;
 }
 .contrib .day:hover {
   outline: 1.5px solid var(--ink);
   outline-offset: 1px;
   z-index: 2;
   cursor: crosshair;
-}
-.contrib .day.hot-now {
-  animation: contrib-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) 1.6s infinite;
-}
-@keyframes contrib-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(217, 105, 68, 0.55);
-  }
-  60% {
-    box-shadow: 0 0 0 7px rgba(217, 105, 68, 0);
-  }
 }
 .contrib-stats {
   display: grid;
@@ -244,8 +232,5 @@
     opacity: 1;
     transform: none;
     transition: none;
-  }
-  .contrib .day.hot-now {
-    animation: none;
   }
 }

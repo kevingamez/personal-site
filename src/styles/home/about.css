@@ -17,7 +17,8 @@
   border: 1.5px solid var(--ink);
   position: relative;
   overflow: hidden;
-  box-shadow: 6px 6px 0 var(--coral);
+  outline: 1px solid var(--coral);
+  outline-offset: 6px;
 }
 .portrait img {
   position: absolute;

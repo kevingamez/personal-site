@@ -2,14 +2,15 @@
   --cream: #faf7f0;
   --cream-2: #f3ede2;
   --cream-3: #ebe3d4;
-  --ink: #1f1d1a;
-  --ink-2: #3a352f;
-  --muted: #6b6660;
-  --line: rgba(31, 29, 26, 0.1);
-  --line-2: rgba(31, 29, 26, 0.18);
-  --coral: #d96944;
-  --coral-strong: #a5401f;
-  --coral-soft: #fce6dc;
+  --ink: #18171a;
+  --ink-2: #36343a;
+  --muted: #6a6770;
+  --line: rgba(24, 23, 26, 0.1);
+  --line-2: rgba(24, 23, 26, 0.18);
+  --coral: #c1462e;
+  --coral-strong: #8f2f1a;
+  --coral-soft: #ece1d2;
+  --slate: #34506b;
   --gold: #c9a35e;
   --green: #5b8a72;
 }

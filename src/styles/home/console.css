@@ -6,30 +6,6 @@
   isolation: isolate;
   overflow: hidden;
 }
-/* Subtle warm wash so the dark glass has something to refract */
-.console-section::before,
-.console-section::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
-}
-.console-section::before {
-  background: rgba(217, 105, 68, 0.32);
-  width: 30vw;
-  height: 30vw;
-  top: 18%;
-  left: 18%;
-}
-.console-section::after {
-  background: rgba(252, 230, 220, 0.7);
-  width: 26vw;
-  height: 26vw;
-  top: 35%;
-  right: 15%;
-}
 
 .console-wrap {
   position: relative;

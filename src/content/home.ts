@@ -43,7 +43,8 @@ export interface HomeStrings {
     sayHi: string
   }
   hero: {
-    hello: string
+    metaRole: string // quiet status line, left of the live dot
+    metaPlace: string // location + latitude
     titleHtml: string // contains <br/> and <i>
     lede: string // raw HTML allowed (b tags)
     btnSeeWork: string

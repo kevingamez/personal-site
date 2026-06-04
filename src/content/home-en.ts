@@ -38,7 +38,8 @@ export const en: HomeStrings = {
     sayHi: 'Say hi →',
   },
   hero: {
-    hello: "Hi, I'm Kevin",
+    metaRole: 'Founding engineer @ Enttor',
+    metaPlace: 'Bogotá · 04°35′N',
     titleHtml: 'I build things,<br />mostly <i>software.</i>',
     lede: "I'm the founding engineer at <b>Enttor</b>, where we use AI and browser automation to make outbound marketing\n            actually work. Before that, I shipped an e-commerce platform at <b>Samsam</b>. M.Sc. in deep learning from\n            Universidad de los Andes.",
     btnSeeWork: 'See work →',
@@ -57,8 +58,8 @@ export const en: HomeStrings = {
       '<b>Conway\'s Game of Life</b> · a zero-player cellular automaton. Each cell lives, dies, or is born from the count of its 8 neighbors (B3/S23). Simple rules, surprising patterns. Click to seed a stamp. <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener">read more →</a>',
   },
   about: {
-    secNum: '§01 · About',
-    titleHtml: 'A small studio of <i>one</i>, mostly happy.',
+    secNum: 'About',
+    titleHtml: 'A studio of one.',
     blurb:
       'Founding engineer, full-stack, deep-learning grad. Short version below; long version over coffee.',
     portraitAlt: 'Kevin Gámez in front of Royce Hall, UCLA',
@@ -67,19 +68,19 @@ export const en: HomeStrings = {
     p2Html:
       'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace with a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
     p3Html:
-      'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and a minor in management. The Game of Life on the right has been\n              alive since 1970; I just gave it a frame.',
+      'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and a minor in management. The Game of Life on the right has been\n              running since 1970.',
     qfBased: 'Based',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Role',
     qfRoleV: 'Founding engineer @ enttor.ai',
     qfStack: 'Stack of choice',
     qfStackV: 'TypeScript · Next.js · Postgres',
-    qfObsessed: 'Currently obsessed',
+    qfObsessed: 'Tinkering with',
     qfObsessedV: 'Browser automation &amp; LLM pipelines',
   },
   experience: {
-    secNum: '§03 · Trajectory',
-    titleHtml: 'A short, mostly <i>linear</i> story.',
+    secNum: 'Trajectory',
+    titleHtml: "Two startups and a master's.",
     blurb:
       "Two founding-engineer tours, a master's in deep learning, and the long stretch at Uniandes that taught me\n            how to ship.",
     e1Year: 'Jun 2025 · now',
@@ -144,11 +145,10 @@ export const en: HomeStrings = {
       "The page you're on. Open-source, built incrementally, and a place to put math that I think is beautiful\n              next to software I'm proud of.",
   },
   github: {
-    secNum: '§05 · Open source',
-    titleHtml: 'Code I leave <i>out in the open.</i>',
-    blurb:
-      'The numbers, the languages, and the repos. The contribution graph is decorative; everything else is real.',
-    snapshot: 'github.com/kevingamez · live snapshot',
+    secNum: 'Open source',
+    titleHtml: 'Code I leave out in the open.',
+    blurb: 'The repos, the languages, and a year of real commits, straight from GitHub.',
+    snapshot: 'github.com/kevingamez · updated daily',
     publicRepos: 'repos shipped',
     publicReposSub: 'public, private, and org repos I’ve contributed to',
     languagesShipped: 'languages shipped',
@@ -173,8 +173,8 @@ export const en: HomeStrings = {
     repoCloudDesc: 'Containerized service deploys on Cloud Run.',
   },
   writing: {
-    secNum: '§06 · Writing',
-    titleHtml: 'Notes from the <i>build.</i>',
+    secNum: 'Writing',
+    titleHtml: 'Notes from the build.',
     blurb: 'Short essays on engineering, startups, and what shipping actually feels like.',
     reactionsLabel: 'reactions',
     commentsLabel: 'comments',
@@ -194,8 +194,8 @@ export const en: HomeStrings = {
     since: 'since',
   },
   console: {
-    secNum: '§09 · Console',
-    titleHtml: 'A real shell. <i>And an AI, if you ask.</i>',
+    secNum: 'Console',
+    titleHtml: 'Try the shell. Ask the AI anything.',
     blurb:
       'Type a command: <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… Need a real conversation? <span class="ac">kevin "your question"</span> opens the LLM.',
     promptLabel: 'kevin@gamez · ~',

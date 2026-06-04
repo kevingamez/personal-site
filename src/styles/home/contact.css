@@ -2,6 +2,7 @@
 .contact {
   padding: 120px 0;
   text-align: center;
+  border-bottom: none;
 }
 .contact h2 {
   font-family: 'Instrument Serif', serif;

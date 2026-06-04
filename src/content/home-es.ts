@@ -38,7 +38,8 @@ export const es: HomeStrings = {
     sayHi: 'Saludar →',
   },
   hero: {
-    hello: 'Hola, soy Kevin',
+    metaRole: 'Founding engineer @ Enttor',
+    metaPlace: 'Bogotá · 04°35′N',
     titleHtml: 'Construyo cosas,<br />casi siempre <i>software.</i>',
     lede: 'Soy founding engineer en <b>Enttor</b>, donde usamos IA y automatización de navegador para que el outbound\n            de marketing realmente funcione. Antes lancé una plataforma de e-commerce en <b>Samsam</b>. Maestría en\n            deep learning en la Universidad de los Andes.',
     btnSeeWork: 'Ver proyectos →',
@@ -57,8 +58,8 @@ export const es: HomeStrings = {
       '<b>Juego de la vida de Conway</b> · un autómata celular de cero jugadores. Cada celda vive, muere o nace según el número de sus 8 vecinas (B3/S23). Reglas simples, patrones sorprendentes. Click para sembrar un patrón. <a href="https://es.wikipedia.org/wiki/Juego_de_la_vida" target="_blank" rel="noopener">más info →</a>',
   },
   about: {
-    secNum: '§01 · Sobre mí',
-    titleHtml: 'Ingeniero primero, nerd de matemáticas <i>de cerca</i>.',
+    secNum: 'Sobre mí',
+    titleHtml: 'Un estudio de una persona.',
     blurb:
       'Founding engineer, full-stack, recién egresado de deep learning. La corta abajo; la larga, con café.',
     portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
@@ -67,19 +68,19 @@ export const es: HomeStrings = {
     p2Html:
       'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
     p3Html:
-      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El Juego\n              de la vida de la derecha está vivo desde 1970; yo solo le puse marco.',
+      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El Juego\n              de la vida de la derecha lleva corriendo desde 1970.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
     qfRoleV: 'Founding engineer @ enttor.ai',
     qfStack: 'Stack favorito',
     qfStackV: 'TypeScript · Next.js · Postgres',
-    qfObsessed: 'Obsesión actual',
+    qfObsessed: 'Cacharreando con',
     qfObsessedV: 'Browser automation &amp; pipelines de LLM',
   },
   experience: {
-    secNum: '§03 · Trayectoria',
-    titleHtml: 'Una historia corta y casi <i>lineal</i>.',
+    secNum: 'Trayectoria',
+    titleHtml: 'Dos startups y una maestría.',
     blurb:
       'Dos turnos como founding engineer, una maestría en deep learning, y los años en Uniandes que me enseñaron a\n            hacer shipping.',
     e1Year: 'Jun 2025 · hoy',
@@ -146,11 +147,10 @@ export const es: HomeStrings = {
       'La página en la que estás. Open-source, construida poco a poco, y un lugar para poner matemáticas que me\n              parecen bellas al lado de software del que estoy orgulloso.',
   },
   github: {
-    secNum: '§05 · Open source',
-    titleHtml: 'Código que dejo <i>a la vista.</i>',
-    blurb:
-      'Los números, los lenguajes y los repos. El gráfico de contribuciones es decorativo; el resto es real.',
-    snapshot: 'github.com/kevingamez · snapshot en vivo',
+    secNum: 'Open source',
+    titleHtml: 'Código que dejo a la vista.',
+    blurb: 'Los repos, los lenguajes y un año de commits reales, directo de GitHub.',
+    snapshot: 'github.com/kevingamez · actualizado a diario',
     publicRepos: 'repos en los que ship',
     publicReposSub: 'públicos, privados y de orgs en los que he aportado',
     languagesShipped: 'lenguajes embarcados',
@@ -175,8 +175,8 @@ export const es: HomeStrings = {
     repoCloudDesc: 'Despliegues de servicios containerizados en Cloud Run.',
   },
   writing: {
-    secNum: '§06 · Escritos',
-    titleHtml: 'Notas <i>desde la trinchera.</i>',
+    secNum: 'Escritos',
+    titleHtml: 'Notas desde la trinchera.',
     blurb: 'Ensayos cortos sobre ingeniería, startups y cómo se siente realmente sacar producto.',
     reactionsLabel: 'reacciones',
     commentsLabel: 'comentarios',
@@ -196,8 +196,8 @@ export const es: HomeStrings = {
     since: 'desde',
   },
   console: {
-    secNum: '§09 · Consola',
-    titleHtml: 'Una shell real. <i>Y una IA, si la llamas.</i>',
+    secNum: 'Consola',
+    titleHtml: 'Prueba la shell. Pregúntale a la IA.',
     blurb:
       'Escribe un comando: <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… ¿Quieres conversar? <span class="ac">kevin "tu pregunta"</span> abre la IA.',
     promptLabel: 'kevin@gamez · ~',
