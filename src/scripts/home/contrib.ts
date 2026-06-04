@@ -125,9 +125,6 @@ export function initContribGraph(): void {
     g.appendChild(el)
   }
 
-  const last = g.lastElementChild as HTMLElement | null
-  if (last && parseInt(last.dataset.lvl || '0') > 0) last.classList.add('hot-now')
-
   const totalEl = document.getElementById('contrib-total')
   const currentEl = document.getElementById('contrib-current')
   const longestEl = document.getElementById('contrib-longest')

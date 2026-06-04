@@ -10,8 +10,9 @@
   --coral: #c1462e;
   --coral-strong: #8f2f1a;
   --coral-soft: #ece1d2;
+  --coral-on-dark: #ff7a5c;
   --slate: #34506b;
-  --gold: #c9a35e;
+  --gold: #8a6a1f;
   --green: #5b8a72;
 }
 * {
@@ -50,6 +51,16 @@ a {
 button {
   font-family: inherit;
   cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--coral-strong);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Lighter ring on the dark terminal / stats banner so it stays visible */
+.console-shell :focus-visible,
+.gh-banner :focus-visible {
+  outline-color: var(--coral-on-dark);
 }
 ::selection {
   background: var(--coral);

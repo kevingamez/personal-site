@@ -30,7 +30,7 @@ footer {
   margin: 0 0 8px;
 }
 .foot-grid .col-name i {
-  font-style: italic;
+  font-style: normal;
   color: var(--coral);
 }
 .foot-grid p {

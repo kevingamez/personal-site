@@ -58,7 +58,7 @@
 }
 .about-prose p:first-child::first-letter {
   font-size: 1.4em;
-  font-style: italic;
+  font-style: normal;
   color: var(--coral);
 }
 .about-prose b {
@@ -67,7 +67,7 @@
 }
 .about-prose i {
   color: var(--coral-strong);
-  font-style: italic;
+  font-style: normal;
 }
 .quick-facts {
   margin-top: 30px;

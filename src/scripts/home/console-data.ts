@@ -88,7 +88,7 @@ export const CONTACT_LINES = [
   '<b>email   </b>  <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>',
   '<b>github  </b>  <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>',
   '<b>linkedin</b>  <a href="https://co.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">linkedin.com/in/kevin-gamez</a>',
-  '<b>x       </b>  <a href="https://x.com/kevin_gamez" target="_blank" rel="noopener">x.com/kevin_gamez</a>',
+  '<b>x       </b>  <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener">x.com/KevinGamezA</a>',
 ]
 
 export const CAT_FILES = ['about', 'experience', 'stack', 'repos', 'now', 'contact']

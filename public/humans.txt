@@ -2,7 +2,7 @@
   Founder, designer, developer: Kevin Gámez
   Site: kevingamez.com
   Github: @kevingamez
-  Twitter: @kevingamez
+  Twitter: @KevinGamezA
   From: Bogotá, Colombia
 
 /* THANKS */

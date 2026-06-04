@@ -3,17 +3,17 @@ import type { HomeStrings } from './home'
 export const en: HomeStrings = {
   meta: {
     htmlLang: 'en',
-    title: 'Kevin Gámez — Founding Engineer at Enttor',
+    title: 'Kevin Gámez - Founding Engineer at Enttor',
     description:
       'Kevin Gámez is the founding engineer at Enttor, based in Bogotá. AI outbound, browser automation, OpenAI pipelines, Next.js / NestJS / Postgres.',
     canonical: 'https://kevingamez.com/',
     ogUrl: 'https://kevingamez.com/',
-    ogTitle: 'Kevin Gámez — Founding Engineer at Enttor',
+    ogTitle: 'Kevin Gámez - Founding Engineer at Enttor',
     ogDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
-    twitterTitle: 'Kevin Gámez — Founding Engineer at Enttor',
+    twitterTitle: 'Kevin Gámez - Founding Engineer at Enttor',
     twitterDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
     includeJsonLd: true,
@@ -145,7 +145,7 @@ export const en: HomeStrings = {
       "The page you're on. Open-source, built incrementally, and a place to put math that I think is beautiful\n              next to software I'm proud of.",
   },
   github: {
-    secNum: 'Open source',
+    secNum: 'GitHub',
     titleHtml: 'Code I leave out in the open.',
     blurb: 'The repos, the languages, and a year of real commits, straight from GitHub.',
     snapshot: 'github.com/kevingamez · updated daily',
@@ -224,7 +224,7 @@ export const en: HomeStrings = {
     sectionsAbout: 'About',
     sectionsExperience: 'Experience',
     sectionsWork: 'Work',
-    sectionsGithub: 'Open source',
+    sectionsGithub: 'GitHub',
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
     fonts: 'Set in Instrument Serif &amp; Inter Tight',

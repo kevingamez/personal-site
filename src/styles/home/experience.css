@@ -85,7 +85,7 @@
 }
 .tl-role .at {
   color: var(--coral-strong);
-  font-style: italic;
+  font-style: normal;
 }
 .tl-meta {
   font-family: 'JetBrains Mono', monospace;
@@ -160,9 +160,15 @@
   padding: 14px 0;
   border-bottom: 1px dashed var(--line);
 }
-.achievement:last-child,
-.achievement:nth-last-child(2):nth-child(odd) {
+.achievement:last-child {
   border-bottom: none;
+}
+@media (min-width: 901px) {
+  /* In the 2-col grid the second-to-last item sits in the last row, so its
+     dashed divider would point at empty space; drop it too. */
+  .achievement:nth-last-child(2) {
+    border-bottom: none;
+  }
 }
 .ach-year {
   display: block;
@@ -180,7 +186,7 @@
   margin: 0 0 4px;
 }
 .ach-title i {
-  font-style: italic;
+  font-style: normal;
   color: var(--gold);
 }
 .ach-meta {

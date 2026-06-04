@@ -39,7 +39,7 @@ h1.hero-title {
   text-wrap: balance;
 }
 h1.hero-title i {
-  font-style: italic;
+  font-style: normal;
   color: var(--coral);
 }
 .hero-lede {
