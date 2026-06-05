@@ -1,19 +1,24 @@
 :root {
-  --cream: #faf7f0;
-  --cream-2: #f3ede2;
-  --cream-3: #ebe3d4;
-  --ink: #18171a;
-  --ink-2: #36343a;
-  --muted: #6a6770;
-  --line: rgba(24, 23, 26, 0.1);
-  --line-2: rgba(24, 23, 26, 0.18);
-  --coral: #c1462e;
-  --coral-strong: #8f2f1a;
-  --coral-soft: #ece1d2;
+  /* Noir — warm dark editorial identity.
+     --cream* are the (now dark) page + raised surfaces; --ink* are the
+     (now light) text colors, so token-driven sections invert automatically.
+     --panel is the deepest surface for the footer / stat banner. */
+  --cream: #15110d;
+  --cream-2: #1e1812;
+  --cream-3: #2a221a;
+  --panel: #100c08;
+  --ink: #f4ede1;
+  --ink-2: #cabeac;
+  --muted: #948a7a;
+  --line: rgba(244, 237, 225, 0.1);
+  --line-2: rgba(244, 237, 225, 0.2);
+  --coral: #ff6a45;
+  --coral-strong: #ff8a68;
+  --coral-soft: rgba(255, 106, 69, 0.16);
   --coral-on-dark: #ff7a5c;
-  --slate: #34506b;
-  --gold: #8a6a1f;
-  --green: #5b8a72;
+  --slate: #82a8cf;
+  --gold: #dab368;
+  --green: #6fbf97;
 }
 * {
   box-sizing: border-box;
@@ -35,7 +40,7 @@ body {
   background: var(--cream);
   color: var(--ink);
   font-family:
-    'Inter Tight',
+    'Hanken Grotesk',
     system-ui,
     -apple-system,
     sans-serif;
@@ -43,6 +48,8 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Fraunces' "ff"/"fi" ligatures look fussy in big display text - turn them off. */
+  font-variant-ligatures: none;
 }
 a {
   color: inherit;
@@ -59,7 +66,8 @@ button {
 }
 /* Lighter ring on the dark terminal / stats banner so it stays visible */
 .console-shell :focus-visible,
-.gh-banner :focus-visible {
+.gh-banner :focus-visible,
+footer :focus-visible {
   outline-color: var(--coral-on-dark);
 }
 ::selection {
