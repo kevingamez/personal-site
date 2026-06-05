@@ -1,0 +1,79 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["work"]
+}
+
+const { t } = Astro.props
+
+const sideProjects = [
+  { name: t.p2Name, desc: t.p2Desc, meta: "WASM · canvas · simulation" },
+  { name: t.p3Name, desc: t.p3Desc, meta: "fractals · shaders · deep zoom" },
+  { name: t.p4Name, desc: t.p4Desc, meta: "Python · notebooks · math" },
+  { name: t.p5Name, desc: t.p5Desc, meta: "Astro · TypeScript · editorial UI" },
+]
+---
+
+<section id="work" class="work-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+
+    <article class="work-feature">
+      <div class="wf-copy">
+        <div class="work-eyebrow">{t.p1Featured}</div>
+        <h3 class="wf-title"><Fragment set:html={t.p1NameHtml} /></h3>
+        <p class="wf-desc">{t.p1Desc}</p>
+
+        <div class="wf-stack" aria-label="Technology stack">
+          <span>Next.js</span>
+          <span>NestJS</span>
+          <span>OpenAI</span>
+          <span>Inngest</span>
+          <span>Supabase</span>
+        </div>
+
+        <a class="work-link" href="https://www.enttor.ai/" target="_blank" rel="noopener">
+          {t.p1Link}
+        </a>
+      </div>
+
+      <a class="wf-visual" href="https://www.enttor.ai/" target="_blank" rel="noopener">
+        <img
+          src="/posts/lessons-turbo.jpg"
+          alt={t.p1ImageAlt}
+          width="1400"
+          height="733"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wf-plate" aria-hidden="true">
+          <span>prospect graph</span>
+          <span>llm qualify</span>
+          <span>queue fanout</span>
+        </div>
+      </a>
+    </article>
+
+    <div class="work-grid">
+      {
+        sideProjects.map((p, i) => (
+          <article class="work-card">
+            <div class="wc-index">{String(i + 2).padStart(2, "0")}</div>
+            <div>
+              <h3>{p.name}</h3>
+              <p>{p.desc}</p>
+            </div>
+            <div class="wc-meta">{p.meta}</div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
