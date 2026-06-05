@@ -2,13 +2,14 @@
 @import './base.css';
 @import './nav.css';
 @import './section-frame.css';
+@import './reveal.css';
 @import './hero.css';
+@import './work.css';
 @import './about.css';
 @import './experience.css';
 @import './github-stats.css';
 @import './github-activity.css';
 @import './strava.css';
-@import './strava-charts.css';
 @import './writing.css';
 @import './console.css';
 @import './contact.css';
