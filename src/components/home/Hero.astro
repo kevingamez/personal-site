@@ -11,11 +11,12 @@ const { t } = Astro.props
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
+      <div class="hero-kicker"><span class="hk-no">00</span><span class="hk-rule"></span></div>
       <h1 class="hero-title"><Fragment set:html={t.titleHtml} /></h1>
 
       <p class="hero-lede"><Fragment set:html={t.lede} /></p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#github">{t.btnSeeWork}</a>
+        <a class="btn btn-primary" href="#work">{t.btnSeeWork}</a>
         <a class="btn btn-ghost" href="#contact">{t.btnGetInTouch}</a>
       </div>
       <div class="meta-row">
