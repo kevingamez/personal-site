@@ -5,4 +5,5 @@ import sitemap from '@astrojs/sitemap'
 export default defineConfig({
   site: 'https://kevingamez.com',
   integrations: [sitemap()],
+  devToolbar: { enabled: false },
 })
