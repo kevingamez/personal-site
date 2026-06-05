@@ -106,10 +106,14 @@ export interface HomeStrings {
     blurb: string
     p1Featured: string
     p1NameHtml: string
+    p1ImageAlt: string
     p1Desc: string
     p1Link: string
+    p2Name: string
     p2Desc: string
+    p3Name: string
     p3Desc: string
+    p4Name: string
     p4Desc: string
     p5Name: string
     p5Desc: string
@@ -146,17 +150,24 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
-    heroCaption: string
     statKm: string
+    statMi: string
     statHours: string
     statElevation: string
+    statElevationFt: string
     statActivities: string
     weeklyTitle: string
     weeklyPeakLabel: string
-    insightLongestLabel: string
+    featuredLabel: string
+    featDist: string
+    featElev: string
+    featTime: string
+    featSpeed: string
+    featPace: string
+    insightClimbLabel: string
+    insightFastLabel: string
     insightBiggestLabel: string
     insightClimbedLabel: string
-    insightBusiestLabel: string
     climbedCompare: string
     weekOf: string
     heatmapTitle: string
