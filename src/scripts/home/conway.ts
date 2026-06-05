@@ -140,15 +140,20 @@ export function initConway(): void {
   let curStamp = 'glider'
   document.querySelectorAll<HTMLElement>('.gol-stamp').forEach((b) => {
     b.addEventListener('click', () => {
-      curStamp = b.dataset.stamp || 'glider'
-      document.querySelectorAll('.gol-stamp').forEach((x) => x.classList.remove('on'))
-      b.classList.add('on')
-      if (curStamp === 'clear') {
+      const stamp = b.dataset.stamp || 'glider'
+      if (stamp === 'clear') {
+        // "clear" is a momentary action, not a selectable mode: wipe the board
+        // without arming the stamp or leaving anything in the coral .on state.
+        document.querySelectorAll('.gol-stamp').forEach((x) => x.classList.remove('on'))
         grid.fill(0)
         trail.fill(0)
         gen = 0
         if (rafId === null) draw()
+        return
       }
+      curStamp = stamp
+      document.querySelectorAll('.gol-stamp').forEach((x) => x.classList.remove('on'))
+      b.classList.add('on')
     })
   })
 

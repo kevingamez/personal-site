@@ -1,9 +1,9 @@
 /* ─── Hero ─── */
 .hero {
-  min-height: calc(100svh - 54px);
+  min-height: calc(100svh - 92px);
   display: flex;
   align-items: center;
-  padding: 24px 0 56px;
+  padding: 22px 0 46px;
   border-bottom: 1px solid var(--line);
   position: relative;
   overflow: hidden;
@@ -15,7 +15,7 @@
 .hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 1.25fr;
-  gap: 56px;
+  gap: clamp(38px, 5vw, 56px);
   align-items: center;
   width: 100%;
 }
@@ -29,12 +29,35 @@
     gap: 48px;
   }
 }
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.hk-no {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--coral);
+  padding: 3px 9px 2px;
+  border: 1px solid var(--coral);
+  border-radius: 5px;
+}
+.hk-rule {
+  height: 1px;
+  width: 56px;
+  background: var(--line-2);
+}
+/* No hero entrance animation: the content stands on its own. (Removed the
+   staggered fade-slide-up, a generic AI-motion cliche.) */
 h1.hero-title {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Fraunces', serif;
   font-weight: 400;
-  font-size: clamp(56px, 6.6vw, 92px);
-  line-height: 0.94;
-  letter-spacing: -0.028em;
+  font-size: 82px;
+  line-height: 0.96;
+  letter-spacing: 0;
   margin: 0 0 24px;
   text-wrap: balance;
 }
@@ -68,14 +91,20 @@ h1.hero-title i {
   font-weight: 500;
   transition:
     transform 0.2s,
-    background 0.2s;
+    background 0.2s,
+    box-shadow 0.2s;
 }
 .btn-primary {
   background: var(--ink);
   color: var(--cream);
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -8px rgba(24, 23, 26, 0.45);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
 }
 .btn-ghost {
   border: 1px solid var(--line-2);
@@ -83,6 +112,9 @@ h1.hero-title i {
 }
 .btn-ghost:hover {
   background: var(--cream-2);
+}
+.btn:active {
+  transform: translateY(0);
 }
 .meta-row {
   display: flex;
@@ -127,20 +159,10 @@ h1.hero-title i {
 .gol-wrap {
   position: relative;
 }
-.gol-cap {
-  position: absolute;
-  top: -22px;
-  left: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--coral-strong);
-}
 .gol-frame {
   position: relative;
   aspect-ratio: 1/1;
-  max-height: calc(100svh - 140px);
+  max-height: calc(100svh - 258px);
   margin-left: auto;
   max-width: 100%;
   border: 1.5px solid var(--ink);
@@ -148,6 +170,33 @@ h1.hero-title i {
   box-shadow:
     9px 9px 0 var(--ink),
     14px 14px 0 var(--coral);
+}
+@media (min-width: 1180px) and (max-height: 950px) {
+  .hero {
+    min-height: calc(100svh - 132px);
+  }
+  h1.hero-title {
+    font-size: 76px;
+  }
+  .hero-lede {
+    max-width: 36ch;
+  }
+  .gol-frame {
+    max-height: calc(100svh - 318px);
+  }
+  .gol-note {
+    margin-top: 24px;
+  }
+}
+@media (max-width: 900px) {
+  h1.hero-title {
+    font-size: 64px;
+  }
+}
+@media (max-width: 520px) {
+  h1.hero-title {
+    font-size: 52px;
+  }
 }
 @media (max-width: 900px) {
   .gol-frame {
@@ -182,7 +231,7 @@ h1.hero-title i {
   font-weight: 600;
 }
 .gol-note {
-  margin: 56px 0 0;
+  margin: 30px 0 0;
   font-size: 13px;
   line-height: 1.55;
   color: var(--muted);
@@ -225,6 +274,10 @@ h1.hero-title i {
   font-size: 11px;
   color: var(--ink);
   cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .gol-btn:hover {
   background: var(--ink);
@@ -249,6 +302,10 @@ h1.hero-title i {
   color: var(--ink);
   cursor: pointer;
   letter-spacing: 0.04em;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .gol-stamp:hover {
   background: var(--ink);
