@@ -16,7 +16,7 @@ const orderedPosts = [...posts].sort((a, b) => {
 
 // Char-based preview - predictable across cards regardless of paragraph
 // breaks, and lets us know whether the post was actually truncated.
-const PREVIEW = 360
+const PREVIEW = 240
 function preview(text: string): { text: string; truncated: boolean } {
   const trimmed = text.replace(/\n+$/, "")
   if (trimmed.length <= PREVIEW) return { text: trimmed, truncated: false }
@@ -43,7 +43,15 @@ function preview(text: string): { text: string; truncated: boolean } {
           orderedPosts.map((p) => (
             <article class="post-card">
               <header class="pc-head">
-                <img class="pc-avatar" src="/kevin.jpg" alt="" width="48" height="48" />
+                <img
+                  class="pc-avatar"
+                  src="/kevin-avatar.jpg"
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div class="pc-author">
                   <div class="pc-name">
                     Kevin Gamez{" "}
@@ -155,7 +163,9 @@ function preview(text: string): { text: string; truncated: boolean } {
             type="button"
             data-dot-index={i}
             aria-label={`Go to post ${i + 1}`}
-          />
+          >
+            <span class="feed-dot-shape" />
+          </button>
         ))
       }
     </div>

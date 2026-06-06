@@ -14,7 +14,10 @@ export function initWriting(): void {
     if (!feed) return
     const target = cards[Math.max(0, Math.min(i, cards.length - 1))]
     if (!target) return
-    feed.scrollTo({ left: target.offsetLeft - feed.offsetLeft - 24, behavior: 'smooth' })
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth'
+    feed.scrollTo({ left: target.offsetLeft - feed.offsetLeft - 24, behavior })
   }
 
   function activeIndex(): number {
