@@ -1,6 +1,6 @@
 footer {
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--panel);
+  color: var(--ink);
   padding: 48px 0 32px;
 }
 .foot-grid {
@@ -18,26 +18,26 @@ footer {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   color: rgba(250, 247, 240, 0.55);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin: 0 0 14px;
   font-weight: 400;
 }
 .foot-grid .col-name {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Fraunces', serif;
   font-size: 32px;
   line-height: 1.1;
   margin: 0 0 8px;
 }
 .foot-grid .col-name i {
   font-style: normal;
-  color: var(--coral);
+  color: var(--coral-on-dark);
 }
 .foot-grid p {
   font-size: 14px;
   color: rgba(250, 247, 240, 0.7);
   max-width: 36ch;
   margin: 0;
+  text-wrap: pretty;
 }
 .foot-grid ul {
   list-style: none;
@@ -53,7 +53,7 @@ footer {
   transition: color 0.2s;
 }
 .foot-grid ul a:hover {
-  color: var(--coral);
+  color: var(--coral-on-dark);
 }
 .colophon {
   display: flex;
@@ -66,4 +66,20 @@ footer {
   letter-spacing: 0.06em;
   flex-wrap: wrap;
   gap: 14px;
+}
+
+@media (min-width: 1180px) and (max-height: 950px) {
+  footer {
+    padding: 34px 0 24px;
+  }
+  .foot-grid {
+    gap: 32px;
+    margin-bottom: 26px;
+  }
+  .foot-grid .col-name {
+    font-size: 28px;
+  }
+  .colophon {
+    padding-top: 18px;
+  }
 }

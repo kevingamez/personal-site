@@ -1,8 +1,8 @@
 /* ─── About ─── */
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 60px;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.45fr);
+  gap: 54px;
   align-items: start;
 }
 @media (max-width: 900px) {
@@ -38,7 +38,7 @@
   color: var(--ink);
   background: var(--cream);
   padding: 3px 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   border: 1px solid var(--line);
 }
 .about-prose {
@@ -53,7 +53,7 @@
 .about-prose p:first-child {
   font-size: 22px;
   color: var(--ink);
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Fraunces', serif;
   line-height: 1.4;
 }
 .about-prose p:first-child::first-letter {
@@ -74,6 +74,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
+  align-items: start;
 }
 .qf {
   padding: 14px 16px;
@@ -85,12 +86,40 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin-bottom: 4px;
 }
 .qf .v {
   font-size: 14.5px;
   color: var(--ink);
   font-weight: 500;
+}
+
+@media (min-width: 1180px) and (max-height: 950px) {
+  .about-grid {
+    grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.5fr);
+    gap: 42px;
+  }
+  .portrait {
+    aspect-ratio: 1 / 1.05;
+    max-height: 420px;
+  }
+  .about-prose {
+    font-size: 16px;
+    line-height: 1.52;
+  }
+  .about-prose p {
+    margin-bottom: 14px;
+  }
+  .about-prose p:first-child {
+    font-size: 20px;
+    line-height: 1.32;
+  }
+  .quick-facts {
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .qf {
+    padding: 11px 13px;
+  }
 }
