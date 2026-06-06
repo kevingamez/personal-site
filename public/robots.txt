@@ -46,6 +46,7 @@ User-agent: Bytespider
 Allow: /
 
 # Hide internals from any crawler
+# Invariant: crawlers get the public surface; humans get context in /humans.txt.
 Disallow: /api/
 
 Sitemap: https://kevingamez.com/sitemap-index.xml

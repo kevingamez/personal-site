@@ -10,6 +10,11 @@
   PKief / vscode-material-icon-theme - file tree icons in dev mode
   Conway, John Horton - for the game on the hero
 
+/* READING */
+  Browser console: window.kevin("proof")
+  Home terminal: try `principles`, `invariants`, `proof`, `bibliography`, `source`
+  Public routes: /, /es/, /dev/, /privacy/
+
 /* SITE */
   Last update: 2026
   Standards: HTML5, CSS3, ES2024, TypeScript
