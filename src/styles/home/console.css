@@ -1,7 +1,7 @@
 /* ─── Console section · Warp-style dark glass on cream ─── */
 .console-section {
   position: relative;
-  padding: 96px 0;
+  padding: clamp(76px, 9svh, 92px) 0 clamp(72px, 8svh, 88px);
   border-bottom: 1px solid var(--line);
   isolation: isolate;
   overflow: hidden;
@@ -12,7 +12,7 @@
   z-index: 1;
 }
 .console-head {
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 /* The terminal - dark translucent glass floating on cream */
@@ -102,8 +102,8 @@
 /* Output stream */
 .cs-stream {
   padding: 18px 18px 8px;
-  min-height: 260px;
-  max-height: 460px;
+  min-height: 240px;
+  max-height: 430px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -298,5 +298,18 @@
   }
   .cs-input {
     padding: 11px 12px;
+  }
+}
+
+@media (min-width: 1180px) and (max-height: 950px) {
+  .console-section {
+    padding: 52px 0 54px;
+  }
+  .console-head {
+    margin-bottom: 24px;
+  }
+  .cs-stream {
+    min-height: 200px;
+    max-height: 360px;
   }
 }

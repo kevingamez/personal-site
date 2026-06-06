@@ -9,6 +9,8 @@ export const HELP_LINES = [
   '  <span class="ac">stack</span>           tools I actually reach for',
   '  <span class="ac">repos</span>           public github repos',
   '  <span class="ac">now</span>             what I’m working on this week',
+  '  <span class="ac">principles</span>      engineering principles',
+  '  <span class="ac">reading</span>         books and ideas in rotation',
   '  <span class="ac">contact</span>         email + socials',
   '',
   '<b>files</b>',
@@ -33,6 +35,7 @@ export const HELP_LINES = [
   '  <span class="ac">ask</span>   &lt;question&gt;  alias for <span class="ac">kevin</span>',
   '',
   '<span class="muted">tip · <kbd>Tab</kbd> autocompletes · <kbd>↑</kbd>/<kbd>↓</kbd> for history · <kbd>Ctrl-W/U/K</kbd> to edit · <kbd>Ctrl-C</kbd> to cancel</span>',
+  '<span class="muted">This console is a compact index of the site and work. Source readers get footnotes.</span>',
 ]
 
 export const ABOUT_LINES = [
@@ -91,7 +94,67 @@ export const CONTACT_LINES = [
   '<b>x       </b>  <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener">x.com/KevinGamezA</a>',
 ]
 
-export const CAT_FILES = ['about', 'experience', 'stack', 'repos', 'now', 'contact']
+export const PRINCIPLES_LINES = [
+  '<b>principles</b>',
+  '  1. Ship small, observable systems.',
+  '  2. Prefer boring infrastructure until novelty is earned.',
+  '  3. Measure behavior before optimizing aesthetics.',
+  '  4. Write for the person who has to maintain the system next.',
+]
+
+export const INVARIANTS_LINES = [
+  '<b>invariants</b>',
+  '  1. Critical paths are measurable.',
+  '  2. State changes are observable.',
+  '  3. Contracts are explicit at boundaries.',
+  '  4. Automation has a human escape hatch.',
+  '  5. A feature is not done while its invariants are implicit.',
+]
+
+export const PROOF_LINES = [
+  '<b>proof sketch</b>',
+  '  Claim: engineering judgment is compression under constraints.',
+  '  Premise 1: production systems expose more states than a team can hold in memory.',
+  '  Premise 2: good interfaces reduce the number of states people must reason about.',
+  '  Premise 3: observability turns guesses into falsifiable claims.',
+  '  Conclusion: the job is not to write more code; it is to choose the invariants that make behavior legible.',
+]
+
+export const BIBLIOGRAPHY_LINES = [
+  '<b>bibliography</b>',
+  "  Hardy · <i>A Mathematician's Apology</i>",
+  '  Abelson & Sussman · <i>Structure and Interpretation of Computer Programs</i>',
+  '  Kleppmann · <i>Designing Data-Intensive Applications</i>',
+  '  Meadows · <i>Thinking in Systems</i>',
+  '  Norman · <i>The Design of Everyday Things</i>',
+]
+
+export const READING_LINES = [
+  '<b>reading / thinking</b>',
+  "  Hardy · <i>A Mathematician's Apology</i>",
+  '  Norman · <i>The Design of Everyday Things</i>',
+  '  Jones polynomial · knot invariants as a way to reason about structure',
+]
+
+export const SOURCE_LINES = [
+  '<b>source map</b>',
+  '  <a href="https://github.com/kevingamez/personal-site" target="_blank" rel="noopener">github.com/kevingamez/personal-site</a>',
+  '  <a href="/humans.txt">/humans.txt</a>    credits and build notes',
+  '  <a href="/robots.txt">/robots.txt</a>    crawler instructions',
+  '  <a href="/dev/">/dev/</a>           alternate portfolio interface',
+  '  exercises: <span class="ac">invariants</span> · <span class="ac">proof</span> · <span class="ac">bibliography</span>',
+]
+
+export const CAT_FILES = [
+  'about',
+  'experience',
+  'stack',
+  'repos',
+  'now',
+  'principles',
+  'reading',
+  'contact',
+]
 
 export const MAN_PAGES: Record<string, string[]> = {
   help: ['<b>HELP</b>(1)', '  list every command this shell knows.'],
@@ -101,7 +164,17 @@ export const MAN_PAGES: Record<string, string[]> = {
   stack: ['<b>STACK</b>(1)', '  print the tools I actually reach for.'],
   repos: ['<b>REPOS</b>(1)', '  list public github repos.'],
   now: ['<b>NOW</b>(1)', '  what I’m building / reading / thinking about.'],
+  principles: ['<b>PRINCIPLES</b>(1)', '  print engineering principles.'],
+  axioms: ['<b>AXIOMS</b>(1)', '  alias for <span class="ac">principles</span>.'],
+  invariants: ['<b>INVARIANTS</b>(1)', '  print the constraints that keep the work coherent.'],
+  invariant: ['<b>INVARIANT</b>(1)', '  alias for <span class="ac">invariants</span>.'],
+  proof: ['<b>PROOF</b>(1)', '  print a short proof sketch about engineering judgment.'],
+  lemma: ['<b>LEMMA</b>(1)', '  alias for <span class="ac">proof</span>.'],
+  bibliography: ['<b>BIBLIOGRAPHY</b>(1)', '  print the reading list behind the footnotes.'],
+  books: ['<b>BOOKS</b>(1)', '  alias for <span class="ac">bibliography</span>.'],
+  reading: ['<b>READING</b>(1)', '  print books and ideas in rotation.'],
   contact: ['<b>CONTACT</b>(1)', '  email + social links.'],
+  source: ['<b>SOURCE</b>(1)', '  print links for source readers.'],
   date: ['<b>DATE</b>(1)', '  print the current date.'],
   uname: ['<b>UNAME</b>(1)', '  print system identity (it lies).'],
   uptime: ['<b>UPTIME</b>(1)', '  how long this tab has been open.'],
@@ -116,7 +189,7 @@ export const MAN_PAGES: Record<string, string[]> = {
   ls: ['<b>LS</b>(1)', '  list available "files" in this fake fs.'],
   cat: [
     '<b>CAT</b>(1)',
-    '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, contact.',
+    '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, principles, reading, contact.',
   ],
   pwd: ['<b>PWD</b>(1)', '  print working directory. always /home/kevin.'],
   cd: ['<b>CD</b>(1)', '  cd is mostly decorative - there’s nowhere else to go.'],

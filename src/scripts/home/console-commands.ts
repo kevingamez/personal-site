@@ -4,12 +4,18 @@
 import { type CommandFn, escape, printLines, printOut } from './console-dom'
 import {
   ABOUT_LINES,
+  BIBLIOGRAPHY_LINES,
   CONTACT_LINES,
   EXPERIENCE_LINES,
   HELP_LINES,
+  INVARIANTS_LINES,
   MAN_PAGES,
   NOW_LINES,
+  PRINCIPLES_LINES,
+  PROOF_LINES,
+  READING_LINES,
   REPOS_LINES,
+  SOURCE_LINES,
   STACK_LINES,
 } from './console-data'
 import { runChat } from './console-chat'
@@ -49,8 +55,38 @@ export const COMMANDS: Record<string, CommandFn> = {
   now: (_a, r) => {
     printLines(r.stream, NOW_LINES)
   },
+  principles: (_a, r) => {
+    printLines(r.stream, PRINCIPLES_LINES)
+  },
+  axioms: (_a, r) => {
+    printLines(r.stream, PRINCIPLES_LINES)
+  },
+  invariants: (_a, r) => {
+    printLines(r.stream, INVARIANTS_LINES)
+  },
+  invariant: (_a, r) => {
+    printLines(r.stream, INVARIANTS_LINES)
+  },
+  proof: (_a, r) => {
+    printLines(r.stream, PROOF_LINES)
+  },
+  lemma: (_a, r) => {
+    printLines(r.stream, PROOF_LINES)
+  },
+  bibliography: (_a, r) => {
+    printLines(r.stream, BIBLIOGRAPHY_LINES)
+  },
+  books: (_a, r) => {
+    printLines(r.stream, BIBLIOGRAPHY_LINES)
+  },
+  reading: (_a, r) => {
+    printLines(r.stream, READING_LINES)
+  },
   contact: (_a, r) => {
     printLines(r.stream, CONTACT_LINES)
+  },
+  source: (_a, r) => {
+    printLines(r.stream, SOURCE_LINES)
   },
   date: (_a, r) => {
     printOut(r.stream, escape(new Date().toString()))
@@ -64,7 +100,7 @@ export const COMMANDS: Record<string, CommandFn> = {
   ls: (_a, r) => {
     printOut(
       r.stream,
-      'about  experience  stack  repos  now  contact  <span class="muted">(try `cat about`)</span>'
+      'about  experience  stack  repos  now  principles  reading  contact  <span class="muted">(try `cat about`)</span>'
     )
   },
   cat: (a, r) => {
@@ -75,6 +111,8 @@ export const COMMANDS: Record<string, CommandFn> = {
       stack: STACK_LINES,
       repos: REPOS_LINES,
       now: NOW_LINES,
+      principles: PRINCIPLES_LINES,
+      reading: READING_LINES,
       contact: CONTACT_LINES,
     }
     if (!f) {
@@ -158,6 +196,8 @@ export const COMMANDS: Record<string, CommandFn> = {
       '  108  ?        00:01:12 inngest-worker',
       '  253  ?        00:00:42 puppeteer-instagram',
       '  254  ?        00:00:38 puppeteer-linkedin',
+      '  404  ?        00:00:00 missing-route',
+      '  418  ?        00:00:00 eval-runner',
       '  789  pts/0    00:00:00 zsh',
       ' 1337  pts/0    00:00:00 ps',
     ])
