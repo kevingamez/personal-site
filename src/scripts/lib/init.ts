@@ -3,8 +3,6 @@
 
 import { logger } from './logger'
 import { pageView, track } from './analytics'
-import { inject as injectVercelAnalytics } from '@vercel/analytics'
-import { injectSpeedInsights } from '@vercel/speed-insights'
 
 const log = logger('boot')
 
@@ -12,6 +10,26 @@ let installed = false
 
 const CLARITY_ID = (import.meta as ImportMeta & { env: Record<string, string> }).env
   ?.PUBLIC_CLARITY_ID
+
+function runWhenIdle(fn: () => void, timeout = 2500): void {
+  if (typeof window === 'undefined') return
+  setTimeout(() => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(fn, { timeout })
+      return
+    }
+    setTimeout(fn, 0)
+  }, 1200)
+}
+
+async function loadVercelTelemetry(): Promise<void> {
+  const [{ inject }, { injectSpeedInsights }] = await Promise.all([
+    import('@vercel/analytics'),
+    import('@vercel/speed-insights'),
+  ])
+  inject()
+  injectSpeedInsights()
+}
 
 function loadClarity(id: string): void {
   if (!id || typeof window === 'undefined') return
@@ -40,15 +58,11 @@ export function bootstrapClient(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
 
-  // Privacy-first first-party analytics. Both run cookieless by default.
-  try {
-    injectVercelAnalytics()
-    injectSpeedInsights()
-  } catch (e) {
-    log.warn('vercel analytics inject failed', e)
-  }
-
-  if (CLARITY_ID) loadClarity(CLARITY_ID)
+  runWhenIdle(() => {
+    // Privacy-first first-party analytics. Both run cookieless by default.
+    void loadVercelTelemetry().catch((e) => log.warn('vercel analytics inject failed', e))
+    if (CLARITY_ID) loadClarity(CLARITY_ID)
+  })
 
   window.addEventListener('error', (e) => {
     log.error('uncaught error', e.error ?? e.message)
