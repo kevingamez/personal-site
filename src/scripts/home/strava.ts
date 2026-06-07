@@ -1,10 +1,7 @@
-// Strava "movement" section orchestrator. Fetches the distilled snapshot from
-// /api/strava, renders the hero counters, weekly chart, insight tiles, training
-// heatmap, and recent strip, then plays the reveal animations when the section
-// scrolls into view. Fails silent: if the endpoint isn't routed, isn't
-// configured, errors, or has no activity, the section just stays hidden.
-
-import { buildSparkline, buildWeekly, buildHeatmap, type Week, type Day } from './strava-charts'
+// Strava "movement" section. Fetches the year snapshot from /api/strava and
+// renders the hero totals, a "longest effort per sport" card grid (each with a
+// Mapbox map), and the metric tiles - counting numbers up on scroll-in. Fails
+// silent: if the endpoint isn't routed / no data, the section stays hidden.
 
 interface Totals {
   distanceM: number
@@ -13,64 +10,85 @@ interface Totals {
   count: number
   activeDays: number
 }
-interface Insights {
-  longest: {
-    name: string
-    distanceM: number
-    sportType: string
-    startDate: string
-    url: string
-  } | null
-  biggestWeekStart: string | null
-  biggestWeekDistanceM: number
-  busiestWeekday: number | null
-  busiestWeekdayCount: number
+interface Effort {
+  name: string
+  startDate: string
+  url: string
+  distanceM: number
+  elevationM: number
   avgSpeedMs: number
-  eiffels: number
 }
-interface RecentActivity {
+interface Activity {
   name: string
   sportType: string
   distanceM: number
   movingTime: number
+  elevationM: number
   avgSpeedMs: number
   startDate: string
   url: string
+  polyline?: string | null
+}
+interface Insights {
+  biggestWeekStart: string | null
+  biggestWeekDistanceM: number
+  busiestWeekday: number | null
+  busiestWeekdayCount: number
+  biggestClimb: Effort | null
+  fastest: Effort | null
+  eiffels: number
 }
 interface Payload {
   configured: boolean
   error?: boolean
   totals: Totals | null
-  weekly: Week[]
-  calendar: Day[]
-  calendarWeeks: number
+  longestBySport: Activity[]
   insights: Insights
-  recent: RecentActivity[]
 }
 
 const REDUCE =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+// Foot sports report a pace (min/km or /mi); wheels report a speed.
 const FOOT_SPORTS = new Set(['Run', 'TrailRun', 'VirtualRun', 'Walk', 'Hike'])
-const SPORT_COLOR: Record<string, string> = {
-  Run: '#c1462e',
-  TrailRun: '#c1462e',
-  VirtualRun: '#c1462e',
-  Ride: '#34506b',
-  VirtualRide: '#34506b',
-  GravelRide: '#34506b',
-  MountainBikeRide: '#34506b',
-  Swim: '#2f6d8f',
-  Walk: '#5b8a72',
-  Hike: '#5b8a72',
-  WeightTraining: '#8a6a1f',
-  Workout: '#8a6a1f',
-  Yoga: '#8a6a1f',
+
+// Unit system. The only countries that don't use metric are the US, Liberia,
+// and Myanmar - Canada and the UK are officially metric for distance/speed - so
+// those visitors get miles/feet/mph/pace-per-mile and everyone else stays
+// metric. Detected from the browser locale: no server round-trip, no edge-cache
+// pollution.
+const IMPERIAL_REGIONS = new Set(['US', 'LR', 'MM'])
+function detectImperial(): boolean {
+  if (typeof navigator === 'undefined') return false
+  try {
+    const langs = navigator.languages?.length ? navigator.languages : [navigator.language]
+    for (const l of langs) {
+      const region = new Intl.Locale(l).maximize().region
+      if (region) return IMPERIAL_REGIONS.has(region)
+    }
+  } catch {
+    /* fall through to metric */
+  }
+  return false
 }
+const IMP = detectImperial()
+const KM_PER_MI = 0.621371
+const FT_PER_M = 3.28084
+const DUNIT = IMP ? 'mi' : 'km'
+const EUNIT = IMP ? 'ft' : 'm'
+const SUNIT = IMP ? 'mph' : 'km/h'
+const PUNIT = IMP ? '/mi' : '/km'
+const distVal = (m: number): number => (IMP ? (m / 1000) * KM_PER_MI : m / 1000)
+const elevVal = (m: number): number => (IMP ? m * FT_PER_M : m)
+const spdVal = (ms: number): number => ms * 3.6 * (IMP ? KM_PER_MI : 1)
 
 let SPORTS: Record<string, string> = {}
 let WEEK_OF = 'week of'
 let COMPARE = '× the Eiffel Tower'
+let SPEED_LABEL = 'avg speed'
+let PACE_LABEL = 'pace'
+let MILES_WORD = 'miles'
+let FEET_WORD = 'feet climbed'
 
 function readI18n(): void {
   const el = document.getElementById('strava-i18n')
@@ -80,71 +98,61 @@ function readI18n(): void {
       sports?: Record<string, string>
       weekOf?: string
       climbedCompare?: string
+      featSpeed?: string
+      featPace?: string
+      statMi?: string
+      statFt?: string
     }
     SPORTS = j.sports || {}
     if (j.weekOf) WEEK_OF = j.weekOf
     if (j.climbedCompare) COMPARE = j.climbedCompare
+    if (j.featSpeed) SPEED_LABEL = j.featSpeed
+    if (j.featPace) PACE_LABEL = j.featPace
+    if (j.statMi) MILES_WORD = j.statMi
+    if (j.statFt) FEET_WORD = j.statFt
   } catch {
-    /* leave defaults */
+    /* defaults */
   }
 }
 
-const km = (m: number): string => (m / 1000).toFixed(1)
-const clock = (s: number): string => {
-  const h = Math.floor(s / 3600)
-  const m = Math.floor((s % 3600) / 60)
-  const sec = Math.floor(s % 60)
-  return h > 0 ? `${h}:${String(m).padStart(2, '0')}` : `${m}:${String(sec).padStart(2, '0')}`
-}
-const pace = (m: number, s: number): string => {
-  if (m <= 0) return ''
-  const per = s / (m / 1000)
+const pace = (distanceM: number, movingTime: number): string => {
+  if (distanceM <= 0) return '-'
+  let per = movingTime / (distanceM / 1000) // seconds per km
+  if (IMP) per /= KM_PER_MI // seconds per mile
   let mm = Math.floor(per / 60)
   let ss = Math.round(per % 60)
   if (ss >= 60) {
     mm += 1
     ss = 0
   }
-  return `${mm}:${String(ss).padStart(2, '0')}/km`
+  return `${mm}:${String(ss).padStart(2, '0')} ${PUNIT}`
 }
-const speed = (ms: number): string => `${(ms * 3.6).toFixed(1)} km/h`
-
-function relTime(iso: string, lang: string): string {
-  const days = Math.round((new Date(iso).getTime() - Date.now()) / 86_400_000)
-  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: 'auto' })
-  return Math.abs(days) >= 7 ? rtf.format(Math.round(days / 7), 'week') : rtf.format(days, 'day')
+const dur = (s: number): string => {
+  const h = Math.floor(s / 3600)
+  const m = Math.round((s % 3600) / 60)
+  return h > 0 ? `${h}h ${String(m).padStart(2, '0')}m` : `${m}m`
 }
 function shortDate(date: string, lang: string): string {
   return new Intl.DateTimeFormat(lang, { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(
     new Date(date + 'T00:00:00Z')
   )
 }
-function weekdayName(idx: number, lang: string): string {
-  const ref = new Date(Date.UTC(2024, 0, 1 + idx)) // 2024-01-01 is a Monday
-  const s = new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(ref)
-  return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
 function setText(id: string, value: string): void {
   const el = document.getElementById(id)
   if (el) el.textContent = value
 }
 
-// Collect count-up closures; run them (and flip the `.on` reveal classes) once
-// the section scrolls into view.
 const plays: (() => void)[] = []
-function countUp(id: string, target: number, fmt: (n: number) => string): void {
-  const el = document.getElementById(id)
+function countUpEl(el: Element | null, target: number, fmt: (n: number) => string): void {
   if (!el) return
   plays.push(() => {
     if (REDUCE) {
       el.textContent = fmt(target)
       return
     }
-    const dur = 1400
     const t0 = performance.now()
     const tick = (now: number): void => {
-      const p = Math.min(1, (now - t0) / dur)
+      const p = Math.min(1, (now - t0) / 1400)
       el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)))
       if (p < 1) requestAnimationFrame(tick)
       else el.textContent = fmt(target)
@@ -152,119 +160,141 @@ function countUp(id: string, target: number, fmt: (n: number) => string): void {
     requestAnimationFrame(tick)
   })
 }
+const countUp = (id: string, target: number, fmt: (n: number) => string): void =>
+  countUpEl(document.getElementById(id), target, fmt)
 
-function renderRecent(host: HTMLElement, acts: RecentActivity[], lang: string): void {
-  const frag = document.createDocumentFragment()
-  for (const a of acts) {
-    const card = document.createElement('a')
-    card.className = 'act'
-    card.href = a.url
-    card.target = '_blank'
-    card.rel = 'noopener'
-
-    const tag = document.createElement('span')
-    tag.className = 'act-tag'
-    const dot = document.createElement('span')
-    dot.className = 'act-dot'
-    dot.style.setProperty('--c', SPORT_COLOR[a.sportType] || 'var(--muted)')
-    tag.append(dot, document.createTextNode(SPORTS[a.sportType] || a.sportType))
-
-    const body = document.createElement('div')
-    body.className = 'act-body'
-    const name = document.createElement('div')
-    name.className = 'act-name'
-    name.textContent = a.name
-    const meta = document.createElement('div')
-    meta.className = 'act-meta'
-    const bits: string[] = []
-    if (a.distanceM > 0) bits.push(`${km(a.distanceM)} km`)
-    bits.push(clock(a.movingTime))
-    if (a.distanceM > 0)
-      bits.push(
-        FOOT_SPORTS.has(a.sportType) ? pace(a.distanceM, a.movingTime) : speed(a.avgSpeedMs)
-      )
-    meta.textContent = bits.filter(Boolean).join(' · ')
-    body.append(name, meta)
-
-    const when = document.createElement('time')
-    when.className = 'act-when'
-    when.dateTime = a.startDate
-    when.textContent = relTime(a.startDate, lang)
-
-    card.append(tag, body, when)
-    frag.appendChild(card)
-  }
-  host.replaceChildren(frag)
+// Mapbox Static map for a route. Public token, dark style, coral path. 640x400
+// @2x = 1280x800 (Mapbox max); 16:10 matches the card so it never crops.
+const MAPBOX_TOKEN = (import.meta.env as unknown as Record<string, string | undefined>)
+  .PUBLIC_MAPBOX_TOKEN
+function mapboxUrl(polyline: string): string {
+  const path = `path-6+e07a5f-0.95(${encodeURIComponent(polyline)})`
+  return `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${path}/auto/640x400@2x?access_token=${MAPBOX_TOKEN}&padding=34`
 }
 
-function fillInsights(ins: Insights, lang: string): void {
-  if (ins.longest) {
-    countUp('sv-longest-val', ins.longest.distanceM, (n) => `${km(n)} km`)
-    setText('sv-longest-sub', ins.longest.name)
+function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts: Activity[]): void {
+  host.replaceChildren()
+  for (const a of acts) {
+    const frag = tpl.content.cloneNode(true) as DocumentFragment
+    const card = frag.querySelector('.sv-feat')
+    if (!card) continue
+
+    const sportEl = frag.querySelector('[data-sport]')
+    if (sportEl) sportEl.textContent = SPORTS[a.sportType] || a.sportType
+    const nameEl = frag.querySelector('[data-name]') as HTMLAnchorElement | null
+    if (nameEl) {
+      nameEl.textContent = a.name
+      nameEl.href = a.url
+    }
+    const routeEl = frag.querySelector('[data-route]')
+    if (routeEl && MAPBOX_TOKEN && a.polyline) {
+      const img = document.createElement('img')
+      img.className = 'sv-feat-map'
+      img.alt = `Route map · ${a.name}`
+      img.loading = 'lazy'
+      img.decoding = 'async'
+      img.addEventListener('error', () => card.classList.add('sv-feat--noroute'))
+      img.src = mapboxUrl(a.polyline)
+      routeEl.appendChild(img)
+    } else {
+      card.classList.add('sv-feat--noroute')
+    }
+    countUpEl(
+      frag.querySelector('[data-dist]'),
+      distVal(a.distanceM),
+      (n) => `${n.toFixed(1)} ${DUNIT}`
+    )
+    countUpEl(
+      frag.querySelector('[data-elev]'),
+      elevVal(a.elevationM),
+      (n) => `${Math.round(n).toLocaleString()} ${EUNIT}`
+    )
+    countUpEl(frag.querySelector('[data-time]'), a.movingTime, (n) => dur(n))
+    // Runs/hikes report pace; rides report speed.
+    const speedEl = frag.querySelector('[data-speed]')
+    const speedLabelEl = frag.querySelector('[data-speedlabel]')
+    if (FOOT_SPORTS.has(a.sportType)) {
+      if (speedLabelEl) speedLabelEl.textContent = PACE_LABEL
+      if (speedEl) speedEl.textContent = pace(a.distanceM, a.movingTime)
+    } else {
+      if (speedLabelEl) speedLabelEl.textContent = SPEED_LABEL
+      countUpEl(speedEl, spdVal(a.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
+    }
+    host.appendChild(frag)
   }
-  countUp('sv-biggest-val', ins.biggestWeekDistanceM, (n) => `${Math.round(n / 1000)} km`)
+}
+
+function fillInsights(ins: Insights, totals: Totals, lang: string): void {
+  if (ins.biggestClimb) {
+    countUp(
+      'sv-climb-val',
+      elevVal(ins.biggestClimb.elevationM),
+      (n) => `${Math.round(n).toLocaleString(lang)} ${EUNIT}`
+    )
+    setText('sv-climb-sub', ins.biggestClimb.name)
+  }
+  if (ins.fastest) {
+    countUp('sv-fast-val', spdVal(ins.fastest.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
+    setText('sv-fast-sub', ins.fastest.name)
+  }
+  countUp('sv-biggest-val', distVal(ins.biggestWeekDistanceM), (n) => `${Math.round(n)} ${DUNIT}`)
   if (ins.biggestWeekStart)
     setText('sv-biggest-sub', `${WEEK_OF} ${shortDate(ins.biggestWeekStart, lang)}`)
-  // (climbed is counted up by the caller so it shares the reveal trigger)
-  if (ins.busiestWeekday !== null) {
-    setText('sv-busiest-val', weekdayName(ins.busiestWeekday, lang))
-    setText('sv-busiest-sub', `${ins.busiestWeekdayCount}×`)
-  }
+  countUp(
+    'sv-climbed-val',
+    elevVal(totals.elevationM),
+    (n) => `${Math.round(n).toLocaleString(lang)} ${EUNIT}`
+  )
+  setText('sv-climbed-sub', `≈ ${ins.eiffels} ${COMPARE}`)
 }
 
 export async function initStrava(): Promise<void> {
   const section = document.getElementById('strava')
   if (!section) return
 
-  let data: Payload
+  let data: Payload | null = null
   try {
     const res = await fetch('/api/strava', { headers: { Accept: 'application/json' } })
-    if (!res.ok) return
-    data = (await res.json()) as Payload
+    if (res.ok) data = (await res.json()) as Payload
   } catch {
-    return
+    /* ignore - may fall back to the dev sample below */
   }
-  if (!data.configured || !data.totals || !data.recent.length) return
+  // `astro dev` doesn't route /api/strava; in dev fall back to a baked snapshot
+  // (stripped from prod builds by the import.meta.env.DEV guard).
+  if (!data && import.meta.env.DEV) {
+    try {
+      data = (await import('./strava-sample')).devSample() as Payload
+    } catch {
+      /* dev sample unavailable (e.g. transient Vite 504) - stay hidden */
+    }
+  }
+  if (!data || !data.configured || !data.totals || data.totals.count === 0) return
 
   readI18n()
   const lang = document.documentElement.lang || 'en'
   const t = data.totals
 
-  // hero counters
-  countUp('sv-km', t.distanceM / 1000, (n) => String(Math.round(n)))
+  // US (and other imperial-region) visitors see miles / feet.
+  if (IMP) {
+    setText('sv-km-unit', DUNIT)
+    setText('sv-km-label', MILES_WORD)
+    setText('sv-elev-label', FEET_WORD)
+  }
+
+  countUp('sv-km', distVal(t.distanceM), (n) => String(Math.round(n)))
   countUp('sv-hours', t.movingTime / 3600, (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1)))
-  countUp('sv-elev', t.elevationM, (n) => Math.round(n).toLocaleString(lang))
+  countUp('sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang))
   countUp('sv-acts', t.count, (n) => String(Math.round(n)))
 
-  // insights (climbed counted up here so it shares the reveal trigger)
-  fillInsights(data.insights, lang)
-  countUp(
-    'sv-climbed-val',
-    data.totals.elevationM,
-    (n) => `${Math.round(n).toLocaleString(lang)} m`
-  )
-  setText('sv-climbed-sub', `≈ ${data.insights.eiffels} ${COMPARE}`)
+  const host = document.getElementById('sv-longest')
+  const tpl = document.getElementById('sv-feat-tpl') as HTMLTemplateElement | null
+  if (host && tpl && data.longestBySport.length) renderLongest(host, tpl, data.longestBySport)
+  fillInsights(data.insights, t, lang)
 
-  // charts
-  const spark = document.getElementById('sv-spark')
-  const weekly = document.getElementById('sv-weekly')
-  const heat = document.getElementById('sv-heat')
-  const recent = document.getElementById('sv-acts-list')
-  if (spark) buildSparkline(spark, data.weekly)
-  if (weekly)
-    buildWeekly(weekly, data.weekly, {
-      lang,
-      weekOf: WEEK_OF,
-      peakEl: document.getElementById('sv-weekly-peak'),
-    })
-  if (heat) buildHeatmap(heat, data.calendar, data.calendarWeeks)
-  if (recent) renderRecent(recent, data.recent, lang)
-
-  // reveal + play animations when the section enters view
   section.hidden = false
   const play = (): void => {
     plays.forEach((f) => f())
-    ;[spark, weekly, heat, section].forEach((el) => el?.classList.add('on'))
+    section.classList.add('on')
   }
   if (typeof IntersectionObserver === 'undefined') {
     play()

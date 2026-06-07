@@ -1,47 +1,25 @@
-/* ─── Strava · movement (hero, insights, recent) ─── */
+/* ─── Strava · movement (metrics only) ─── */
 #strava[hidden] {
   display: none;
+}
+.strava-lazy-anchor {
+  height: 1px;
 }
 
 /* hero band */
 .sv-hero {
   position: relative;
-  margin-bottom: 22px;
-  padding: 34px 36px 26px;
-  background: var(--ink);
-  color: var(--cream);
+  margin-bottom: 16px;
+  padding: 24px 30px 20px;
+  background: var(--panel);
+  color: var(--ink);
   border-radius: 14px;
-  box-shadow: 0 0 0 1px var(--ink);
+  box-shadow: 0 0 0 1px var(--line);
   overflow: hidden;
-}
-.sv-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(250, 247, 240, 0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
 }
 .sv-hero > * {
   position: relative;
   z-index: 1;
-}
-.sv-hero-cap {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--coral-on-dark);
-  margin-bottom: 22px;
-}
-.sv-hero-cap::before {
-  content: '';
-  display: inline-block;
-  width: 22px;
-  height: 1px;
-  background: var(--coral-on-dark);
-  vertical-align: middle;
-  margin-right: 10px;
 }
 .sv-hero-grid {
   display: flex;
@@ -53,10 +31,10 @@
 .sv-hero-km {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 500;
-  font-size: clamp(56px, 8vw, 96px);
+  font-size: 58px;
   line-height: 0.9;
-  letter-spacing: -0.03em;
-  color: var(--cream);
+  letter-spacing: 0;
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .sv-hero-km i {
@@ -69,8 +47,7 @@
 .sv-hero-kml {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.04em;
   color: var(--coral-on-dark);
   margin-top: 12px;
 }
@@ -87,60 +64,110 @@
 }
 .sv-mini span {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: 22px;
   line-height: 1;
-  color: var(--cream);
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .sv-mini em {
   font-style: normal;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
   color: rgba(250, 247, 240, 0.55);
   margin-top: 7px;
 }
 
-/* shared card chrome */
-.sv-card {
+/* longest effort per sport: card grid, each with its route map */
+.sv-longest {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.sv-feat {
+  display: flex;
+  flex-direction: column;
   background: var(--cream-2);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 22px 24px 20px;
-  margin-bottom: 22px;
-  min-width: 0;
+  overflow: hidden;
 }
-.sv-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 20px;
+.sv-feat-route {
+  width: 100%;
+  aspect-ratio: 16 / 10;
 }
-.sv-card-head h3 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px;
-  font-weight: 400;
-  margin: 0;
+.sv-feat-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--panel);
 }
-.sv-peak {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
+.sv-feat--noroute .sv-feat-route {
+  display: none;
+}
+.sv-feat-body {
+  padding: 14px 16px 15px;
+}
+.sv-feat-label {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.sv-feat-name {
+  display: block;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink);
+  text-decoration: none;
+}
+.sv-feat-name:hover {
   color: var(--coral);
 }
-.sv-peak::before {
-  content: '▲ ';
-  font-size: 9px;
+.sv-feat-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 16px;
+  margin-top: 14px;
+}
+.sv-feat-stats > div {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--coral);
+  padding-left: 10px;
+}
+.sv-feat-stats span {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.sv-feat-stats em {
+  font-style: normal;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-top: 5px;
 }
 
 /* insight tiles */
 .sv-insights {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 22px;
+  gap: 12px;
 }
 @media (max-width: 760px) {
   .sv-insights {
@@ -156,7 +183,7 @@
   background: var(--cream-2);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 16px 18px 15px;
+  padding: 13px 16px 12px;
   opacity: 0;
   transform: translateY(10px);
   transition:
@@ -177,31 +204,46 @@
   transform: none;
 }
 .sv-tile-lbl {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--muted);
 }
-.sv-tile-lbl::before {
-  content: '';
-  width: 14px;
-  height: 1px;
-  background: var(--coral);
-}
 .sv-tile-val {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(26px, 3.4vw, 34px);
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 27px;
+  font-style: normal;
+  font-weight: 600;
   line-height: 1.05;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
-  margin-top: 10px;
+  margin-top: 7px;
+}
+
+@media (max-width: 700px) {
+  .sv-hero-km {
+    font-size: 42px;
+  }
+  .sv-mini span {
+    font-size: 18px;
+  }
+  .sv-feat-name {
+    font-size: 20px;
+  }
+  .sv-feat-stats span {
+    font-size: 18px;
+  }
+  .sv-tile-val {
+    font-size: 24px;
+  }
 }
 .sv-tile-sub {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
   font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
   color: var(--muted);
   margin-top: 5px;
   white-space: nowrap;
@@ -209,109 +251,52 @@
   text-overflow: ellipsis;
 }
 
-/* recent strip */
-.sv-recent-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-.sv-recent-head h3 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px;
-  font-weight: 400;
-  margin: 0;
-}
-.sv-recent-link {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--coral);
-  text-decoration: none;
-}
-.sv-recent-link:hover {
-  text-decoration: underline;
-}
-.acts {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.act {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 13px 16px;
-  background: var(--cream);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: inherit;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.act:hover {
-  border-color: var(--coral);
-  background: var(--cream-2);
-}
-.act-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex-shrink: 0;
-  width: 92px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-.act-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c, var(--muted));
-  flex-shrink: 0;
-}
-.act-body {
-  flex: 1;
-  min-width: 0;
-}
-.act-name {
-  font-family: 'Inter Tight', system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.act-meta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-.act-when {
-  flex-shrink: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  white-space: nowrap;
-}
-@media (max-width: 560px) {
-  .act-tag {
-    width: auto;
-  }
-  .act-when {
-    display: none;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .sv-tile {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+@media (min-width: 1180px) and (max-height: 950px) {
+  .sv-hero {
+    margin-bottom: 12px;
+    padding: 20px 24px 18px;
+  }
+  .sv-hero-cap {
+    margin-bottom: 16px;
+  }
+  .sv-hero-km {
+    font-size: 48px;
+  }
+  .sv-hero-side {
+    gap: 22px;
+  }
+  .sv-longest {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .sv-feat-route {
+    aspect-ratio: 16 / 8.5;
+  }
+  .sv-feat-body {
+    padding: 12px 14px;
+  }
+  .sv-feat-name {
+    font-size: 20px;
+  }
+  .sv-feat-stats {
+    gap: 8px 12px;
+    margin-top: 10px;
+  }
+  .sv-insights {
+    gap: 10px;
+  }
+  .sv-tile {
+    padding: 11px 13px;
+  }
+  .sv-tile-val {
+    font-size: 24px;
   }
 }
