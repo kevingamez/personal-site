@@ -1,21 +1,15 @@
 // Vercel Serverless Function - /api/strava
 //
-// Serves a sanitized, chart-ready snapshot of recent Strava activity for the
-// home-page "movement" section, so the static site can fetch it client-side and
-// render near-live data without ever exposing OAuth secrets to the browser.
+// Serves a sanitized snapshot of the full Strava history for the home
+// "movement" section: all-time totals, the longest effort per sport (each with
+// a route polyline for an optional Mapbox map), and a few insight metrics.
 //
-// Two hard-won platform notes baked into this file:
-//   1. Classic Node `(req, res)` signature - the Web-handler form is invoked as
-//      a Node handler here, its returned Response is dropped, and the request
-//      hangs to a 504. Writing to `res` is the reliable path.
-//   2. Everything lives in this one file (over the 300-line cap on purpose):
-//      Vercel strips `_`-prefixed helpers AND won't reliably bundle imported
-//      siblings, so a split lib 500s with ERR_MODULE_NOT_FOUND at runtime.
+// Platform notes baked in: classic Node `(req, res)` signature (the Web-handler
+// form is invoked as a Node handler here and 504s); everything in one file
+// (Vercel strips `_`-prefixed helpers and won't bundle imported siblings).
 //
-// Hardening: every awaited dependency (Strava, Redis) has a hard timeout, so the
-// function can never hang to a 504; secrets live only in env; no GPS/polyline/
-// location is ever forwarded; missing env or a Strava hiccup degrades to an
-// inert payload instead of erroring.
+// Privacy: only the featured longest efforts carry a raw polyline (for the map
+// the user opted into). Hard timeouts on every awaited call so it can't hang.
 //
 // Required env: STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN.
 // Optional env (shared with /api/chat): UPSTASH/KV REST url + token for caching.
@@ -24,7 +18,6 @@ import { Redis } from '@upstash/redis'
 
 export const config = { runtime: 'nodejs' }
 
-// Minimal structural types for the Node serverless req/res Vercel passes in.
 interface Req {
   method?: string
 }
@@ -34,18 +27,15 @@ interface Res {
   end(body?: string): void
 }
 
-const WINDOW_DAYS = 133 // 19 weeks - covers the 12-week chart + 18-week heatmap
-const WEEKLY_WEEKS = 12
-const HEATMAP_WEEKS = 18
-const LIST_LIMIT = 5
-const EIFFEL_M = 330 // playful elevation yardstick
-const CACHE_TTL = 600 // seconds - matches the edge s-maxage below
+const MAX_PAGES = 10
+const EIFFEL_M = 330
+const ROUTE_PTS = 160
+const LONGEST_SPORTS = 3
+const CACHE_TTL = 600
 const ERROR_TTL = 120
-const CACHE_KEY = 'kg-strava:v2'
+const CACHE_KEY = 'kg-strava:v4'
 const STRAVA_TIMEOUT_MS = 8000
 const REDIS_TIMEOUT_MS = 2000
-
-// ───────── Types ─────────
 
 interface RawActivity {
   id: number
@@ -58,16 +48,32 @@ interface RawActivity {
   average_speed?: number
   start_date: string
   start_date_local?: string
+  map?: { summary_polyline?: string }
+}
+interface Route {
+  points: number[][]
+  w: number
+  h: number
 }
 interface Activity {
-  id: number
   name: string
   sportType: string
   distanceM: number
   movingTime: number
+  elevationM: number
   avgSpeedMs: number
   startDate: string
   url: string
+  route: Route | null
+  polyline: string | null
+}
+interface Effort {
+  name: string
+  startDate: string
+  url: string
+  distanceM: number
+  elevationM: number
+  avgSpeedMs: number
 }
 interface Payload {
   configured: boolean
@@ -80,25 +86,75 @@ interface Payload {
     count: number
     activeDays: number
   } | null
-  weekly: { weekStart: string; distanceM: number }[]
-  calendar: { date: string; distanceM: number }[]
-  calendarWeeks: number
+  longestBySport: Activity[]
   insights: {
-    longest: {
-      name: string
-      distanceM: number
-      sportType: string
-      startDate: string
-      url: string
-    } | null
     biggestWeekStart: string | null
     biggestWeekDistanceM: number
-    busiestWeekday: number | null // 0 = Monday .. 6 = Sunday
+    busiestWeekday: number | null
     busiestWeekdayCount: number
-    avgSpeedMs: number
+    biggestClimb: Effort | null
+    fastest: Effort | null
     eiffels: number
   }
-  recent: Activity[]
+}
+
+// ───────── encoded-polyline → normalized shape ─────────
+
+function decodePolyline(str: string): [number, number][] {
+  let index = 0
+  let lat = 0
+  let lng = 0
+  const out: [number, number][] = []
+  while (index < str.length) {
+    let shift = 0
+    let result = 0
+    let b: number
+    do {
+      b = str.charCodeAt(index++) - 63
+      result |= (b & 0x1f) << shift
+      shift += 5
+    } while (b >= 0x20)
+    lat += result & 1 ? ~(result >> 1) : result >> 1
+    shift = 0
+    result = 0
+    do {
+      b = str.charCodeAt(index++) - 63
+      result |= (b & 0x1f) << shift
+      shift += 5
+    } while (b >= 0x20)
+    lng += result & 1 ? ~(result >> 1) : result >> 1
+    out.push([lat / 1e5, lng / 1e5])
+  }
+  return out
+}
+function extractRoute(poly: string | undefined, maxPts: number): Route | null {
+  if (!poly) return null
+  const pts = decodePolyline(poly)
+  if (pts.length < 2) return null
+  const meanLat = pts.reduce((s, p) => s + p[0], 0) / pts.length
+  const k = Math.cos((meanLat * Math.PI) / 180)
+  const proj = pts.map(([la, ln]) => [ln * k, la])
+  let minX = Infinity
+  let maxX = -Infinity
+  let minY = Infinity
+  let maxY = -Infinity
+  for (const [x, y] of proj) {
+    if (x < minX) minX = x
+    if (x > maxX) maxX = x
+    if (y < minY) minY = y
+    if (y > maxY) maxY = y
+  }
+  const span = Math.max(maxX - minX, maxY - minY)
+  if (span === 0) return null
+  const scale = 1000 / span
+  const step = Math.max(1, Math.floor(proj.length / maxPts))
+  const points: number[][] = []
+  for (let i = 0; i < proj.length; i += step) {
+    points.push([Math.round((proj[i][0] - minX) * scale), Math.round((maxY - proj[i][1]) * scale)])
+  }
+  const last = proj[proj.length - 1]
+  points.push([Math.round((last[0] - minX) * scale), Math.round((maxY - last[1]) * scale)])
+  return { points, w: Math.round((maxX - minX) * scale), h: Math.round((maxY - minY) * scale) }
 }
 
 // ───────── date helpers (YYYY-MM-DD strings in UTC) ─────────
@@ -109,25 +165,39 @@ function mondayOf(date: string): string {
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7))
   return d.toISOString().slice(0, 10)
 }
-function addDays(date: string, n: number): string {
-  const d = new Date(date + 'T00:00:00Z')
-  d.setUTCDate(d.getUTCDate() + n)
-  return d.toISOString().slice(0, 10)
-}
 const weekdayMon = (date: string): number => (new Date(date + 'T00:00:00Z').getUTCDay() + 6) % 7
 
-// Distil raw Strava activities into the GPS-free, chart-ready shape the browser
-// receives. No coordinates, polylines, or locations are ever forwarded.
-function shape(raw: RawActivity[]): Payload {
-  const thisMonday = mondayOf(new Date().toISOString().slice(0, 10))
+const toActivity = (a: RawActivity): Activity => ({
+  name: a.name,
+  sportType: a.sport_type || a.type || 'Workout',
+  distanceM: a.distance || 0,
+  movingTime: a.moving_time || 0,
+  elevationM: a.total_elevation_gain || 0,
+  avgSpeedMs: a.average_speed || 0,
+  startDate: a.start_date,
+  url: `https://www.strava.com/activities/${a.id}`,
+  route: extractRoute(a.map?.summary_polyline, ROUTE_PTS),
+  polyline: a.map?.summary_polyline ?? null,
+})
+const toEffort = (a: RawActivity): Effort => ({
+  name: a.name,
+  startDate: a.start_date,
+  url: `https://www.strava.com/activities/${a.id}`,
+  distanceM: a.distance || 0,
+  elevationM: a.total_elevation_gain || 0,
+  avgSpeedMs: a.average_speed || 0,
+})
 
+function shape(raw: RawActivity[]): Payload {
   let distanceM = 0
   let movingTime = 0
   let elevationM = 0
   const activeDays = new Set<string>()
-  const daily = new Map<string, number>()
   const weekdayCount = [0, 0, 0, 0, 0, 0, 0]
-  let longest: RawActivity | null = null
+  const weekMap = new Map<string, number>()
+  const bySport = new Map<string, RawActivity>()
+  let biggestClimb: RawActivity | null = null
+  let fastest: RawActivity | null = null
 
   for (const a of raw) {
     const dist = a.distance || 0
@@ -136,29 +206,24 @@ function shape(raw: RawActivity[]): Payload {
     elevationM += a.total_elevation_gain || 0
     const ld = localDate(a)
     activeDays.add(ld)
-    daily.set(ld, (daily.get(ld) || 0) + dist)
     weekdayCount[weekdayMon(ld)]++
-    if (!longest || dist > (longest.distance || 0)) longest = a
-  }
-
-  const weekly: { weekStart: string; distanceM: number }[] = []
-  const weekIdx = new Map<string, number>()
-  for (let i = WEEKLY_WEEKS - 1; i >= 0; i--) {
-    const ws = addDays(thisMonday, -7 * i)
-    weekIdx.set(ws, weekly.length)
-    weekly.push({ weekStart: ws, distanceM: 0 })
-  }
-  for (const a of raw) {
-    const idx = weekIdx.get(mondayOf(localDate(a)))
-    if (idx !== undefined) weekly[idx].distanceM += a.distance || 0
+    weekMap.set(mondayOf(ld), (weekMap.get(mondayOf(ld)) || 0) + dist)
+    const sp = a.sport_type || a.type || 'Workout'
+    const cur = bySport.get(sp)
+    // "Most impressive" per sport = longest by moving time (a 7h ride / 4h trail
+    // run reads as a bigger effort than a flat, fast, longer-distance one).
+    if (!cur || (a.moving_time || 0) > (cur.moving_time || 0)) bySport.set(sp, a)
+    if (!biggestClimb || (a.total_elevation_gain || 0) > (biggestClimb.total_elevation_gain || 0))
+      biggestClimb = a
+    if (!fastest || (a.average_speed || 0) > (fastest.average_speed || 0)) fastest = a
   }
 
   let biggestWeekStart: string | null = null
   let biggestWeekDistanceM = 0
-  for (const w of weekly) {
-    if (w.distanceM > biggestWeekDistanceM) {
-      biggestWeekDistanceM = w.distanceM
-      biggestWeekStart = w.weekStart
+  for (const [ws, dist] of weekMap) {
+    if (dist > biggestWeekDistanceM) {
+      biggestWeekDistanceM = dist
+      biggestWeekStart = ws
     }
   }
 
@@ -171,51 +236,29 @@ function shape(raw: RawActivity[]): Payload {
     }
   }
 
-  const calStart = addDays(thisMonday, -7 * (HEATMAP_WEEKS - 1))
-  const calendar: { date: string; distanceM: number }[] = []
-  for (const [date, dist] of daily) {
-    if (date >= calStart) calendar.push({ date, distanceM: dist })
-  }
-
-  const recent: Activity[] = [...raw]
-    .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
-    .slice(0, LIST_LIMIT)
-    .map((a) => ({
-      id: a.id,
-      name: a.name,
-      sportType: a.sport_type || a.type || 'Workout',
-      distanceM: a.distance || 0,
-      movingTime: a.moving_time || 0,
-      avgSpeedMs: a.average_speed || 0,
-      startDate: a.start_date,
-      url: `https://www.strava.com/activities/${a.id}`,
-    }))
+  const longestBySport = [...bySport.values()]
+    .filter((a) => (a.moving_time || 0) > 0)
+    .sort((a, b) => (b.moving_time || 0) - (a.moving_time || 0))
+    .slice(0, LONGEST_SPORTS)
+    .map(toActivity)
 
   return {
     configured: true,
     generatedAt: new Date().toISOString(),
     totals: { distanceM, movingTime, elevationM, count: raw.length, activeDays: activeDays.size },
-    weekly,
-    calendar,
-    calendarWeeks: HEATMAP_WEEKS,
+    longestBySport,
     insights: {
-      longest: longest
-        ? {
-            name: longest.name,
-            distanceM: longest.distance || 0,
-            sportType: longest.sport_type || longest.type || 'Workout',
-            startDate: longest.start_date,
-            url: `https://www.strava.com/activities/${longest.id}`,
-          }
-        : null,
       biggestWeekStart,
       biggestWeekDistanceM,
       busiestWeekday,
       busiestWeekdayCount,
-      avgSpeedMs: movingTime > 0 ? distanceM / movingTime : 0,
+      biggestClimb:
+        biggestClimb && (biggestClimb.total_elevation_gain || 0) > 0
+          ? toEffort(biggestClimb)
+          : null,
+      fastest: fastest && (fastest.average_speed || 0) > 0 ? toEffort(fastest) : null,
       eiffels: Math.round(elevationM / EIFFEL_M),
     },
-    recent,
   }
 }
 
@@ -224,19 +267,16 @@ function emptyPayload(extra: Partial<Payload>): Payload {
     configured: true,
     generatedAt: new Date().toISOString(),
     totals: null,
-    weekly: [],
-    calendar: [],
-    calendarWeeks: HEATMAP_WEEKS,
+    longestBySport: [],
     insights: {
-      longest: null,
       biggestWeekStart: null,
       biggestWeekDistanceM: 0,
       busiestWeekday: null,
       busiestWeekdayCount: 0,
-      avgSpeedMs: 0,
+      biggestClimb: null,
+      fastest: null,
       eiffels: 0,
     },
-    recent: [],
     ...extra,
   }
 }
@@ -286,16 +326,24 @@ async function refreshAccessToken(): Promise<string> {
 }
 
 async function fetchActivities(token: string): Promise<RawActivity[]> {
-  const after = Math.floor(Date.now() / 1000) - WINDOW_DAYS * 86400
-  const url = `https://www.strava.com/api/v3/athlete/activities?after=${after}&per_page=200`
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(STRAVA_TIMEOUT_MS),
-  })
-  if (!res.ok) throw new Error(`activities fetch failed: ${res.status}`)
-  const data = await res.json()
-  if (!Array.isArray(data)) throw new Error('activities fetch returned a non-array body')
-  return (data as RawActivity[]).filter((a) => a && typeof a === 'object' && a.id && a.start_date)
+  // Full history (no `after`): paginate newest-first until a short page. Capped
+  // at MAX_PAGES so a huge account can't hang the function.
+  const all: RawActivity[] = []
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    const url = `https://www.strava.com/api/v3/athlete/activities?per_page=200&page=${page}`
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(STRAVA_TIMEOUT_MS),
+    })
+    if (!res.ok) throw new Error(`activities fetch failed: ${res.status}`)
+    const data = await res.json()
+    if (!Array.isArray(data)) throw new Error('activities fetch returned a non-array body')
+    for (const a of data as RawActivity[]) {
+      if (a && typeof a === 'object' && a.id && a.start_date) all.push(a)
+    }
+    if (data.length < 200) break
+  }
+  return all
 }
 
 async function cacheGet(): Promise<Payload | null> {
