@@ -4,12 +4,18 @@
 // "movement" section, so the static site can fetch it client-side and render
 // near-live data without ever exposing OAuth secrets to the browser.
 //
+// Runtime note: this uses the classic Node `(req, res)` signature on purpose.
+// The Web-handler signature (`export default (req: Request) => Response`) is
+// silently invoked as a Node handler on this project, so a returned Response is
+// dropped and the request hangs to a 504. Writing to `res` is the reliable path.
+//
 // Hardening / shape:
 //   - Secrets (client id/secret/refresh token) live only in env; the browser
 //     only ever receives distilled, GPS-free activity summaries.
+//   - Every awaited dependency (Strava, Redis) has a hard timeout, so the
+//     function can never hang to a 504 - it always answers in a few seconds.
 //   - Edge + Redis cached (~10 min) so a burst of visitors costs Strava at most
-//     one token refresh + one activities call per window - well under its rate
-//     limits, no matter how many people hit the page.
+//     one token refresh + one activities call per window.
 //   - No start_latlng / map polyline / location is ever forwarded (no home leak).
 //   - Never 500s the page: missing env or a Strava hiccup degrades to an empty
 //     (or last-known) payload with `configured`/`error` flags the client reads.
@@ -21,13 +27,26 @@ import { Redis } from '@upstash/redis'
 
 export const config = { runtime: 'nodejs' }
 
+// Minimal structural types for the Node serverless req/res Vercel passes in -
+// avoids a hard dependency on @vercel/node just for types.
+interface Req {
+  method?: string
+}
+interface Res {
+  statusCode: number
+  setHeader(key: string, value: string): void
+  end(body?: string): void
+}
+
 // ───────── Tunables ─────────
 
 const WINDOW_DAYS = 28
 const LIST_LIMIT = 6
 const CACHE_TTL = 600 // seconds - matches the edge s-maxage below
-const ERROR_TTL = 120 // shorter window for failures: bounds Strava retries while still recovering fast
+const ERROR_TTL = 120 // shorter window for failures: bounds Strava retries while recovering fast
 const CACHE_KEY = 'kg-strava:v1'
+const STRAVA_TIMEOUT_MS = 8000
+const REDIS_TIMEOUT_MS = 2000
 
 // ───────── Cache (shared Upstash/KV setup with /api/chat) ─────────
 
@@ -42,6 +61,12 @@ const redis = (() => {
     return null
   }
 })()
+
+// Race any promise against a timeout so a slow/hung dependency can't stall the
+// whole function. Returns `fallback` if it doesn't settle in time.
+function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([p, new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms))])
+}
 
 // ───────── Types ─────────
 
@@ -88,13 +113,11 @@ interface RawActivity {
 
 // ───────── Helpers ─────────
 
-function json(body: Payload, maxAge: number): Response {
-  return new Response(JSON.stringify(body), {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': `public, s-maxage=${maxAge}, stale-while-revalidate=86400`,
-    },
-  })
+function send(res: Res, body: Payload, maxAge: number): void {
+  res.statusCode = 200
+  res.setHeader('Content-Type', 'application/json; charset=utf-8')
+  res.setHeader('Cache-Control', `public, s-maxage=${maxAge}, stale-while-revalidate=86400`)
+  res.end(JSON.stringify(body))
 }
 
 async function refreshAccessToken(): Promise<string> {
@@ -107,6 +130,7 @@ async function refreshAccessToken(): Promise<string> {
       grant_type: 'refresh_token',
       refresh_token: process.env.STRAVA_REFRESH_TOKEN,
     }),
+    signal: AbortSignal.timeout(STRAVA_TIMEOUT_MS),
   })
   if (!res.ok) throw new Error(`token refresh failed: ${res.status}`)
   const data = (await res.json()) as { access_token?: string } | null
@@ -119,14 +143,13 @@ async function refreshAccessToken(): Promise<string> {
 async function fetchActivities(token: string): Promise<RawActivity[]> {
   const after = Math.floor(Date.now() / 1000) - WINDOW_DAYS * 86400
   const url = `https://www.strava.com/api/v3/athlete/activities?after=${after}&per_page=100`
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(STRAVA_TIMEOUT_MS),
+  })
   if (!res.ok) throw new Error(`activities fetch failed: ${res.status}`)
   const data = await res.json()
-  // A 200 with a non-array body means something is wrong upstream (rate limit,
-  // proxy, format change). Throw so the caller's catch flags + caches it as an
-  // error instead of silently rendering "no activity".
   if (!Array.isArray(data)) throw new Error('activities fetch returned a non-array body')
-  // Drop anything missing the fields shape() relies on.
   return (data as RawActivity[]).filter((a) => a && typeof a === 'object' && a.id && a.start_date)
 }
 
@@ -171,10 +194,24 @@ function shape(raw: RawActivity[]): Payload {
   }
 }
 
-// ───────── Handler ─────────
+function errorPayload(): Payload {
+  return {
+    configured: true,
+    error: true,
+    generatedAt: new Date().toISOString(),
+    totals: null,
+    activities: [],
+  }
+}
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'GET') return new Response('Use GET', { status: 405 })
+// ───────── Handler (classic Node signature) ─────────
+
+export default async function handler(req: Req, res: Res): Promise<void> {
+  if (req.method !== 'GET') {
+    res.statusCode = 405
+    res.end('Use GET')
+    return
+  }
 
   // Not wired up yet: hand back an inert "unconfigured" payload (short cache so
   // it flips live the moment the env vars land) instead of erroring.
@@ -183,19 +220,25 @@ export default async function handler(req: Request): Promise<Response> {
     !process.env.STRAVA_CLIENT_SECRET ||
     !process.env.STRAVA_REFRESH_TOKEN
   ) {
-    return json(
+    send(
+      res,
       { configured: false, generatedAt: new Date().toISOString(), totals: null, activities: [] },
       60
     )
+    return
   }
 
-  // 1. Cache hit - serve straight away (this is what bounds our Strava calls).
+  // 1. Cache hit - serve straight away (bounds our Strava calls). Guarded by a
+  //    timeout so a slow Redis can never stall the response.
   if (redis) {
-    try {
-      const cached = await redis.get<Payload>(CACHE_KEY)
-      if (cached) return json(cached, CACHE_TTL)
-    } catch {
-      /* Redis hiccup - fall through to a live fetch */
+    const cached = await withTimeout(
+      redis.get<Payload>(CACHE_KEY).catch(() => null),
+      REDIS_TIMEOUT_MS,
+      null
+    )
+    if (cached) {
+      send(res, cached, CACHE_TTL)
+      return
     }
   }
 
@@ -205,33 +248,30 @@ export default async function handler(req: Request): Promise<Response> {
     const raw = await fetchActivities(token)
     const payload = shape(raw)
     if (redis) {
-      try {
-        await redis.set(CACHE_KEY, payload, { ex: CACHE_TTL })
-      } catch {
-        /* caching is best-effort */
-      }
+      await withTimeout(
+        redis
+          .set(CACHE_KEY, payload, { ex: CACHE_TTL })
+          .then(() => null)
+          .catch(() => null),
+        REDIS_TIMEOUT_MS,
+        null
+      )
     }
-    return json(payload, CACHE_TTL)
+    send(res, payload, CACHE_TTL)
   } catch (err) {
-    // Degrade gracefully: never break the page over a Strava outage. Cache the
-    // failure briefly so a sustained outage can't make every request re-hit
-    // Strava's auth/activities endpoints; the edge still serves the last good
-    // response via stale-while-revalidate in the meantime.
-    console.error('[api/strava]', err)
-    const errorPayload: Payload = {
-      configured: true,
-      error: true,
-      generatedAt: new Date().toISOString(),
-      totals: null,
-      activities: [],
-    }
+    // Degrade gracefully: never break the page over a Strava outage.
+    console.error('[api/strava]', err instanceof Error ? err.message : err)
+    const payload = errorPayload()
     if (redis) {
-      try {
-        await redis.set(CACHE_KEY, errorPayload, { ex: ERROR_TTL })
-      } catch {
-        /* caching is best-effort */
-      }
+      await withTimeout(
+        redis
+          .set(CACHE_KEY, payload, { ex: ERROR_TTL })
+          .then(() => null)
+          .catch(() => null),
+        REDIS_TIMEOUT_MS,
+        null
+      )
     }
-    return json(errorPayload, ERROR_TTL)
+    send(res, payload, ERROR_TTL)
   }
 }
