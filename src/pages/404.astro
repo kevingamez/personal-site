@@ -6,16 +6,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 - Kevin Gámez</title>
+    <meta name="description" content="The page could not be found on Kevin Gámez's site." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -26,6 +28,7 @@
         --muted: #6a6770;
         --line-2: rgba(24, 23, 26, 0.18);
         --coral: #c1462e;
+        --green: #5a8a4f;
       }
       * {
         box-sizing: border-box;
@@ -33,10 +36,10 @@
         padding: 0;
       }
       body {
-        background: var(--cream);
+        background: linear-gradient(180deg, rgba(193, 70, 46, 0.08), transparent 34%), var(--cream);
         color: var(--ink);
         font-family:
-          "Inter Tight",
+          "Hanken Grotesk",
           system-ui,
           -apple-system,
           sans-serif;
@@ -48,7 +51,7 @@
         padding: 24px;
       }
       .wrap {
-        max-width: 520px;
+        width: min(720px, 100%);
       }
       .tag {
         font-family: "JetBrains Mono", monospace;
@@ -68,11 +71,11 @@
         background: var(--coral);
       }
       h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: "Fraunces", serif;
         font-weight: 400;
         font-size: clamp(80px, 18vw, 160px);
         line-height: 0.95;
-        letter-spacing: -0.025em;
+        letter-spacing: -0.02em;
         margin: 0 0 16px;
       }
       h1 i {
@@ -97,7 +100,7 @@
         align-items: center;
         gap: 8px;
         padding: 11px 18px;
-        border-radius: 999px;
+        border-radius: 8px;
         font-size: 14px;
         font-weight: 500;
         text-decoration: none;
@@ -119,20 +122,85 @@
       .btn-ghost:hover {
         background: #f3ede2;
       }
+      .console {
+        width: min(620px, 100%);
+        margin: 36px auto 0;
+        padding: 14px 16px;
+        background: rgba(31, 29, 26, 0.05);
+        border: 1px solid var(--line-2);
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11.5px;
+        color: var(--ink-2);
+        text-align: left;
+        line-height: 1.7;
+      }
+      .console .ln {
+        display: flex;
+        gap: 10px;
+      }
+      .console .ln .nm {
+        color: var(--muted);
+        width: 14px;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .console .err {
+        color: var(--coral);
+      }
+      .console .ok {
+        color: var(--green);
+      }
+      .console .key {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .console .mute {
+        color: var(--muted);
+      }
+      .console a {
+        color: var(--coral);
+      }
+      #missing-path {
+        word-break: break-all;
+      }
+      @media (max-width: 640px) {
+        body {
+          align-items: flex-start;
+          padding-top: 56px;
+        }
+        .console {
+          font-size: 11px;
+          padding: 12px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <div class="tag">§ - Lost</div>
+      <div class="tag">route not found</div>
       <h1>4<i>0</i>4</h1>
-      <p>
-        This page doesn't exist - the URL might be wrong, or it moved. Either way, the Game of Life is still running
-        back home.
-      </p>
+      <p>This route is not in the build. The URL may be stale, mistyped, or from a branch that never shipped.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="/">← Back home</a>
         <a class="btn btn-ghost" href="/dev/">Open dev mode</a>
       </div>
+
+      <div class="console" role="presentation">
+        <div class="ln">
+          <span class="nm">1</span><span><span class="key">$</span> resolve <span id="missing-path">/404</span></span>
+        </div>
+        <div class="ln"><span class="nm">2</span><span class="err">ERR_ROUTE_NOT_FOUND</span></div>
+        <div class="ln">
+          <span class="nm">3</span><span class="mute">fallbacks: <a href="/">/</a>, <a href="/dev/">/dev/</a></span>
+        </div>
+        <div class="ln">
+          <span class="nm">4</span><span class="ok">hint: read /humans.txt for context</span>
+        </div>
+      </div>
     </div>
+
+    <script src="/head-init.js" defer is:inline></script>
+    <script src="/error-page.js" defer is:inline></script>
   </body>
 </html>

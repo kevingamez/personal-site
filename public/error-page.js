@@ -14,6 +14,11 @@ if (el) {
   el.textContent = hex(8) + '-' + hex(4) + '-' + hex(4)
 }
 
+var missingPath = document.getElementById('missing-path')
+if (missingPath) {
+  missingPath.textContent = window.location.pathname || '/404'
+}
+
 var refresh = document.getElementById('refresh-btn')
 if (refresh) {
   refresh.addEventListener('click', function () {
