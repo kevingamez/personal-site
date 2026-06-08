@@ -39,3 +39,4 @@ playwright-report/
 !public/**/*.png
 !public/**/*.jpeg
 !public/**/*.jpg
+.vercel
