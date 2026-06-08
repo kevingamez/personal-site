@@ -68,7 +68,7 @@ export const es: HomeStrings = {
     p2Html:
       'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
     p3Html:
-      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management. El Juego\n              de la vida de la derecha lleva corriendo desde 1970.',
+      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
