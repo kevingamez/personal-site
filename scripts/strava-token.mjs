@@ -2,11 +2,12 @@
 // One-time helper to mint a Strava refresh token for /api/strava.
 //
 // Prerequisite: create an API application at https://www.strava.com/settings/api
-// (set "Authorization Callback Domain" to `localhost`). Note the Client ID and
-// Client Secret it gives you.
+// and set "Authorization Callback Domain" to `kevingamez.co` (just the domain -
+// no scheme, port, or path). Note the Client ID and Client Secret it gives you.
 //
-// Step 1 - print the authorize URL, open it, click Authorize, then copy the
-//          `code` query param from the (broken) localhost redirect you land on:
+// Step 1 - print the authorize URL, open it, click Authorize. Strava redirects
+//          to https://kevingamez.co/exchange_token?code=...  (the site shows its
+//          themed 404 - that's fine). Copy the `code` value from the address bar:
 //
 //   STRAVA_CLIENT_ID=12345 node scripts/strava-token.mjs authorize
 //
@@ -18,11 +19,15 @@
 // Then add all three to Vercel (Project -> Settings -> Environment Variables):
 //   STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN
 //
+// The redirect only matters for this one-time authorize step (the server-side
+// refresh_token grant never uses it). Override it with STRAVA_REDIRECT if your
+// callback domain differs - its host must match the registered domain exactly.
+//
 // Scope note: `activity:read_all` includes private activities. Swap it for
 // `read,activity:read` below if you only want public activities surfaced.
 
 const SCOPE = 'read,activity:read_all'
-const REDIRECT = 'http://localhost/exchange_token'
+const REDIRECT = process.env.STRAVA_REDIRECT || 'https://kevingamez.co/exchange_token'
 
 function die(msg) {
   console.error(msg)
