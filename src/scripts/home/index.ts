@@ -6,6 +6,7 @@ import { track } from '../lib/analytics'
 import { initConway } from './conway'
 import { initContribGraph } from './contrib'
 import { initGhStats } from './gh-stats'
+import { initStrava } from './strava'
 import { initConsole } from './console'
 import { initWriting } from './writing'
 import { initVisibility } from './visibility'
@@ -15,6 +16,7 @@ bootstrapClient()
 initConway()
 initContribGraph()
 initGhStats()
+initStrava().catch(() => {})
 initWriting()
 initConsole()
 initVisibility()

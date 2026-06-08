@@ -142,6 +142,35 @@ export interface HomeStrings {
     repoBudgetDesc: string
     repoCloudDesc: string
   }
+  strava: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    totalsCaption: string
+    statDistance: string
+    statTime: string
+    statActiveDays: string
+    recentTitle: string
+    viewOnStrava: string
+    profileUrl: string
+    // Localized Strava sport_type labels; the client falls back to the raw
+    // sport_type for anything not listed here.
+    sports: {
+      Run: string
+      TrailRun: string
+      VirtualRun: string
+      Ride: string
+      VirtualRide: string
+      GravelRide: string
+      MountainBikeRide: string
+      Swim: string
+      Walk: string
+      Hike: string
+      Workout: string
+      WeightTraining: string
+      Yoga: string
+    }
+  }
   writing: {
     secNum: string
     titleHtml: string
