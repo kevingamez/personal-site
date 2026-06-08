@@ -21,6 +21,22 @@ import { z } from 'zod'
 
 export const config = { runtime: 'nodejs' }
 
+interface Req {
+  method?: string
+  headers: Record<string, string | string[] | undefined>
+  on(event: 'data', cb: (chunk: Buffer | string) => void): void
+  on(event: 'end', cb: () => void): void
+  on(event: 'error', cb: (err: unknown) => void): void
+  on(event: 'close', cb: () => void): void
+}
+interface Res {
+  status(code: number): Res
+  setHeader(name: string, value: string): void
+  write(chunk: string): void
+  end(body?: string): void
+  writableEnded?: boolean
+}
+
 // ───────── Limits ─────────
 
 const DAILY_LIMIT = 20
@@ -165,10 +181,43 @@ Be concise (2-4 sentences for casual chat). Use markdown sparingly: **bold** for
 
 // ───────── Helpers ─────────
 
-function jsonError(status: number, error: string, message: string): Response {
-  return new Response(JSON.stringify({ error, message }), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
+function header(req: Req, name: string): string | null {
+  const value = req.headers[name.toLowerCase()]
+  if (Array.isArray(value)) return value[0] ?? null
+  return value ?? null
+}
+
+function writeJson(res: Res, status: number, body: unknown): void {
+  res.status(status)
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify(body))
+}
+
+function jsonError(res: Res, status: number, error: string, message: string): void {
+  writeJson(res, status, { error, message })
+}
+
+function readJsonBody(req: Req, maxBytes: number): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    let size = 0
+    let body = ''
+    req.on('data', (chunk) => {
+      const part = String(chunk)
+      size += Buffer.byteLength(part)
+      if (size > maxBytes) {
+        reject(new Error('too_large'))
+        return
+      }
+      body += part
+    })
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(body || '{}'))
+      } catch {
+        reject(new Error('bad_json'))
+      }
+    })
+    req.on('error', reject)
   })
 }
 
@@ -178,55 +227,66 @@ function jsonError(status: number, error: string, message: string): Response {
 // is appended-to by the platform, so its left-most value is whatever the client
 // sent — never trust it for rate-limit keys. `x-real-ip` / `x-vercel-forwarded-for`
 // are set by Vercel's proxy and overwrite anything the client supplies.
-function clientIp(req: Request): string | null {
-  const real = req.headers.get('x-real-ip')
+function clientIp(req: Req): string | null {
+  const real = header(req, 'x-real-ip')
   if (real) return real.trim()
-  const vff = req.headers.get('x-vercel-forwarded-for')
+  const vff = header(req, 'x-vercel-forwarded-for')
   if (vff) return vff.split(',')[0].trim()
   return null
 }
 
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(req: Req, res: Res): Promise<void> {
   if (req.method !== 'POST') {
-    return new Response('Use POST', { status: 405 })
+    res.status(405).end('Use POST')
+    return
   }
 
   // 1. Origin check — the first line of defense against cross-origin abuse.
-  const origin = req.headers.get('origin')
+  const origin = header(req, 'origin')
   if (!isOriginAllowed(origin)) {
-    return jsonError(403, 'forbidden', 'Origin not allowed.')
+    jsonError(res, 403, 'forbidden', 'Origin not allowed.')
+    return
   }
 
   // 2. Reject oversized bodies before buffering them into memory.
-  const contentLength = Number(req.headers.get('content-length') || 0)
+  const contentLength = Number(header(req, 'content-length') || 0)
   if (contentLength > MAX_BODY_BYTES) {
-    return jsonError(413, 'too_large', 'Request body too large.')
+    jsonError(res, 413, 'too_large', 'Request body too large.')
+    return
   }
 
   // 3. Parse + validate body BEFORE spending a rate-limit token, so malformed
   //    requests can't drain an IP's daily quota.
   let raw: unknown
   try {
-    raw = await req.json()
-  } catch {
-    return jsonError(400, 'bad_json', 'Could not parse JSON body.')
+    raw = await readJsonBody(req, MAX_BODY_BYTES)
+  } catch (err) {
+    if (err instanceof Error && err.message === 'too_large') {
+      jsonError(res, 413, 'too_large', 'Request body too large.')
+      return
+    }
+    jsonError(res, 400, 'bad_json', 'Could not parse JSON body.')
+    return
   }
   const parsed = ChatBodySchema.safeParse(raw)
   if (!parsed.success) {
-    return jsonError(400, 'bad_shape', 'Body does not match expected schema.')
+    jsonError(res, 400, 'bad_shape', 'Body does not match expected schema.')
+    return
   }
 
   // 4. Length check (defense in depth — zod already caps each message; here we
   //    sum the whole conversation).
   const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
   if (totalChars > MAX_TOTAL_CHARS) {
-    return jsonError(413, 'too_long', 'Conversation too long. Start a new one.')
+    jsonError(res, 413, 'too_long', 'Conversation too long. Start a new one.')
+    return
   }
 
   // 5. Backend config.
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    return jsonError(500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
+    jsonError(res, 500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
+    return
   }
 
   // 6. Rate limit (per IP, only for well-formed requests). When no trusted IP
@@ -235,103 +295,93 @@ export default async function handler(req: Request): Promise<Response> {
   const ip = clientIp(req)
   const rl = await checkRateLimit(ip ?? 'local')
   if (!rl.allowed) {
-    return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
+    jsonError(res, 429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
+    return
   }
   // Global backstop across all IPs (bounds total cost under IP rotation).
   if (!(await checkGlobalLimit())) {
-    return jsonError(429, 'busy', 'The assistant is busy right now. Try again later.')
+    jsonError(res, 429, 'busy', 'The assistant is busy right now. Try again later.')
+    return
   }
 
   // 7. Trim history before sending to the model.
   const messages = parsed.data.messages.slice(-MAX_HISTORY)
 
   const client = new Anthropic({ apiKey })
+  const abort = new AbortController()
+  req.on('close', () => abort.abort())
 
-  const stream = new TransformStream<Uint8Array, Uint8Array>()
-  const writer = stream.writable.getWriter()
-  const enc = new TextEncoder()
+  res.status(200)
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+  res.setHeader('Cache-Control', 'no-cache, no-transform')
+  res.setHeader('Connection', 'keep-alive')
+  res.setHeader('Access-Control-Allow-Origin', origin || '')
+  res.setHeader('Vary', 'Origin')
+  res.setHeader('X-RateLimit-Remaining', String(rl.remaining))
+  res.setHeader('X-RateLimit-Limit', String(DAILY_LIMIT))
 
   // Writes never throw out of the streaming task: once the client disconnects
   // the writer rejects, and we just stop instead of crashing the detached IIFE.
-  const send = async (event: Record<string, unknown>): Promise<void> => {
+  const send = (event: Record<string, unknown>): void => {
+    if (res.writableEnded) return
     try {
-      await writer.write(enc.encode(`data: ${JSON.stringify(event)}\n\n`))
+      res.write(`data: ${JSON.stringify(event)}\n\n`)
     } catch {
       /* client disconnected — nothing to do */
     }
   }
 
-  ;(async () => {
-    try {
-      const response = await client.messages.create(
-        {
-          model: 'claude-sonnet-4-5',
-          max_tokens: 512,
-          stream: true,
-          system: KEVIN_CONTEXT,
-          tools: [
-            {
-              type: 'web_search_20250305',
-              name: 'web_search',
-              max_uses: 3,
-            } as unknown as Anthropic.Tool,
-          ],
-          messages: messages as Anthropic.MessageParam[],
-        },
-        // Propagate client disconnects so we stop generating (and billing) the
-        // moment the browser goes away.
-        { signal: req.signal }
-      )
+  try {
+    const response = await client.messages.create(
+      {
+        model: 'claude-sonnet-4-5',
+        max_tokens: 512,
+        stream: true,
+        system: KEVIN_CONTEXT,
+        tools: [
+          {
+            type: 'web_search_20250305',
+            name: 'web_search',
+            max_uses: 3,
+          } as unknown as Anthropic.Tool,
+        ],
+        messages: messages as Anthropic.MessageParam[],
+      },
+      // Propagate client disconnects so we stop generating (and billing) the
+      // moment the browser goes away.
+      { signal: abort.signal }
+    )
 
-      for await (const event of response as unknown as AsyncIterable<{
-        type: string
-        index?: number
-        delta?: { type?: string; text?: string }
-        content_block?: { type?: string; name?: string; input?: unknown }
-      }>) {
-        if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
-          await send({ type: 'text_delta', text: event.delta.text || '' })
-        } else if (
-          event.type === 'content_block_start' &&
-          (event.content_block?.type === 'tool_use' ||
-            event.content_block?.type === 'server_tool_use')
-        ) {
-          await send({
-            type: 'tool_use',
-            name: event.content_block.name,
-            input: event.content_block.input,
-          })
-        }
+    for await (const event of response as unknown as AsyncIterable<{
+      type: string
+      index?: number
+      delta?: { type?: string; text?: string }
+      content_block?: { type?: string; name?: string; input?: unknown }
+    }>) {
+      if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+        send({ type: 'text_delta', text: event.delta.text || '' })
+      } else if (
+        event.type === 'content_block_start' &&
+        (event.content_block?.type === 'tool_use' ||
+          event.content_block?.type === 'server_tool_use')
+      ) {
+        send({
+          type: 'tool_use',
+          name: event.content_block.name,
+          input: event.content_block.input,
+        })
       }
-      await send({ type: 'done' })
-      try {
-        await writer.write(enc.encode('data: [DONE]\n\n'))
-      } catch {
-        /* client disconnected */
-      }
-    } catch (err) {
-      // A client abort is expected, not an error — don't log it or try to write
-      // to a stream that's already gone. For anything else, log the real cause
-      // server-side and hand the client a generic message (never leak internals).
-      if (!req.signal?.aborted) {
-        console.error('[api/chat] stream error:', err)
-        await send({ type: 'error', message: 'Sorry, something went wrong generating a reply.' })
-      }
-    } finally {
-      await writer.close().catch(() => {})
     }
-  })()
-
-  return new Response(stream.readable, {
-    headers: {
-      'Content-Type': 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-      // Restrict CORS to the allowlist (echoing the validated origin).
-      'Access-Control-Allow-Origin': origin || '',
-      Vary: 'Origin',
-      'X-RateLimit-Remaining': String(rl.remaining),
-      'X-RateLimit-Limit': String(DAILY_LIMIT),
-    },
-  })
+    send({ type: 'done' })
+    if (!res.writableEnded) res.write('data: [DONE]\n\n')
+  } catch (err) {
+    // A client abort is expected, not an error. For anything else, log the real
+    // cause server-side and hand the client a generic message (never leak internals).
+    if (!abort.signal.aborted) {
+      console.error('[api/chat] stream error:', err)
+      send({ type: 'error', message: 'Sorry, something went wrong generating a reply.' })
+    }
+  } finally {
+    if (!res.writableEnded) res.end()
+  }
 }
