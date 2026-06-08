@@ -146,10 +146,22 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
-    totalsCaption: string
-    statDistance: string
-    statTime: string
-    statActiveDays: string
+    heroCaption: string
+    statKm: string
+    statHours: string
+    statElevation: string
+    statActivities: string
+    weeklyTitle: string
+    weeklyPeakLabel: string
+    insightLongestLabel: string
+    insightBiggestLabel: string
+    insightClimbedLabel: string
+    insightBusiestLabel: string
+    climbedCompare: string
+    weekOf: string
+    heatmapTitle: string
+    heatLess: string
+    heatMore: string
     recentTitle: string
     viewOnStrava: string
     profileUrl: string

@@ -7,14 +7,17 @@ interface Props {
 
 const { t } = Astro.props
 
-// Localized sport-name lookup handed to the client script as inert JSON (same
-// pattern as the contribution-calendar data block). Escape `<` so the payload
-// can never break out of the <script> context.
-const i18n = JSON.stringify({ sports: t.sports }).replace(/</g, "\\u003c")
+// Inert JSON handed to the client script (same pattern as the contribution
+// calendar). Only the bits the renderer needs to localize at runtime.
+const i18n = JSON.stringify({
+  sports: t.sports,
+  weekOf: t.weekOf,
+  climbedCompare: t.climbedCompare,
+}).replace(/</g, "\\u003c")
 ---
 
-<!-- Hidden until the client script confirms there's live activity to show, so
-     it never renders an empty shell on preview / before Strava is wired up. -->
+<!-- Hidden until the client confirms live activity, so it never renders an
+     empty shell on preview / before Strava is wired up. -->
 <section id="strava" hidden>
   <div class="wrap">
     <div class="sec-head">
@@ -25,30 +28,78 @@ const i18n = JSON.stringify({ sports: t.sports }).replace(/</g, "\\u003c")
       <p class="sec-blurb">{t.blurb}</p>
     </div>
 
-    <div class="strava-banner">
-      <div class="strava-banner-cap">{t.totalsCaption}</div>
-      <div class="strava-stats-row">
-        <div class="strava-stat">
-          <div class="strava-stat-num" id="strava-dist">0</div>
-          <div class="strava-stat-lbl">{t.statDistance}</div>
+    <!-- Hero band: big total + secondary stats + 12-week sparkline -->
+    <div class="sv-hero">
+      <div class="sv-hero-cap">{t.heroCaption}</div>
+      <div class="sv-hero-grid">
+        <div class="sv-hero-lead">
+          <div class="sv-hero-km"><span id="sv-km">0</span><i>km</i></div>
+          <div class="sv-hero-kml">{t.statKm}</div>
         </div>
-        <div class="strava-stat">
-          <div class="strava-stat-num" id="strava-time">0</div>
-          <div class="strava-stat-lbl">{t.statTime}</div>
+        <div class="sv-hero-side">
+          <div class="sv-mini"><span id="sv-hours">0</span><em>{t.statHours}</em></div>
+          <div class="sv-mini"><span id="sv-elev">0</span><em>{t.statElevation}</em></div>
+          <div class="sv-mini"><span id="sv-acts">0</span><em>{t.statActivities}</em></div>
         </div>
-        <div class="strava-stat">
-          <div class="strava-stat-num" id="strava-days">0</div>
-          <div class="strava-stat-lbl">{t.statActiveDays}</div>
-        </div>
+      </div>
+      <div class="sv-spark" id="sv-spark" aria-hidden="true"></div>
+    </div>
+
+    <!-- Weekly distance bar chart -->
+    <div class="sv-card sv-weekly">
+      <div class="sv-card-head">
+        <h3>{t.weeklyTitle}</h3>
+        <span class="sv-peak" id="sv-weekly-peak"></span>
+      </div>
+      <div class="sv-bars" id="sv-weekly" role="img" aria-label={t.weeklyTitle}></div>
+    </div>
+
+    <!-- Insight tiles -->
+    <div class="sv-insights">
+      <div class="sv-tile">
+        <div class="sv-tile-lbl">{t.insightLongestLabel}</div>
+        <div class="sv-tile-val" id="sv-longest-val">—</div>
+        <div class="sv-tile-sub" id="sv-longest-sub"></div>
+      </div>
+      <div class="sv-tile">
+        <div class="sv-tile-lbl">{t.insightBiggestLabel}</div>
+        <div class="sv-tile-val" id="sv-biggest-val">—</div>
+        <div class="sv-tile-sub" id="sv-biggest-sub"></div>
+      </div>
+      <div class="sv-tile">
+        <div class="sv-tile-lbl">{t.insightClimbedLabel}</div>
+        <div class="sv-tile-val" id="sv-climbed-val">—</div>
+        <div class="sv-tile-sub" id="sv-climbed-sub"></div>
+      </div>
+      <div class="sv-tile">
+        <div class="sv-tile-lbl">{t.insightBusiestLabel}</div>
+        <div class="sv-tile-val" id="sv-busiest-val">—</div>
+        <div class="sv-tile-sub" id="sv-busiest-sub"></div>
       </div>
     </div>
 
-    <div class="strava-recent">
-      <div class="strava-recent-head">
-        <h3>{t.recentTitle}</h3>
-        <a class="strava-recent-link" href={t.profileUrl} target="_blank" rel="noopener">{t.viewOnStrava}</a>
+    <!-- Training heatmap -->
+    <div class="sv-card sv-heatwrap">
+      <div class="sv-card-head">
+        <h3>{t.heatmapTitle}</h3>
       </div>
-      <div class="acts" id="strava-acts"></div>
+      <div class="sv-heat" id="sv-heat"></div>
+      <div class="sv-heat-legend">
+        <span>{t.heatLess}</span>
+        <span class="sv-scale">
+          <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>
+        </span>
+        <span>{t.heatMore}</span>
+      </div>
+    </div>
+
+    <!-- Recent activity strip -->
+    <div class="sv-recent">
+      <div class="sv-recent-head">
+        <h3>{t.recentTitle}</h3>
+        <a class="sv-recent-link" href={t.profileUrl} target="_blank" rel="noopener">{t.viewOnStrava}</a>
+      </div>
+      <div class="acts" id="sv-acts-list"></div>
     </div>
 
     <script id="strava-i18n" type="application/json" is:inline set:html={i18n} />
