@@ -4,7 +4,7 @@
 import './dev-editor-loader'
 import { bootstrapClient } from '../lib/init'
 import { track } from '../lib/analytics'
-import { PROJECT_NAME, pathDisplay, state } from './state'
+import { PROJECT_NAME, state } from './state'
 import { persistActive } from './persistence'
 import { initHeatmap } from './heatmap'
 import { initRequestLog } from './request-log'

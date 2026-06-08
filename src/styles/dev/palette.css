@@ -30,7 +30,7 @@
   outline: none;
   color: var(--ink);
   padding: 14px 18px;
-  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Hanken Grotesk', sans-serif;
   font-size: 14px;
   border-bottom: 1px solid var(--line);
   caret-color: var(--coral);
@@ -82,7 +82,7 @@
 .palette-empty {
   padding: 20px 18px;
   color: var(--mute-2);
-  font-family: 'Inter Tight', sans-serif;
+  font-family: 'Hanken Grotesk', sans-serif;
   font-size: 13px;
   text-align: center;
 }
