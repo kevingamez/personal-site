@@ -5,7 +5,6 @@ const routes = [
   { path: '/es/', title: /Kevin G[áa]mez/ },
   { path: '/dev', title: /Kevin G[áa]mez|dev/i },
   { path: '/privacy', title: /Privacy|Kevin G[áa]mez/ },
-  { path: '/500', title: /500|Kevin G[áa]mez/ },
 ]
 
 // Ignore noise that's expected when running against the preview server:
@@ -58,4 +57,20 @@ for (const path of ['/', '/es/']) {
 test('404 page returns 404', async ({ page }) => {
   const response = await page.goto('/this-route-does-not-exist')
   expect(response?.status()).toBe(404)
+})
+
+test('500 page returns 500 and renders without console errors', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(`[pageerror] ${e.message}`))
+  page.on('console', (msg) => {
+    if (msg.type() !== 'error') return
+    const text = msg.text()
+    if (isThirdPartyResourceError(text)) return
+    errors.push(text)
+  })
+
+  const response = await page.goto('/500')
+  expect(response?.status()).toBe(500)
+  await expect(page).toHaveTitle(/500|Kevin G[áa]mez/)
+  expect(errors, 'console / page errors on /500').toEqual([])
 })
