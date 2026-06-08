@@ -19,14 +19,28 @@ interface ContribCalendar {
   longestStreak: number
   currentStreak: number
 }
+interface CompactContribCalendar {
+  t: number
+  l: number
+  c: number
+  d: [string, number, 0 | 1 | 2 | 3 | 4][]
+}
 
 function readCalendar(): ContribCalendar | null {
   const node = document.getElementById('contrib-data')
   if (!node?.textContent) return null
   try {
-    const data = JSON.parse(node.textContent) as ContribCalendar
-    if (!data || !Array.isArray(data.days) || !data.days.length) return null
-    return data
+    const data = JSON.parse(node.textContent) as ContribCalendar | CompactContribCalendar
+    if ('d' in data && Array.isArray(data.d) && data.d.length) {
+      return {
+        totalContributions: data.t,
+        longestStreak: data.l,
+        currentStreak: data.c,
+        days: data.d.map(([date, count, level]) => ({ date, count, level })),
+      }
+    }
+    if ('days' in data && Array.isArray(data.days) && data.days.length) return data
+    return null
   } catch {
     return null
   }
@@ -96,6 +110,34 @@ function animateNumber(el: HTMLElement, target: number, duration: number, delay:
   requestAnimationFrame(tick)
 }
 
+function renderMonthLabels(days: ContribDay[]): void {
+  const holder = document.querySelector<HTMLElement>('.contrib-months')
+  if (!holder) return
+
+  const lang = document.documentElement.lang === 'es' ? 'es-CO' : 'en-US'
+  const fmt = new Intl.DateTimeFormat(lang, { month: 'short' })
+  const labels = Array.from({ length: WEEKS }, () => '')
+  let prevMonth = ''
+
+  days.forEach((day, i) => {
+    const date = new Date(`${day.date}T00:00:00`)
+    const monthKey = `${date.getFullYear()}-${date.getMonth()}`
+    const week = Math.floor(i / DAYS)
+    if (i === 0 || monthKey !== prevMonth) {
+      labels[week] = fmt.format(date).replace('.', '')
+      prevMonth = monthKey
+    }
+  })
+
+  holder.textContent = ''
+  holder.style.setProperty('--contrib-weeks', String(WEEKS))
+  labels.forEach((label) => {
+    const el = document.createElement('span')
+    el.textContent = label
+    holder.appendChild(el)
+  })
+}
+
 export function initContribGraph(): void {
   const g = document.getElementById('contrib-graph') as HTMLElement | null
   if (!g) return
@@ -104,14 +146,17 @@ export function initContribGraph(): void {
 
   // Trim to the most recent WEEKS*DAYS days so the visual stays fixed-size.
   const tail = calendar.days.slice(-WEEKS * DAYS)
-  // GitHub's calendar starts on Sunday; if the tail doesn't start aligned
-  // we just render whatever is there - cells flow column-major into the grid.
+  g.style.setProperty('--contrib-weeks', String(WEEKS))
+  renderMonthLabels(tail)
+
   for (let i = 0; i < tail.length; i++) {
     const day = tail[i]
     const w = Math.floor(i / DAYS)
     const d = i % DAYS
     const el = document.createElement('div')
     el.className = 'day' + (day.level ? ' l' + day.level : '')
+    el.style.gridColumn = String(w + 1)
+    el.style.gridRow = String(d + 1)
     el.style.setProperty('--w', String(w))
     el.style.setProperty('--d', String(d))
     el.dataset.count = String(day.count)
