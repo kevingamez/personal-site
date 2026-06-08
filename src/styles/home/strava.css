@@ -1,38 +1,40 @@
-/* ─── Strava · movement ─── */
+/* ─── Strava · movement (hero, insights, recent) ─── */
 #strava[hidden] {
   display: none;
 }
 
-.strava-banner {
+/* hero band */
+.sv-hero {
   position: relative;
-  margin-bottom: 28px;
-  padding: 36px 36px 30px;
+  margin-bottom: 22px;
+  padding: 34px 36px 26px;
   background: var(--ink);
   color: var(--cream);
   border-radius: 14px;
   box-shadow: 0 0 0 1px var(--ink);
   overflow: hidden;
 }
-.strava-banner::before {
+.sv-hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: radial-gradient(rgba(250, 247, 240, 0.06) 1px, transparent 1px);
   background-size: 24px 24px;
   pointer-events: none;
-  z-index: 0;
 }
-.strava-banner-cap {
+.sv-hero > * {
   position: relative;
   z-index: 1;
+}
+.sv-hero-cap {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--coral-on-dark);
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
-.strava-banner-cap::before {
+.sv-hero-cap::before {
   content: '';
   display: inline-block;
   width: 22px;
@@ -41,93 +43,207 @@
   vertical-align: middle;
   margin-right: 10px;
 }
-.strava-stats-row {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-@media (max-width: 700px) {
-  .strava-stats-row {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-.strava-stat {
+.sv-hero-grid {
   display: flex;
-  flex-direction: column;
-  border-left: 2px solid var(--coral-on-dark);
-  padding-left: 18px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px 40px;
+  flex-wrap: wrap;
 }
-.strava-stat:nth-child(2) {
-  transition-delay: 0.1s;
-}
-.strava-stat:nth-child(3) {
-  transition-delay: 0.2s;
-}
-.strava-on .strava-stat {
-  opacity: 1;
-  transform: translateY(0);
-}
-.strava-stat-num {
+.sv-hero-km {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 500;
-  font-size: clamp(44px, 4.5vw, 68px);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-size: clamp(56px, 8vw, 96px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
   color: var(--cream);
   font-variant-numeric: tabular-nums;
 }
-.strava-stat-lbl {
+.sv-hero-km i {
+  font-style: normal;
+  font-size: 0.32em;
+  letter-spacing: 0;
+  color: var(--coral-on-dark);
+  margin-left: 8px;
+}
+.sv-hero-kml {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--coral-on-dark);
-  margin-top: 10px;
+  margin-top: 12px;
+}
+.sv-hero-side {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.sv-mini {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid rgba(255, 122, 92, 0.55);
+  padding-left: 14px;
+}
+.sv-mini span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+}
+.sv-mini em {
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(250, 247, 240, 0.55);
+  margin-top: 7px;
 }
 
-/* recent activity list */
-.strava-recent-head {
+/* shared card chrome */
+.sv-card {
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 24px 20px;
+  margin-bottom: 22px;
+  min-width: 0;
+}
+.sv-card-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
-.strava-recent-head h3 {
+.sv-card-head h3 {
   font-family: 'Instrument Serif', serif;
   font-size: 22px;
   font-weight: 400;
   margin: 0;
 }
-.strava-recent-link {
+.sv-peak {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--coral);
+}
+.sv-peak::before {
+  content: '▲ ';
+  font-size: 9px;
+}
+
+/* insight tiles */
+.sv-insights {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+@media (max-width: 760px) {
+  .sv-insights {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 430px) {
+  .sv-insights {
+    grid-template-columns: 1fr;
+  }
+}
+.sv-tile {
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px 15px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+}
+.sv-tile:nth-child(2) {
+  transition-delay: 0.08s;
+}
+.sv-tile:nth-child(3) {
+  transition-delay: 0.16s;
+}
+.sv-tile:nth-child(4) {
+  transition-delay: 0.24s;
+}
+#strava.on .sv-tile {
+  opacity: 1;
+  transform: none;
+}
+.sv-tile-lbl {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.sv-tile-lbl::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--coral);
+}
+.sv-tile-val {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(26px, 3.4vw, 34px);
+  line-height: 1.05;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin-top: 10px;
+}
+.sv-tile-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* recent strip */
+.sv-recent-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sv-recent-head h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0;
+}
+.sv-recent-link {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--coral);
   text-decoration: none;
 }
-.strava-recent-link:hover {
+.sv-recent-link:hover {
   text-decoration: underline;
 }
 .acts {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
 }
 .act {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 16px;
+  padding: 13px 16px;
   background: var(--cream);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -144,7 +260,7 @@
   align-items: center;
   gap: 7px;
   flex-shrink: 0;
-  width: 96px;
+  width: 92px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
@@ -193,12 +309,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .strava-stat {
+  .sv-tile {
     opacity: 1;
     transform: none;
-    transition: none;
-  }
-  .act {
     transition: none;
   }
 }
