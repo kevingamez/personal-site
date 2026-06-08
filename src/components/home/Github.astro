@@ -20,6 +20,13 @@ const repoDesc: Record<string, string> = {
   "budget-app": t.repoBudgetDesc,
   "GCP-CloudRun": t.repoCloudDesc,
 }
+
+const contribPayload = JSON.stringify({
+  t: stats.contribCalendar.totalContributions,
+  l: stats.contribCalendar.longestStreak,
+  c: stats.contribCalendar.currentStreak,
+  d: stats.contribCalendar.days.map((d) => [d.date, d.count, d.level]),
+}).replace(/</g, "\\u003c")
 ---
 
 <section id="github">
@@ -88,12 +95,7 @@ const repoDesc: Record<string, string> = {
             {t.dows.map((d, i) => <span class={i % 2 === 0 ? "hide" : ""}>{d}</span>)}
           </div>
           <div class="contrib" id="contrib-graph"></div>
-          <script
-            id="contrib-data"
-            type="application/json"
-            is:inline
-            set:html={JSON.stringify(stats.contribCalendar).replace(/</g, "\\u003c")}
-          />
+          <script id="contrib-data" type="application/json" is:inline set:html={contribPayload} />
         </div>
         <div class="contrib-legend">
           <span>{t.less}</span>

@@ -1,7 +1,7 @@
 /* ─── GitHub activity ─── */
 .gh-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 32px;
   align-items: start;
 }
@@ -10,21 +10,13 @@
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 600px) {
-  /* Keep the calendar cells legible; the card scrolls horizontally. */
-  .contrib-frame {
-    min-width: 440px;
-  }
-}
 .gh-card {
   background: var(--cream-2);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 22px;
-  /* Let the card shrink inside its grid track and scroll the wide
-     contribution calendar instead of overflowing the page on mobile. */
   min-width: 0;
-  overflow-x: auto;
+  overflow: hidden;
 }
 .gh-card-head {
   display: flex;
@@ -33,7 +25,7 @@
   margin-bottom: 16px;
 }
 .gh-card-head h3 {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Fraunces', serif;
   font-size: 22px;
   font-weight: 400;
   margin: 0;
@@ -46,13 +38,14 @@
 }
 .contrib-frame {
   display: grid;
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: 28px minmax(0, 1fr);
   gap: 6px;
+  min-width: 0;
 }
 .contrib-months {
   grid-column: 2;
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(var(--contrib-weeks, 52), minmax(0, 1fr));
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 0.06em;
@@ -82,12 +75,14 @@
 }
 .contrib {
   display: grid;
-  grid-template-rows: repeat(7, 1fr);
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  grid-template-columns: repeat(var(--contrib-weeks, 52), minmax(0, 1fr));
+  grid-template-rows: repeat(7, minmax(0, 1fr));
   gap: 3px;
+  min-width: 0;
 }
 .contrib .day {
+  width: 100%;
+  min-width: 0;
   aspect-ratio: 1/1;
   background: var(--cream-3);
   border: 1px solid rgba(31, 29, 26, 0.04);
@@ -137,12 +132,12 @@
   gap: 2px;
 }
 .cs-num {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Fraunces', serif;
   font-size: 28px;
   line-height: 1;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 .cs-num.coral {
   color: var(--coral);
@@ -150,8 +145,7 @@
 .cs-lbl {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: var(--muted);
   margin-top: 4px;
 }
@@ -169,7 +163,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-  transition: all 0.2s;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 .repo:hover {
   border-color: var(--coral);
@@ -186,6 +182,7 @@
   font-size: 12.5px;
   color: var(--muted);
   line-height: 1.4;
+  text-wrap: pretty;
 }
 .repo .stat {
   display: flex;
@@ -216,6 +213,40 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   color: var(--muted);
+}
+
+@media (min-width: 1180px) and (max-height: 950px) {
+  #github .gh-card {
+    padding: 18px;
+  }
+  #github .gh-card-head {
+    margin-bottom: 12px;
+  }
+  #github .gh-card-head h3 {
+    font-size: 20px;
+  }
+  #github .contrib-stats {
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  #github .cs-num {
+    font-size: 24px;
+  }
+  #github .repo {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  #github .repo .desc {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 980px) {
+  .gh-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .contrib-legend .scale {
   display: flex;
