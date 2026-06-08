@@ -55,10 +55,40 @@ const FOOT_SPORTS = new Set(['Run', 'TrailRun', 'VirtualRun', 'Walk', 'Hike'])
 // Unit system. The only countries that don't use metric are the US, Liberia,
 // and Myanmar - Canada and the UK are officially metric for distance/speed - so
 // those visitors get miles/feet/mph/pace-per-mile and everyone else stays
-// metric. Detected from the browser locale: no server round-trip, no edge-cache
-// pollution.
+// metric. Resolved by *actual location*, best signal first: the visitor's
+// geo-IP country (from /api/geo, uncached), then the device timezone, then the
+// browser locale. Location beats locale so a Colombian on an en-US browser
+// still sees kilometers.
 const IMPERIAL_REGIONS = new Set(['US', 'LR', 'MM'])
-function detectImperial(): boolean {
+
+// Imperial IANA timezones (US + Liberia + Myanmar). Prefix entries cover the
+// many America/Indiana, America/Kentucky and America/North_Dakota sub-zones.
+const IMPERIAL_TZ = [
+  'America/New_York',
+  'America/Detroit',
+  'America/Chicago',
+  'America/Denver',
+  'America/Boise',
+  'America/Phoenix',
+  'America/Los_Angeles',
+  'America/Anchorage',
+  'America/Juneau',
+  'America/Sitka',
+  'America/Metlakatla',
+  'America/Yakutat',
+  'America/Nome',
+  'America/Adak',
+  'America/Menominee',
+  'America/Indiana/',
+  'America/Kentucky/',
+  'America/North_Dakota/',
+  'Pacific/Honolulu',
+  'Africa/Monrovia',
+  'Asia/Yangon',
+  'Asia/Rangoon',
+]
+
+function imperialByLocale(): boolean {
   if (typeof navigator === 'undefined') return false
   try {
     const langs = navigator.languages?.length ? navigator.languages : [navigator.language]
@@ -71,13 +101,53 @@ function detectImperial(): boolean {
   }
   return false
 }
-const IMP = detectImperial()
+
+function imperialByTimezone(): boolean | null {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (!tz) return null
+    return IMPERIAL_TZ.some((z) => tz === z || tz.startsWith(z))
+  } catch {
+    return null
+  }
+}
+
+async function fetchCountry(): Promise<string | null> {
+  try {
+    const res = await fetch('/api/geo', { headers: { Accept: 'application/json' } })
+    if (!res.ok) return null
+    const j = (await res.json()) as { country?: string | null }
+    return j.country && /^[A-Z]{2}$/.test(j.country) ? j.country : null
+  } catch {
+    return null // not routed in `astro dev`, or offline - fall back below
+  }
+}
+
+// geo-IP country (authoritative) → device timezone → browser locale.
+function resolveImperial(country: string | null): boolean {
+  if (country) return IMPERIAL_REGIONS.has(country)
+  const byTz = imperialByTimezone()
+  return byTz !== null ? byTz : imperialByLocale()
+}
+
 const KM_PER_MI = 0.621371
 const FT_PER_M = 3.28084
-const DUNIT = IMP ? 'mi' : 'km'
-const EUNIT = IMP ? 'ft' : 'm'
-const SUNIT = IMP ? 'mph' : 'km/h'
-const PUNIT = IMP ? '/mi' : '/km'
+
+// Mutable so the geo lookup can finalize the system before anything renders;
+// the value functions read these at call time. Seeded from the offline signals
+// (timezone/locale) so the dev-sample path still has a sane default.
+let IMP = resolveImperial(null)
+let DUNIT = IMP ? 'mi' : 'km'
+let EUNIT = IMP ? 'ft' : 'm'
+let SUNIT = IMP ? 'mph' : 'km/h'
+let PUNIT = IMP ? '/mi' : '/km'
+function applyUnitSystem(imperial: boolean): void {
+  IMP = imperial
+  DUNIT = imperial ? 'mi' : 'km'
+  EUNIT = imperial ? 'ft' : 'm'
+  SUNIT = imperial ? 'mph' : 'km/h'
+  PUNIT = imperial ? '/mi' : '/km'
+}
 const distVal = (m: number): number => (IMP ? (m / 1000) * KM_PER_MI : m / 1000)
 const elevVal = (m: number): number => (IMP ? m * FT_PER_M : m)
 const spdVal = (ms: number): number => ms * 3.6 * (IMP ? KM_PER_MI : 1)
@@ -252,6 +322,10 @@ export async function initStrava(): Promise<void> {
   const section = document.getElementById('strava')
   if (!section) return
 
+  // Resolve units by location in parallel with the data fetch (overlaps the two
+  // round-trips). The promise can't reject - it resolves to null on failure.
+  const countryP = fetchCountry()
+
   let data: Payload | null = null
   try {
     const res = await fetch('/api/strava', { headers: { Accept: 'application/json' } })
@@ -269,6 +343,8 @@ export async function initStrava(): Promise<void> {
     }
   }
   if (!data || !data.configured || !data.totals || data.totals.count === 0) return
+
+  applyUnitSystem(resolveImperial(await countryP))
 
   readI18n()
   const lang = document.documentElement.lang || 'en'
