@@ -1,4 +1,5 @@
 ---
+import { formatBogotaTime } from "@/scripts/clock"
 interface Props {
   buildId: string
 }
@@ -21,5 +22,5 @@ const { buildId } = Astro.props
   <div class="tab muted" data-ws="scratchpad"><span class="num">2</span>scratchpad</div>
   <div class="tab muted" data-ws="changelog"><span class="num">3</span>changelog</div>
   <div class="grow"></div>
-  <div class="live">utc-5 · bogotá · <b>04°35′N</b></div>
+  <div class="live">utc-5 · bogotá · <b data-bogota-clock>{formatBogotaTime()}</b></div>
 </div>

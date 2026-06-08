@@ -3,10 +3,12 @@
 
 import { bootstrapClient } from '../lib/init'
 import { track } from '../lib/analytics'
+import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initDevTransition } from './dev-transition'
 
 bootstrapClient()
+initBogotaClock()
 initConway()
 initDevTransition()
 

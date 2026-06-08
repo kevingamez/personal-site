@@ -4,6 +4,7 @@
 import './dev-editor-loader'
 import { bootstrapClient } from '../lib/init'
 import { track } from '../lib/analytics'
+import { initBogotaClock } from '../clock'
 import { PROJECT_NAME, state } from './state'
 import { persistActive } from './persistence'
 import { initHeatmap } from './heatmap'
@@ -34,6 +35,7 @@ function saveActive(): void {
 function init(): void {
   bootstrapClient()
   // Independent widgets first (no shared state).
+  initBogotaClock()
   initHeatmap()
   initRequestLog()
   initToast()

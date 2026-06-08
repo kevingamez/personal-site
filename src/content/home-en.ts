@@ -39,7 +39,7 @@ export const en: HomeStrings = {
   },
   hero: {
     metaRole: 'Founding engineer @ Enttor',
-    metaPlace: 'Bogotá · 04°35′N',
+    metaPlace: 'Bogotá',
     titleHtml: 'I build things,<br />mostly <i>software.</i>',
     lede: "I'm the founding engineer at <b>Enttor</b>, where we use AI and browser automation to make outbound marketing\n            actually work. Before that, I shipped an e-commerce platform at <b>Samsam</b>. M.Sc. in deep learning from\n            Universidad de los Andes.",
     btnSeeWork: 'See work →',
@@ -280,6 +280,6 @@ export const en: HomeStrings = {
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
     fonts: 'Set in Fraunces &amp; Hanken Grotesk',
-    estab: 'Est. 2026 · Bogotá · 04°35′N',
+    estab: 'Est. 2026 · Bogotá',
   },
 }
