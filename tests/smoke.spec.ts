@@ -21,7 +21,8 @@ function isThirdPartyResourceError(text: string): boolean {
     text.includes('clarity.ms') ||
     text.includes('google-analytics.com') ||
     text.includes('googletagmanager.com') ||
-    text.includes('/api/chat')
+    text.includes('/api/chat') ||
+    text.includes('/api/strava')
   )
 }
 
@@ -40,6 +41,17 @@ for (const { path, title } of routes) {
     expect(response?.status()).toBeLessThan(400)
     await expect(page).toHaveTitle(title)
     expect(errors, `console / page errors on ${path}`).toEqual([])
+  })
+}
+
+// The Strava section is rendered server-side but stays `hidden` until the
+// client confirms live activity from /api/strava (which `astro preview` doesn't
+// route). Assert the static markup ships on both locales regardless.
+for (const path of ['/', '/es/']) {
+  test(`${path} ships the Strava section markup`, async ({ page }) => {
+    await page.goto(path)
+    await expect(page.locator('#strava')).toHaveCount(1)
+    await expect(page.locator('#strava .sec-title')).toHaveText(/.+/)
   })
 }
 

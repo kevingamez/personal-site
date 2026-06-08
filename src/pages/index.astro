@@ -5,6 +5,7 @@ import Hero from "@/components/home/Hero.astro"
 import About from "@/components/home/About.astro"
 import Experience from "@/components/home/Experience.astro"
 import Github from "@/components/home/Github.astro"
+import Strava from "@/components/home/Strava.astro"
 import Writing from "@/components/home/Writing.astro"
 import Console from "@/components/home/Console.astro"
 import Contact from "@/components/home/Contact.astro"
@@ -26,6 +27,7 @@ const githubStats = await loadHomeStats()
   <About t={t.about} />
   <Experience t={t.experience} />
   <Github t={t.github} stats={githubStats} />
+  <Strava t={t.strava} />
   <Writing t={t.writing} />
   <Console t={t.console} />
   <Contact t={t.contact} />

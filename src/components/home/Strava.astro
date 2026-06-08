@@ -1,0 +1,56 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["strava"]
+}
+
+const { t } = Astro.props
+
+// Localized sport-name lookup handed to the client script as inert JSON (same
+// pattern as the contribution-calendar data block). Escape `<` so the payload
+// can never break out of the <script> context.
+const i18n = JSON.stringify({ sports: t.sports }).replace(/</g, "\\u003c")
+---
+
+<!-- Hidden until the client script confirms there's live activity to show, so
+     it never renders an empty shell on preview / before Strava is wired up. -->
+<section id="strava" hidden>
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+
+    <div class="strava-banner">
+      <div class="strava-banner-cap">{t.totalsCaption}</div>
+      <div class="strava-stats-row">
+        <div class="strava-stat">
+          <div class="strava-stat-num" id="strava-dist">0</div>
+          <div class="strava-stat-lbl">{t.statDistance}</div>
+        </div>
+        <div class="strava-stat">
+          <div class="strava-stat-num" id="strava-time">0</div>
+          <div class="strava-stat-lbl">{t.statTime}</div>
+        </div>
+        <div class="strava-stat">
+          <div class="strava-stat-num" id="strava-days">0</div>
+          <div class="strava-stat-lbl">{t.statActiveDays}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strava-recent">
+      <div class="strava-recent-head">
+        <h3>{t.recentTitle}</h3>
+        <a class="strava-recent-link" href={t.profileUrl} target="_blank" rel="noopener">{t.viewOnStrava}</a>
+      </div>
+      <div class="acts" id="strava-acts"></div>
+    </div>
+
+    <script id="strava-i18n" type="application/json" is:inline set:html={i18n} />
+  </div>
+</section>
