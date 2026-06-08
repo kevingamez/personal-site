@@ -1,5 +1,6 @@
 ---
 import type { HomeStrings } from "@/content/home"
+import { formatBogotaTime } from "@/scripts/clock"
 
 interface Props {
   t: HomeStrings["hero"]
@@ -21,7 +22,7 @@ const { t } = Astro.props
       </div>
       <div class="meta-row">
         <span class="live">{t.metaRole}</span>
-        <span>{t.metaPlace}</span>
+        <span>{t.metaPlace} · <span data-bogota-clock>{formatBogotaTime()}</span></span>
       </div>
     </div>
     <div class="gol-wrap" style="width:100%">

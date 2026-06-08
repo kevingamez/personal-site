@@ -44,7 +44,7 @@ export interface HomeStrings {
   }
   hero: {
     metaRole: string // quiet status line, left of the live dot
-    metaPlace: string // location + latitude
+    metaPlace: string // location label (live clock appended in the component)
     titleHtml: string // contains <br/> and <i>
     lede: string // raw HTML allowed (b tags)
     btnSeeWork: string
