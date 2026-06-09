@@ -3,7 +3,7 @@
 // Progressive enhancement: the hiding only happens once this script adds the
 // `reveal-on` class to <html>, and only when motion is allowed. With no JS, a
 // reduced-motion preference, or no IntersectionObserver, every element stays
-// visible — content is never trapped at opacity 0. Elements inside the
+// visible - content is never trapped at opacity 0. Elements inside the
 // optional #strava section are skipped (it can be display:none until its data
 // loads, which would prevent the observer from ever firing).
 

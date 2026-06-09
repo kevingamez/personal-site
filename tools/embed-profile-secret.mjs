@@ -1,7 +1,7 @@
 // Hides a quiet signature inside the profile photo (public/kevin.jpg): a Conway
-// glider (the hacker emblem — and this site's hero) plus a Caesar-ciphered
+// glider (the hacker emblem - and this site's hero) plus a Caesar-ciphered
 // signature line, appended after the JPEG end-of-image marker. Decoders ignore
-// everything past FFD9, so the image renders identically — but `strings
+// everything past FFD9, so the image renders identically - but `strings
 // public/kevin.jpg`, `exiftool`, or a hex editor reveal the mark.
 //
 // It's a watermark, not a note to a stranger: name, city, coordinates. Shift is
@@ -20,7 +20,7 @@ const caesar = (s, k = 3) =>
     .replace(/[a-z]/g, (c) => String.fromCharCode(((c.charCodeAt(0) - 97 + k) % 26) + 97))
     .replace(/[A-Z]/g, (c) => String.fromCharCode(((c.charCodeAt(0) - 65 + k) % 26) + 65))
 
-// Conway glider — spaced so each line is >=4 printable chars (so `strings`
+// Conway glider - spaced so each line is >=4 printable chars (so `strings`
 // shows it) and left as-is (Caesar only touches letters), so it stays legible.
 const GLIDER = ['. # .', '. . #', '# # #'].join('\n')
 

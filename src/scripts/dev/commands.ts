@@ -3,7 +3,7 @@
 // terminal without depending on the DOM directly.
 
 import { _d, getNode, pathDisplay, resolvePath, state, PROJECT_NAME } from './state'
-import type { DirNode, FileNode } from './state'
+import type { DirNode } from './state'
 import { esc, highlight } from './highlight'
 import { openFile } from './editor'
 import { forgetSaved, renameSaved } from './persistence'
@@ -64,7 +64,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const node = getNode(target)
       if (!node) return errFn('cat: ' + args[0] + ': no such file or directory')
       if (node.type !== 'file') return errFn('cat: ' + args[0] + ': is a directory')
-      const file = node as FileNode
+      const file = node
       const lines = file.body.split('\n')
       if (lines.length && lines[lines.length - 1] === '') lines.pop()
       for (const ln of lines) addLine(highlight(ln, file.lang) || '&nbsp;')
@@ -95,8 +95,8 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const name = target[target.length - 1]
       if (!parent || parent.type !== 'dir')
         return errFn('mkdir: ' + args[0] + ': no such directory')
-      if ((parent as DirNode).children[name]) return errFn('mkdir: ' + args[0] + ': file exists')
-      ;(parent as DirNode).children[name] = _d()
+      if (parent.children[name]) return errFn('mkdir: ' + args[0] + ': file exists')
+      parent.children[name] = _d()
     },
     touch: (args) => {
       if (!args[0]) return errFn('touch: missing operand')
@@ -106,7 +106,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const parent = getNode(target.slice(0, -1))
       const name = target[target.length - 1]
       if (!parent || parent.type !== 'dir') return errFn('touch: ' + args[0] + ': cannot create')
-      if ((parent as DirNode).children[name]) return
+      if (parent.children[name]) return
       const ext = (name.split('.').pop() || '').toLowerCase()
       const langMap: Record<string, string> = {
         ts: 'ts',
@@ -118,7 +118,7 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
         json: 'json',
         toml: 'toml',
       }
-      ;(parent as DirNode).children[name] = {
+      parent.children[name] = {
         type: 'file',
         lang: langMap[ext] || 'plain',
         body: '',
@@ -137,16 +137,16 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
         }
         const parent = getNode(tp.slice(0, -1))
         const name = tp[tp.length - 1]
-        if (!parent || parent.type !== 'dir' || !(parent as DirNode).children[name]) {
+        if (!parent || parent.type !== 'dir' || !parent.children[name]) {
           errFn('rm: ' + t + ': no such file or directory')
           continue
         }
-        const target = (parent as DirNode).children[name]
+        const target = parent.children[name]
         if (target.type === 'dir' && !recursive) {
           errFn('rm: ' + t + ': is a directory')
           continue
         }
-        delete (parent as DirNode).children[name]
+        delete parent.children[name]
         forgetSaved(relOf(tp))
       }
     },
@@ -157,11 +157,11 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
       const parent = getNode(tp.slice(0, -1))
       const name = tp[tp.length - 1]
       if (!parent || parent.type !== 'dir') return errFn('rmdir: ' + args[0] + ': not a directory')
-      const node = (parent as DirNode).children[name]
+      const node = parent.children[name]
       if (!node || node.type !== 'dir') return errFn('rmdir: ' + args[0] + ': not a directory')
       if (Object.keys(node.children).length)
         return errFn('rmdir: ' + args[0] + ': directory not empty')
-      delete (parent as DirNode).children[name]
+      delete parent.children[name]
       forgetSaved(relOf(tp))
     },
     mv: (args) => {
@@ -179,13 +179,13 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
         return errFn('mv: cannot move ' + args[0] + ' into itself')
       const sParent = getNode(src.slice(0, -1))
       const sName = src[src.length - 1]
-      if (!sParent || sParent.type !== 'dir' || !(sParent as DirNode).children[sName])
+      if (!sParent || sParent.type !== 'dir' || !sParent.children[sName])
         return errFn('mv: ' + args[0] + ': no such file or directory')
       const dParent = getNode(dst.slice(0, -1))
       const dName = dst[dst.length - 1]
       if (!dParent || dParent.type !== 'dir') return errFn('mv: ' + args[1] + ': no such directory')
-      ;(dParent as DirNode).children[dName] = (sParent as DirNode).children[sName]
-      delete (sParent as DirNode).children[sName]
+      dParent.children[dName] = sParent.children[sName]
+      delete sParent.children[sName]
       renameSaved(relOf(src), relOf(dst))
     },
     echo: (args) => addLine(esc(args.join(' '))),

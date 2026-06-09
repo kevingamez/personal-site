@@ -2,11 +2,38 @@
 // the Settings panel (theme switcher, font size, cursor style, motion + sound
 // toggles). All preferences persist to localStorage under `dev:*` keys.
 
+import { formatBogotaTime } from '@/scripts/clock'
+
 const LS_THEME = 'dev:theme'
 const LS_FONTSIZE = 'dev:fontsize'
 const LS_CURSOR = 'dev:cursor'
 const LS_MOTION = 'dev:motion'
 const LS_SOUND = 'dev:sound'
+
+// localStorage can throw (Safari private mode, locked-down webviews). Guard
+// every access so a SecurityError can't abort initProfileSettings() and leave
+// /dev half-wired (shortcuts unbound, README never opened).
+const lsGet = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+const lsSet = (key: string, value: string): void => {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    /* storage blocked - ignore */
+  }
+}
+const lsRemove = (key: string): void => {
+  try {
+    localStorage.removeItem(key)
+  } catch {
+    /* storage blocked - ignore */
+  }
+}
 
 type Theme = 'cream' | 'midnight' | 'sepia' | 'solar'
 type Cursor = 'block' | 'bar' | 'underline'
@@ -153,7 +180,7 @@ function bindThemeButtons(): void {
         x.classList.toggle('on', x === b)
         x.setAttribute('aria-checked', String(x === b))
       })
-      localStorage.setItem(LS_THEME, theme)
+      lsSet(LS_THEME, theme)
     })
   )
 }
@@ -166,7 +193,7 @@ function bindFontSize(): void {
     const px = parseFloat(slider.value)
     applyFontSize(px)
     if (out) out.textContent = `${px}px`
-    localStorage.setItem(LS_FONTSIZE, slider.value)
+    lsSet(LS_FONTSIZE, slider.value)
   }
   slider.addEventListener('input', sync)
   sync()
@@ -183,7 +210,7 @@ function bindCursor(): void {
         x.classList.toggle('on', x === b)
         x.setAttribute('aria-checked', String(x === b))
       })
-      localStorage.setItem(LS_CURSOR, c)
+      lsSet(LS_CURSOR, c)
     })
   )
 }
@@ -194,13 +221,13 @@ function bindToggles(): void {
   if (motion) {
     motion.addEventListener('change', () => {
       applyMotion(motion.checked)
-      localStorage.setItem(LS_MOTION, motion.checked ? '1' : '0')
+      lsSet(LS_MOTION, motion.checked ? '1' : '0')
     })
   }
   if (sound) {
     sound.addEventListener('change', () => {
       soundOn = sound.checked
-      localStorage.setItem(LS_SOUND, sound.checked ? '1' : '0')
+      lsSet(LS_SOUND, sound.checked ? '1' : '0')
     })
   }
 }
@@ -209,15 +236,13 @@ function bindReset(): void {
   const btn = document.getElementById('st-reset')
   if (!btn) return
   btn.addEventListener('click', () => {
-    ;[LS_THEME, LS_FONTSIZE, LS_CURSOR, LS_MOTION, LS_SOUND].forEach((k) =>
-      localStorage.removeItem(k)
-    )
+    ;[LS_THEME, LS_FONTSIZE, LS_CURSOR, LS_MOTION, LS_SOUND].forEach((k) => lsRemove(k))
     location.reload()
   })
 }
 
 function restoreSettings(): void {
-  const theme = (localStorage.getItem(LS_THEME) as Theme | null) || 'cream'
+  const theme = (lsGet(LS_THEME) as Theme | null) || 'cream'
   applyTheme(theme)
   const themeBtn = document.querySelector<HTMLButtonElement>(`.st-theme[data-theme="${theme}"]`)
   if (themeBtn) {
@@ -227,7 +252,7 @@ function restoreSettings(): void {
     })
   }
 
-  const fontVal = localStorage.getItem(LS_FONTSIZE)
+  const fontVal = lsGet(LS_FONTSIZE)
   const slider = document.getElementById('st-fontsize') as HTMLInputElement | null
   if (fontVal && slider) {
     slider.value = fontVal
@@ -236,7 +261,7 @@ function restoreSettings(): void {
     if (out) out.textContent = `${fontVal}px`
   }
 
-  const cursor = (localStorage.getItem(LS_CURSOR) as Cursor | null) || 'block'
+  const cursor = (lsGet(LS_CURSOR) as Cursor | null) || 'block'
   applyCursor(cursor)
   const curBtn = document.querySelector<HTMLButtonElement>(`.st-seg[data-cursor="${cursor}"]`)
   if (curBtn) {
@@ -247,26 +272,16 @@ function restoreSettings(): void {
   }
 
   const motionEl = document.getElementById('st-motion') as HTMLInputElement | null
-  const motionOn = localStorage.getItem(LS_MOTION) === '1'
+  const motionOn = lsGet(LS_MOTION) === '1'
   if (motionEl) motionEl.checked = motionOn
   applyMotion(motionOn)
 
   const soundEl = document.getElementById('st-sound') as HTMLInputElement | null
-  soundOn = localStorage.getItem(LS_SOUND) === '1'
+  soundOn = lsGet(LS_SOUND) === '1'
   if (soundEl) soundEl.checked = soundOn
 }
 
 // ─── Profile widgets ───────────────────────────────────────────────────
-function bogotaTime(): string {
-  const opt: Intl.DateTimeFormatOptions = {
-    timeZone: 'America/Bogota',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }
-  return new Intl.DateTimeFormat('en-GB', opt).format(new Date())
-}
-
 // Reduced-motion gating + stored handles, mirroring the other dev widgets. The
 // values still render once (a static frame) for reduce users; only the ticking
 // is suppressed, and the handles stay clearable.
@@ -294,7 +309,7 @@ function startClock(): void {
   const el = document.getElementById('pf-clock')
   if (!el) return
   const tick = (): void => {
-    el.textContent = bogotaTime()
+    el.textContent = formatBogotaTime()
   }
   tick()
   if (clockTimer) clearInterval(clockTimer)

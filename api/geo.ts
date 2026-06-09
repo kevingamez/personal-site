@@ -29,6 +29,13 @@ function header(req: Req, name: string): string | null {
 }
 
 export default function handler(req: Req, res: Res): void {
+  if (req.method !== 'GET') {
+    res.statusCode = 405
+    res.setHeader('Allow', 'GET')
+    res.end('Use GET')
+    return
+  }
+
   const raw = header(req, 'x-vercel-ip-country')
   const country = raw && /^[A-Za-z]{2}$/.test(raw) ? raw.toUpperCase() : null
 

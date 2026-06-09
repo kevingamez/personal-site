@@ -49,7 +49,7 @@ async function describeError(res: Response): Promise<string> {
   if (res.status === 429)
     return message || 'rate limited · daily message cap reached. try tomorrow.'
   if (res.status === 413) return 'this conversation got too long. reload the page to start fresh.'
-  if (res.status === 403) return 'this console only answers requests from kevingamez.com.'
+  if (res.status === 403) return 'this console only answers requests from kevingamez.co.'
   if (res.status === 500 && code === 'no_key')
     return 'the AI backend is not configured here. the shell still works - try `help`.'
   return message || 'could not reach the AI backend. the shell still works - try `help`.'
@@ -118,18 +118,29 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
         const data = line.slice(5).trim()
         if (data === '[DONE]') continue
         try {
-          const evt = JSON.parse(data)
+          const evt = JSON.parse(data) as {
+            type?: string
+            text?: string
+            name?: string
+            input?: { query?: string }
+            message?: string
+          }
           if (evt.type === 'text_delta' && typeof evt.text === 'string') {
             assistant += evt.text
             out.innerHTML = mdLite(assistant)
             refs.stream.scrollTop = refs.stream.scrollHeight
           } else if (evt.type === 'tool_use' && evt.name) {
+            const detail = evt.input?.query
+              ? String(evt.input.query)
+              : evt.name === 'get_strava_stats'
+                ? 'reading training stats'
+                : '...'
             const tool = el('div', 'cs-line cs-tool')
             tool.innerHTML =
               '<span class="cs-tool-tag">[' +
               escape(String(evt.name)) +
               ']</span> ' +
-              escape(String(evt.input?.query || '...'))
+              escape(detail)
             out.parentElement?.insertBefore(tool, out)
             refs.stream.scrollTop = refs.stream.scrollHeight
           } else if (evt.type === 'error' && typeof evt.message === 'string') {

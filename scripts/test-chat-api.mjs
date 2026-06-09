@@ -23,7 +23,7 @@ async function call(opts = {}) {
 
 const VALID_ORIGIN = 'https://kevingamez.co'
 
-console.log('\n— /api/chat hardening tests —\n')
+console.log('\n- /api/chat hardening tests -\n')
 
 // 1. Non-POST should be 405.
 let r = await call({ method: 'GET', headers: { origin: VALID_ORIGIN } })

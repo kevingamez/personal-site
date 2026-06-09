@@ -1,6 +1,6 @@
 # personal-site
 
-This is the repo behind **kevingamez.com**. A static Astro site with two faces: a calm editorial home (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono, hero with Conway's Game of Life), and a `/dev` page that's basically VS Code in your browser · file tree, terminal, real CodeMirror editor, command palette.
+This is the repo behind **kevingamez.co**. A static Astro site with two faces: a calm editorial home (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono, hero with Conway's Game of Life), and a `/dev` page that's basically VS Code in your browser · file tree, terminal, real CodeMirror editor, command palette.
 
 The home is what HR and clients see. `/dev` is what other engineers see. Same person, two registers.
 
@@ -66,7 +66,7 @@ Editorial layout. Each section is a component under `src/components/home/`. Sect
 
 The Conway hero is a `<canvas>` driven by `src/scripts/home/conway.ts` · 64×64 toroidal grid, click to seed, B3/S23 rules, FPS-throttled, respects `prefers-reduced-motion`. The contribution-graph mock under "GitHub" comes from `src/scripts/home/contrib.ts`. Live-ish stats ("commits this month", language breakdown) come from `gh-stats.ts` which calls a tiny build-time helper.
 
-Two image assets matter: `public/kevin.jpg` (the About portrait, 1200×1500, 4:5 cropped via `object-fit: cover`) and `public/og-image.svg` (Open Graph preview, 1200×630).
+Two image assets matter: `public/kevin.jpg` (the About portrait, 1200×1500, 4:5 cropped via `object-fit: cover`) and `public/og-dev-preview.png` (Open Graph preview, 1200×630, wired in `src/components/Layout.astro`).
 
 ### /dev page
 
@@ -227,7 +227,7 @@ src/
 | Change indent / chevron  | `src/styles/dev/explorer.css` + `src/scripts/dev/explorer.ts`                                                                                            |
 | Add a security header    | **Both** `vercel.json` AND `src/middleware.ts`                                                                                                           |
 | New analytics event      | `src/scripts/lib/analytics.ts` (typed)                                                                                                                   |
-| OG image                 | `public/og-image.svg` (1200×630) · update both `home.ts` meta entries                                                                                    |
+| OG image                 | `public/og-dev-preview.png` (1200×630) · wired in `src/components/Layout.astro`                                                                          |
 | About portrait           | `public/kevin.jpg` (4:5, 1200×1500 recommended)                                                                                                          |
 | New env var              | `.env.example` + read in `src/data/*` (build) or expose as `PUBLIC_*` for client                                                                         |
 
@@ -305,7 +305,7 @@ Vercel deploys `main` automatically. Build command: `npm run build`. Output: `di
 - **Immutable cache** for `/_astro/*` (1-year max-age, hash-busted by Astro).
 - **Redirects** (none currently · placeholder for future).
 
-Custom domain: `kevingamez.com`. Free tier covers this comfortably.
+Custom domain: `kevingamez.co`. Free tier covers this comfortably.
 
 ## Known gotchas
 

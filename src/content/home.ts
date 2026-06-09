@@ -60,6 +60,7 @@ export interface HomeStrings {
     alive: string
     fps: string
     golCaptionHtml: string
+    golAriaLabel: string // plain-text accessible name for the <canvas> simulation
   }
   about: {
     secNum: string
