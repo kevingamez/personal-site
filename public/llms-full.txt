@@ -1,6 +1,6 @@
 # Kevin Gámez · full profile (for LLMs and AI search)
 
-This document is structured for retrieval by AI search engines (ChatGPT, Claude, Perplexity, Gemini, Bing Copilot). It contains the same facts as kevingamez.com, in plain markdown.
+This document is structured for retrieval by AI search engines (ChatGPT, Claude, Perplexity, Gemini, Bing Copilot). It contains the same facts as kevingamez.co, in plain markdown.
 
 ---
 
@@ -66,7 +66,7 @@ Five-year program covering systems, algorithms, ML and a management minor (Jan 2
 
 The full repo list is at https://github.com/kevingamez. Highlighted ones:
 
-- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.com (TypeScript · Astro · Preact)
+- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.co (TypeScript · Astro · Preact)
 - **[AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders)** - aerial object detection for Amazon deforestation events (Python · OpenCV · YOLOv5 · FastAPI)
 - **[Palladium_Chat](https://github.com/kevingamez/Palladium_Chat)** - TypeScript chat project
 - **[Palladium_Challenge](https://github.com/kevingamez/Palladium_Challenge)** - frontend challenge (CSS)

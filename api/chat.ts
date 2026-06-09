@@ -2,14 +2,15 @@
 //
 // Streams an Anthropic Claude response back to the home-page console as SSE
 // events. Hardened against:
-//   - Cross-origin abuse: only requests from kevingamez.co/.com (or localhost
+//   - Cross-origin abuse: only requests from kevingamez.co (or localhost
 //     during dev) are accepted; everything else gets 403.
 //   - Oversized inputs: each message capped at MAX_MESSAGE_CHARS, total
 //     conversation capped at MAX_TOTAL_CHARS, history capped at 8 messages.
 //   - Schema confusion: zod parses the request body and rejects malformed shapes.
 //   - Token cost: max_tokens 512 (was 1024), and we slice history to 8.
-//   - Bot abuse: per-IP daily rate limit, keyed on the Vercel-set client IP
-//     (persistent via KV when configured, in-memory otherwise). The body is
+//   - Bot abuse: per-IP daily rate limit + a global daily backstop, both keyed
+//     in KV/Upstash. If KV is unavailable the endpoint FAILS CLOSED (503) rather
+//     than serving the model without a durable cost ceiling. The body is
 //     validated before a token is spent so junk requests can't drain the quota.
 //
 // Required env: ANTHROPIC_API_KEY.
@@ -46,7 +47,7 @@ const MAX_HISTORY = 8
 // Hard ceiling on the request body we buffer. The largest valid payload is
 // ~12k chars of messages plus JSON overhead; 64 KB is generous.
 const MAX_BODY_BYTES = 64 * 1024
-// Global daily cap across ALL IPs — a backstop against distributed abuse that a
+// Global daily cap across ALL IPs - a backstop against distributed abuse that a
 // per-IP limit can't bound. Only enforced when KV/Upstash is configured.
 const GLOBAL_DAILY_LIMIT = 1000
 
@@ -55,8 +56,6 @@ const GLOBAL_DAILY_LIMIT = 1000
 const ALLOWED_ORIGINS = new Set([
   'https://kevingamez.co',
   'https://www.kevingamez.co',
-  'https://kevingamez.com',
-  'https://www.kevingamez.com',
   'http://localhost:4321',
   'http://127.0.0.1:4321',
 ])
@@ -119,6 +118,18 @@ const globalLimiter = redis
     })
   : null
 
+// Persistent rate limiting (per-IP cap + global backstop) lives in KV/Upstash.
+// When a model key is configured but KV is not, there is NO durable cost ceiling
+// across instances/IPs, so the handler fails closed (503) rather than serving the
+// model unbounded. A loud startup log makes a missing or rotated KV token obvious.
+const RATE_LIMIT_READY = redis !== null
+if (process.env.ANTHROPIC_API_KEY && !RATE_LIMIT_READY) {
+  console.error(
+    '[api/chat] ANTHROPIC_API_KEY is set but KV/Upstash is not configured; ' +
+      'persistent rate limiting is unavailable - chat requests will be refused (503).'
+  )
+}
+
 async function checkGlobalLimit(): Promise<boolean> {
   if (!globalLimiter) return true
   try {
@@ -176,8 +187,120 @@ Kevin's facts (only state these as facts; otherwise use web_search):
 - Public GitHub @kevingamez. Notable repos: personal-site (TS), AD_ASTRA2023-SpaceInvaders (Python, aerial deforestation detection, OpenCV / YOLOv5 / FastAPI), Palladium_Chat (TS), budget-app (Swift), GCP-CloudRun (Dockerfile).
 - Languages he ships: TypeScript, Python, Swift, JavaScript, Java, Dart.
 - Contact: kevingamez.kg@gmail.com, github.com/kevingamez, linkedin.com/in/kevin-gamez.
+- Endurance training (running, cycling, hiking) is logged on Strava; call get_strava_stats for any movement or fitness question.
 
-Be concise (2-4 sentences for casual chat). Use markdown sparingly: **bold** for names, \`code\` for tech, [text](url) for links. When asked about anything time-sensitive or outside Kevin's profile, use web_search. Never invent stars, metrics, or projects that aren't listed above.`
+Be concise (2-4 sentences for casual chat). Use markdown sparingly: **bold** for names, \`code\` for tech, [text](url) for links. When asked about anything time-sensitive or outside Kevin's profile, use web_search - EXCEPT for his running, cycling, hiking, swimming, or training: for those, call the get_strava_stats tool (never web_search them) and answer from what it returns. Never invent stars, metrics, activities, or projects that aren't listed above or returned by a tool.`
+
+// ───────── Strava tool (get_strava_stats) ─────────
+//
+// /api/strava caches a sanitized snapshot of Kevin's full Strava history in the
+// SAME Upstash/KV store this function uses, under the key below. The chat model
+// pulls it ON DEMAND via the get_strava_stats tool (only when a visitor asks
+// about movement/training), so ordinary chats stay cheap. We read the cache
+// directly - never the Strava API - so there's no OAuth round-trip or cold-fetch
+// latency; a cold cache or unconfigured Strava degrades gracefully. Keep
+// STRAVA_CACHE_KEY in sync with api/strava.ts (currently 'kg-strava:v4').
+const STRAVA_CACHE_KEY = 'kg-strava:v4'
+const STRAVA_READ_TIMEOUT_MS = 1500
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+interface StravaSnapshot {
+  generatedAt?: string
+  totals?: {
+    distanceM: number
+    movingTime: number
+    elevationM: number
+    count: number
+    activeDays: number
+  } | null
+  longestBySport?: {
+    name: string
+    sportType: string
+    distanceM: number
+    movingTime: number
+    elevationM: number
+    startDate: string
+  }[]
+  insights?: {
+    biggestWeekStart: string | null
+    biggestWeekDistanceM: number
+    busiestWeekday: number | null
+    biggestClimb: { name: string; elevationM: number } | null
+    fastest: { name: string; avgSpeedMs: number } | null
+    eiffels: number
+  }
+}
+
+const fmtKm = (m: number): string => (m / 1000).toFixed(1)
+const fmtHm = (s: number): string => {
+  const h = Math.floor(s / 3600)
+  const m = Math.round((s % 3600) / 60)
+  return h ? `${h}h ${m}m` : `${m}m`
+}
+
+async function stravaSnapshotText(): Promise<string | null> {
+  if (!redis) return null
+  let snap: StravaSnapshot | null = null
+  try {
+    snap = await Promise.race([
+      redis.get<StravaSnapshot>(STRAVA_CACHE_KEY),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), STRAVA_READ_TIMEOUT_MS)),
+    ])
+  } catch {
+    return null
+  }
+  if (!snap || !snap.totals) return null
+
+  const t = snap.totals
+  const lines = [
+    `- All-time totals: ${fmtKm(t.distanceM)} km across ${t.count} activities, ${fmtHm(t.movingTime)} moving, ${Math.round(t.elevationM)} m climbed (~${snap.insights?.eiffels ?? 0} Eiffel Towers), active on ${t.activeDays} days.`,
+  ]
+  const efforts = snap.longestBySport ?? []
+  if (efforts.length) {
+    lines.push('- Longest effort per sport:')
+    for (const a of efforts.slice(0, 3)) {
+      lines.push(
+        `  - ${a.sportType}: "${a.name}" - ${fmtKm(a.distanceM)} km, ${fmtHm(a.movingTime)}, ${Math.round(a.elevationM)} m gain (${a.startDate.slice(0, 10)})`
+      )
+    }
+  }
+  const ins = snap.insights
+  if (ins) {
+    const bits: string[] = []
+    if (ins.biggestWeekStart)
+      bits.push(
+        `biggest week ${fmtKm(ins.biggestWeekDistanceM)} km (week of ${ins.biggestWeekStart})`
+      )
+    if (ins.biggestClimb)
+      bits.push(
+        `biggest climb ${Math.round(ins.biggestClimb.elevationM)} m ("${ins.biggestClimb.name}")`
+      )
+    if (ins.fastest)
+      bits.push(
+        `fastest avg ${(ins.fastest.avgSpeedMs * 3.6).toFixed(1)} km/h ("${ins.fastest.name}")`
+      )
+    if (ins.busiestWeekday != null) bits.push(`busiest day ${WEEKDAYS[ins.busiestWeekday] ?? '?'}`)
+    if (bits.length) lines.push(`- Insights: ${bits.join('; ')}.`)
+  }
+
+  const freshness = snap.generatedAt ? `, snapshot generated ${snap.generatedAt}` : ''
+  return `Kevin's Strava stats (cached${freshness}, refreshed about every 10 minutes):\n${lines.join('\n')}`
+}
+
+const STRAVA_TOOL: Anthropic.Tool = {
+  name: 'get_strava_stats',
+  description:
+    "Get Kevin's real training data from Strava: all-time totals (distance, moving time, elevation, activity count, active days), the longest effort per sport, and insights (biggest week, biggest single climb, fastest average pace, busiest weekday). Call this for ANY question about Kevin's running, cycling, hiking, swimming, or training/fitness. Returns a cached snapshot refreshed about every 10 minutes; takes no arguments.",
+  input_schema: { type: 'object', properties: {} },
+}
+
+async function runStravaTool(): Promise<string> {
+  const text = await stravaSnapshotText()
+  return (
+    text ??
+    'No live Strava data is available right now (the cache is cold or Strava is not configured). Tell the visitor to check the movement section of the site for the latest.'
+  )
+}
 
 // ───────── Helpers ─────────
 
@@ -225,7 +348,7 @@ function readJsonBody(req: Req, maxBytes: number): Promise<unknown> {
 
 // Resolve the client IP from Vercel-controlled headers only. `x-forwarded-for`
 // is appended-to by the platform, so its left-most value is whatever the client
-// sent — never trust it for rate-limit keys. `x-real-ip` / `x-vercel-forwarded-for`
+// sent - never trust it for rate-limit keys. `x-real-ip` / `x-vercel-forwarded-for`
 // are set by Vercel's proxy and overwrite anything the client supplies.
 function clientIp(req: Req): string | null {
   const real = header(req, 'x-real-ip')
@@ -241,7 +364,7 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // 1. Origin check — the first line of defense against cross-origin abuse.
+  // 1. Origin check - the first line of defense against cross-origin abuse.
   const origin = header(req, 'origin')
   if (!isOriginAllowed(origin)) {
     jsonError(res, 403, 'forbidden', 'Origin not allowed.')
@@ -274,7 +397,7 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // 4. Length check (defense in depth — zod already caps each message; here we
+  // 4. Length check (defense in depth - zod already caps each message; here we
   //    sum the whole conversation).
   const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
   if (totalChars > MAX_TOTAL_CHARS) {
@@ -286,6 +409,13 @@ export default async function handler(req: Req, res: Res): Promise<void> {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     jsonError(res, 500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
+    return
+  }
+
+  // 5b. Persistent rate limiting is mandatory: without KV we cannot bound total
+  //     cost across instances and IPs, so refuse rather than serve unbounded.
+  if (!RATE_LIMIT_READY) {
+    jsonError(res, 503, 'unavailable', 'The assistant is temporarily unavailable. Try again later.')
     return
   }
 
@@ -304,8 +434,9 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // 7. Trim history before sending to the model.
-  const messages = parsed.data.messages.slice(-MAX_HISTORY)
+  // 7. Trim history before sending to the model. The assistant pulls live data
+  //    on demand through the tools below, so the system prompt stays static.
+  const convo = parsed.data.messages.slice(-MAX_HISTORY) as Anthropic.MessageParam[]
 
   const client = new Anthropic({ apiKey })
   const abort = new AbortController()
@@ -327,50 +458,77 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     try {
       res.write(`data: ${JSON.stringify(event)}\n\n`)
     } catch {
-      /* client disconnected — nothing to do */
+      /* client disconnected - nothing to do */
     }
   }
 
-  try {
-    const response = await client.messages.create(
-      {
-        model: 'claude-sonnet-4-5',
-        max_tokens: 512,
-        stream: true,
-        system: KEVIN_CONTEXT,
-        tools: [
-          {
-            type: 'web_search_20250305',
-            name: 'web_search',
-            max_uses: 3,
-          } as unknown as Anthropic.Tool,
-        ],
-        messages: messages as Anthropic.MessageParam[],
-      },
-      // Propagate client disconnects so we stop generating (and billing) the
-      // moment the browser goes away.
-      { signal: abort.signal }
-    )
+  // The model's tools: Anthropic's hosted web_search (run server-side, inline)
+  // plus our client-executed get_strava_stats. A client tool pauses the turn
+  // with stop_reason 'tool_use'; we run it, feed the result back, and continue
+  // streaming. MAX_TURNS bounds tool round-trips so a loop can't run away.
+  const tools = [
+    { type: 'web_search_20250305', name: 'web_search', max_uses: 2 } as unknown as Anthropic.Tool,
+    STRAVA_TOOL,
+  ]
+  const MAX_TURNS = 5
 
-    for await (const event of response as unknown as AsyncIterable<{
-      type: string
-      index?: number
-      delta?: { type?: string; text?: string }
-      content_block?: { type?: string; name?: string; input?: unknown }
-    }>) {
-      if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
-        send({ type: 'text_delta', text: event.delta.text || '' })
-      } else if (
-        event.type === 'content_block_start' &&
-        (event.content_block?.type === 'tool_use' ||
-          event.content_block?.type === 'server_tool_use')
-      ) {
-        send({
-          type: 'tool_use',
-          name: event.content_block.name,
-          input: event.content_block.input,
-        })
+  try {
+    for (let turn = 0; turn < MAX_TURNS; turn++) {
+      const stream = client.messages.stream(
+        {
+          model: 'claude-sonnet-4-5',
+          max_tokens: 512,
+          system: KEVIN_CONTEXT,
+          tools,
+          messages: convo,
+        },
+        // Propagate client disconnects so we stop generating (and billing) the
+        // moment the browser goes away.
+        { signal: abort.signal }
+      )
+
+      for await (const event of stream) {
+        if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+          send({ type: 'text_delta', text: event.delta.text })
+        } else if (
+          event.type === 'content_block_start' &&
+          (event.content_block.type === 'tool_use' ||
+            event.content_block.type === 'server_tool_use')
+        ) {
+          send({
+            type: 'tool_use',
+            name: event.content_block.name,
+            input: event.content_block.input,
+          })
+        }
       }
+
+      const final = await stream.finalMessage()
+
+      // A long server-tool turn (web_search) can ask to continue without a
+      // client tool: echo its content back and keep the same turn going.
+      if (final.stop_reason === 'pause_turn') {
+        convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
+        continue
+      }
+
+      // The turn paused for our client tool(s). web_search is a server tool that
+      // Anthropic resolves inline, so it never surfaces here.
+      const calls = final.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
+      if (final.stop_reason === 'tool_use' && calls.length) {
+        const results: Anthropic.ToolResultBlockParam[] = []
+        for (const call of calls) {
+          const output =
+            call.name === 'get_strava_stats' ? await runStravaTool() : `Unknown tool: ${call.name}`
+          results.push({ type: 'tool_result', tool_use_id: call.id, content: output })
+        }
+        convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
+        convo.push({ role: 'user', content: results })
+        continue
+      }
+
+      // end_turn / max_tokens / stop_sequence: the reply is complete.
+      break
     }
     send({ type: 'done' })
     if (!res.writableEnded) res.write('data: [DONE]\n\n')

@@ -3,10 +3,10 @@
 // JSON carrier by the Astro build, falls back to a synthetic recency-biased
 // sample when the data is empty (e.g. build ran without a GITHUB_TOKEN).
 
+import { animateCounter } from './counter'
+
 const WEEKS = 52
 const DAYS = 7
-const REDUCE =
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 interface ContribDay {
   date: string
@@ -94,22 +94,6 @@ function fallbackCalendar(): ContribCalendar {
   return { totalContributions: total, days, longestStreak: longest, currentStreak: current }
 }
 
-function animateNumber(el: HTMLElement, target: number, duration: number, delay: number): void {
-  if (REDUCE) {
-    el.textContent = target.toLocaleString('en-US')
-    return
-  }
-  const start = performance.now() + delay
-  function tick(now: number): void {
-    const t = Math.max(0, Math.min(1, (now - start) / duration))
-    const eased = 1 - Math.pow(1 - t, 3)
-    el.textContent = Math.floor(target * eased).toLocaleString('en-US')
-    if (t < 1) requestAnimationFrame(tick)
-    else el.textContent = target.toLocaleString('en-US')
-  }
-  requestAnimationFrame(tick)
-}
-
 function renderMonthLabels(days: ContribDay[]): void {
   const holder = document.querySelector<HTMLElement>('.contrib-months')
   if (!holder) return
@@ -184,9 +168,28 @@ export function initContribGraph(): void {
     if (played) return
     played = true
     g.classList.add('contrib-on')
-    if (totalEl) animateNumber(totalEl, calendar.totalContributions, 1800, 200)
-    if (currentEl) animateNumber(currentEl, calendar.currentStreak, 1400, 400)
-    if (longestEl) animateNumber(longestEl, calendar.longestStreak, 1600, 600)
+    const intFmt = (n: number): string => Math.floor(n).toLocaleString('en-US')
+    if (totalEl)
+      animateCounter(totalEl, {
+        target: calendar.totalContributions,
+        duration: 1800,
+        delay: 200,
+        format: intFmt,
+      })
+    if (currentEl)
+      animateCounter(currentEl, {
+        target: calendar.currentStreak,
+        duration: 1400,
+        delay: 400,
+        format: intFmt,
+      })
+    if (longestEl)
+      animateCounter(longestEl, {
+        target: calendar.longestStreak,
+        duration: 1600,
+        delay: 600,
+        format: intFmt,
+      })
   }
 
   if (typeof IntersectionObserver === 'undefined' || !card) {

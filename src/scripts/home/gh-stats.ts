@@ -2,6 +2,8 @@
 // Counters tween from 0 to target with cubic ease-out; the language bar
 // fills its segments staggered. Triggered when the banner enters view.
 
+import { animateCounter } from './counter'
+
 const REDUCE_MOTION =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -17,25 +19,6 @@ function formatNumber(n: number, fmt: string): string {
   return Math.floor(n).toString()
 }
 
-function animateCounter(el: HTMLElement, delay: number): void {
-  const target = parseFloat(el.dataset.target || '0')
-  const fmt = el.dataset.format || 'plain'
-  if (REDUCE_MOTION) {
-    el.textContent = formatNumber(target, fmt)
-    return
-  }
-  const duration = 1600
-  const start = performance.now() + delay
-  function tick(now: number): void {
-    const t = Math.max(0, Math.min(1, (now - start) / duration))
-    const eased = 1 - Math.pow(1 - t, 3)
-    el.textContent = formatNumber(target * eased, fmt)
-    if (t < 1) requestAnimationFrame(tick)
-    else el.textContent = formatNumber(target, fmt)
-  }
-  requestAnimationFrame(tick)
-}
-
 export function initGhStats(): void {
   const banner = document.querySelector<HTMLElement>('.gh-banner')
   if (!banner) return
@@ -46,7 +29,14 @@ export function initGhStats(): void {
     played = true
     banner.classList.add('gh-banner-on')
     banner.querySelectorAll<HTMLElement>('.gh-stat-num').forEach((el, i) => {
-      animateCounter(el, 200 + i * 200)
+      const target = parseFloat(el.dataset.target || '0')
+      const fmt = el.dataset.format || 'plain'
+      animateCounter(el, {
+        target,
+        duration: 1600,
+        delay: 200 + i * 200,
+        format: (n) => formatNumber(n, fmt),
+      })
     })
     banner.querySelectorAll<HTMLElement>('.gh-langbar-seg').forEach((el, i) => {
       const pct = el.dataset.pct || '0'

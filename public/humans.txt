@@ -1,6 +1,6 @@
 /* TEAM */
   Founder, designer, developer: Kevin Gámez
-  Site: kevingamez.com
+  Site: kevingamez.co
   Github: @kevingamez
   Twitter: @KevinGamezA
   From: Bogotá, Colombia

@@ -103,6 +103,18 @@
   height: 100%;
   object-fit: cover;
   background: var(--panel);
+  /* Wipes in left-to-right when the section scrolls into view (#strava.on). */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sv-feat:nth-child(2) .sv-feat-map {
+  transition-delay: 0.1s;
+}
+.sv-feat:nth-child(3) .sv-feat-map {
+  transition-delay: 0.2s;
+}
+#strava.on .sv-feat-map {
+  clip-path: inset(0 0 0 0);
 }
 .sv-feat--noroute .sv-feat-route {
   display: none;
@@ -255,6 +267,10 @@
   .sv-tile {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+  .sv-feat-map {
+    clip-path: none;
     transition: none;
   }
 }

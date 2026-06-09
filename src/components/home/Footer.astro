@@ -1,13 +1,12 @@
 ---
 import type { HomeStrings } from "@/content/home"
-import { formatBogotaTime } from "@/scripts/clock"
 
 interface Props {
   t: HomeStrings["footer"]
   buildId: string
 }
 
-const { t, buildId } = Astro.props
+const { t } = Astro.props
 ---
 
 <footer>
@@ -37,11 +36,6 @@ const { t, buildId } = Astro.props
           <li><a href="/dev/">{t.elsewhereDev}</a></li>
         </ul>
       </div>
-    </div>
-    <div class="colophon">
-      <span><Fragment set:html={t.fonts} /></span>
-      <span>v14.2 · build {buildId}</span>
-      <span>{t.estab} · <span data-bogota-clock>{formatBogotaTime()}</span></span>
     </div>
   </div>
 </footer>

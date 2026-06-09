@@ -197,10 +197,14 @@ function applyLangAsync(name: string, lang: string | undefined): void {
     view?.dispatch({ effects: langCompartment.reconfigure(cached) })
     return
   }
-  loadLang(key).then((ext) => {
-    langCache.set(key, ext)
-    if (view) view.dispatch({ effects: langCompartment.reconfigure(ext) })
-  })
+  loadLang(key)
+    .then((ext) => {
+      langCache.set(key, ext)
+      if (view) view.dispatch({ effects: langCompartment.reconfigure(ext) })
+    })
+    .catch(() => {
+      /* highlight chunk failed to load; fall back to plain (unhighlighted) text */
+    })
 }
 
 function mount(container: HTMLElement, opts: MountOpts): EditorView {

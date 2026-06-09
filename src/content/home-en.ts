@@ -6,8 +6,8 @@ export const en: HomeStrings = {
     title: 'Kevin Gámez - Founding Engineer at Enttor',
     description:
       'Kevin Gámez is the founding engineer at Enttor, based in Bogotá. AI outbound, browser automation, OpenAI pipelines, Next.js / NestJS / Postgres.',
-    canonical: 'https://kevingamez.com/',
-    ogUrl: 'https://kevingamez.com/',
+    canonical: 'https://kevingamez.co/',
+    ogUrl: 'https://kevingamez.co/',
     ogTitle: 'Kevin Gámez - Founding Engineer at Enttor',
     ogDescription:
       'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
@@ -24,9 +24,9 @@ export const en: HomeStrings = {
     langSwitchLabelHtml: '<b>EN</b> · ES',
     skip: 'Skip to content',
     hreflang: [
-      { lang: 'en', href: 'https://kevingamez.com/' },
-      { lang: 'es', href: 'https://kevingamez.com/es/' },
-      { lang: 'x-default', href: 'https://kevingamez.com/' },
+      { lang: 'en', href: 'https://kevingamez.co/' },
+      { lang: 'es', href: 'https://kevingamez.co/es/' },
+      { lang: 'x-default', href: 'https://kevingamez.co/' },
     ],
   },
   nav: {
@@ -56,6 +56,7 @@ export const en: HomeStrings = {
     fps: 'fps',
     golCaptionHtml:
       '<b>Conway\'s Game of Life</b> · a zero-player cellular automaton. Each cell lives, dies, or is born from the count of its 8 neighbors (B3/S23). Simple rules, surprising patterns. Click to seed a stamp. <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener">read more →</a>',
+    golAriaLabel: "Conway's Game of Life simulation",
   },
   about: {
     secNum: 'About',
@@ -237,7 +238,7 @@ export const en: HomeStrings = {
     more: 'See all on LinkedIn →',
   },
   wanderings: {
-    secNum: '§08 · Wanderings',
+    secNum: 'Wanderings',
     titleHtml: 'A small heatmap of <i>where I’ve been.</i>',
     blurb:
       'Pan, zoom, hover. Heat blooms scale with how long I spent there; Bogotá glows for a reason.',

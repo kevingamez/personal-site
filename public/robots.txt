@@ -49,4 +49,4 @@ Allow: /
 # Invariant: crawlers get the public surface; humans get context in /humans.txt.
 Disallow: /api/
 
-Sitemap: https://kevingamez.com/sitemap-index.xml
+Sitemap: https://kevingamez.co/sitemap-index.xml

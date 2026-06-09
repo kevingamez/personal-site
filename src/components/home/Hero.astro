@@ -27,7 +27,7 @@ const { t } = Astro.props
     </div>
     <div class="gol-wrap" style="width:100%">
       <div class="gol-frame">
-        <canvas id="gol"></canvas>
+        <canvas id="gol" role="img" aria-label={t.golAriaLabel}></canvas>
         <div class="gol-controls">
           <button class="gol-btn" id="gol-pause" title={t.pauseTitle} aria-label={t.pauseTitle}>⏸</button>
           <button class="gol-btn" id="gol-reset" title={t.resetTitle} aria-label={t.resetTitle}>↻</button>

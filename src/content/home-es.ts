@@ -6,8 +6,8 @@ export const es: HomeStrings = {
     title: 'Kevin Gámez - Founding Engineer en Enttor',
     description:
       'Kevin Gámez es founding engineer en Enttor, basado en Bogotá. Outbound con IA, automatización de navegador, pipelines de OpenAI, Next.js / NestJS / Postgres.',
-    canonical: 'https://kevingamez.com/es/',
-    ogUrl: 'https://kevingamez.com/es/',
+    canonical: 'https://kevingamez.co/es/',
+    ogUrl: 'https://kevingamez.co/es/',
     ogTitle: 'Kevin Gámez - Founding Engineer en Enttor',
     ogDescription:
       'Founding engineer en enttor.ai. Outbound con IA, automatización de navegador, pipelines de LLM.',
@@ -24,9 +24,9 @@ export const es: HomeStrings = {
     langSwitchLabelHtml: 'EN · <b>ES</b>',
     skip: 'Saltar al contenido',
     hreflang: [
-      { lang: 'en', href: 'https://kevingamez.com/' },
-      { lang: 'es', href: 'https://kevingamez.com/es/' },
-      { lang: 'x-default', href: 'https://kevingamez.com/' },
+      { lang: 'en', href: 'https://kevingamez.co/' },
+      { lang: 'es', href: 'https://kevingamez.co/es/' },
+      { lang: 'x-default', href: 'https://kevingamez.co/' },
     ],
   },
   nav: {
@@ -56,6 +56,7 @@ export const es: HomeStrings = {
     fps: 'fps',
     golCaptionHtml:
       '<b>Juego de la vida de Conway</b> · un autómata celular de cero jugadores. Cada celda vive, muere o nace según el número de sus 8 vecinas (B3/S23). Reglas simples, patrones sorprendentes. Click para sembrar un patrón. <a href="https://es.wikipedia.org/wiki/Juego_de_la_vida" target="_blank" rel="noopener">más info →</a>',
+    golAriaLabel: 'Simulación del Juego de la vida de Conway',
   },
   about: {
     secNum: 'Sobre mí',
@@ -239,7 +240,7 @@ export const es: HomeStrings = {
     more: 'Ver todos en LinkedIn →',
   },
   wanderings: {
-    secNum: '§08 · Andanzas',
+    secNum: 'Andanzas',
     titleHtml: 'Un pequeño mapa de <i>donde he estado.</i>',
     blurb:
       'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo; Bogotá brilla por algo.',

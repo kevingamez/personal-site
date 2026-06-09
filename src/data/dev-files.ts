@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 export const projectRoot = process.cwd()
 
-export const readSafe = (rel: string): string => {
+const readSafe = (rel: string): string => {
   try {
     return readFileSync(join(projectRoot, rel), 'utf-8')
   } catch {
@@ -13,7 +13,7 @@ export const readSafe = (rel: string): string => {
   }
 }
 
-export const langOf = (name: string): string => {
+const langOf = (name: string): string => {
   const lower = name.toLowerCase()
   if (lower.endsWith('.astro')) return 'astro'
   if (
@@ -33,7 +33,7 @@ export const langOf = (name: string): string => {
   return 'plain'
 }
 
-export const LOCAL_FILE_PATHS = [
+const LOCAL_FILE_PATHS = [
   'src/pages/es/index.astro',
   'src/pages/404.astro',
   'src/pages/dev.astro',

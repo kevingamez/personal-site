@@ -1,6 +1,6 @@
 // Refresh the dev-only Strava snapshot used by `astro dev` (which can't run the
-// /api/strava function). Bakes REAL data — including decoded, bbox-normalized
-// route shapes + raw polylines for the maps — into src/scripts/home/strava-sample.ts.
+// /api/strava function). Bakes REAL data - including decoded, bbox-normalized
+// route shapes + raw polylines for the maps - into src/scripts/home/strava-sample.ts.
 // Mirrors the /api/strava pipeline. Run: node scripts/gen-strava-sample.mjs
 import { readFileSync, writeFileSync } from 'node:fs'
 

@@ -3,11 +3,22 @@
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 32px;
-  align-items: start;
+  align-items: stretch;
 }
 @media (max-width: 900px) {
   .gh-grid {
     grid-template-columns: 1fr;
+  }
+}
+/* Two-column layout: the repo list is the taller side, so let the card grow to
+   match it and anchor its stats to the bottom (no empty gap). */
+@media (min-width: 901px) {
+  .gh-card {
+    display: flex;
+    flex-direction: column;
+  }
+  #github .gh-card .contrib-stats {
+    margin-top: auto;
   }
 }
 .gh-card {
