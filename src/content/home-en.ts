@@ -158,7 +158,9 @@ export const en: HomeStrings = {
     publicRepos: 'repos shipped',
     publicReposSub: 'public, private, and org repos I’ve contributed to',
     languagesShipped: 'languages shipped',
-    languagesShippedSub: 'TypeScript leads · Python is second',
+    languagesShippedSub: 'top languages by bytes',
+    langLeads: 'leads',
+    langSecond: 'is second',
     yearsOnGithub: 'years on github',
     yearsOnGithubSub: 'joined April 2019',
     languageMix: 'language mix',
@@ -177,6 +179,7 @@ export const en: HomeStrings = {
     repoChatDesc: 'Chat experiment in TypeScript.',
     repoBudgetDesc: 'Personal-finance app, written in Swift.',
     repoCloudDesc: 'Containerized service deploys on Cloud Run.',
+    repoFallbackDesc: 'Public repository on GitHub.',
   },
   strava: {
     secNum: 'Strava',
@@ -254,7 +257,7 @@ export const en: HomeStrings = {
     promptLabel: 'kevin@gamez · ~',
     streaming: 'ready',
     greeting:
-      'welcome · type <span class="ac">help</span> to see commands · or <span class="ac">kevin "your question"</span> to chat with the AI.',
+      'welcome · a small shell that indexes this site. type <span class="ac">help</span> for commands, or ask the AI directly: <span class="ac">kevin "what does enttor do?"</span>',
     placeholder: 'type a command, press enter…',
     suggest1: 'help',
     suggest2: 'whoami',

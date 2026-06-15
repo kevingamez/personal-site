@@ -127,7 +127,9 @@ export interface HomeStrings {
     publicRepos: string
     publicReposSub: string
     languagesShipped: string
-    languagesShippedSub: string
+    languagesShippedSub: string // fallback caption when fewer than 2 languages
+    langLeads: string // connector, e.g. "leads" / "va primero"
+    langSecond: string // connector, e.g. "is second" / "segundo"
     yearsOnGithub: string
     yearsOnGithubSub: string
     languageMix: string
@@ -146,6 +148,7 @@ export interface HomeStrings {
     repoChatDesc: string
     repoBudgetDesc: string
     repoCloudDesc: string
+    repoFallbackDesc: string // shown when a repo has no curated or API description
   }
   strava: {
     secNum: string

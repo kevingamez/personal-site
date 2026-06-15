@@ -480,14 +480,33 @@ async function buildStats(): Promise<HomeStats | null> {
       languageMix[0] = { ...languageMix[0], pct: languageMix[0].pct + (100 - sum) }
     }
 
-    // Top repos by stars, falling back to most recently updated for the trailing slots.
-    // Stays public-only on purpose so private/org repo names never leak.
+    // Curated showcase. Stays public-only so private/org names never leak, and
+    // never surfaces the profile-README repo or undescribed coursework dumps.
+    // Featured names rank first (in this order); then repos that actually
+    // describe themselves; then by stars and recency.
+    const FEATURED = [
+      'personal-site',
+      'AD_ASTRA2023-SpaceInvaders',
+      'Palladium_Chat',
+      'budget-app',
+      'GCP-CloudRun',
+    ]
+    const featuredRank = (name: string): number => {
+      const i = FEATURED.indexOf(name)
+      return i === -1 ? FEATURED.length : i
+    }
+    const isProfileRepo = (name: string): boolean => name.toLowerCase() === GH_USER.toLowerCase()
     const topRepos: RepoCard[] = publicRepos
       .slice()
-      .sort(
-        (a, b) =>
-          b.stargazers_count - a.stargazers_count || b.updated_at.localeCompare(a.updated_at)
-      )
+      .filter((r) => !isProfileRepo(r.name))
+      .sort((a, b) => {
+        const fr = featuredRank(a.name) - featuredRank(b.name)
+        if (fr !== 0) return fr
+        const da = a.description ? 0 : 1
+        const db = b.description ? 0 : 1
+        if (da !== db) return da - db
+        return b.stargazers_count - a.stargazers_count || b.updated_at.localeCompare(a.updated_at)
+      })
       .slice(0, 5)
       .map((r) => ({
         name: r.name,
