@@ -12,7 +12,7 @@ const { t } = Astro.props
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="hero-kicker"><span class="hk-no">00</span><span class="hk-rule"></span></div>
+      <div class="hero-kicker"><span class="hk-rule"></span></div>
       <h1 class="hero-title"><Fragment set:html={t.titleHtml} /></h1>
 
       <p class="hero-lede"><Fragment set:html={t.lede} /></p>
@@ -29,14 +29,16 @@ const { t } = Astro.props
       <div class="gol-frame">
         <canvas id="gol" role="img" aria-label={t.golAriaLabel}></canvas>
         <div class="gol-controls">
-          <button class="gol-btn" id="gol-pause" title={t.pauseTitle} aria-label={t.pauseTitle}>⏸</button>
+          <button class="gol-btn" id="gol-pause" title={t.pauseTitle} aria-label={t.pauseTitle} aria-pressed="false"
+            >⏸</button
+          >
           <button class="gol-btn" id="gol-reset" title={t.resetTitle} aria-label={t.resetTitle}>↻</button>
         </div>
         <div class="gol-stamps">
-          <button class="gol-stamp on" data-stamp="glider">{t.stampGlider}</button>
-          <button class="gol-stamp" data-stamp="lwss">{t.stampLwss}</button>
-          <button class="gol-stamp" data-stamp="pulsar">{t.stampPulsar}</button>
-          <button class="gol-stamp" data-stamp="gun">{t.stampGun}</button>
+          <button class="gol-stamp on" data-stamp="glider" aria-pressed="true">{t.stampGlider}</button>
+          <button class="gol-stamp" data-stamp="lwss" aria-pressed="false">{t.stampLwss}</button>
+          <button class="gol-stamp" data-stamp="pulsar" aria-pressed="false">{t.stampPulsar}</button>
+          <button class="gol-stamp" data-stamp="gun" aria-pressed="false">{t.stampGun}</button>
           <button class="gol-stamp" data-stamp="clear">{t.stampClear}</button>
         </div>
       </div>
