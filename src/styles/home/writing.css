@@ -35,7 +35,7 @@
   scroll-snap-align: start;
   background: var(--cream-2);
   border: 1px solid var(--line-2);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   overflow: hidden;

@@ -19,6 +19,28 @@
   --slate: #82a8cf;
   --gold: #dab368;
   --green: #6fbf97;
+
+  /* Warm-ink channels, so on-dark text/films derive from one base instead of a
+     stray second cream. Use as rgb(var(--ink-rgb) / <alpha>). */
+  --ink-rgb: 244 237 225;
+  --coral-rgb: 255 106 69;
+
+  /* Motion scale - one shared physics. --ease-out for reveals, --ease-spring
+     for pops, --ease-emph for emphatic sweeps. Durations cover the real range
+     already in use so no section invents its own. */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.3, 1.25);
+  --ease-emph: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.18s;
+  --dur-reveal: 0.6s;
+  --dur-slow: 0.9s;
+  --dur-bar: 1.5s;
+
+  /* Radius scale - assigned by role: small chips, mid cards, large panels. */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 14px;
+  --pill: 999px;
 }
 * {
   box-sizing: border-box;
@@ -30,6 +52,8 @@ body {
 }
 html {
   scroll-behavior: auto;
+  /* Keep in-page anchor jumps clear of the sticky nav (and keyboard focus too). */
+  scroll-padding-top: 78px;
 }
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -55,6 +79,11 @@ a {
   color: inherit;
   text-decoration: none;
 }
+/* <picture> is used only as a transparent WebP-with-JPEG-fallback wrapper, so it
+   must not introduce a layout box - the <img> keeps its own sizing. */
+picture {
+  display: contents;
+}
 button {
   font-family: inherit;
   cursor: pointer;
@@ -73,6 +102,11 @@ footer :focus-visible {
 ::selection {
   background: var(--coral);
   color: var(--cream);
+}
+
+/* Skip-link target; don't draw a ring around the whole page when focused. */
+main:focus {
+  outline: none;
 }
 
 .skip {
@@ -96,6 +130,20 @@ footer :focus-visible {
   color: var(--cream);
   border-radius: 8px;
   font-size: 14px;
+}
+
+/* Visually hidden but available to assistive tech (live-region announcements). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .wrap {
