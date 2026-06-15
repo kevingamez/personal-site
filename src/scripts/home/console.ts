@@ -20,8 +20,9 @@ function getRefs(): Refs | null {
   const form = document.getElementById('console-form') as HTMLFormElement | null
   const input = document.getElementById('console-msg') as HTMLInputElement | null
   const suggest = document.getElementById('console-suggest')
+  const status = document.getElementById('console-status') ?? undefined
   if (!stream || !form || !input || !suggest) return null
-  return { stream, form, input, suggest, cmdHistory: [], bootTime: Date.now() }
+  return { stream, form, input, suggest, status, cmdHistory: [], bootTime: Date.now() }
 }
 
 // ───────── Tab completion ─────────
