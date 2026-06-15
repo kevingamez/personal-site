@@ -45,14 +45,17 @@ const sideProjects = [
       </div>
 
       <a class="wf-visual" href="https://www.enttor.ai/" target="_blank" rel="noopener">
-        <img
-          src="/posts/lessons-turbo.jpg"
-          alt={t.p1ImageAlt}
-          width="1400"
-          height="733"
-          loading="lazy"
-          decoding="async"
-        />
+        <picture>
+          <source srcset="/posts/lessons-turbo.webp" type="image/webp" />
+          <img
+            src="/posts/lessons-turbo.jpg"
+            alt={t.p1ImageAlt}
+            width="1400"
+            height="733"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
         <div class="wf-plate" aria-hidden="true">
           <span>prospect graph</span>
           <span>llm qualify</span>

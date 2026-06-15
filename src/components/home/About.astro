@@ -20,7 +20,10 @@ const { t } = Astro.props
     <div class="about-grid">
       <div>
         <div class="portrait">
-          <img src="/kevin.jpg" alt={t.portraitAlt} width="1200" height="1500" loading="lazy" decoding="async" />
+          <picture>
+            <source srcset="/kevin.webp" type="image/webp" />
+            <img src="/kevin.jpg" alt={t.portraitAlt} width="640" height="800" loading="lazy" decoding="async" />
+          </picture>
           <span class="badge">K. Gámez · 2026</span>
         </div>
       </div>

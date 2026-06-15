@@ -133,6 +133,10 @@ export function initContribGraph(): void {
   g.style.setProperty('--contrib-weeks', String(WEEKS))
   renderMonthLabels(tail)
 
+  // Build into a fragment and insert once: ~371 cells appended one-by-one to the
+  // live, attached grid would force a layout per node right as the section
+  // scrolls in (an INP spike on low-end mobile).
+  const frag = document.createDocumentFragment()
   for (let i = 0; i < tail.length; i++) {
     const day = tail[i]
     const w = Math.floor(i / DAYS)
@@ -151,8 +155,9 @@ export function initContribGraph(): void {
       'aria-label',
       `${day.count} contribution${day.count === 1 ? '' : 's'} on ${day.date}`
     )
-    g.appendChild(el)
+    frag.appendChild(el)
   }
+  g.appendChild(frag)
 
   const totalEl = document.getElementById('contrib-total')
   const currentEl = document.getElementById('contrib-current')
