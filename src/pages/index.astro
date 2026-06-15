@@ -21,19 +21,21 @@ const githubStats = await loadHomeStats()
 ---
 
 <Layout meta={t.meta}>
-  <a class="skip" href="#about">{t.meta.skip}</a>
+  <a class="skip" href="#main">{t.meta.skip}</a>
 
   <Nav meta={t.meta} t={t.nav} />
-  <Hero t={t.hero} />
-  <Work t={t.work} />
-  <About t={t.about} />
-  <Experience t={t.experience} />
-  <Github t={t.github} stats={githubStats} />
-  <div class="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
-  <Strava t={t.strava} />
-  <Writing t={t.writing} />
-  <Console t={t.console} />
-  <Contact t={t.contact} />
+  <main id="main" tabindex="-1">
+    <Hero t={t.hero} />
+    <Work t={t.work} />
+    <About t={t.about} />
+    <Experience t={t.experience} />
+    <Github t={t.github} stats={githubStats} />
+    <div class="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
+    <Strava t={t.strava} />
+    <Writing t={t.writing} />
+    <Console t={t.console} />
+    <Contact t={t.contact} />
+  </main>
   <Footer t={t.footer} buildId={buildId} />
 
   <script>

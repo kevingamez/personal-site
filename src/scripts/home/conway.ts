@@ -145,6 +145,9 @@ export function initConway(): void {
         // "clear" is a momentary action, not a selectable mode: wipe the board
         // without arming the stamp or leaving anything in the coral .on state.
         document.querySelectorAll('.gol-stamp').forEach((x) => x.classList.remove('on'))
+        document
+          .querySelectorAll('.gol-stamp[aria-pressed]')
+          .forEach((x) => x.setAttribute('aria-pressed', 'false'))
         grid.fill(0)
         trail.fill(0)
         gen = 0
@@ -153,7 +156,11 @@ export function initConway(): void {
       }
       curStamp = stamp
       document.querySelectorAll('.gol-stamp').forEach((x) => x.classList.remove('on'))
+      document
+        .querySelectorAll('.gol-stamp[aria-pressed]')
+        .forEach((x) => x.setAttribute('aria-pressed', 'false'))
       b.classList.add('on')
+      b.setAttribute('aria-pressed', 'true')
     })
   })
 
@@ -185,6 +192,7 @@ export function initConway(): void {
       paused = !paused
       const target = e.currentTarget as HTMLElement
       target.textContent = paused ? '▶' : '⏸'
+      target.setAttribute('aria-pressed', String(paused))
     })
   }
   const resetBtn = document.getElementById('gol-reset')
