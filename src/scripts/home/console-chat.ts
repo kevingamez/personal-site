@@ -68,6 +68,8 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
 
   refs.input.disabled = true
   refs.input.classList.add('cs-input-busy')
+  // Clear any prior announcement so an identical reply still re-announces.
+  if (refs.status) refs.status.textContent = ''
 
   const out = printOut(refs.stream, '', 'out')
   out.classList.add('cm-streaming')
@@ -168,6 +170,9 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
     if (watchdog) clearTimeout(watchdog)
     out.classList.remove('cm-streaming')
     if (ok) {
+      // Announce the complete reply once, as plain text, to the live status node
+      // (the visible stream is aria-live="off" to avoid a per-token flood).
+      if (refs.status) refs.status.textContent = assistant
       history.push({ role: 'assistant', content: assistant })
       if (history.length > MAX_CLIENT_HISTORY) {
         history.splice(0, history.length - MAX_CLIENT_HISTORY)

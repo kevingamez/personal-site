@@ -12,6 +12,9 @@ export interface Refs {
   form: HTMLFormElement
   input: HTMLInputElement
   suggest: HTMLElement
+  // Visually-hidden role="status" node; the finished AI reply is written here
+  // once so assistive tech announces a coherent message, not a token flood.
+  status?: HTMLElement
   cmdHistory: string[]
   bootTime: number
 }

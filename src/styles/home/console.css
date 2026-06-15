@@ -18,9 +18,9 @@
 /* The terminal - dark translucent glass floating on cream */
 .console-shell {
   position: relative;
-  background: #0d0d12;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid rgba(var(--ink-rgb) / 0.1);
+  border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow:
     0 30px 80px -20px rgba(31, 29, 26, 0.45),
@@ -102,7 +102,7 @@
 /* Output stream */
 .cs-stream {
   padding: 18px 18px 8px;
-  min-height: 240px;
+  min-height: 150px;
   max-height: 430px;
   overflow-y: auto;
   display: flex;
@@ -290,7 +290,7 @@
   }
   .cs-stream {
     padding: 14px 12px 6px;
-    min-height: 220px;
+    min-height: 140px;
     max-height: 380px;
   }
   .cs-suggest {
@@ -309,7 +309,7 @@
     margin-bottom: 24px;
   }
   .cs-stream {
-    min-height: 200px;
+    min-height: 140px;
     max-height: 360px;
   }
 }

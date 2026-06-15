@@ -26,9 +26,14 @@ const { t } = Astro.props
         <span class="ct-meta"><i class="ct-led"></i>{t.streaming}</span>
       </div>
 
-      <div class="cs-stream" id="console-stream" aria-live="polite">
+      <!-- The visible stream is not a live region: it also receives the echoed
+           command + tool lines, and the reply streams token-by-token, which
+           would flood a screen reader. The finished reply is announced once via
+           #console-status below. -->
+      <div class="cs-stream" id="console-stream" aria-live="off">
         <pre class="cs-line cs-out" set:html={t.greeting} />
       </div>
+      <div id="console-status" class="sr-only" role="status" aria-live="polite"></div>
 
       <div class="cs-suggest" id="console-suggest" aria-label="Quick commands">
         <button type="button" data-cmd={t.suggest1}>$ {t.suggest1}</button>
