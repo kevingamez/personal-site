@@ -5,7 +5,7 @@
   padding: 32px 32px 28px;
   background: var(--panel);
   color: var(--ink);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   box-shadow: 0 0 0 1px var(--line);
   overflow: hidden;
 }
@@ -108,7 +108,7 @@
 }
 .gh-stat-sub {
   font-size: 13px;
-  color: rgba(250, 247, 240, 0.55);
+  color: rgb(var(--ink-rgb) / 0.55);
   margin-top: 4px;
 }
 .gh-langbar {
@@ -123,7 +123,7 @@
   font-family: 'Hanken Grotesk', system-ui, sans-serif;
   font-size: 12px;
   letter-spacing: 0.01em;
-  color: rgba(250, 247, 240, 0.55);
+  color: rgb(var(--ink-rgb) / 0.55);
 }
 .gh-langbar-head b {
   color: var(--ink);
@@ -135,7 +135,7 @@
   height: 14px;
   border-radius: 999px;
   overflow: hidden;
-  background: rgba(250, 247, 240, 0.07);
+  background: rgb(var(--ink-rgb) / 0.07);
 }
 .gh-langbar-seg {
   display: block;
@@ -151,7 +151,7 @@
   margin-top: 16px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: rgba(250, 247, 240, 0.78);
+  color: rgb(var(--ink-rgb) / 0.78);
 }
 .gh-langbar-legend span {
   display: inline-flex;

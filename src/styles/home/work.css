@@ -17,7 +17,7 @@
 .wf-copy {
   background: var(--panel);
   border: 1px solid var(--line-2);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   padding: 34px;
   display: flex;
   flex-direction: column;
@@ -101,7 +101,7 @@
 .wf-visual {
   min-height: 380px;
   border: 1.5px solid var(--ink);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   overflow: hidden;
   position: relative;
   background: var(--cream-2);
@@ -186,7 +186,7 @@
   min-height: 230px;
   background: var(--cream-2);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   padding: 18px;
   display: flex;
   flex-direction: column;
