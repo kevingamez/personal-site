@@ -160,7 +160,9 @@ export const es: HomeStrings = {
     publicRepos: 'repos en los que ship',
     publicReposSub: 'públicos, privados y de orgs en los que he aportado',
     languagesShipped: 'lenguajes embarcados',
-    languagesShippedSub: 'TypeScript va primero · Python segundo',
+    languagesShippedSub: 'lenguajes principales por bytes',
+    langLeads: 'va primero',
+    langSecond: 'va segundo',
     yearsOnGithub: 'años en github',
     yearsOnGithubSub: 'desde abril de 2019',
     languageMix: 'mezcla de lenguajes',
@@ -179,6 +181,7 @@ export const es: HomeStrings = {
     repoChatDesc: 'Experimento de chat en TypeScript.',
     repoBudgetDesc: 'App de finanzas personales en Swift.',
     repoCloudDesc: 'Despliegues de servicios containerizados en Cloud Run.',
+    repoFallbackDesc: 'Repositorio público en GitHub.',
   },
   strava: {
     secNum: 'Strava',
@@ -256,7 +259,7 @@ export const es: HomeStrings = {
     promptLabel: 'kevin@gamez · ~',
     streaming: 'listo',
     greeting:
-      'bienvenido · escribe <span class="ac">help</span> para ver comandos · o <span class="ac">kevin "tu pregunta"</span> para chatear con la IA.',
+      'bienvenido · una pequeña shell que indexa este sitio. escribe <span class="ac">help</span> para ver comandos, o pregúntale a la IA: <span class="ac">kevin "¿qué hace enttor?"</span>',
     placeholder: 'escribe un comando, enter para enviar…',
     suggest1: 'help',
     suggest2: 'whoami',

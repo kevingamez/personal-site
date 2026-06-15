@@ -21,6 +21,12 @@ const repoDesc: Record<string, string> = {
   "GCP-CloudRun": t.repoCloudDesc,
 }
 
+// Derive the "languages shipped" caption from the live, sorted mix so it can
+// never drift from the bar beside it. (It used to be a hardcoded string that
+// claimed TypeScript led while the bar showed Swift first.)
+const [lead, second] = stats.languageMix
+const langSub = lead && second ? `${lead.name} ${t.langLeads} · ${second.name} ${t.langSecond}` : t.languagesShippedSub
+
 const contribPayload = JSON.stringify({
   t: stats.contribCalendar.totalContributions,
   l: stats.contribCalendar.longestStreak,
@@ -49,7 +55,7 @@ const contribPayload = JSON.stringify({
         <div class="gh-stat">
           <div class="gh-stat-num" data-target={stats.languagesShipped} data-format="plain">0</div>
           <div class="gh-stat-lbl">{t.languagesShipped}</div>
-          <div class="gh-stat-sub">{t.languagesShippedSub}</div>
+          <div class="gh-stat-sub">{langSub}</div>
         </div>
         <div class="gh-stat">
           <div class="gh-stat-num" data-target={stats.yearsOnGithub} data-format="plain">0</div>
@@ -132,7 +138,7 @@ const contribPayload = JSON.stringify({
                   <div class="nm">
                     {GH_USER} / {r.name}
                   </div>
-                  <div class="desc">{repoDesc[r.name] ?? r.description}</div>
+                  <div class="desc">{repoDesc[r.name] || r.description || t.repoFallbackDesc}</div>
                 </div>
                 <div class="stat">
                   {r.stars > 0 && <span>★ {r.stars}</span>}
