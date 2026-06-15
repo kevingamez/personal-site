@@ -24,7 +24,7 @@
 .gh-card {
   background: var(--cream-2);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   padding: 22px;
   min-width: 0;
   overflow: hidden;
@@ -101,10 +101,10 @@
   opacity: 0;
   transform: scale(0.25);
   transition:
-    transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.25),
-    opacity 0.4s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.55s var(--ease-spring),
+    opacity 0.4s var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
   transition-delay: calc(var(--w, 0) * 14ms + var(--d, 0) * 5ms);
 }
 .contrib.contrib-on .day {
@@ -124,8 +124,9 @@
   background: #216e39;
 }
 .contrib .day:hover {
-  outline: 1.5px solid var(--ink);
-  outline-offset: 1px;
+  /* A box-shadow ring fades in via the transition above, instead of an outline
+     that hard-pops (the entrance is a spring, so the hover should not jar). */
+  box-shadow: 0 0 0 1.5px var(--ink);
   z-index: 2;
   cursor: crosshair;
 }

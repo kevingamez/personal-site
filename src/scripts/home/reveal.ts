@@ -46,7 +46,7 @@ export function initReveal(): void {
     const stagger = STAGGER_GROUPS.has(sel)
     els.forEach((el, i) => {
       el.classList.add('reveal')
-      if (stagger) el.style.transitionDelay = `${Math.min(i * 70, 350)}ms`
+      if (stagger) el.style.transitionDelay = `${Math.min(i * 50, 250)}ms`
       io.observe(el)
     })
   }

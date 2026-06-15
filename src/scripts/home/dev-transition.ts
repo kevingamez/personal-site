@@ -1,8 +1,10 @@
 // Smooth transition into /dev: instead of an immediate hard navigation we
 // briefly fade in a CRT-style terminal-boot overlay, then navigate. Gives the
 // editorial home → IDE jump some narrative weight ("you are entering dev
-// mode") without feeling slow. Total time ~650ms; reduced-motion users get
-// the plain instant navigation.
+// mode") without feeling slow. We navigate the moment the last boot line
+// settles (~1.1s, matching the CSS animation-delays) so there's no dead wait;
+// reduced-motion users get the plain instant navigation.
+const BOOT_MS = 1100
 
 const BOOT_LINES = ['> booting dev mode', '> mounting workspace', '> opening editor']
 
@@ -31,6 +33,6 @@ export function initDevTransition(): void {
 
     window.setTimeout(() => {
       window.location.href = href
-    }, 1500)
+    }, BOOT_MS)
   })
 }

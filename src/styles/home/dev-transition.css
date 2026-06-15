@@ -59,7 +59,7 @@
   opacity: 0;
 }
 .dev-transition.on::after {
-  animation: dev-scan 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: dev-scan 1000ms var(--ease-emph) forwards;
 }
 @keyframes dev-scan {
   0% {
@@ -91,19 +91,19 @@
   transform: translateY(6px);
 }
 .dev-transition.on .dev-transition-line {
-  animation: dev-line 280ms cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+  animation: dev-line 260ms var(--ease-out) forwards;
 }
 .dev-transition.on .dev-transition-line:nth-child(1) {
-  animation-delay: 180ms;
+  animation-delay: 120ms;
 }
 .dev-transition.on .dev-transition-line:nth-child(2) {
-  animation-delay: 480ms;
+  animation-delay: 360ms;
 }
 .dev-transition.on .dev-transition-line:nth-child(3) {
-  animation-delay: 780ms;
+  animation-delay: 600ms;
 }
 .dev-transition.on .dev-transition-line:nth-child(4) {
-  animation-delay: 1080ms;
+  animation-delay: 840ms;
 }
 @keyframes dev-line {
   to {
