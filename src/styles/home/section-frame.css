@@ -34,6 +34,8 @@ section {
 .sec-title {
   font-family: 'Fraunces', serif;
   font-weight: 400;
+  /* opsz pinned to 22 in the font URL keeps the display "f" arm short so runs
+     like "Logged off" stay separate, not ligated. */
   font-size: 76px;
   line-height: 0.94;
   letter-spacing: 0;
