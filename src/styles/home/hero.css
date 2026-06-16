@@ -45,6 +45,9 @@
 h1.hero-title {
   font-family: 'Fraunces', serif;
   font-weight: 400;
+  /* opsz is pinned to 22 in the Google Fonts URL (Layout.astro) so Fraunces'
+     display "f" keeps a short arm and never merges with the next letter. Baked
+     into the font, so it renders the same in every browser. */
   font-size: 82px;
   line-height: 0.96;
   letter-spacing: 0;
