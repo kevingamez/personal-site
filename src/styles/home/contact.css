@@ -7,6 +7,10 @@
 .contact h2 {
   font-family: 'Fraunces', serif;
   font-weight: 400;
+  font-optical-sizing: none;
+  font-variation-settings:
+    'opsz' 22,
+    'wght' 400;
   font-size: 78px;
   line-height: 0.95;
   letter-spacing: 0;
