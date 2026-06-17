@@ -43,16 +43,8 @@
 /* No hero entrance animation: the content stands on its own. (Removed the
    staggered fade-slide-up, a generic AI-motion cliche.) */
 h1.hero-title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Newsreader', serif;
   font-weight: 400;
-  /* Force a text optical size (opsz 22). The font is variable, so without
-     `optical-sizing: none` the browser auto-raises opsz at this 82px size and
-     Fraunces' display "f" grows a long arm that merges into the next letter
-     ("ft"/"ff"). none + the URL's opsz-22 default keep the "f" short and clean. */
-  font-optical-sizing: none;
-  font-variation-settings:
-    'opsz' 22,
-    'wght' 400;
   font-size: 82px;
   line-height: 0.96;
   letter-spacing: 0;

@@ -283,7 +283,7 @@ export const en: HomeStrings = {
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
-    fonts: 'Set in Fraunces &amp; Hanken Grotesk',
+    fonts: 'Set in Newsreader &amp; Hanken Grotesk',
     estab: 'Est. 2026 · Bogotá',
   },
 }
