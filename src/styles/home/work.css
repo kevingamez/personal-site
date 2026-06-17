@@ -47,7 +47,7 @@
 }
 .wf-title {
   position: relative;
-  font-family: 'Fraunces', serif;
+  font-family: 'Newsreader', serif;
   font-size: 50px;
   font-weight: 400;
   line-height: 1;
@@ -213,7 +213,7 @@
   margin-bottom: 24px;
 }
 .work-card h3 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Newsreader', serif;
   font-weight: 400;
   font-size: 28px;
   line-height: 1;

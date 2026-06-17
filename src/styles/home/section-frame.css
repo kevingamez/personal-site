@@ -32,14 +32,8 @@ section {
   margin-bottom: 20px;
 }
 .sec-title {
-  font-family: 'Fraunces', serif;
+  font-family: 'Newsreader', serif;
   font-weight: 400;
-  /* optical-sizing:none keeps opsz at the URL's 22 default so the display "f"
-     stays short and runs like "Logged off" don't merge. */
-  font-optical-sizing: none;
-  font-variation-settings:
-    'opsz' 22,
-    'wght' 400;
   font-size: 76px;
   line-height: 0.94;
   letter-spacing: 0;

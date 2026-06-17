@@ -285,7 +285,7 @@ export const es: HomeStrings = {
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'En otros lados',
     elsewhereDev: 'Modo dev →',
-    fonts: 'Tipografías Fraunces e Hanken Grotesk',
+    fonts: 'Tipografías Newsreader e Hanken Grotesk',
     estab: 'Est. 2026 · Bogotá',
   },
 }
