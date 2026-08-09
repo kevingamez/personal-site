@@ -8,8 +8,8 @@ const routes = [
 ]
 
 // Ignore noise that's expected when running against the preview server:
-// - third-party analytics scripts (Vercel, Clarity, GA) that need real
-//   prod hosts to respond, and 404 on file:// preview / static deploys.
+// - the Vercel analytics script needs real prod hosts to respond, and 404s
+//   on file:// preview / static deploys.
 // - the dev console hits /api/chat which isn't routed by `astro preview`.
 // - missing favicons / og-image variants in dev.
 // We only care about real JS errors from our own code.
@@ -17,9 +17,6 @@ function isThirdPartyResourceError(text: string): boolean {
   return (
     text.includes('Failed to load resource') ||
     text.includes('vercel-scripts.com') ||
-    text.includes('clarity.ms') ||
-    text.includes('google-analytics.com') ||
-    text.includes('googletagmanager.com') ||
     text.includes('/api/chat') ||
     text.includes('/api/strava')
   )
