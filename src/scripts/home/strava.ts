@@ -230,13 +230,13 @@ function countUpEl(el: Element | null, target: number, fmt: (n: number) => strin
 const countUp = (id: string, target: number, fmt: (n: number) => string): void =>
   countUpEl(document.getElementById(id), target, fmt)
 
-// Mapbox Static map for a route. Public token, dark style, coral path. 640x400
+// Mapbox Static map for a route. Public token, light style, ink path. 640x400
 // @2x = 1280x800 (Mapbox max); 16:10 matches the card so it never crops.
 const MAPBOX_TOKEN = (import.meta.env as unknown as Record<string, string | undefined>)
   .PUBLIC_MAPBOX_TOKEN
 function mapboxUrl(polyline: string): string {
-  const path = `path-6+e07a5f-0.95(${encodeURIComponent(polyline)})`
-  return `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${path}/auto/640x400@2x?access_token=${MAPBOX_TOKEN}&padding=34`
+  const path = `path-6+1f1d1a-0.9(${encodeURIComponent(polyline)})`
+  return `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/${path}/auto/640x400@2x?access_token=${MAPBOX_TOKEN}&padding=34`
 }
 
 function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts: Activity[]): void {
