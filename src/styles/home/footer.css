@@ -30,7 +30,7 @@ footer {
 }
 .foot-grid .col-name i {
   font-style: normal;
-  color: var(--coral-on-dark);
+  color: var(--coral);
 }
 .foot-grid p {
   font-size: 14px;
@@ -53,7 +53,7 @@ footer {
   transition: color 0.2s;
 }
 .foot-grid ul a:hover {
-  color: var(--coral-on-dark);
+  color: var(--coral);
 }
 .colophon {
   display: flex;

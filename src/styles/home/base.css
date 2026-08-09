@@ -1,29 +1,30 @@
 :root {
-  /* Noir - warm dark editorial identity.
-     --cream* are the (now dark) page + raised surfaces; --ink* are the
-     (now light) text colors, so token-driven sections invert automatically.
-     --panel is the deepest surface for the footer / stat banner. */
-  --cream: #15110d;
-  --cream-2: #1e1812;
-  --cream-3: #2a221a;
-  --panel: #100c08;
-  --ink: #f4ede1;
-  --ink-2: #cabeac;
-  --muted: #948a7a;
-  --line: rgba(244, 237, 225, 0.1);
-  --line-2: rgba(244, 237, 225, 0.2);
-  --coral: #ff6a45;
-  --coral-strong: #ff8a68;
-  --coral-soft: rgba(255, 106, 69, 0.16);
-  --coral-on-dark: #ff7a5c;
-  --slate: #82a8cf;
-  --gold: #dab368;
-  --green: #6fbf97;
+  /* Paper - warm light editorial identity, monochrome.
+     --cream* are the page + raised surfaces; --ink* are the text colors, so
+     token-driven sections stay consistent. --panel is the deepest surface for
+     the footer / stat banner. The old coral accent is folded into the ink
+     scale; --coral-on-dark is the light accent for the dark console window. */
+  --cream: #faf7f0;
+  --cream-2: #f3eee3;
+  --cream-3: #eae3d4;
+  --panel: #f0ebdf;
+  --ink: #18171a;
+  --ink-2: #4c4954;
+  --muted: #6a6770;
+  --line: rgba(24, 23, 26, 0.12);
+  --line-2: rgba(24, 23, 26, 0.22);
+  --coral: #18171a;
+  --coral-strong: #000000;
+  --coral-soft: rgba(24, 23, 26, 0.08);
+  --coral-on-dark: #f4ede1;
+  --slate: #4a6f96;
+  --gold: #8a6d2f;
+  --green: #2f8a5d;
 
-  /* Warm-ink channels, so on-dark text/films derive from one base instead of a
-     stray second cream. Use as rgb(var(--ink-rgb) / <alpha>). */
-  --ink-rgb: 244 237 225;
-  --coral-rgb: 255 106 69;
+  /* Ink channels, so text/films derive from one base instead of a stray
+     second gray. Use as rgb(var(--ink-rgb) / <alpha>). */
+  --ink-rgb: 24 23 26;
+  --coral-rgb: 24 23 26;
 
   /* Motion scale - one shared physics. --ease-out for reveals, --ease-spring
      for pops, --ease-emph for emphatic sweeps. Durations cover the real range
@@ -93,10 +94,8 @@ button {
   outline-offset: 2px;
   border-radius: 2px;
 }
-/* Lighter ring on the dark terminal / stats banner so it stays visible */
-.console-shell :focus-visible,
-.gh-banner :focus-visible,
-footer :focus-visible {
+/* Lighter ring on the dark terminal so it stays visible */
+.console-shell :focus-visible {
   outline-color: var(--coral-on-dark);
 }
 ::selection {

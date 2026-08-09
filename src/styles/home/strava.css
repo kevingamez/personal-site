@@ -41,14 +41,14 @@
   font-style: normal;
   font-size: 0.32em;
   letter-spacing: 0;
-  color: var(--coral-on-dark);
+  color: var(--coral);
   margin-left: 8px;
 }
 .sv-hero-kml {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
-  color: var(--coral-on-dark);
+  color: var(--coral);
   margin-top: 12px;
 }
 .sv-hero-side {
