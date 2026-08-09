@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Drop Google Analytics and Microsoft Clarity; Vercel Analytics + Speed Insights are the only telemetry (cookieless site, smaller CSP)
+- Add ESLint (typescript-eslint + astro + jsx-a11y flat config) to CI
+- Add Dependabot for npm and GitHub Actions updates
+- Add LICENSE stating the all-rights-reserved, reference-only terms
+- Serve the /dev background as WebP and quantize the large favicons
+- Move changelog archives into docs/
 - Initial portfolio launch
 - Bilingual support (EN/ES)
 - Conway's Game of Life background
@@ -36,7 +42,7 @@
 - localStorage language persistence
 - Canvas-based animation system
 
-<!-- See [CHANGELOG-archive.md](./CHANGELOG-archive.md) for the older event-marker history (2025-11-03 → 2025-11-24). -->
+<!-- See [docs/CHANGELOG-archive.md](./docs/CHANGELOG-archive.md) for the older event-marker history (2025-11-03 → 2025-11-24). -->
 
   <!-- recent: 2025-11-25 onward -->
   <!-- 2025-11-25-0 -->
