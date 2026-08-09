@@ -83,7 +83,7 @@ export const en: HomeStrings = {
     secNum: 'Trajectory',
     titleHtml: "Two startups and a master's.",
     blurb:
-      "Two founding-engineer tours, a master's in deep learning, and the long stretch at Uniandes that taught me\n            how to ship.",
+      "Founding engineer at Samsam, then at Enttor. The master's in deep learning ran in parallel with the first job.",
     e1Year: 'Jun 2025 · now',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
@@ -128,8 +128,7 @@ export const en: HomeStrings = {
   work: {
     secNum: 'Selected work',
     titleHtml: "Things I've built and <i>still believe in.</i>",
-    blurb:
-      'A tighter edit of the systems behind the resume: product surfaces, automation loops, and experiments that still feel alive.',
+    blurb: 'The systems behind the resume: what I built and what still runs.',
     p1Featured: '01 / Featured',
     p1NameHtml: 'enttor.ai · <i>AI outbound that actually runs.</i>',
     p1ImageAlt:
@@ -145,7 +144,7 @@ export const en: HomeStrings = {
       'An interactive atlas of escape-time fractals · Mandelbrot, Burning Ship, Julia, Newton · with deep zoom,\n              color schemes, and shareable URLs. A weekend project that ate three weekends.',
     p4Name: 'Number notebooks',
     p4Desc:
-      'Number-theory walkthroughs as live Jupyter notebooks: Ulam spiral, Goldbach pairs, the Riemann staircase.\n              Used by a few math teachers I admire.',
+      'Number-theory walkthroughs as live Jupyter notebooks: Ulam spiral, Goldbach pairs, the Riemann staircase.',
     p5Name: 'this site',
     p5Desc:
       "The page you're on. Open-source, built incrementally, and a place to put math that I think is beautiful\n              next to software I'm proud of.",
@@ -268,7 +267,7 @@ export const en: HomeStrings = {
   },
   contact: {
     titleHtml: 'Nice to <i>meet you</i>.',
-    body: 'This is just a corner of the internet where you can get to know me a little. If something here resonates and\n          you want to say hello, the inbox is open.',
+    body: 'Thanks for reading this far. If you want to talk about work, or just say hi, send me an email.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnDev: 'Open dev mode',
   },
