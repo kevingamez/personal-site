@@ -5,8 +5,8 @@ export const HELP_LINES = [
   '<b>info</b>',
   '  <span class="ac">whoami</span>          one-line bio',
   '  <span class="ac">about</span>           the long version',
-  '  <span class="ac">experience</span>      trajectory · roles · dates',
-  '  <span class="ac">stack</span>           tools I actually reach for',
+  '  <span class="ac">experience</span>      roles, dates, education',
+  '  <span class="ac">stack</span>           tools I use',
   '  <span class="ac">repos</span>           public github repos',
   '  <span class="ac">now</span>             what I’m working on this week',
   '  <span class="ac">contact</span>         email + socials',
@@ -15,12 +15,12 @@ export const HELP_LINES = [
   '  <span class="ac">ls</span>              list available "files"',
   '  <span class="ac">cat</span> &lt;name&gt;      print a file (try <span class="ac">cat about</span>)',
   '  <span class="ac">pwd</span>             print working directory',
-  '  <span class="ac">cd</span> &lt;dir&gt;        change directory (sort of)',
+  '  <span class="ac">cd</span> &lt;dir&gt;        change directory',
   '',
   '<b>system</b>',
   '  <span class="ac">date</span>            current date',
   '  <span class="ac">uname</span>           kernel info',
-  '  <span class="ac">uptime</span>          how long this tab has been alive',
+  '  <span class="ac">uptime</span>          how long this tab has been open',
   '  <span class="ac">history</span>         your command history',
   '  <span class="ac">which</span> &lt;cmd&gt;     where a command lives',
   '  <span class="ac">man</span> &lt;cmd&gt;       what a command does',
@@ -33,7 +33,6 @@ export const HELP_LINES = [
   '  <span class="ac">ask</span>   &lt;question&gt;  alias for <span class="ac">kevin</span>',
   '',
   '<span class="muted">tip · <kbd>Tab</kbd> autocompletes · <kbd>↑</kbd>/<kbd>↓</kbd> for history · <kbd>Ctrl-W/U/K</kbd> to edit · <kbd>Ctrl-C</kbd> to cancel</span>',
-  '<span class="muted">This console is a compact index of the site and work.</span>',
 ]
 
 export const ABOUT_LINES = [
@@ -80,7 +79,7 @@ export const REPOS_LINES = [
 ]
 
 export const NOW_LINES = [
-  'building   · <b>eval-as-a-service</b> at enttor - brand-fit evals over an API',
+  'building   · <b>AI outbound</b> at enttor - browser automation + OpenAI pipelines',
 ]
 
 export const CONTACT_LINES = [
@@ -104,14 +103,14 @@ export const MAN_PAGES: Record<string, string[]> = {
   help: ['<b>HELP</b>(1)', '  list every command this shell knows.'],
   whoami: ['<b>WHOAMI</b>(1)', '  print a one-line bio.'],
   about: ['<b>ABOUT</b>(1)', '  print the longer bio (~6 lines).'],
-  experience: ['<b>EXPERIENCE</b>(1)', '  print the trajectory: roles, dates, education.'],
-  stack: ['<b>STACK</b>(1)', '  print the tools I actually reach for.'],
+  experience: ['<b>EXPERIENCE</b>(1)', '  print roles, dates, education.'],
+  stack: ['<b>STACK</b>(1)', '  print the tools I use.'],
   repos: ['<b>REPOS</b>(1)', '  list public github repos.'],
   now: ['<b>NOW</b>(1)', '  what I’m working on right now.'],
   contact: ['<b>CONTACT</b>(1)', '  email + social links.'],
   source: ['<b>SOURCE</b>(1)', '  print links for source readers.'],
   date: ['<b>DATE</b>(1)', '  print the current date.'],
-  uname: ['<b>UNAME</b>(1)', '  print system identity (it lies).'],
+  uname: ['<b>UNAME</b>(1)', '  print system info.'],
   uptime: ['<b>UPTIME</b>(1)', '  how long this tab has been open.'],
   history: ['<b>HISTORY</b>(1)', '  list the commands you’ve typed in this session.'],
   which: [
@@ -127,17 +126,17 @@ export const MAN_PAGES: Record<string, string[]> = {
     '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, contact.',
   ],
   pwd: ['<b>PWD</b>(1)', '  print working directory. always /home/kevin.'],
-  cd: ['<b>CD</b>(1)', '  cd is mostly decorative - there’s nowhere else to go.'],
+  cd: ['<b>CD</b>(1)', '  cd &lt;dir&gt;  · only /home/kevin exists.'],
   ps: ['<b>PS</b>(1)', '  list (fake) processes.'],
   mkdir: ['<b>MKDIR</b>(1)', '  this fs is read-only. mkdir always fails.'],
   rmdir: ['<b>RMDIR</b>(1)', '  this fs is read-only. rmdir always fails.'],
   touch: ['<b>TOUCH</b>(1)', '  this fs is read-only. touch always fails.'],
-  rm: ['<b>RM</b>(1)', '  this fs is read-only. rm always fails (mercifully).'],
+  rm: ['<b>RM</b>(1)', '  this fs is read-only. rm always fails.'],
   mv: ['<b>MV</b>(1)', '  this fs is read-only.'],
   cp: ['<b>CP</b>(1)', '  this fs is read-only.'],
-  sudo: ['<b>SUDO</b>(1)', '  not on my watch.'],
-  exit: ['<b>EXIT</b>(1)', '  there is no exit.'],
-  logout: ['<b>LOGOUT</b>(1)', '  there is no exit.'],
+  sudo: ['<b>SUDO</b>(1)', '  not available.'],
+  exit: ['<b>EXIT</b>(1)', '  does nothing. this is a web page.'],
+  logout: ['<b>LOGOUT</b>(1)', '  does nothing. this is a web page.'],
   kevin: [
     '<b>KEVIN</b>(1)',
     '  kevin &lt;question&gt;  · POST your question to /api/chat and stream back a Claude reply.',

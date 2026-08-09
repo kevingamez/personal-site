@@ -154,7 +154,6 @@ const spdVal = (ms: number): number => ms * 3.6 * (IMP ? KM_PER_MI : 1)
 
 let SPORTS: Record<string, string> = {}
 let WEEK_OF = 'week of'
-let COMPARE = '× the Eiffel Tower'
 let SPEED_LABEL = 'avg speed'
 let PACE_LABEL = 'pace'
 let MILES_WORD = 'miles'
@@ -167,7 +166,6 @@ function readI18n(): void {
     const j = JSON.parse(el.textContent) as {
       sports?: Record<string, string>
       weekOf?: string
-      climbedCompare?: string
       featSpeed?: string
       featPace?: string
       statMi?: string
@@ -175,7 +173,6 @@ function readI18n(): void {
     }
     SPORTS = j.sports || {}
     if (j.weekOf) WEEK_OF = j.weekOf
-    if (j.climbedCompare) COMPARE = j.climbedCompare
     if (j.featSpeed) SPEED_LABEL = j.featSpeed
     if (j.featPace) PACE_LABEL = j.featPace
     if (j.statMi) MILES_WORD = j.statMi
@@ -315,7 +312,6 @@ function fillInsights(ins: Insights, totals: Totals, lang: string): void {
     elevVal(totals.elevationM),
     (n) => `${Math.round(n).toLocaleString(lang)} ${EUNIT}`
   )
-  setText('sv-climbed-sub', `≈ ${ins.eiffels} ${COMPARE}`)
 }
 
 export async function initStrava(): Promise<void> {

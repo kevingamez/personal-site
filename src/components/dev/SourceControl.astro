@@ -17,15 +17,9 @@ const fmtRel = (iso: string): string => {
   return `${Math.round(d / 30)}mo`
 }
 
-// Synthetic "Changes" section - the working-tree dirty files. Shows the
-// real personal-site files we've been editing in this session, so it feels
-// believable even though they're hardcoded.
-const changes = [
-  { path: "src/scripts/home/dev-transition.ts", status: "M" },
-  { path: "src/styles/home/dev-transition.css", status: "M" },
-  { path: "src/components/dev/SourceControl.astro", status: "A" },
-]
-const staged = [{ path: "src/data/dev-github.ts", status: "M" }]
+// The panel renders a clean working tree - no fabricated dirty files.
+const changes: { path: string; status: string }[] = []
+const staged: { path: string; status: string }[] = []
 ---
 
 <aside class="sc-panel" id="source-control" hidden>
@@ -46,7 +40,7 @@ const staged = [{ path: "src/data/dev-github.ts", status: "M" }]
 
   <div class="sc-branch">
     <span class="material-symbols-outlined">commit</span>
-    <span><b>main</b><span class="sc-up">↑1 ↓0</span></span>
+    <span><b>main</b></span>
     <span class="sc-grow"></span>
     <span class="sc-sync" title="Sync changes">⟳</span>
   </div>

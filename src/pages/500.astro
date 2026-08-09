@@ -26,7 +26,7 @@ Astro.response.status = 500
         --ink-2: #36343a;
         --muted: #6a6770;
         --line-2: rgba(24, 23, 26, 0.18);
-        --coral: #c1462e;
+        --coral: #18171a;
       }
       * {
         box-sizing: border-box;
@@ -182,13 +182,10 @@ Astro.response.status = 500
   </head>
   <body>
     <div class="wrap">
-      <div class="tag">§ - Broken</div>
+      <div class="tag">Server error</div>
       <h1>5<i>0</i>0</h1>
-      <h2>Something <i>misbehaved.</i></h2>
-      <p>
-        An error slipped through. The site didn't plan for this one. Try again, head home, or refresh and pretend
-        nothing happened.
-      </p>
+      <h2>Something went wrong.</h2>
+      <p>Something broke while rendering this page. Try refreshing, or go back home.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="/">← Back home</a>
         <button class="btn btn-ghost" type="button" id="refresh-btn">↻ Refresh</button>
@@ -202,18 +199,7 @@ Astro.response.status = 500
           >
         </div>
         <div class="ln"><span class="nm">2</span><span class="err">HTTP/1.1 500 Internal Server Error</span></div>
-        <div class="ln">
-          <span class="nm">3</span><span class="mute">x-trace-id: <span id="ref">-------</span></span>
-        </div>
-        <div class="ln"><span class="nm">4</span><span class="mute">x-build: a7f3c91 · static · vercel</span></div>
-        <div class="ln">
-          <span class="nm">5</span><span
-            ><span class="key">$</span> <span class="mute">retry --backoff exponential</span></span
-          >
-        </div>
-        <div class="ln">
-          <span class="nm">6</span><span class="ok">… or just go back home.</span>
-        </div>
+        <div class="ln"><span class="nm">3</span><span class="mute">x-build: static · vercel</span></div>
       </div>
     </div>
 

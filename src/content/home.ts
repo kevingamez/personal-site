@@ -112,12 +112,6 @@ export interface HomeStrings {
     p1Link: string
     p2Name: string
     p2Desc: string
-    p3Name: string
-    p3Desc: string
-    p4Name: string
-    p4Desc: string
-    p5Name: string
-    p5Desc: string
   }
   github: {
     secNum: string
@@ -172,7 +166,6 @@ export interface HomeStrings {
     insightFastLabel: string
     insightBiggestLabel: string
     insightClimbedLabel: string
-    climbedCompare: string
     weekOf: string
     heatmapTitle: string
     heatLess: string

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Strip remaining performative copy: joke terminal output, twee headlines and blurbs, unverified metrics and tech claims, and the three side projects with no public trace
+- Neutralize the coral accent into the ink scale for a monochrome palette; error pages and theme-color follow
 - Remove invented easter-egg content (fake proofs, principles, invariants, bibliography) and rewrite filler copy in plain voice across both locales
 - Drop Google Analytics and Microsoft Clarity; Vercel Analytics + Speed Insights are the only telemetry (cookieless site, smaller CSP)
 - Add ESLint (typescript-eslint + astro + jsx-a11y flat config) to CI

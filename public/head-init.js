@@ -33,6 +33,6 @@ window.kg = window.kevin
 
 runWhenIdle(function greetCuriousPeople() {
   if (!window.console) return
-  window.console.log('%cKevin Gámez', 'font-weight:700;font-size:16px;color:#c1462e')
+  window.console.log('%cKevin Gámez', 'font-weight:700;font-size:16px')
   window.console.log('Profile: window.kevin()')
 })
