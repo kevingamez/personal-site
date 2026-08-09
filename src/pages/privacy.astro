@@ -8,10 +8,9 @@ const meta = {
   title: "Privacy · Kevin Gámez",
   ogTitle: "Privacy · Kevin Gámez",
   twitterTitle: "Privacy · Kevin Gámez",
-  description: "What kevingamez.co collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
-  ogDescription: "What kevingamez.co collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
-  twitterDescription:
-    "What kevingamez.co collects, why, and how to opt out. First-party analytics, heatmaps, error logs.",
+  description: "What kevingamez.co collects, why, and how to opt out. First-party analytics, error logs.",
+  ogDescription: "What kevingamez.co collects, why, and how to opt out. First-party analytics, error logs.",
+  twitterDescription: "What kevingamez.co collects, why, and how to opt out. First-party analytics, error logs.",
   canonical: "https://kevingamez.co/privacy/",
   ogUrl: "https://kevingamez.co/privacy/",
   includeJsonLd: false,
@@ -29,7 +28,7 @@ const meta = {
         <h1>What this site collects</h1>
         <p class="lede">
           Plain-language list of every piece of data <a href="/">kevingamez.co</a> sees, why, and how to opt out. Last updated
-          2026-05.
+          2026-08.
         </p>
       </header>
 
@@ -37,36 +36,20 @@ const meta = {
       <ul>
         <li>No accounts, no logins, no marketing emails.</li>
         <li>Aggregate analytics - page views, sections viewed, device, country - never tied to you.</li>
-        <li>
-          Heatmaps and session replays via Microsoft Clarity (cursor moves, clicks, scroll). Form fields are masked by
-          default.
-        </li>
+        <li>No cookies, no session replays, no fingerprinting.</li>
         <li>
           The <code>/api/chat</code> Claude console keeps your IP only for daily rate limiting (20 messages / IP / day) and
           forgets it within 24 hours.
         </li>
-        <li>Nothing is sold or shared with third parties beyond the analytics vendors below.</li>
+        <li>Nothing is sold or shared with third parties beyond the vendors below.</li>
       </ul>
 
       <h2>Vendors and what they receive</h2>
 
-      <h3>Google Analytics 4 (gtag)</h3>
-      <p>
-        Anonymous page-view counts and event names (e.g. <code>section_view</code>, <code>cta_click</code>), coarse
-        country/device, referrer. IPs are anonymized at edge by Google before they hit the analytics dashboard.
-      </p>
-
       <h3>Vercel Analytics + Speed Insights</h3>
       <p>
-        First-party, cookieless. Records page paths, Core Web Vitals (LCP, INP, CLS) and country at country level. No
-        persistent identifier.
-      </p>
-
-      <h3>Microsoft Clarity</h3>
-      <p>
-        Heatmaps and session replays. Records cursor movement, clicks, and scrolling on kevingamez.co. <strong
-          >All input fields, including the live console, are masked</strong
-        > - I see <em>that</em> you typed, not <em>what</em>. Clarity sets a session cookie scoped to this domain.
+        First-party, cookieless. Records page paths, custom event names (e.g. <code>section_view</code>,
+        <code>cta_click</code>), Core Web Vitals (LCP, INP, CLS) and country at country level. No persistent identifier.
       </p>
 
       <h3>Anthropic (Claude · /api/chat)</h3>
@@ -80,28 +63,22 @@ const meta = {
       <ul>
         <li>
           <strong>Block analytics.</strong> Most browser tracker-blockers (uBlock Origin, Brave Shields, Privacy Badger, Safari
-          ITP) already block Google Analytics, Vercel and Clarity by default. The site still works fully.
-        </li>
-        <li>
-          <strong>Honor Do-Not-Track / Global Privacy Control.</strong> If your browser sends DNT or GPC, plan is to skip
-          Clarity loading. (Coming next; until then, use a blocker.)
+          ITP) already block Vercel Analytics by default. The site still works fully.
         </li>
         <li>
           <strong>Don't use the console.</strong> If you don't type anything in <code>/#console</code>, nothing reaches
           Anthropic. Browsing the rest of the site doesn't trigger any LLM call.
         </li>
         <li>
-          <strong>Ask for deletion.</strong> Email <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>
-          and I'll wipe what I can (heatmap recordings tied to a session ID, GA event log).
+          <strong>Questions.</strong> Email <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a> about anything
+          on this page.
         </li>
       </ul>
 
       <h2>Cookies</h2>
-      <ul>
-        <li><code>_ga</code>, <code>_ga_*</code> - Google Analytics, ~1 year.</li>
-        <li><code>_clck</code>, <code>_clsk</code> - Microsoft Clarity, session + 1 year.</li>
-      </ul>
-      <p>That's it. No third-party advertising cookies, no remarketing pixels.</p>
+      <p>
+        None. This site sets no cookies - analytics are cookieless, and there are no advertising or remarketing pixels.
+      </p>
 
       <h2>Contact</h2>
       <p>

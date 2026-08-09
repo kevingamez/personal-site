@@ -1,5 +1,6 @@
-// Typed wrapper over gtag. Adding a new event? Add it to AnalyticsEvent and
-// describe its props in the union - the call site is then typechecked.
+// Typed wrapper over the analytics sink (Vercel Analytics). Adding a new
+// event? Add it to AnalyticsEvent and describe its props in the union - the
+// call site is then typechecked.
 
 import { logger } from './logger'
 
@@ -24,38 +25,18 @@ export type AnalyticsEvent =
 
 declare global {
   interface Window {
-    gtag?: (...args: unknown[]) => void
-    dataLayer?: unknown[]
     va?: (event: string, props?: Record<string, unknown>) => void
-    clarity?: (action: string, ...args: unknown[]) => void
   }
 }
 
 function send(event: string, props?: Record<string, unknown>): void {
   if (typeof window === 'undefined') return
   log.debug(event, props)
-  // Fan out to every analytics sink loaded on the page. None of these throw
-  // on missing globals; we just no-op when a script hasn't booted yet.
-  try {
-    window.gtag?.('event', event, props)
-  } catch (e) {
-    log.warn('gtag threw', e)
-  }
+  // No-ops when the Vercel Analytics script hasn't booted yet.
   try {
     window.va?.('event', { name: event, ...props })
   } catch (e) {
     log.warn('vercel/va threw', e)
-  }
-  try {
-    window.clarity?.('event', event)
-    if (props && Object.keys(props).length) {
-      // Clarity custom tags surface in the dashboard as filters.
-      for (const [k, v] of Object.entries(props)) {
-        if (v != null) window.clarity?.('set', k, String(v))
-      }
-    }
-  } catch (e) {
-    log.warn('clarity threw', e)
   }
 }
 

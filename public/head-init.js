@@ -75,21 +75,6 @@ window.kevin = function kevin(command) {
 }
 window.kg = window.kevin
 
-window.dataLayer = window.dataLayer || []
-window.gtag = function gtag() {
-  window.dataLayer.push(arguments)
-}
-window.gtag('js', new Date())
-window.gtag('config', 'G-2EK3T4PNNY')
-
-runWhenIdle(function loadGoogleAnalytics() {
-  if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return
-  const script = document.createElement('script')
-  script.async = true
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-2EK3T4PNNY'
-  document.head.appendChild(script)
-})
-
 runWhenIdle(function greetCuriousPeople() {
   if (!window.console) return
   window.console.log('%cKevin Gámez', 'font-weight:700;font-size:16px;color:#c1462e')

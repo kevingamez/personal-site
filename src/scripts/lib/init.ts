@@ -8,9 +8,6 @@ const log = logger('boot')
 
 let installed = false
 
-const CLARITY_ID = (import.meta as ImportMeta & { env: Record<string, string> }).env
-  ?.PUBLIC_CLARITY_ID
-
 function runWhenIdle(fn: () => void, timeout = 2500): void {
   if (typeof window === 'undefined') return
   setTimeout(() => {
@@ -31,37 +28,13 @@ async function loadVercelTelemetry(): Promise<void> {
   injectSpeedInsights()
 }
 
-function loadClarity(id: string): void {
-  if (!id || typeof window === 'undefined') return
-  // Reject the placeholder value shipped in `.env.example` so we don't
-  // 400-bomb against clarity.ms before the user wires the real ID.
-  if (id === 'replace-me-10chars' || id.startsWith('replace-')) return
-  if (window.clarity) return
-  // Standard Clarity bootstrap (https://clarity.microsoft.com).
-  // Casts narrow the inline IIFE to a typed shape without `any`.
-  const w = window as unknown as { clarity?: unknown }
-  ;(function (c: typeof w, l: Document, a: string, r: string, i: string) {
-    type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[] }
-    const clarityFn: ClarityFn = function (...args: unknown[]): void {
-      ;(clarityFn.q = clarityFn.q || []).push(args)
-    }
-    c.clarity = clarityFn
-    const t = l.createElement(a) as HTMLScriptElement
-    t.async = true
-    t.src = 'https://www.clarity.ms/tag/' + i
-    const y = l.getElementsByTagName(r)[0]
-    y.parentNode?.insertBefore(t, y)
-  })(w, document, 'script', 'head', id)
-}
-
 export function bootstrapClient(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
 
   runWhenIdle(() => {
-    // Privacy-first first-party analytics. Both run cookieless by default.
+    // Privacy-first first-party analytics. Cookieless by default.
     void loadVercelTelemetry().catch((e) => log.warn('vercel analytics inject failed', e))
-    if (CLARITY_ID) loadClarity(CLARITY_ID)
   })
 
   window.addEventListener('error', (e) => {
