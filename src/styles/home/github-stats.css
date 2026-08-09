@@ -15,7 +15,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   letter-spacing: 0.06em;
-  color: var(--coral-on-dark);
+  color: var(--coral);
   margin-bottom: 24px;
 }
 .gh-stats-row {
@@ -35,7 +35,7 @@
 .gh-stat {
   display: flex;
   flex-direction: column;
-  border-left: 2px solid var(--coral-on-dark);
+  border-left: 2px solid var(--coral);
   padding-left: 18px;
   opacity: 0;
   transform: translateY(10px);
@@ -103,7 +103,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
   letter-spacing: 0.04em;
-  color: var(--coral-on-dark);
+  color: var(--coral);
   margin-top: 10px;
 }
 .gh-stat-sub {

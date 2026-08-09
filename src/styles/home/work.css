@@ -42,7 +42,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   letter-spacing: 0.06em;
-  color: var(--coral-on-dark);
+  color: var(--coral);
   margin-bottom: 24px;
 }
 .wf-title {

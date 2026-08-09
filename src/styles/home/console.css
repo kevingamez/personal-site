@@ -18,8 +18,9 @@
 /* The terminal - dark translucent glass floating on cream */
 .console-shell {
   position: relative;
-  background: var(--panel);
-  border: 1px solid rgba(var(--ink-rgb) / 0.1);
+  /* The terminal window stays dark on the light page, like a code block. */
+  background: #141310;
+  border: 1px solid rgba(24, 23, 26, 0.2);
   border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow:
