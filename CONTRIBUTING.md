@@ -13,6 +13,7 @@ npm run dev    # localhost:4321
 
 ```bash
 npm run format
+npm run lint
 npm run check
 npm run format:check
 npm test
@@ -32,4 +33,4 @@ The full list is in `CLAUDE.md`. Highlights:
 
 ## License
 
-Personal project; all rights reserved. The code is public for reference, not a permissive license - please don't ship a clone of the design.
+Personal project; all rights reserved - see [LICENSE](./LICENSE). The code is public for reference, not a permissive license - please don't ship a clone of the design.

@@ -9,12 +9,13 @@ npm run dev           # Dev server at localhost:4321
 npm run build         # Build static site to ./dist/
 npm run preview       # Preview production build locally
 npm run check         # Type-check .astro and .ts (astro check)
+npm run lint          # ESLint (typescript-eslint + astro + jsx-a11y)
 npm run format        # Apply Prettier
 npm run format:check  # Verify formatting (CI)
 npm test              # Playwright smoke tests against ./dist via preview
 ```
 
-Always run `npm run check`, `npm run format:check`, and `npm test` before pushing. The `check` + `smoke` + `lighthouse` jobs run on every PR via `.github/workflows/ci.yml`.
+Always run `npm run check`, `npm run lint`, `npm run format:check`, and `npm test` before pushing. The `check` + `smoke` + `lighthouse` jobs run on every PR via `.github/workflows/ci.yml`.
 
 ## Architecture Overview
 

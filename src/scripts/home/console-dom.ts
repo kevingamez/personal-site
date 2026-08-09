@@ -93,7 +93,10 @@ export function tokenize(line: string): string[] {
     } else if (ch === '"' || ch === "'") {
       quote = ch
     } else if (/\s/.test(ch)) {
-      if (cur) (out.push(cur), (cur = ''))
+      if (cur) {
+        out.push(cur)
+        cur = ''
+      }
     } else {
       cur += ch
     }
