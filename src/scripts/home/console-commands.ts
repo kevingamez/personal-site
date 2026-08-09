@@ -108,16 +108,13 @@ export const COMMANDS: Record<string, CommandFn> = {
     )
   },
   uname: (_a, r) => {
-    printOut(r.stream, 'Darwin kevingamez.local 25.4.0 arm64')
+    printOut(r.stream, 'kevingamez.co · astro static build')
   },
   uptime: (_a, r) => {
     const ms = Date.now() - r.bootTime
     const m = Math.floor(ms / 60000)
     const s = Math.floor((ms % 60000) / 1000)
-    printOut(
-      r.stream,
-      `up ${m}m ${s}s · 1 user · load avg: 0.42, 0.42, 0.42 <span class="muted">(it's a static site)</span>`
-    )
+    printOut(r.stream, `up ${m}m ${s}s`)
   },
   history: (_a, r) => {
     if (!r.cmdHistory.length) {
@@ -162,10 +159,8 @@ export const COMMANDS: Record<string, CommandFn> = {
       '  108  ?        00:01:12 inngest-worker',
       '  253  ?        00:00:42 puppeteer-instagram',
       '  254  ?        00:00:38 puppeteer-linkedin',
-      '  404  ?        00:00:00 missing-route',
-      '  418  ?        00:00:00 eval-runner',
       '  789  pts/0    00:00:00 zsh',
-      ' 1337  pts/0    00:00:00 ps',
+      '  790  pts/0    00:00:00 ps',
     ])
   },
   // file-mutating commands - keep the joke gentle; this site is read-only.
@@ -177,7 +172,7 @@ export const COMMANDS: Record<string, CommandFn> = {
     }
     printOut(
       r.stream,
-      `mkdir: cannot create directory ‘${escape(name)}’: <span class="muted">read-only file system. this is a static site, friend.</span>`,
+      `mkdir: cannot create directory ‘${escape(name)}’: <span class="muted">read-only file system.</span>`,
       'err'
     )
   },
@@ -187,19 +182,11 @@ export const COMMANDS: Record<string, CommandFn> = {
   touch: (a, r) => {
     printOut(
       r.stream,
-      `touch: cannot touch ‘${escape(a[0] || '')}’: <span class="muted">read-only. but the thought counts.</span>`,
+      `touch: cannot touch ‘${escape(a[0] || '')}’: <span class="muted">read-only file system.</span>`,
       'err'
     )
   },
   rm: (a, r) => {
-    if (a[0] === '-rf' && (a[1] === '/' || a[1] === '/*')) {
-      printOut(
-        r.stream,
-        '<span class="muted">nice try. running on someone else’s machine.</span>',
-        'err'
-      )
-      return
-    }
     printOut(
       r.stream,
       `rm: cannot remove ‘${escape(a.slice(-1)[0] || '')}’: <span class="muted">read-only file system.</span>`,
@@ -213,17 +200,13 @@ export const COMMANDS: Record<string, CommandFn> = {
     printOut(r.stream, 'cp: <span class="muted">read-only file system.</span>', 'err')
   },
   sudo: (_a, r) => {
-    printOut(
-      r.stream,
-      '<span class="muted">nice try.</span> kevin is not in the sudoers file. <span class="muted">this incident will be reported.</span>',
-      'err'
-    )
+    printOut(r.stream, 'sudo: not available.', 'err')
   },
   exit: (_a, r) => {
-    printOut(r.stream, '<span class="muted">there is no exit. you live here now.</span>')
+    printOut(r.stream, '<span class="muted">nothing to exit. this is a web page.</span>')
   },
   logout: (_a, r) => {
-    printOut(r.stream, '<span class="muted">there is no exit. you live here now.</span>')
+    printOut(r.stream, '<span class="muted">nothing to log out of. this is a web page.</span>')
   },
   kevin: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'kevin')),
   ask: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'ask')),

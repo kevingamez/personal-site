@@ -7,12 +7,7 @@ interface Props {
 
 const { t } = Astro.props
 
-const sideProjects = [
-  { name: t.p2Name, desc: t.p2Desc, meta: "WASM · canvas · simulation" },
-  { name: t.p3Name, desc: t.p3Desc, meta: "fractals · shaders · deep zoom" },
-  { name: t.p4Name, desc: t.p4Desc, meta: "Python · notebooks · math" },
-  { name: t.p5Name, desc: t.p5Desc, meta: "Astro · TypeScript · editorial UI" },
-]
+const sideProjects = [{ name: t.p2Name, desc: t.p2Desc, meta: "Astro · TypeScript" }]
 ---
 
 <section id="work" class="work-section">
@@ -56,11 +51,6 @@ const sideProjects = [
             decoding="async"
           />
         </picture>
-        <div class="wf-plate" aria-hidden="true">
-          <span>prospect graph</span>
-          <span>llm qualify</span>
-          <span>queue fanout</span>
-        </div>
       </a>
     </article>
 

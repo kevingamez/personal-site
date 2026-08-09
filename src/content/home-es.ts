@@ -40,8 +40,8 @@ export const es: HomeStrings = {
   hero: {
     metaRole: 'Founding engineer @ Enttor',
     metaPlace: 'Bogotá',
-    titleHtml: 'Construyo cosas,<br />casi siempre <i>software.</i>',
-    lede: 'Soy founding engineer en <b>Enttor</b>, donde usamos IA y automatización de navegador para que el outbound\n            de marketing realmente funcione. Antes lancé una plataforma de e-commerce en <b>Samsam</b>. Maestría en\n            deep learning en la Universidad de los Andes.',
+    titleHtml: 'Construyo <i>software.</i>',
+    lede: 'Soy founding engineer en <b>Enttor</b>, donde construimos outbound con IA: automatización de navegador y\n            pipelines de OpenAI que encuentran y califican prospectos. Antes lancé un marketplace de e-commerce en\n            <b>Samsam</b>. Maestría en deep learning en la Universidad de los Andes.',
     btnSeeWork: 'Ver proyectos →',
     btnGetInTouch: 'Hablemos',
     pauseTitle: 'pausar / reproducir',
@@ -55,14 +55,13 @@ export const es: HomeStrings = {
     alive: 'vivas',
     fps: 'fps',
     golCaptionHtml:
-      '<b>Juego de la vida de Conway</b> · un autómata celular de cero jugadores. Cada celda vive, muere o nace según el número de sus 8 vecinas (B3/S23). Reglas simples, patrones sorprendentes. Click para sembrar un patrón. <a href="https://es.wikipedia.org/wiki/Juego_de_la_vida" target="_blank" rel="noopener">más info →</a>',
+      '<b>Juego de la vida de Conway</b> · un autómata celular de cero jugadores. Cada celda vive, muere o nace según el número de sus 8 vecinas (B3/S23). Click para sembrar un patrón. <a href="https://es.wikipedia.org/wiki/Juego_de_la_vida" target="_blank" rel="noopener">más info →</a>',
     golAriaLabel: 'Simulación del Juego de la vida de Conway',
   },
   about: {
     secNum: 'Sobre mí',
-    titleHtml: 'Un estudio de una persona.',
-    blurb:
-      'Founding engineer, full-stack, recién egresado de deep learning. La corta abajo; la larga, con café.',
+    titleHtml: 'Sobre mí.',
+    blurb: 'Founding engineer, full-stack, egresado de deep learning.',
     portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
     p1Html:
       'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero: la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
@@ -87,17 +86,17 @@ export const es: HomeStrings = {
     e1Year: 'Jun 2025 · hoy',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
-      'Construí el sistema que encuentra los prospectos correctos en Instagram y LinkedIn, los califica con IA y\n                arranca conversaciones reales, a escala. Full-stack: dashboards en Next.js, APIs en NestJS, colas en\n                Inngest, todo sobre Vercel y Supabase.',
+      'Construí el sistema que encuentra prospectos en Instagram y LinkedIn y los califica con IA. Full-stack:\n                dashboards en Next.js, APIs en NestJS, colas en Inngest, todo sobre Vercel y Supabase.',
     e2Year: 'Feb 2024 · Mar 2025',
     e2Meta: 'Bogotá · plataforma de e-commerce',
     e2Desc:
-      'Lancé los dos lados del marketplace: una app en React Native para compradores y un panel en Next.js para\n                comerciantes. Bajé los tiempos de respuesta del backend un 10% y construí un sistema de alertas que\n                hizo visibles los errores críticos un 70% más rápido.',
+      'Lancé los dos lados del marketplace: una app en React Native para compradores y un panel en Next.js para\n                comerciantes, sobre Prisma y Postgres.',
     e3Year: 'Ene 2024 · May 2025',
     e3RoleHtml:
       'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
     e3Meta: 'Especialización en deep learning · TA de posgrado',
     e3Desc:
-      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo trabajé como teaching assistant de posgrado; diseñé labs, abrí horarios de consulta y ayudé a\n                pregrados a sacar sus primeros modelos.',
+      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo, teaching assistant de posgrado.',
     e4Year: 'Ene 2019 · Dic 2023',
     e4RoleHtml:
       'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
@@ -105,7 +104,7 @@ export const es: HomeStrings = {
     e4Desc:
       'Cinco años en los fundamentos: sistemas, algoritmos, ML aplicado y un minor en Management. Side projects\n                en Python, TypeScript, Java y Swift en el camino.',
     achievementsTitle: 'Honores y certificaciones',
-    achievementsBlurb: 'Algunos sellos en el camino.',
+    achievementsBlurb: 'Una distinción nacional y dos certificaciones de AWS.',
     achievements: [
       {
         year: '2018',
@@ -123,42 +122,32 @@ export const es: HomeStrings = {
         year: '2021',
         titleHtml: 'AWS Academy <i>Cloud Foundations</i>',
         meta: 'Certificación · Amazon Web Services',
-        desc: 'Fundamentos de AWS: servicios, seguridad, arquitectura y el modelo de billing que decide cuáles de esos terminas usando.',
+        desc: 'Fundamentos de AWS: servicios, seguridad, arquitectura y facturación.',
       },
     ],
   },
   work: {
     secNum: 'Proyectos',
-    titleHtml: 'Cosas que he construido y <i>aún defiendo.</i>',
-    blurb: 'Los sistemas detrás del CV: lo que construí y lo que sigue funcionando.',
+    titleHtml: 'Cosas que he construido.',
+    blurb: 'Lo que he construido en el trabajo y por mi cuenta.',
     p1Featured: '01 / Destacado',
-    p1NameHtml: 'enttor.ai · <i>outbound con IA que sí corre.</i>',
+    p1NameHtml: 'enttor.ai · <i>outbound con IA.</i>',
     p1ImageAlt:
       'Estación de trabajo de Kevin Gámez con el sitio de Enttor abierto en un portátil y código en un monitor',
     p1Desc:
-      'El sistema encuentra prospectos en Instagram y LinkedIn, los califica con pipelines de OpenAI y mueve el trabajo por dashboards, APIs y colas. Construí la automatización de navegador, la superficie de producto y el backend que lo mantiene andando.',
+      'El sistema encuentra prospectos en Instagram y LinkedIn y los califica con pipelines de OpenAI. Construí la automatización de navegador, los dashboards y el backend.',
     p1Link: 'Ver Enttor →',
-    p2Name: 'Laboratorio de autómatas',
-    p2Desc:
-      "Un sandbox de autómatas celulares en WebAssembly: Conway, Wireworld, Brian's Brain, Lenia. En tiempo real\n              sobre un millón de celdas, todo en el navegador. El hero de esta página usa una implementación hermana.",
-    p3Name: 'Atlas de fractales',
-    p3Desc:
-      'Un atlas interactivo de fractales de tiempo de escape · Mandelbrot, Burning Ship, Julia, Newton · con zoom\n              profundo, esquemas de color y URLs compartibles. Un proyecto de fin de semana que se comió tres fines de\n              semana.',
-    p4Name: 'Cuadernos de números',
-    p4Desc:
-      'Recorridos de teoría de números como cuadernos Jupyter en vivo: espiral de Ulam, parejas de Goldbach, la\n              escalera de Riemann.',
-    p5Name: 'este sitio',
-    p5Desc:
-      'La página en la que estás. Open-source, construida poco a poco, y un lugar para poner matemáticas que me\n              parecen bellas al lado de software del que estoy orgulloso.',
+    p2Name: 'este sitio',
+    p2Desc: 'La página en la que estás. Open-source, construida con Astro y TypeScript.',
   },
   github: {
     secNum: 'GitHub',
-    titleHtml: 'Código que dejo a la vista.',
-    blurb: 'Los repos, los lenguajes y un año de commits reales, directo de GitHub.',
+    titleHtml: 'Repos públicos y commits.',
+    blurb: 'Repos, lenguajes y los últimos 12 meses de commits, directo de GitHub.',
     snapshot: 'github.com/kevingamez · actualizado a diario',
-    publicRepos: 'repos en los que ship',
+    publicRepos: 'repos',
     publicReposSub: 'públicos, privados y de orgs en los que he aportado',
-    languagesShipped: 'lenguajes embarcados',
+    languagesShipped: 'lenguajes',
     languagesShippedSub: 'lenguajes principales por bytes',
     langLeads: 'va primero',
     langSecond: 'va segundo',
@@ -184,9 +173,8 @@ export const es: HomeStrings = {
   },
   strava: {
     secNum: 'Strava',
-    titleHtml: 'Desconectado, pero en movimiento.',
-    blurb:
-      'Una mirada en vivo a cada salida en bici, carrera y trail - el esfuerzo más largo de cada uno, directo de Strava.',
+    titleHtml: 'Correr y montar bici.',
+    blurb: 'Datos de Strava: bici, carrera y trail, con el esfuerzo más largo de cada tipo.',
     statKm: 'kilómetros',
     statMi: 'millas',
     statHours: 'horas en movimiento',
@@ -205,7 +193,6 @@ export const es: HomeStrings = {
     insightFastLabel: 'Más rápida',
     insightBiggestLabel: 'Mejor semana',
     insightClimbedLabel: 'Escalado',
-    climbedCompare: '× la Torre Eiffel',
     weekOf: 'semana del',
     heatmapTitle: 'Calendario de entreno',
     heatLess: 'Descanso',
@@ -231,8 +218,8 @@ export const es: HomeStrings = {
   },
   writing: {
     secNum: 'Escritos',
-    titleHtml: 'Notas mientras construyo.',
-    blurb: 'Ensayos cortos sobre ingeniería, startups y cómo se siente realmente sacar producto.',
+    titleHtml: 'Posts de LinkedIn.',
+    blurb: 'Mis posts de LinkedIn, reproducidos tal cual.',
     reactionsLabel: 'reacciones',
     commentsLabel: 'comentarios',
     repostsLabel: 'reposts',
@@ -244,8 +231,7 @@ export const es: HomeStrings = {
   wanderings: {
     secNum: 'Andanzas',
     titleHtml: 'Un pequeño mapa de <i>donde he estado.</i>',
-    blurb:
-      'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo; Bogotá brilla por algo.',
+    blurb: 'Mueve, haz zoom, pasa el cursor. Los puntos calientan más donde pasé más tiempo.',
     countries: 'países',
     cities: 'lugares',
     since: 'desde',
@@ -275,8 +261,7 @@ export const es: HomeStrings = {
   },
   footer: {
     h4Page: 'La página',
-    pBlurb:
-      'Founding engineer, recién graduado de deep learning y estudiante entusiasta · aunque mediocre · de\n              matemáticas. Hecho a mano en Bogotá.',
+    pBlurb: 'Founding engineer y egresado de deep learning. Hecho en Bogotá.',
     h4Sections: 'Secciones',
     sectionsAbout: 'Sobre mí',
     sectionsExperience: 'Experiencia',
