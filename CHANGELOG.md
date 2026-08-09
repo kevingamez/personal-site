@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Remove invented easter-egg content (fake proofs, principles, invariants, bibliography) and rewrite filler copy in plain voice across both locales
 - Drop Google Analytics and Microsoft Clarity; Vercel Analytics + Speed Insights are the only telemetry (cookieless site, smaller CSP)
 - Add ESLint (typescript-eslint + astro + jsx-a11y flat config) to CI
 - Add Dependabot for npm and GitHub Actions updates

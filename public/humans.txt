@@ -11,8 +11,8 @@
   Conway, John Horton - for the game on the hero
 
 /* READING */
-  Browser console: window.kevin("proof")
-  Home terminal: try `principles`, `invariants`, `proof`, `bibliography`, `source`
+  Browser console: window.kevin()
+  Home terminal: try `about`, `stack`, `repos`, `contact`
   Public routes: /, /es/, /dev/, /privacy/
 
 /* SITE */

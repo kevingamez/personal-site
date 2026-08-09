@@ -83,7 +83,7 @@ export const es: HomeStrings = {
     secNum: 'Trayectoria',
     titleHtml: 'Dos startups y una maestría.',
     blurb:
-      'Dos turnos como founding engineer, una maestría en deep learning, y los años en Uniandes que me enseñaron a\n            hacer shipping.',
+      'Ingeniero fundador en Samsam y luego en Enttor. La maestría en deep learning fue en paralelo con el primer trabajo.',
     e1Year: 'Jun 2025 · hoy',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
@@ -130,8 +130,7 @@ export const es: HomeStrings = {
   work: {
     secNum: 'Proyectos',
     titleHtml: 'Cosas que he construido y <i>aún defiendo.</i>',
-    blurb:
-      'Una edición más cuidada de los sistemas detrás del CV: superficies de producto, loops de automatización y experimentos que siguen vivos.',
+    blurb: 'Los sistemas detrás del CV: lo que construí y lo que sigue funcionando.',
     p1Featured: '01 / Destacado',
     p1NameHtml: 'enttor.ai · <i>outbound con IA que sí corre.</i>',
     p1ImageAlt:
@@ -147,7 +146,7 @@ export const es: HomeStrings = {
       'Un atlas interactivo de fractales de tiempo de escape · Mandelbrot, Burning Ship, Julia, Newton · con zoom\n              profundo, esquemas de color y URLs compartibles. Un proyecto de fin de semana que se comió tres fines de\n              semana.',
     p4Name: 'Cuadernos de números',
     p4Desc:
-      'Recorridos de teoría de números como cuadernos Jupyter en vivo: espiral de Ulam, parejas de Goldbach, la\n              escalera de Riemann. Lo usan algunos profesores de matemáticas que admiro.',
+      'Recorridos de teoría de números como cuadernos Jupyter en vivo: espiral de Ulam, parejas de Goldbach, la\n              escalera de Riemann.',
     p5Name: 'este sitio',
     p5Desc:
       'La página en la que estás. Open-source, construida poco a poco, y un lugar para poner matemáticas que me\n              parecen bellas al lado de software del que estoy orgulloso.',
@@ -232,7 +231,7 @@ export const es: HomeStrings = {
   },
   writing: {
     secNum: 'Escritos',
-    titleHtml: 'Notas desde la trinchera.',
+    titleHtml: 'Notas mientras construyo.',
     blurb: 'Ensayos cortos sobre ingeniería, startups y cómo se siente realmente sacar producto.',
     reactionsLabel: 'reacciones',
     commentsLabel: 'comentarios',
@@ -270,7 +269,7 @@ export const es: HomeStrings = {
   },
   contact: {
     titleHtml: 'Un gusto <i>conocerte</i>.',
-    body: 'Este es solo un rincón de internet para que me conozcas un poco. Si algo de aquí te resonó y quieres\n          saludar, el inbox está abierto.',
+    body: 'Gracias por leer hasta acá. Si quieres hablar de trabajo, o solo saludar, escríbeme un correo.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnDev: 'Abrir modo dev',
   },

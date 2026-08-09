@@ -18,7 +18,7 @@ This document is structured for retrieval by AI search engines (ChatGPT, Claude,
 
 Kevin Gámez is a software engineer from Bogotá. He's the founding engineer at Enttor, an AI outbound platform that automates prospecting, filtering and direct messaging on Instagram and LinkedIn. Before Enttor he was founding engineer at Samsam, an e-commerce startup, and a graduate teaching assistant at Universidad de los Andes while finishing a Master's in Information Engineering with a specialization in deep learning.
 
-He ships in TypeScript and Next.js by default, reaches for Python on ML/research work, and has open-source repos in Swift, Dart and Java as well. He cares about cellular automata, deep learning on satellite imagery, and software that compounds - small, sharp tools that get more useful the longer you use them.
+He ships in TypeScript and Next.js by default, reaches for Python on ML/research work, and has open-source repos in Swift, Dart and Java as well. He's interested in cellular automata (the hero of his site runs Conway's Game of Life) and deep learning on satellite imagery.
 
 ## Experience
 
