@@ -38,7 +38,7 @@ function preview(text: string): { text: string; truncated: boolean } {
     <div class="feed-wrap">
       <button class="feed-nav prev" type="button" aria-label="Previous post" data-feed-prev hidden>‹</button>
 
-      <div class="feed" id="writing-feed" tabindex="0" aria-label="LinkedIn posts carousel">
+      <div class="feed" id="writing-feed" role="region" tabindex="0" aria-label="LinkedIn posts carousel">
         {
           orderedPosts.map((p) => (
             <article class="post-card">
