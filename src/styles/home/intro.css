@@ -1,0 +1,71 @@
+/* ─── Intro curtain ─── */
+/* Hidden by default; only html.intro-pending (set pre-paint by head-init.js)
+   shows it, so no-JS visitors and reduced-motion users never see a flash. */
+.intro {
+  display: none;
+}
+html.intro-pending {
+  overflow: hidden;
+}
+html.intro-pending .intro {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--paper);
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.48s var(--ease-emph);
+}
+html.intro-pending .intro.intro-out {
+  transform: translateY(-100%);
+}
+.intro-word {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(44px, 9vw, 112px);
+  line-height: 0.94;
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
+  clip-path: inset(0 100% 0 0);
+  animation: kg-wipe 0.9s var(--ease-out-soft) 0.12s forwards;
+}
+@keyframes kg-wipe {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.intro-meta {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+.intro-bar {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+.intro-bar-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+@media (max-width: 760px) {
+  .intro-meta {
+    left: 24px;
+    right: 24px;
+    bottom: 28px;
+  }
+}

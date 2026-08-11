@@ -6,8 +6,10 @@ import { track } from '../lib/analytics'
 import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initDevTransition } from './dev-transition'
+import { initIntro } from './intro'
 
 bootstrapClient()
+initIntro()
 initBogotaClock()
 initConway()
 initDevTransition()
@@ -80,6 +82,17 @@ whenVisible(
     })
   },
   '900px 0px'
+)
+
+whenVisible(
+  '#deck',
+  () => {
+    loadLazy(async () => {
+      const cards = await import('./cards')
+      cards.initDeck()
+    })
+  },
+  '600px 0px'
 )
 
 whenVisible(

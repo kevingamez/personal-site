@@ -1,46 +1,73 @@
 :root {
-  /* Paper - warm light editorial identity, monochrome.
-     --cream* are the page + raised surfaces; --ink* are the text colors, so
-     token-driven sections stay consistent. --panel is the deepest surface for
-     the footer / stat banner. The old coral accent is folded into the ink
-     scale; --coral-on-dark is the light accent for the dark console window. */
-  --cream: #faf7f0;
-  --cream-2: #f3eee3;
-  --cream-3: #eae3d4;
-  --panel: #f0ebdf;
-  --ink: #18171a;
-  --ink-2: #4c4954;
-  --muted: #6a6770;
-  --line: rgba(24, 23, 26, 0.12);
-  --line-2: rgba(24, 23, 26, 0.22);
-  --coral: #18171a;
-  --coral-strong: #000000;
-  --coral-soft: rgba(24, 23, 26, 0.08);
-  --coral-on-dark: #f4ede1;
-  --slate: #4a6f96;
-  --gold: #8a6d2f;
-  --green: #2f8a5d;
+  /* Vela tokens - light editorial theme: paper ground, near-black ink,
+     violet as the only interactive accent, amber/emerald for taxonomy.
+     Legacy names (--cream*, --ink*, --coral*) alias into this scale so
+     every section reads from one palette. */
+  --paper: #f4f4f2;
+  --paper-raised: #fafaf9;
+  --white: #ffffff;
+  --ink-900: #0b0b0c;
+  --ink-600: #3a3a3e;
+  --ink-400: #7c7c83;
+  --ink-300: #a3a3a9;
+  --ink-150: #dedee0;
+  --ink-050: #f0f0ee;
+  --violet-600: #5b3fe0;
+  --violet-500: #7c5cff;
+  --violet-400: #9b82ff;
+  --violet-200: #d3c8ff;
+  --amber-500: #e9a521;
+  --emerald-500: #3e8e6e;
 
-  /* Ink channels, so text/films derive from one base instead of a stray
-     second gray. Use as rgb(var(--ink-rgb) / <alpha>). */
-  --ink-rgb: 24 23 26;
-  --coral-rgb: 24 23 26;
+  /* Legacy aliases (kept so section styles need no rename) */
+  --cream: var(--paper);
+  --cream-2: var(--paper-raised);
+  --cream-3: var(--ink-050);
+  --panel: var(--white);
+  --ink: var(--ink-900);
+  --ink-2: var(--ink-600);
+  --muted: var(--ink-400);
+  --line: var(--ink-150);
+  --line-2: var(--ink-300);
+  --coral: var(--ink-900);
+  --coral-strong: var(--ink-900);
+  --coral-soft: rgba(11, 11, 12, 0.06);
+  --coral-on-dark: var(--violet-400);
+  --slate: var(--violet-500);
+  --gold: var(--amber-500);
+  --green: var(--emerald-500);
+  --ink-rgb: 11 11 12;
+  --coral-rgb: 11 11 12;
 
-  /* Motion scale - one shared physics. --ease-out for reveals, --ease-spring
-     for pops, --ease-emph for emphatic sweeps. Durations cover the real range
-     already in use so no section invents its own. */
-  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --ease-spring: cubic-bezier(0.2, 0.8, 0.3, 1.25);
-  --ease-emph: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-fast: 0.18s;
-  --dur-reveal: 0.6s;
-  --dur-slow: 0.9s;
+  /* Type - Archivo carries display and body; Instrument Serif Italic is the
+     one serif register (italic spans in titles); JetBrains Mono is meta. */
+  --font-sans: 'Archivo', 'Helvetica Neue', Helvetica, system-ui, sans-serif;
+  --font-display: 'Archivo', 'Helvetica Neue', Helvetica, system-ui, sans-serif;
+  --font-serif-italic: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ls-display: -0.035em;
+  --ls-heading: -0.02em;
+  --ls-label: 0.14em;
+
+  /* Motion - fades and translations only, no bounce. */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-emph: cubic-bezier(0.65, 0.05, 0.36, 1);
+  --dur-fast: 0.16s;
+  --dur-reveal: 0.72s;
+  --dur-slow: 0.42s;
   --dur-bar: 1.5s;
 
-  /* Radius scale - assigned by role: small chips, mid cards, large panels. */
+  /* Elevation - hairline first, shadow only on lift. */
+  --shadow-md: 0 4px 14px rgba(11, 11, 12, 0.07);
+  --shadow-lg: 0 12px 34px rgba(11, 11, 12, 0.09);
+  --glass-nav: rgba(244, 244, 242, 0.78);
+
+  /* Radius - 12px cards and media, 16px bands, pills for controls. */
   --r-sm: 8px;
   --r-md: 12px;
-  --r-lg: 14px;
+  --r-lg: 16px;
   --pill: 999px;
 }
 * {
@@ -54,7 +81,7 @@ body {
 html {
   scroll-behavior: auto;
   /* Keep in-page anchor jumps clear of the sticky nav (and keyboard focus too). */
-  scroll-padding-top: 78px;
+  scroll-padding-top: 72px;
 }
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -62,19 +89,20 @@ html {
   }
 }
 body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family:
-    'Hanken Grotesk',
-    system-ui,
-    -apple-system,
-    sans-serif;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.55;
+  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* Newsreader' "ff"/"fi" ligatures look fussy in big display text - turn them off. */
-  font-variant-ligatures: none;
+}
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink);
 }
 a {
   color: inherit;
@@ -90,17 +118,17 @@ button {
   cursor: pointer;
 }
 :focus-visible {
-  outline: 2px solid var(--coral-strong);
+  outline: 2px solid var(--violet-500);
   outline-offset: 2px;
   border-radius: 2px;
 }
-/* Lighter ring on the dark terminal so it stays visible */
+/* Keep the ring visible on the dark terminal window. */
 .console-shell :focus-visible {
-  outline-color: var(--coral-on-dark);
+  outline-color: var(--violet-400);
 }
 ::selection {
-  background: var(--coral);
-  color: var(--cream);
+  background: var(--violet-200);
+  color: var(--ink-900);
 }
 
 /* Skip-link target; don't draw a ring around the whole page when focused. */
@@ -126,7 +154,7 @@ main:focus {
   overflow: visible;
   padding: 8px 16px;
   background: var(--ink);
-  color: var(--cream);
+  color: var(--white);
   border-radius: 8px;
   font-size: 14px;
 }
@@ -146,7 +174,12 @@ main:focus {
 }
 
 .wrap {
-  max-width: 1240px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0 48px;
+}
+@media (max-width: 760px) {
+  .wrap {
+    padding: 0 24px;
+  }
 }

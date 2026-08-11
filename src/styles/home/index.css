@@ -1,12 +1,16 @@
 /* Aggregator for home page styles. Order matters - cascade depends on it. */
 @import './base.css';
+@import './intro.css';
 @import './nav.css';
 @import './section-frame.css';
 @import './reveal.css';
 @import './hero.css';
-@import './work.css';
 @import './about.css';
+@import './gol.css';
+@import './stack.css';
 @import './experience.css';
+@import './work.css';
+@import './deck.css';
 @import './github-stats.css';
 @import './github-activity.css';
 @import './strava.css';

@@ -1,0 +1,62 @@
+---
+import type { HomeStrings } from "@/content/home"
+
+interface Props {
+  t: HomeStrings["deck"]
+}
+
+const { t } = Astro.props
+const rotations = [-7, -3.5, 0, 3.5, 7]
+---
+
+<section id="deck" class="deck-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-num">{t.secNum}</div>
+        <h2 class="sec-title"><Fragment set:html={t.titleHtml} /></h2>
+      </div>
+      <p class="sec-blurb">{t.blurb}</p>
+    </div>
+    <div class="deck-stage" data-deck>
+      <div class="deck-fan" role="tablist" aria-label={t.hint}>
+        {
+          t.items.map((card, i) => (
+            <button
+              class:list={["deck-card", { active: i === 0 }]}
+              id={`deck-tab-${i}`}
+              role="tab"
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-controls={`deck-panel-${i}`}
+              tabindex={i === 0 ? 0 : -1}
+              data-deck-card={i}
+              style={`--rot:${rotations[i]}deg;--i:${i}`}
+            >
+              <span class="dc-num">0{i + 1}</span>
+              <span class="dc-label">{card.label}</span>
+            </button>
+          ))
+        }
+      </div>
+      <div class="deck-panels">
+        {
+          t.items.map((card, i) => (
+            <div
+              class="deck-panel"
+              id={`deck-panel-${i}`}
+              role="tabpanel"
+              aria-labelledby={`deck-tab-${i}`}
+              hidden={i !== 0}
+              tabindex="0"
+            >
+              <p class="dp-statement">{card.statement}</p>
+              <p class="dp-body">
+                <Fragment set:html={card.bodyHtml} />
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

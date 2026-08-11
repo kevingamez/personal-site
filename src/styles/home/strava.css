@@ -123,7 +123,7 @@
   padding: 14px 16px 15px;
 }
 .sv-feat-label {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -133,7 +133,7 @@
 }
 .sv-feat-name {
   display: block;
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 23px;
   font-style: normal;
   font-weight: 600;
@@ -157,7 +157,7 @@
   padding-left: 10px;
 }
 .sv-feat-stats span {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -167,7 +167,7 @@
 }
 .sv-feat-stats em {
   font-style: normal;
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0;
@@ -216,7 +216,7 @@
   transform: none;
 }
 .sv-tile-lbl {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -224,7 +224,7 @@
   color: var(--muted);
 }
 .sv-tile-val {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 27px;
   font-style: normal;
   font-weight: 600;
@@ -252,7 +252,7 @@
   }
 }
 .sv-tile-sub {
-  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-style: normal;
   font-weight: 500;

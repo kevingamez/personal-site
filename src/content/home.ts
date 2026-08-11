@@ -36,6 +36,7 @@ export interface HomeStrings {
   }
   nav: {
     about: string
+    stack: string
     experience: string
     work: string
     github: string
@@ -43,11 +44,16 @@ export interface HomeStrings {
     sayHi: string
   }
   hero: {
-    metaRole: string // quiet status line, left of the live dot
+    metaRole: string // rotated label on the vertical rail
     metaPlace: string // location label (live clock appended in the component)
     titleHtml: string // contains <br/> and <i>
     lede: string // raw HTML allowed (b tags)
-    btnSeeWork: string
+    stat1Num: string
+    stat1Label: string
+    stat2Num: string
+    stat2Label: string
+    portraitAlt: string
+    scrollDown: string
     btnGetInTouch: string
     pauseTitle: string
     resetTitle: string
@@ -66,7 +72,6 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
-    portraitAlt: string
     p1Html: string
     p2Html: string
     p3Html: string
@@ -78,6 +83,12 @@ export interface HomeStrings {
     qfStackV: string
     qfObsessed: string
     qfObsessedV: string
+  }
+  stack: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    cols: { name: string; items: string[] }[]
   }
   experience: {
     secNum: string
@@ -112,6 +123,19 @@ export interface HomeStrings {
     p1Link: string
     p2Name: string
     p2Desc: string
+    p3Name: string
+    p3Desc: string
+    p4Name: string
+    p4Desc: string
+    allRepos: string
+  }
+  deck: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    hint: string
+    // `bodyHtml` follows the *Html invariant above: static, trusted markup only.
+    items: { label: string; statement: string; bodyHtml: string }[]
   }
   github: {
     secNum: string
@@ -233,7 +257,6 @@ export interface HomeStrings {
     btnDev: string
   }
   footer: {
-    h4Page: string
     pBlurb: string
     h4Sections: string
     sectionsAbout: string

@@ -1,22 +1,20 @@
-/* ─── Scroll reveal ─── */
+/* ─── Scroll reveal (Vela: fade + 16px rise, 720ms, soft ease-out) ─── */
 /* `reveal-on` is set on <html> by reveal.ts only when motion is allowed, so
    the hidden state never applies without JS or under reduced motion. */
 .reveal-on .reveal {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(16px);
   transition:
-    opacity var(--dur-reveal) var(--ease-out),
-    transform var(--dur-reveal) var(--ease-out);
+    opacity var(--dur-reveal) var(--ease-out-soft),
+    transform var(--dur-reveal) var(--ease-out-soft);
   will-change: opacity, transform;
 }
 .reveal-on .reveal.in {
   opacity: 1;
   transform: none;
 }
-/* Role-differentiated reveals so motion maps to what the element is, instead of
-   one uniform slide on everything. Section headers settle in place (opacity
-   only); repo rows just nudge, so a 6-row list does not do a long cascade. The
-   translateY lift is reserved for the work/post cards. */
+/* Role-differentiated reveals: section headers settle in place (opacity only);
+   repo rows just nudge, so a 6-row list does not do a long cascade. */
 .reveal-on .sec-head.reveal {
   transform: none;
 }

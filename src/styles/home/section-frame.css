@@ -1,50 +1,68 @@
-/* ─── Section frame ─── */
+/* ─── Section frame (Vela) ─── */
 section {
-  padding: clamp(76px, 9svh, 96px) 0 clamp(72px, 8svh, 88px);
-  border-bottom: 1px solid var(--line);
+  padding: clamp(80px, 11svh, 128px) 0 clamp(64px, 8svh, 96px);
   position: relative;
-  scroll-margin-top: 78px;
+  scroll-margin-top: 72px;
 }
 .sec-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  grid-template-columns: 1.15fr 1fr;
   align-items: end;
   gap: clamp(30px, 4vw, 56px);
-  margin-bottom: clamp(38px, 5svh, 50px);
-  padding-bottom: clamp(22px, 3svh, 28px);
-  border-bottom: 1px solid var(--line);
+  margin-bottom: clamp(36px, 5svh, 56px);
 }
 @media (max-width: 760px) {
   .sec-head {
     grid-template-columns: 1fr;
     gap: 16px;
-    padding-bottom: 22px;
     margin-bottom: 36px;
   }
 }
-/* Section eyebrow: a quiet mono label. No numbered index chip - the ordinal
-   numbers were a §-style device and renumbered themselves when Strava hid. */
+/* Section eyebrow: dot-prefixed micro label, uppercase and letterspaced. */
 .sec-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--coral);
-  letter-spacing: 0.06em;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.sec-num::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+  flex: none;
 }
 .sec-title {
-  font-family: 'Newsreader', serif;
+  font-family: var(--font-display);
   font-weight: 400;
-  font-size: 76px;
-  line-height: 0.94;
-  letter-spacing: 0;
+  font-size: clamp(34px, 4.2vw, 44px);
+  line-height: 1.08;
+  letter-spacing: var(--ls-heading);
   margin: 0;
-  max-width: 16ch;
+  max-width: 22ch;
   text-wrap: balance;
+}
+/* The serif-italic register: italic spans inside display type. */
+.sec-title i,
+.wf-title i,
+.tl-role i,
+.ach-title i,
+.contact h2 i {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  letter-spacing: 0;
 }
 .sec-blurb {
   font-size: 15px;
   color: var(--muted);
-  max-width: 38ch;
+  max-width: 40ch;
   line-height: 1.6;
   margin: 0;
   padding-bottom: 6px;
@@ -52,38 +70,43 @@ section {
   text-wrap: pretty;
 }
 
+/* Shared control vocabulary: the underlined uppercase arrow link. */
+.arrow-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.arrow-link:hover {
+  border-color: var(--ink);
+}
+
 @media (min-width: 1180px) and (max-height: 950px) {
   section {
-    padding-top: 44px;
-    padding-bottom: 46px;
+    padding-top: 64px;
+    padding-bottom: 52px;
   }
   .sec-head {
-    margin-bottom: 22px;
-    padding-bottom: 16px;
+    margin-bottom: 28px;
   }
   .sec-num {
     margin-bottom: 14px;
   }
   .sec-title {
-    font-size: 56px;
-    line-height: 0.98;
+    font-size: 36px;
   }
   .sec-blurb {
     font-size: 14px;
     line-height: 1.5;
     padding-bottom: 4px;
-  }
-}
-
-@media (max-width: 760px) {
-  .sec-title {
-    font-size: 48px;
-    line-height: 0.98;
-  }
-}
-
-@media (max-width: 430px) {
-  .sec-title {
-    font-size: 44px;
   }
 }

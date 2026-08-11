@@ -1,332 +1,168 @@
-/* ─── Experience timeline ─── */
+/* ─── Experience (Vela: CV rows opened by a full-ink rule, hairlines between) ─── */
 .timeline {
-  position: relative;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 150px;
-  top: 6px;
-  bottom: 6px;
-  width: 1px;
-  background: var(--line-2);
-}
-@media (max-width: 700px) {
-  .timeline::before {
-    left: 8px;
-  }
+  border-top: 1px solid var(--ink-900);
 }
 .tl-item {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 28px;
-  padding: 10px 0;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
   position: relative;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-@media (max-width: 700px) {
-  .tl-item {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding-left: 32px;
+/* Row hover: fill white and bleed past the gutter, per the Vela list rule. */
+@media (min-width: 900px) {
+  .tl-item:hover {
+    background: var(--white);
+    box-shadow: 16px 0 0 var(--white), -16px 0 0 var(--white);
   }
 }
 .tl-year {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
   color: var(--muted);
   padding-top: 4px;
-  padding-right: 18px;
-  text-align: right;
-  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
-@media (max-width: 700px) {
-  .tl-year {
-    text-align: left;
-    padding-right: 0;
-  }
-}
-.tl-content {
-  position: relative;
-  padding-left: 28px;
-}
-@media (max-width: 700px) {
-  .tl-content {
-    padding-left: 0;
-  }
-}
-.tl-content::before {
+/* The current row carries the one live marker. */
+.tl-item.now .tl-year::before {
   content: '';
-  position: absolute;
-  left: -32px;
-  top: 8px;
-  width: 13px;
-  height: 13px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  transform: translateX(-50%);
-}
-@media (max-width: 700px) {
-  .tl-content::before {
-    left: -28px;
-    transform: none;
-  }
-}
-.tl-item.now .tl-content::before {
-  background: var(--coral);
-  border-color: var(--coral);
-  box-shadow: 0 0 0 4px var(--coral-soft);
+  background: var(--emerald-500);
+  align-self: center;
 }
 .tl-role {
-  font-family: 'Newsreader', serif;
-  font-size: 23px;
-  line-height: 1.1;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: var(--ls-heading);
+  line-height: 1.25;
   margin: 0 0 4px;
 }
 .tl-role .at {
-  color: var(--coral-strong);
-  font-style: normal;
+  color: var(--muted);
 }
 .tl-meta {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: var(--ink-300);
+  margin-bottom: 10px;
 }
 .tl-desc {
-  font-size: 14.5px;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--ink-2);
-  line-height: 1.55;
+  max-width: 62ch;
   margin: 0;
-  max-width: 46ch;
   text-wrap: pretty;
 }
-/* Wide screens: lay the timeline two-up so it fills the width instead of
-   hugging the left. The continuous spine is dropped; each entry keeps its
-   node dot, and a hairline separates rows. */
-@media (min-width: 1040px) {
-  .timeline {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 64px;
-    row-gap: 4px;
-  }
-  .timeline::before {
-    display: none;
-  }
+@media (max-width: 720px) {
   .tl-item {
-    grid-template-columns: clamp(144px, 12vw, 168px) 14px minmax(0, 1fr);
-    column-gap: 12px;
-    min-width: 0;
-    padding: 16px 0;
-    border-top: 1px solid var(--line);
-  }
-  .tl-item::before {
-    content: '';
-    grid-column: 2;
-    grid-row: 1;
-    width: 10px;
-    height: 10px;
-    margin-top: 6px;
-    border: 2px solid var(--ink);
-    border-radius: 50%;
-    background: var(--cream);
-    align-self: start;
-    justify-self: center;
-  }
-  .tl-item:nth-child(1),
-  .tl-item:nth-child(2) {
-    border-top: none;
-  }
-  .tl-item.now::before {
-    background: var(--coral);
-    border-color: var(--coral);
-    box-shadow: 0 0 0 4px var(--coral-soft);
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 22px 0;
   }
   .tl-year {
-    grid-column: 1;
-    padding-right: 0;
-    text-align: left;
-  }
-  .tl-content {
-    grid-column: 3;
-    min-width: 0;
-    padding-left: 0;
-  }
-  .tl-content::before {
-    display: none;
-  }
-  .tl-role {
-    overflow-wrap: normal;
-    text-wrap: balance;
+    padding-top: 0;
   }
 }
 
-/* ─── Honors & certifications ─── */
+/* Honors & certifications: the same row grammar, smaller type. */
 .achievements {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+  margin-top: 72px;
 }
 .achievements-head {
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 28px;
-  align-items: baseline;
-  margin-bottom: 12px;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: end;
+  gap: clamp(30px, 4vw, 56px);
+  margin-bottom: 24px;
 }
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .achievements-head {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 8px;
   }
 }
 .achievements-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11.5px;
-  color: var(--slate);
-  letter-spacing: 0.04em;
-  text-align: right;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: var(--ls-heading);
   margin: 0;
-  font-weight: 600;
-}
-@media (max-width: 700px) {
-  .achievements-title {
-    text-align: left;
-  }
 }
 .achievements-blurb {
   font-size: 14px;
   color: var(--muted);
   margin: 0;
-  max-width: 50ch;
+  max-width: 40ch;
 }
-/* 2-col grid so honors take ~half the vertical space without shrinking text */
 .achievements-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0 40px;
-}
-@media (max-width: 900px) {
-  .achievements-list {
-    grid-template-columns: 1fr;
-  }
+  border-top: 1px solid var(--ink-900);
 }
 .achievement {
-  padding: 14px 0;
-  border-bottom: 1px dashed var(--line);
-}
-.achievement:last-child {
-  border-bottom: none;
-}
-@media (min-width: 901px) {
-  /* In the 2-col grid the second-to-last item sits in the last row, so its
-     dashed divider would point at empty space; drop it too. */
-  .achievement:nth-last-child(2) {
-    border-bottom: none;
-  }
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
 }
 .ach-year {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   color: var(--muted);
-  margin-bottom: 4px;
-  white-space: nowrap;
+  padding-top: 2px;
 }
 .ach-title {
-  font-family: 'Newsreader', serif;
+  font-family: var(--font-display);
   font-weight: 400;
-  font-size: 21px;
-  line-height: 1.1;
-  margin: 0 0 4px;
-}
-.ach-title i {
-  font-style: normal;
-  color: var(--gold);
+  font-size: 18px;
+  letter-spacing: var(--ls-heading);
+  margin: 0 0 2px;
 }
 .ach-meta {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  margin-bottom: 5px;
+  letter-spacing: 0.03em;
+  color: var(--ink-300);
+  margin-bottom: 8px;
 }
 .ach-desc {
   font-size: 14px;
-  color: var(--ink-2);
   line-height: 1.55;
-  margin: 0;
+  color: var(--ink-2);
   max-width: 62ch;
+  margin: 0;
   text-wrap: pretty;
+}
+@media (max-width: 720px) {
+  .achievement {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
 }
 
 @media (min-width: 1180px) and (max-height: 950px) {
-  .timeline {
-    column-gap: 46px;
-  }
   .tl-item {
-    grid-template-columns: 136px 12px minmax(0, 1fr);
-    column-gap: 9px;
-    padding: 8px 0;
-  }
-  .tl-item::before {
-    width: 9px;
-    height: 9px;
-    margin-top: 5px;
-  }
-  .tl-year {
-    overflow: hidden;
-    padding-right: 0;
-    font-size: 10.5px;
-    text-align: left;
-    text-overflow: ellipsis;
-  }
-  .tl-content {
-    padding-left: 0;
-  }
-  .tl-role {
-    font-size: 19px;
-    margin-bottom: 3px;
-  }
-  .tl-meta {
-    font-size: 10px;
-    margin-bottom: 5px;
+    padding: 20px 0;
   }
   .tl-desc {
-    font-size: 12.6px;
-    line-height: 1.38;
-    max-width: 48ch;
+    font-size: 14px;
   }
   .achievements {
-    margin-top: 18px;
-    padding-top: 16px;
-  }
-  .achievements-head {
-    grid-template-columns: 118px 1fr;
-    gap: 22px;
-    margin-bottom: 8px;
+    margin-top: 44px;
   }
   .achievement {
-    padding: 7px 0;
-  }
-  .ach-year {
-    font-size: 11px;
-    margin-bottom: 3px;
-  }
-  .ach-title {
-    font-size: 17px;
-  }
-  .ach-meta {
-    font-size: 10px;
-    margin-bottom: 4px;
-  }
-  .ach-desc {
-    font-size: 12.4px;
-    line-height: 1.38;
+    padding: 16px 0;
   }
 }

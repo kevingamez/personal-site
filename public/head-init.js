@@ -5,6 +5,22 @@ for (const link of document.querySelectorAll('link[rel="preload"][as="style"]'))
   link.rel = 'stylesheet'
 }
 
+// Intro curtain gate, decided before first paint so there is never a flash:
+// only the home pages, only once per browsing session, only when motion is
+// allowed. The curtain markup stays display:none unless this class lands.
+try {
+  var introPath = window.location.pathname
+  if (
+    (introPath === '/' || introPath === '/es' || introPath === '/es/') &&
+    !window.sessionStorage.getItem('kg-intro') &&
+    window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+  ) {
+    document.documentElement.classList.add('intro-pending')
+  }
+} catch {
+  // Storage or matchMedia unavailable: skip the intro entirely.
+}
+
 function runWhenIdle(fn) {
   window.setTimeout(function scheduleIdle() {
     if ('requestIdleCallback' in window) {

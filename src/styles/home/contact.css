@@ -1,68 +1,35 @@
-/* ─── Contact ─── */
+/* ─── Contact (Vela: centered invitation, one solid pill) ─── */
 .contact {
-  padding: 120px 0;
+  padding: clamp(96px, 14svh, 160px) 0;
   text-align: center;
-  border-bottom: none;
 }
 .contact h2 {
-  font-family: 'Newsreader', serif;
+  font-family: var(--font-display);
   font-weight: 400;
-  font-size: 78px;
-  line-height: 0.95;
-  letter-spacing: 0;
-  margin: 0 0 24px;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.02;
+  letter-spacing: var(--ls-heading);
+  margin: 0 0 20px;
   text-wrap: balance;
-}
-
-@media (max-width: 700px) {
-  .contact h2 {
-    font-size: 48px;
-    line-height: 1;
-  }
-}
-.contact h2 i {
-  font-style: normal;
-  color: var(--coral);
 }
 .contact p {
   font-size: 17px;
   color: var(--ink-2);
-  max-width: 42ch;
+  max-width: 44ch;
   text-wrap: pretty;
-  margin: 0 auto 32px;
+  margin: 0 auto 36px;
 }
 .contact-cta {
   display: inline-flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
-.contact-channels {
-  margin-top: 50px;
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12.5px;
-}
-.contact-channels a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--ink-2);
-  border-bottom: 1px dashed var(--line-2);
-  padding-bottom: 2px;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
-}
-.contact-channels a svg {
-  flex-shrink: 0;
-}
-.contact-channels a:hover {
-  color: var(--coral-strong);
-  border-color: var(--coral);
+/* The email pill shows a literal address - never uppercase it. */
+.btn-email {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 13px;
 }
 
 @media (min-width: 1180px) and (max-height: 950px) {
@@ -70,14 +37,11 @@
     padding: 82px 0 86px;
   }
   .contact h2 {
-    font-size: 66px;
-    margin-bottom: 18px;
+    font-size: 52px;
+    margin-bottom: 16px;
   }
   .contact p {
     font-size: 16px;
-    margin-bottom: 24px;
-  }
-  .contact-channels {
-    margin-top: 34px;
+    margin-bottom: 26px;
   }
 }
