@@ -99,6 +99,11 @@ html {
   }
 }
 
+/* Lenis drives the glide when active; native smooth would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
 body {
   background: var(--paper);
   color: var(--ink-2);
