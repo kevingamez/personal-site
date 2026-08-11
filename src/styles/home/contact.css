@@ -10,6 +10,15 @@
   align-items: center;
 }
 
+/* Fixed page-wide layer for the scroll-choreographed figure: behind all
+   content (white cards occlude it), never intercepts the pointer. */
+.cube-journey {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
 .cube-stage {
   width: 100%;
   max-width: 520px;
@@ -26,6 +35,15 @@
 
   .contact-cta {
     justify-content: center;
+  }
+
+  /* Fixed page-wide layer for the scroll-choreographed figure: behind all
+   content (white cards occlude it), never intercepts the pointer. */
+  .cube-journey {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .cube-stage {
