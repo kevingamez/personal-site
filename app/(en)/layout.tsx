@@ -11,7 +11,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // head-init.js stamps `intro-pending` on <html> before React hydrates -
+    // an expected, deliberate mismatch.
+    <html lang="en" suppressHydrationWarning>
       <body>
         <SiteChrome />
         {children}

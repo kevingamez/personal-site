@@ -1,12 +1,12 @@
-// Vercel Serverless Function - /api/strava
+// Next.js Route Handler - /api/strava
 //
 // Serves a sanitized snapshot of the full Strava history for the home
 // "movement" section: all-time totals, the longest effort per sport (each with
 // a route polyline for an optional Mapbox map), and a few insight metrics.
 //
-// Platform notes baked in: classic Node `(req, res)` signature (the Web-handler
-// form is invoked as a Node handler here and 504s); everything in one file
-// (Vercel strips `_`-prefixed helpers and won't bundle imported siblings).
+// Platform notes baked in: App Router Web-handler form (a single exported GET;
+// other methods get the framework's automatic 405); everything kept in one file
+// to match the original layout.
 //
 // Privacy: only the featured longest efforts carry a raw polyline (for the map
 // the user opted into). Hard timeouts on every awaited call so it can't hang.
@@ -16,16 +16,9 @@
 
 import { Redis } from '@upstash/redis'
 
-export const config = { runtime: 'nodejs' }
-
-interface Req {
-  method?: string
-}
-interface Res {
-  statusCode: number
-  setHeader(key: string, value: string): void
-  end(body?: string): void
-}
+export const runtime = 'nodejs'
+// The original serverless function ran on every request; never prerender.
+export const dynamic = 'force-dynamic'
 
 const MAX_PAGES = 10
 const EIFFEL_M = 330
@@ -298,11 +291,14 @@ function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
   return Promise.race([p, new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms))])
 }
 
-function send(res: Res, body: Payload, maxAge: number): void {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'application/json; charset=utf-8')
-  res.setHeader('Cache-Control', `public, s-maxage=${maxAge}, stale-while-revalidate=86400`)
-  res.end(JSON.stringify(body))
+function send(body: Payload, maxAge: number): Response {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': `public, s-maxage=${maxAge}, stale-while-revalidate=86400`,
+    },
+  })
 }
 
 async function refreshAccessToken(): Promise<string> {
@@ -366,36 +362,28 @@ async function cacheSet(payload: Payload, ttl: number): Promise<void> {
   )
 }
 
-export default async function handler(req: Req, res: Res): Promise<void> {
-  if (req.method !== 'GET') {
-    res.statusCode = 405
-    res.end('Use GET')
-    return
-  }
-
+export async function GET(): Promise<Response> {
   if (
     !process.env.STRAVA_CLIENT_ID ||
     !process.env.STRAVA_CLIENT_SECRET ||
     !process.env.STRAVA_REFRESH_TOKEN
   ) {
-    send(res, emptyPayload({ configured: false }), 60)
-    return
+    return send(emptyPayload({ configured: false }), 60)
   }
 
   const cached = await cacheGet()
   if (cached) {
-    send(res, cached, CACHE_TTL)
-    return
+    return send(cached, CACHE_TTL)
   }
 
   try {
     const payload = shape(await fetchActivities(await refreshAccessToken()))
     await cacheSet(payload, CACHE_TTL)
-    send(res, payload, CACHE_TTL)
+    return send(payload, CACHE_TTL)
   } catch (err) {
     console.error('[api/strava]', err instanceof Error ? err.message : err)
     const payload = emptyPayload({ error: true })
     await cacheSet(payload, ERROR_TTL)
-    send(res, payload, ERROR_TTL)
+    return send(payload, ERROR_TTL)
   }
 }

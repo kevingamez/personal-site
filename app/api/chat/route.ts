@@ -1,4 +1,4 @@
-// Vercel Serverless Function - /api/chat
+// Next.js Route Handler - /api/chat
 //
 // Streams an Anthropic Claude response back to the home-page console as SSE
 // events. Hardened against:
@@ -20,23 +20,7 @@ import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 import { z } from 'zod'
 
-export const config = { runtime: 'nodejs' }
-
-interface Req {
-  method?: string
-  headers: Record<string, string | string[] | undefined>
-  on(event: 'data', cb: (chunk: Buffer | string) => void): void
-  on(event: 'end', cb: () => void): void
-  on(event: 'error', cb: (err: unknown) => void): void
-  on(event: 'close', cb: () => void): void
-}
-interface Res {
-  status(code: number): Res
-  setHeader(name: string, value: string): void
-  write(chunk: string): void
-  end(body?: string): void
-  writableEnded?: boolean
-}
+export const runtime = 'nodejs'
 
 // ───────── Limits ─────────
 
@@ -304,43 +288,10 @@ async function runStravaTool(): Promise<string> {
 
 // ───────── Helpers ─────────
 
-function header(req: Req, name: string): string | null {
-  const value = req.headers[name.toLowerCase()]
-  if (Array.isArray(value)) return value[0] ?? null
-  return value ?? null
-}
-
-function writeJson(res: Res, status: number, body: unknown): void {
-  res.status(status)
-  res.setHeader('Content-Type', 'application/json')
-  res.end(JSON.stringify(body))
-}
-
-function jsonError(res: Res, status: number, error: string, message: string): void {
-  writeJson(res, status, { error, message })
-}
-
-function readJsonBody(req: Req, maxBytes: number): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    let size = 0
-    let body = ''
-    req.on('data', (chunk) => {
-      const part = String(chunk)
-      size += Buffer.byteLength(part)
-      if (size > maxBytes) {
-        reject(new Error('too_large'))
-        return
-      }
-      body += part
-    })
-    req.on('end', () => {
-      try {
-        resolve(JSON.parse(body || '{}'))
-      } catch {
-        reject(new Error('bad_json'))
-      }
-    })
-    req.on('error', reject)
+function jsonError(status: number, error: string, message: string): Response {
+  return new Response(JSON.stringify({ error, message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
   })
 }
 
@@ -350,73 +301,69 @@ function readJsonBody(req: Req, maxBytes: number): Promise<unknown> {
 // is appended-to by the platform, so its left-most value is whatever the client
 // sent - never trust it for rate-limit keys. `x-real-ip` / `x-vercel-forwarded-for`
 // are set by Vercel's proxy and overwrite anything the client supplies.
-function clientIp(req: Req): string | null {
-  const real = header(req, 'x-real-ip')
+function clientIp(req: Request): string | null {
+  const real = req.headers.get('x-real-ip')
   if (real) return real.trim()
-  const vff = header(req, 'x-vercel-forwarded-for')
+  const vff = req.headers.get('x-vercel-forwarded-for')
   if (vff) return vff.split(',')[0].trim()
   return null
 }
 
-export default async function handler(req: Req, res: Res): Promise<void> {
-  if (req.method !== 'POST') {
-    res.status(405).end('Use POST')
-    return
-  }
+export async function POST(req: Request): Promise<Response> {
+  // (Method gating: only POST is exported, so Next serves 405 for other verbs.)
 
   // 1. Origin check - the first line of defense against cross-origin abuse.
-  const origin = header(req, 'origin')
+  const origin = req.headers.get('origin')
   if (!isOriginAllowed(origin)) {
-    jsonError(res, 403, 'forbidden', 'Origin not allowed.')
-    return
+    return jsonError(403, 'forbidden', 'Origin not allowed.')
   }
 
   // 2. Reject oversized bodies before buffering them into memory.
-  const contentLength = Number(header(req, 'content-length') || 0)
+  const contentLength = Number(req.headers.get('content-length') || 0)
   if (contentLength > MAX_BODY_BYTES) {
-    jsonError(res, 413, 'too_large', 'Request body too large.')
-    return
+    return jsonError(413, 'too_large', 'Request body too large.')
   }
 
   // 3. Parse + validate body BEFORE spending a rate-limit token, so malformed
-  //    requests can't drain an IP's daily quota.
+  //    requests can't drain an IP's daily quota. Guard the ACTUAL byte length
+  //    too - content-length can be absent or lie.
   let raw: unknown
   try {
-    raw = await readJsonBody(req, MAX_BODY_BYTES)
-  } catch (err) {
-    if (err instanceof Error && err.message === 'too_large') {
-      jsonError(res, 413, 'too_large', 'Request body too large.')
-      return
+    const body = await req.text()
+    // Same UTF-8 byte count the Node version got from Buffer.byteLength(body).
+    if (new TextEncoder().encode(body).byteLength > MAX_BODY_BYTES) {
+      return jsonError(413, 'too_large', 'Request body too large.')
     }
-    jsonError(res, 400, 'bad_json', 'Could not parse JSON body.')
-    return
+    try {
+      raw = JSON.parse(body || '{}')
+    } catch {
+      return jsonError(400, 'bad_json', 'Could not parse JSON body.')
+    }
+  } catch {
+    return jsonError(400, 'bad_json', 'Could not parse JSON body.')
   }
   const parsed = ChatBodySchema.safeParse(raw)
   if (!parsed.success) {
-    jsonError(res, 400, 'bad_shape', 'Body does not match expected schema.')
-    return
+    return jsonError(400, 'bad_shape', 'Body does not match expected schema.')
   }
 
   // 4. Length check (defense in depth - zod already caps each message; here we
   //    sum the whole conversation).
   const totalChars = parsed.data.messages.reduce((s, m) => s + m.content.length, 0)
   if (totalChars > MAX_TOTAL_CHARS) {
-    jsonError(res, 413, 'too_long', 'Conversation too long. Start a new one.')
-    return
+    return jsonError(413, 'too_long', 'Conversation too long. Start a new one.')
   }
 
   // 5. Backend config.
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    jsonError(res, 500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
-    return
+    return jsonError(500, 'no_key', 'Backend not configured (no ANTHROPIC_API_KEY).')
   }
 
   // 5b. Persistent rate limiting is mandatory: without KV we cannot bound total
   //     cost across instances and IPs, so refuse rather than serve unbounded.
   if (!RATE_LIMIT_READY) {
-    jsonError(res, 503, 'unavailable', 'The assistant is temporarily unavailable. Try again later.')
-    return
+    return jsonError(503, 'unavailable', 'The assistant is temporarily unavailable. Try again later.')
   }
 
   // 6. Rate limit (per IP, only for well-formed requests). When no trusted IP
@@ -425,13 +372,11 @@ export default async function handler(req: Req, res: Res): Promise<void> {
   const ip = clientIp(req)
   const rl = await checkRateLimit(ip ?? 'local')
   if (!rl.allowed) {
-    jsonError(res, 429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
-    return
+    return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
   }
   // Global backstop across all IPs (bounds total cost under IP rotation).
   if (!(await checkGlobalLimit())) {
-    jsonError(res, 429, 'busy', 'The assistant is busy right now. Try again later.')
-    return
+    return jsonError(429, 'busy', 'The assistant is busy right now. Try again later.')
   }
 
   // 7. Trim history before sending to the model. The assistant pulls live data
@@ -440,106 +385,137 @@ export default async function handler(req: Req, res: Res): Promise<void> {
 
   const client = new Anthropic({ apiKey })
   const abort = new AbortController()
-  req.on('close', () => abort.abort())
+  // Client disconnect: Next aborts req.signal the way Node fires req 'close' -
+  // stop the Anthropic stream (and billing) the moment the browser goes away.
+  req.signal.addEventListener('abort', () => abort.abort())
 
-  res.status(200)
-  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
-  res.setHeader('Cache-Control', 'no-cache, no-transform')
-  res.setHeader('Connection', 'keep-alive')
-  res.setHeader('Access-Control-Allow-Origin', origin || '')
-  res.setHeader('Vary', 'Origin')
-  res.setHeader('X-RateLimit-Remaining', String(rl.remaining))
-  res.setHeader('X-RateLimit-Limit', String(DAILY_LIMIT))
+  const encoder = new TextEncoder()
+  let closed = false
 
-  // Writes never throw out of the streaming task: once the client disconnects
-  // the writer rejects, and we just stop instead of crashing the detached IIFE.
-  const send = (event: Record<string, unknown>): void => {
-    if (res.writableEnded) return
-    try {
-      res.write(`data: ${JSON.stringify(event)}\n\n`)
-    } catch {
-      /* client disconnected - nothing to do */
-    }
-  }
-
-  // The model's tools: Anthropic's hosted web_search (run server-side, inline)
-  // plus our client-executed get_strava_stats. A client tool pauses the turn
-  // with stop_reason 'tool_use'; we run it, feed the result back, and continue
-  // streaming. MAX_TURNS bounds tool round-trips so a loop can't run away.
-  const tools = [
-    { type: 'web_search_20250305', name: 'web_search', max_uses: 2 } as unknown as Anthropic.Tool,
-    STRAVA_TOOL,
-  ]
-  const MAX_TURNS = 5
-
-  try {
-    for (let turn = 0; turn < MAX_TURNS; turn++) {
-      const stream = client.messages.stream(
-        {
-          model: 'claude-sonnet-4-5',
-          max_tokens: 512,
-          system: KEVIN_CONTEXT,
-          tools,
-          messages: convo,
-        },
-        // Propagate client disconnects so we stop generating (and billing) the
-        // moment the browser goes away.
-        { signal: abort.signal }
-      )
-
-      for await (const event of stream) {
-        if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-          send({ type: 'text_delta', text: event.delta.text })
-        } else if (
-          event.type === 'content_block_start' &&
-          (event.content_block.type === 'tool_use' ||
-            event.content_block.type === 'server_tool_use')
-        ) {
-          send({
-            type: 'tool_use',
-            name: event.content_block.name,
-            input: event.content_block.input,
-          })
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      // Writes never throw out of the streaming task: once the client disconnects
+      // the controller rejects enqueues, and we just stop instead of crashing.
+      const send = (event: Record<string, unknown>): void => {
+        if (closed) return
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`))
+        } catch {
+          closed = true // client disconnected - nothing to do
         }
       }
 
-      const final = await stream.finalMessage()
+      // The model's tools: Anthropic's hosted web_search (run server-side, inline)
+      // plus our client-executed get_strava_stats. A client tool pauses the turn
+      // with stop_reason 'tool_use'; we run it, feed the result back, and continue
+      // streaming. MAX_TURNS bounds tool round-trips so a loop can't run away.
+      const tools = [
+        { type: 'web_search_20250305', name: 'web_search', max_uses: 2 } as unknown as Anthropic.Tool,
+        STRAVA_TOOL,
+      ]
+      const MAX_TURNS = 5
 
-      // A long server-tool turn (web_search) can ask to continue without a
-      // client tool: echo its content back and keep the same turn going.
-      if (final.stop_reason === 'pause_turn') {
-        convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
-        continue
-      }
+      try {
+        for (let turn = 0; turn < MAX_TURNS; turn++) {
+          const modelStream = client.messages.stream(
+            {
+              model: 'claude-sonnet-4-5',
+              max_tokens: 512,
+              system: KEVIN_CONTEXT,
+              tools,
+              messages: convo,
+            },
+            // Propagate client disconnects so we stop generating (and billing) the
+            // moment the browser goes away.
+            { signal: abort.signal }
+          )
 
-      // The turn paused for our client tool(s). web_search is a server tool that
-      // Anthropic resolves inline, so it never surfaces here.
-      const calls = final.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
-      if (final.stop_reason === 'tool_use' && calls.length) {
-        const results: Anthropic.ToolResultBlockParam[] = []
-        for (const call of calls) {
-          const output =
-            call.name === 'get_strava_stats' ? await runStravaTool() : `Unknown tool: ${call.name}`
-          results.push({ type: 'tool_result', tool_use_id: call.id, content: output })
+          for await (const event of modelStream) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              send({ type: 'text_delta', text: event.delta.text })
+            } else if (
+              event.type === 'content_block_start' &&
+              (event.content_block.type === 'tool_use' ||
+                event.content_block.type === 'server_tool_use')
+            ) {
+              send({
+                type: 'tool_use',
+                name: event.content_block.name,
+                input: event.content_block.input,
+              })
+            }
+          }
+
+          const final = await modelStream.finalMessage()
+
+          // A long server-tool turn (web_search) can ask to continue without a
+          // client tool: echo its content back and keep the same turn going.
+          if (final.stop_reason === 'pause_turn') {
+            convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
+            continue
+          }
+
+          // The turn paused for our client tool(s). web_search is a server tool that
+          // Anthropic resolves inline, so it never surfaces here.
+          const calls = final.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
+          if (final.stop_reason === 'tool_use' && calls.length) {
+            const results: Anthropic.ToolResultBlockParam[] = []
+            for (const call of calls) {
+              const output =
+                call.name === 'get_strava_stats' ? await runStravaTool() : `Unknown tool: ${call.name}`
+              results.push({ type: 'tool_result', tool_use_id: call.id, content: output })
+            }
+            convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
+            convo.push({ role: 'user', content: results })
+            continue
+          }
+
+          // end_turn / max_tokens / stop_sequence: the reply is complete.
+          break
         }
-        convo.push({ role: 'assistant', content: final.content as Anthropic.ContentBlockParam[] })
-        convo.push({ role: 'user', content: results })
-        continue
+        send({ type: 'done' })
+        if (!closed) {
+          try {
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'))
+          } catch {
+            closed = true
+          }
+        }
+      } catch (err) {
+        // A client abort is expected, not an error. For anything else, log the real
+        // cause server-side and hand the client a generic message (never leak internals).
+        if (!abort.signal.aborted) {
+          console.error('[api/chat] stream error:', err)
+          send({ type: 'error', message: 'Sorry, something went wrong generating a reply.' })
+        }
+      } finally {
+        if (!closed) {
+          closed = true
+          try {
+            controller.close()
+          } catch {
+            /* already canceled - nothing to do */
+          }
+        }
       }
+    },
+    cancel() {
+      // Consumer went away (client disconnect): stop enqueuing and stop the model.
+      closed = true
+      abort.abort()
+    },
+  })
 
-      // end_turn / max_tokens / stop_sequence: the reply is complete.
-      break
-    }
-    send({ type: 'done' })
-    if (!res.writableEnded) res.write('data: [DONE]\n\n')
-  } catch (err) {
-    // A client abort is expected, not an error. For anything else, log the real
-    // cause server-side and hand the client a generic message (never leak internals).
-    if (!abort.signal.aborted) {
-      console.error('[api/chat] stream error:', err)
-      send({ type: 'error', message: 'Sorry, something went wrong generating a reply.' })
-    }
-  } finally {
-    if (!res.writableEnded) res.end()
-  }
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+      'Access-Control-Allow-Origin': origin || '',
+      Vary: 'Origin',
+      'X-RateLimit-Remaining': String(rl.remaining),
+      'X-RateLimit-Limit': String(DAILY_LIMIT),
+    },
+  })
 }
