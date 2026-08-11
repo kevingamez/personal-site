@@ -4,6 +4,7 @@
   justify-content: center;
   padding: 32px 0 48px;
 }
+
 .deck-card {
   /* Fluid sizing: five cards plus their rotation spread must always fit the
      wrap. Fixed widths overflowed every viewport under ~780px. */
@@ -30,20 +31,24 @@
     color var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out);
 }
+
 /* Deal-in: cards start stacked flat and fan out with a stagger. Both classes
    are managed by cards.ts and only when motion is allowed. */
 .deck-fan.pre-deal .deck-card {
   transform: translateY(28px) rotate(0deg);
   opacity: 0;
 }
+
 .deck-fan.dealing .deck-card {
   transition-delay: calc(var(--i) * 70ms);
 }
+
 @media (prefers-reduced-motion: no-preference) {
   .deck-card:hover {
     transform: rotate(var(--rot)) translateY(-12px);
   }
 }
+
 .deck-card.active {
   background: var(--ink-900);
   color: var(--white);
@@ -51,12 +56,14 @@
   transform: rotate(var(--rot)) translateY(-16px);
   z-index: 1;
 }
+
 .dc-num {
   font-family: var(--font-mono);
   font-size: 13px;
   letter-spacing: 0.02em;
   opacity: 0.75;
 }
+
 .dc-label {
   font-size: 10px;
   font-weight: 500;
@@ -64,13 +71,16 @@
   text-transform: uppercase;
   line-height: 1.5;
 }
+
 .deck-panels {
   max-width: 720px;
   margin: 0 auto;
 }
+
 .deck-panel {
   min-height: 170px;
 }
+
 .dp-statement {
   font-family: var(--font-display);
   font-weight: 400;
@@ -81,6 +91,7 @@
   margin: 0 0 14px;
   text-wrap: balance;
 }
+
 .dp-body {
   font-size: 16px;
   line-height: 1.6;
@@ -88,37 +99,45 @@
   max-width: 56ch;
   margin: 0;
 }
+
 .dp-body a {
   color: var(--ink);
   border-bottom: 1px solid var(--line-2);
   padding-bottom: 1px;
   transition: border-color var(--dur-fast) var(--ease-out);
 }
+
 .dp-body a:hover {
   border-color: var(--ink);
 }
+
 .deck-panel.dp-in {
   animation: dp-in var(--dur-slow) var(--ease-out-soft);
 }
+
 @keyframes dp-in {
   from {
     opacity: 0;
     transform: translateY(8px);
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
   .deck-panel.dp-in {
     animation: none;
   }
+
   /* State changes still happen, but as instant jumps, not movement. */
   .deck-card {
     transition: none;
   }
 }
-@media (max-width: 640px) {
+
+@media (width <= 640px) {
   .dc-label {
     font-size: 9px;
   }
+
   .deck-panel {
     min-height: 200px;
   }

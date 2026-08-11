@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["deck"]
+  t: HomeStrings['deck']
 }
 
 export function Deck({ t }: Props) {
@@ -21,10 +21,10 @@ export function Deck({ t }: Props) {
           <div className="deck-fan" role="tablist" aria-label={t.hint}>
             {t.items.map((card, i) => (
               <button
-                className={i === 0 ? "deck-card active" : "deck-card"}
+                className={i === 0 ? 'deck-card active' : 'deck-card'}
                 id={`deck-tab-${i}`}
                 role="tab"
-                aria-selected={i === 0 ? "true" : "false"}
+                aria-selected={i === 0 ? 'true' : 'false'}
                 aria-controls={`deck-panel-${i}`}
                 tabIndex={i === 0 ? 0 : -1}
                 data-deck-card={i}

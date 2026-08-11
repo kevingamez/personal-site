@@ -1,4 +1,4 @@
-import { loadRecentCommits } from "@/data/dev-github"
+import { loadRecentCommits } from '@/data/dev-github'
 
 export async function SourceControl() {
   // Build-time fetch of recent commits across all public repos via GitHub
@@ -8,7 +8,7 @@ export async function SourceControl() {
   const fmtRel = (iso: string): string => {
     const diff = Date.now() - new Date(iso).getTime()
     const m = Math.round(diff / 60000)
-    if (m < 1) return "now"
+    if (m < 1) return 'now'
     if (m < 60) return `${m}m`
     const h = Math.round(m / 60)
     if (h < 24) return `${h}h`
@@ -25,24 +25,38 @@ export async function SourceControl() {
     <aside className="sc-panel" id="source-control" hidden>
       <div className="sc-head">
         <span className="sc-title">SOURCE CONTROL</span>
-        <span className="sc-actions"><span className="material-symbols-outlined" title="Refresh">refresh</span><span className="material-symbols-outlined" title="More">more_horiz</span></span>
+        <span className="sc-actions">
+          <span className="material-symbols-outlined" title="Refresh">
+            refresh
+          </span>
+          <span className="material-symbols-outlined" title="More">
+            more_horiz
+          </span>
+        </span>
       </div>
 
       <div className="sc-msg-row">
         <input className="sc-msg" placeholder="Message (⌘Enter to commit on 'main')" disabled />
-        <button className="sc-commit" disabled>✓ Commit</button>
+        <button className="sc-commit" disabled>
+          ✓ Commit
+        </button>
       </div>
 
       <div className="sc-branch">
         <span className="material-symbols-outlined">commit</span>
-        <span><b>main</b></span>
+        <span>
+          <b>main</b>
+        </span>
         <span className="sc-grow"></span>
-        <span className="sc-sync" title="Sync changes">⟳</span>
+        <span className="sc-sync" title="Sync changes">
+          ⟳
+        </span>
       </div>
 
       <details className="sc-section" open>
         <summary>
-          <span className="sc-caret">▾</span>Staged Changes <span className="sc-count">{staged.length}</span>
+          <span className="sc-caret">▾</span>Staged Changes{' '}
+          <span className="sc-count">{staged.length}</span>
         </summary>
         {staged.map((f, i) => (
           <div key={i} className="sc-file">
@@ -54,7 +68,8 @@ export async function SourceControl() {
 
       <details className="sc-section" open>
         <summary>
-          <span className="sc-caret">▾</span>Changes <span className="sc-count">{changes.length}</span>
+          <span className="sc-caret">▾</span>Changes{' '}
+          <span className="sc-count">{changes.length}</span>
         </summary>
         {changes.map((f, i) => (
           <div key={i} className="sc-file">
@@ -66,18 +81,26 @@ export async function SourceControl() {
 
       <details className="sc-section" open>
         <summary>
-          <span className="sc-caret">▾</span>Recent Commits <span className="sc-count">{commits.length}</span>
+          <span className="sc-caret">▾</span>Recent Commits{' '}
+          <span className="sc-count">{commits.length}</span>
         </summary>
         <div className="sc-commits">
           {commits.length === 0 ? (
             <div className="sc-empty">No public push events in the last 90 days.</div>
           ) : (
             commits.map((c, i) => (
-              <a key={i} className="sc-commit-row" href={c.url} target="_blank" rel="noopener">
+              <a
+                key={i}
+                className="sc-commit-row"
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span className="sc-sha">{c.shaShort}</span>
                 <span className="sc-msg-text">{c.message}</span>
                 <span className="sc-meta">
-                  <span className="sc-repo">{c.repoShort}</span> <span className="sc-time">{fmtRel(c.ts)}</span>
+                  <span className="sc-repo">{c.repoShort}</span>{' '}
+                  <span className="sc-time">{fmtRel(c.ts)}</span>
                 </span>
               </a>
             ))

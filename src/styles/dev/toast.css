@@ -17,8 +17,9 @@
     transform 0.2s;
   pointer-events: none;
   z-index: 200;
-  box-shadow: 0 6px 20px rgba(217, 105, 68, 0.4);
+  box-shadow: 0 6px 20px rgb(217 105 68 / 40%);
 }
+
 .toast.show {
   opacity: 1;
   transform: translateY(0);

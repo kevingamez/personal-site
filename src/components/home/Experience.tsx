@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["experience"]
+  t: HomeStrings['experience']
 }
 
 export function Experience({ t }: Props) {
@@ -19,7 +19,9 @@ export function Experience({ t }: Props) {
           <div className="tl-item">
             <div className="tl-year">{t.e1Year}</div>
             <div className="tl-content">
-              <h3 className="tl-role">Founding engineer <span className="at">@ Enttor</span></h3>
+              <h3 className="tl-role">
+                Founding engineer <span className="at">@ Enttor</span>
+              </h3>
               <div className="tl-meta">{t.e1Meta}</div>
               <p className="tl-desc">{t.e1Desc}</p>
             </div>
@@ -27,7 +29,9 @@ export function Experience({ t }: Props) {
           <div className="tl-item">
             <div className="tl-year">{t.e2Year}</div>
             <div className="tl-content">
-              <h3 className="tl-role">Founding engineer <span className="at">@ Samsam</span></h3>
+              <h3 className="tl-role">
+                Founding engineer <span className="at">@ Samsam</span>
+              </h3>
               <div className="tl-meta">{t.e2Meta}</div>
               <p className="tl-desc">{t.e2Desc}</p>
             </div>
@@ -52,7 +56,10 @@ export function Experience({ t }: Props) {
 
         <div className="achievements">
           <div className="achievements-head">
-            <h3 className="achievements-title" dangerouslySetInnerHTML={{ __html: t.achievementsTitle }} />
+            <h3
+              className="achievements-title"
+              dangerouslySetInnerHTML={{ __html: t.achievementsTitle }}
+            />
             <p className="achievements-blurb">{t.achievementsBlurb}</p>
           </div>
           <ul className="achievements-list">

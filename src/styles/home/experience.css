@@ -2,6 +2,7 @@
 .timeline {
   border-top: 1px solid var(--ink-900);
 }
+
 .tl-item {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
@@ -11,13 +12,17 @@
   position: relative;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
+
 /* Row hover: fill white and bleed past the gutter, per the Vela list rule. */
-@media (min-width: 900px) {
+@media (width >= 900px) {
   .tl-item:hover {
     background: var(--white);
-    box-shadow: 16px 0 0 var(--white), -16px 0 0 var(--white);
+    box-shadow:
+      16px 0 0 var(--white),
+      -16px 0 0 var(--white);
   }
 }
+
 .tl-year {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -28,6 +33,7 @@
   align-items: baseline;
   gap: 8px;
 }
+
 /* The current row carries the one live marker. */
 .tl-item.now .tl-year::before {
   content: '';
@@ -37,6 +43,7 @@
   background: var(--emerald-500);
   align-self: center;
 }
+
 .tl-role {
   font-family: var(--font-display);
   font-weight: 400;
@@ -45,9 +52,11 @@
   line-height: 1.25;
   margin: 0 0 4px;
 }
+
 .tl-role .at {
   color: var(--muted);
 }
+
 .tl-meta {
   font-family: var(--font-mono);
   font-size: 11.5px;
@@ -55,6 +64,7 @@
   color: var(--muted);
   margin-bottom: 10px;
 }
+
 .tl-desc {
   font-size: 15px;
   line-height: 1.6;
@@ -63,12 +73,14 @@
   margin: 0;
   text-wrap: pretty;
 }
-@media (max-width: 720px) {
+
+@media (width <= 720px) {
   .tl-item {
     grid-template-columns: 1fr;
     gap: 8px;
     padding: 22px 0;
   }
+
   .tl-year {
     padding-top: 0;
   }
@@ -78,6 +90,7 @@
 .achievements {
   margin-top: 72px;
 }
+
 .achievements-head {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
@@ -85,12 +98,14 @@
   gap: clamp(30px, 4vw, 56px);
   margin-bottom: 24px;
 }
-@media (max-width: 760px) {
+
+@media (width <= 760px) {
   .achievements-head {
     grid-template-columns: 1fr;
     gap: 8px;
   }
 }
+
 .achievements-title {
   font-family: var(--font-display);
   font-weight: 400;
@@ -98,18 +113,21 @@
   letter-spacing: var(--ls-heading);
   margin: 0;
 }
+
 .achievements-blurb {
   font-size: 14px;
   color: var(--muted);
   margin: 0;
   max-width: 40ch;
 }
+
 .achievements-list {
   list-style: none;
   margin: 0;
   padding: 0;
   border-top: 1px solid var(--ink-900);
 }
+
 .achievement {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
@@ -117,12 +135,14 @@
   padding: 20px 0;
   border-bottom: 1px solid var(--line);
 }
+
 .ach-year {
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--muted);
   padding-top: 2px;
 }
+
 .ach-title {
   font-family: var(--font-display);
   font-weight: 400;
@@ -130,6 +150,7 @@
   letter-spacing: var(--ls-heading);
   margin: 0 0 2px;
 }
+
 .ach-meta {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -137,6 +158,7 @@
   color: var(--muted);
   margin-bottom: 8px;
 }
+
 .ach-desc {
   font-size: 14px;
   line-height: 1.55;
@@ -145,23 +167,27 @@
   margin: 0;
   text-wrap: pretty;
 }
-@media (max-width: 720px) {
+
+@media (width <= 720px) {
   .achievement {
     grid-template-columns: 1fr;
     gap: 6px;
   }
 }
 
-@media (min-width: 1180px) and (max-height: 950px) {
+@media (width >= 1180px) and (height <= 950px) {
   .tl-item {
     padding: 20px 0;
   }
+
   .tl-desc {
     font-size: 14px;
   }
+
   .achievements {
     margin-top: 44px;
   }
+
   .achievement {
     padding: 16px 0;
   }

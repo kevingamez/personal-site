@@ -82,7 +82,11 @@ export default async function Page() {
 
       <CommandPalette />
 
-      <script id="dev-data" type="application/json" dangerouslySetInnerHTML={{ __html: devDataJson }} />
+      <script
+        id="dev-data"
+        type="application/json"
+        dangerouslySetInnerHTML={{ __html: devDataJson }}
+      />
 
       <DevScripts />
     </>

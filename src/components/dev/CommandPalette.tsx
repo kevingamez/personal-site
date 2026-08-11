@@ -12,9 +12,16 @@ export function CommandPalette() {
           />
           <div className="palette-list" id="palette-list"></div>
           <div className="palette-foot">
-            <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-            <span><kbd>↵</kbd> open</span>
-            <span><kbd>esc</kbd> close</span>
+            <span>
+              <kbd>↑</kbd>
+              <kbd>↓</kbd> navigate
+            </span>
+            <span>
+              <kbd>↵</kbd> open
+            </span>
+            <span>
+              <kbd>esc</kbd> close
+            </span>
           </div>
         </div>
       </div>

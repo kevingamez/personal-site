@@ -1,13 +1,14 @@
-import type { HomeStrings } from "@/content/home"
-import { posts } from "@/data/posts"
+import type { HomeStrings } from '@/content/home'
+import { posts } from '@/data/posts'
 
 interface Props {
-  t: HomeStrings["writing"]
+  t: HomeStrings['writing']
 }
 
 // Highest-engagement first; tie-break with comments + reposts.
 const orderedPosts = [...posts].sort((a, b) => {
-  const score = (p: (typeof posts)[number]): number => p.reactions + (p.comments ?? 0) + (p.reposts ?? 0)
+  const score = (p: (typeof posts)[number]): number =>
+    p.reactions + (p.comments ?? 0) + (p.reposts ?? 0)
   return score(b) - score(a)
 })
 
@@ -15,10 +16,10 @@ const orderedPosts = [...posts].sort((a, b) => {
 // breaks, and lets us know whether the post was actually truncated.
 const PREVIEW = 240
 function preview(text: string): { text: string; truncated: boolean } {
-  const trimmed = text.replace(/\n+$/, "")
+  const trimmed = text.replace(/\n+$/, '')
   if (trimmed.length <= PREVIEW) return { text: trimmed, truncated: false }
-  const cut = trimmed.lastIndexOf(" ", PREVIEW)
-  return { text: trimmed.slice(0, cut > 100 ? cut : PREVIEW) + "…", truncated: true }
+  const cut = trimmed.lastIndexOf(' ', PREVIEW)
+  return { text: trimmed.slice(0, cut > 100 ? cut : PREVIEW) + '…', truncated: true }
 }
 
 export function Writing({ t }: Props) {
@@ -34,11 +35,23 @@ export function Writing({ t }: Props) {
         </div>
 
         <div className="feed-wrap">
-          <button className="feed-nav prev" type="button" aria-label="Previous post" data-feed-prev="" hidden>
+          <button
+            className="feed-nav prev"
+            type="button"
+            aria-label="Previous post"
+            data-feed-prev=""
+            hidden
+          >
             ‹
           </button>
 
-          <div className="feed" id="writing-feed" role="region" tabIndex={0} aria-label="LinkedIn posts carousel">
+          <div
+            className="feed"
+            id="writing-feed"
+            role="region"
+            tabIndex={0}
+            aria-label="LinkedIn posts carousel"
+          >
             {orderedPosts.map((p, postIndex) => (
               <article className="post-card" key={postIndex}>
                 <header className="pc-head">
@@ -53,21 +66,27 @@ export function Writing({ t }: Props) {
                   />
                   <div className="pc-author">
                     <div className="pc-name">
-                      Kevin Gamez{" "}
+                      Kevin Gamez{' '}
                       <span className="pc-badge" aria-label="LinkedIn">
                         in
-                      </span>{" "}
+                      </span>{' '}
                       <span className="pc-degree">· 1st</span>
                     </div>
                     <div className="pc-headline">Founding Engineer @ Enttor</div>
                     <div className="pc-meta">
-                      {p.date} <span className="pc-dot">·</span>{" "}
+                      {p.date} <span className="pc-dot">·</span>{' '}
                       <span className="pc-globe" aria-hidden="true">
                         🌎
                       </span>
                     </div>
                   </div>
-                  <a className="pc-open" href={p.url} target="_blank" rel="noopener" aria-label="Open on LinkedIn">
+                  <a
+                    className="pc-open"
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open on LinkedIn"
+                  >
                     ⋯
                   </a>
                 </header>
@@ -81,7 +100,7 @@ export function Writing({ t }: Props) {
                       ))}
                   </div>
                   {preview(p.body).truncated && (
-                    <a className="pc-more" href={p.url} target="_blank" rel="noopener">
+                    <a className="pc-more" href={p.url} target="_blank" rel="noopener noreferrer">
                       {t.seeMore}
                     </a>
                   )}
@@ -92,13 +111,22 @@ export function Writing({ t }: Props) {
                     className={`pc-imgs n-${Math.min(p.images.length, 4)}`}
                     href={p.url}
                     target="_blank"
-                    rel="noopener"
+                    rel="noopener noreferrer"
                   >
                     {p.images.slice(0, 4).map((img, i) => (
                       <span className="pc-img-cell" key={i}>
                         <picture>
-                          <source srcSet={img.src.replace(/\.jpe?g$/i, ".webp")} type="image/webp" />
-                          <img className="pc-img" src={img.src} alt={img.alt || ""} loading="lazy" decoding="async" />
+                          <source
+                            srcSet={img.src.replace(/\.jpe?g$/i, '.webp')}
+                            type="image/webp"
+                          />
+                          <img
+                            className="pc-img"
+                            src={img.src}
+                            alt={img.alt || ''}
+                            loading="lazy"
+                            decoding="async"
+                          />
                         </picture>
                         {i === 3 && p.images && p.images.length > 4 && (
                           <span className="pc-img-more">+{p.images.length - 4}</span>
@@ -166,7 +194,7 @@ export function Writing({ t }: Props) {
         <div className="feed-dots" role="group" aria-label="Post indicators">
           {orderedPosts.map((_, i) => (
             <button
-              className={`feed-dot${i === 0 ? " on" : ""}`}
+              className={`feed-dot${i === 0 ? ' on' : ''}`}
               type="button"
               data-dot-index={i}
               aria-label={`Go to post ${i + 1}`}
@@ -181,7 +209,7 @@ export function Writing({ t }: Props) {
           className="writing-more"
           href="https://www.linkedin.com/in/kevin-gamez/recent-activity/all/"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           {t.more}
         </a>

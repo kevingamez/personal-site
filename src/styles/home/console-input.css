@@ -1,0 +1,99 @@
+/* Console part 2: suggestion chips and the persistent input prompt (split from console.css) */
+
+/* Suggestions row - looks like CLI hints */
+.cs-suggest {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 18px 12px;
+  border-top: 1px dashed rgb(255 255 255 / 6%);
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.cs-suggest button {
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 10%);
+  color: rgb(232 232 236 / 70%);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cs-suggest button:hover {
+  background: rgb(255 255 255 / 6%);
+  border-color: var(--coral-on-dark);
+  color: #fff;
+}
+
+.cs-suggest button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Persistent input prompt */
+.cs-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 16px;
+  background: rgb(0 0 0 / 22%);
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.cs-input .ci-host {
+  color: #5be59f;
+}
+
+.cs-input .ci-sep {
+  color: rgb(232 232 236 / 55%);
+}
+
+.cs-input .ci-prompt {
+  color: var(--coral-on-dark);
+  margin-right: 4px;
+}
+
+#console-msg {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgb(232 232 236 / 98%);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  caret-color: var(--coral-on-dark);
+  padding: 2px 0;
+}
+
+#console-msg:focus-visible {
+  outline: 2px solid var(--coral-on-dark);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+#console-msg::placeholder {
+  color: rgb(232 232 236 / 35%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cs-input-busy {
+  opacity: 0.5;
+}
+
+@media (width <= 700px) {
+  .cs-suggest {
+    padding: 8px 12px 10px;
+  }
+
+  .cs-input {
+    padding: 11px 12px;
+  }
+}

@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "playwright test",
-    "test:install": "playwright install --with-deps chromium"
+    "test:install": "playwright install --with-deps chromium",
+    "lint:css": "stylelint \"src/**/*.css\" \"app/**/*.css\"",
+    "check:size": "node scripts/check-size.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -55,8 +57,12 @@
     "@types/three": "^0.185.4",
     "eslint": "^9.39.5",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.9.0",
     "prettier": "^3.8.3",
+    "stylelint": "^17.14.1",
+    "stylelint-config-standard": "^40.0.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.66.0"

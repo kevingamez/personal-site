@@ -5,10 +5,7 @@
   "trailingComma": "es5",
   "overrides": [
     {
-      "files": [
-        "*.json",
-        "*.md"
-      ],
+      "files": ["*.json", "*.md"],
       "options": {
         "singleQuote": false
       }

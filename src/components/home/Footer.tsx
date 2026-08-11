@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["footer"]
+  t: HomeStrings['footer']
   buildId: string
 }
 
@@ -35,22 +35,30 @@ export function Footer({ t }: Props) {
             <h3>{t.h4Elsewhere}</h3>
             <ul>
               <li>
-                <a href="https://github.com/kevingamez" target="_blank" rel="noopener">
+                <a href="https://github.com/kevingamez" target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href="https://co.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">
+                <a
+                  href="https://co.linkedin.com/in/kevin-gamez/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener">
+                <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener noreferrer">
                   X
                 </a>
               </li>
               <li>
-                <a href="https://www.strava.com/athletes/70612862" target="_blank" rel="noopener">
+                <a
+                  href="https://www.strava.com/athletes/70612862"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Strava
                 </a>
               </li>

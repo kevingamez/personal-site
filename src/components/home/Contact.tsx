@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["contact"]
+  t: HomeStrings['contact']
 }
 
 export function Contact({ t }: Props) {

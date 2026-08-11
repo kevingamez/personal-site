@@ -3,6 +3,7 @@
 .gol-wrap {
   position: relative;
 }
+
 .gol-frame {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -12,6 +13,7 @@
   overflow: hidden;
   background: var(--white);
 }
+
 .gol-frame canvas {
   position: absolute;
   inset: 0;
@@ -19,6 +21,7 @@
   height: 100%;
   cursor: crosshair;
 }
+
 .gol-readout {
   display: flex;
   justify-content: space-between;
@@ -28,10 +31,12 @@
   color: var(--muted);
   letter-spacing: 0.05em;
 }
+
 .gol-readout b {
   color: var(--ink);
   font-weight: 600;
 }
+
 .gol-note {
   margin: 18px 0 0;
   font-size: 13px;
@@ -40,10 +45,12 @@
   max-width: 52ch;
   text-wrap: pretty;
 }
+
 .gol-note b {
   color: var(--ink);
   font-weight: 500;
 }
+
 .gol-note a {
   color: var(--ink);
   border-bottom: 1px solid var(--line-2);
@@ -54,9 +61,11 @@
   white-space: nowrap;
   margin-left: 2px;
 }
+
 .gol-note a:hover {
   border-color: var(--ink);
 }
+
 .gol-controls {
   position: absolute;
   top: 8px;
@@ -64,6 +73,7 @@
   display: flex;
   gap: 4px;
 }
+
 .gol-btn {
   width: 24px;
   height: 24px;
@@ -81,11 +91,13 @@
     color 0.15s,
     border-color 0.15s;
 }
+
 .gol-btn:hover {
   background: var(--ink);
   color: var(--white);
   border-color: var(--ink);
 }
+
 .gol-stamps {
   position: absolute;
   left: 8px;
@@ -95,6 +107,7 @@
   flex-wrap: wrap;
   max-width: calc(100% - 16px);
 }
+
 .gol-stamp {
   padding: 5px 10px;
   border-radius: var(--pill);
@@ -110,9 +123,11 @@
     color 0.15s,
     border-color 0.15s;
 }
+
 .gol-stamp:hover {
   border-color: var(--ink);
 }
+
 .gol-stamp.on {
   background: var(--ink);
   color: var(--white);

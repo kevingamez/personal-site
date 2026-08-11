@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["strava"]
+  t: HomeStrings['strava']
 }
 
 export function Strava({ t }: Props) {
@@ -13,7 +13,7 @@ export function Strava({ t }: Props) {
     featPace: t.featPace,
     statMi: t.statMi,
     statFt: t.statElevationFt,
-  }).replace(/</g, "\\u003c")
+  }).replace(/</g, '\\u003c')
 
   return (
     // Hidden until the client confirms live activity.
@@ -30,13 +30,27 @@ export function Strava({ t }: Props) {
         <div className="sv-hero">
           <div className="sv-hero-grid">
             <div className="sv-hero-lead">
-              <div className="sv-hero-km"><span id="sv-km">0</span><i id="sv-km-unit">km</i></div>
-              <div className="sv-hero-kml" id="sv-km-label">{t.statKm}</div>
+              <div className="sv-hero-km">
+                <span id="sv-km">0</span>
+                <i id="sv-km-unit">km</i>
+              </div>
+              <div className="sv-hero-kml" id="sv-km-label">
+                {t.statKm}
+              </div>
             </div>
             <div className="sv-hero-side">
-              <div className="sv-mini"><span id="sv-hours">0</span><em>{t.statHours}</em></div>
-              <div className="sv-mini"><span id="sv-elev">0</span><em id="sv-elev-label">{t.statElevation}</em></div>
-              <div className="sv-mini"><span id="sv-acts">0</span><em>{t.statActivities}</em></div>
+              <div className="sv-mini">
+                <span id="sv-hours">0</span>
+                <em>{t.statHours}</em>
+              </div>
+              <div className="sv-mini">
+                <span id="sv-elev">0</span>
+                <em id="sv-elev-label">{t.statElevation}</em>
+              </div>
+              <div className="sv-mini">
+                <span id="sv-acts">0</span>
+                <em>{t.statActivities}</em>
+              </div>
             </div>
           </div>
         </div>
@@ -69,26 +83,38 @@ export function Strava({ t }: Props) {
         <div className="sv-insights">
           <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightClimbLabel}</div>
-            <div className="sv-tile-val" id="sv-climb-val">0</div>
+            <div className="sv-tile-val" id="sv-climb-val">
+              0
+            </div>
             <div className="sv-tile-sub" id="sv-climb-sub"></div>
           </div>
           <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightFastLabel}</div>
-            <div className="sv-tile-val" id="sv-fast-val">0</div>
+            <div className="sv-tile-val" id="sv-fast-val">
+              0
+            </div>
             <div className="sv-tile-sub" id="sv-fast-sub"></div>
           </div>
           <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightBiggestLabel}</div>
-            <div className="sv-tile-val" id="sv-biggest-val">0</div>
+            <div className="sv-tile-val" id="sv-biggest-val">
+              0
+            </div>
             <div className="sv-tile-sub" id="sv-biggest-sub"></div>
           </div>
           <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightClimbedLabel}</div>
-            <div className="sv-tile-val" id="sv-climbed-val">0</div>
+            <div className="sv-tile-val" id="sv-climbed-val">
+              0
+            </div>
           </div>
         </div>
 
-        <script id="strava-i18n" type="application/json" dangerouslySetInnerHTML={{ __html: i18n }} />
+        <script
+          id="strava-i18n"
+          type="application/json"
+          dangerouslySetInnerHTML={{ __html: i18n }}
+        />
       </div>
     </section>
   )

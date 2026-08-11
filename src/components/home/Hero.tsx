@@ -1,8 +1,8 @@
-import type { HomeStrings } from "@/content/home"
-import { formatBogotaTime } from "@/scripts/clock"
+import type { HomeStrings } from '@/content/home'
+import { formatBogotaTime } from '@/scripts/clock'
 
 interface Props {
-  t: HomeStrings["hero"]
+  t: HomeStrings['hero']
 }
 
 export function Hero({ t }: Props) {
@@ -28,8 +28,12 @@ export function Hero({ t }: Props) {
           <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
           <p className="hero-lede" dangerouslySetInnerHTML={{ __html: t.lede }} />
           <div className="hero-cta">
-            <a className="btn btn-primary" href="#contact">{t.btnGetInTouch}</a>
-            <a className="arrow-link" href="#about">{t.scrollDown} ↓</a>
+            <a className="btn btn-primary" href="#contact">
+              {t.btnGetInTouch}
+            </a>
+            <a className="arrow-link" href="#about">
+              {t.scrollDown} ↓
+            </a>
           </div>
         </div>
         <div className="hero-media">

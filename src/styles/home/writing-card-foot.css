@@ -1,0 +1,117 @@
+/* Writing section - .post-card footer: engagement counts, reactions stack, meta line */
+
+/* Footer (engagement counts) - explicit overrides because the page's
+   global `footer` rule paints the dark ink color. */
+.post-card .pc-foot {
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+.pc-meta-right {
+  white-space: nowrap;
+  text-align: right;
+  font-size: 11.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pc-meta-sep {
+  color: var(--line-2);
+}
+
+@media (width <= 520px) {
+  .post-card .pc-foot {
+    padding: 9px 12px;
+    font-size: 11px;
+  }
+
+  .pc-meta-right {
+    font-size: 11px;
+  }
+
+  /* Drop the verbose labels on mobile - keep just the numbers like LinkedIn does. */
+  .pc-meta-label {
+    display: none;
+  }
+
+  .pc-meta-item::after {
+    content: ' 💬';
+    font-size: 10px;
+    margin-left: 2px;
+    opacity: 0.55;
+  }
+
+  .pc-meta-item + .pc-meta-sep + .pc-meta-item::after {
+    content: ' ↻';
+    font-size: 11px;
+  }
+}
+
+.pc-reactions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pc-reax-stack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.pc-reax {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  color: #fff;
+}
+
+.pc-reax + .pc-reax {
+  margin-left: -5px;
+}
+
+.pc-reax.like {
+  background: #0073b1;
+}
+
+.pc-reax.love {
+  background: #df704d;
+}
+
+.pc-reax.insight {
+  background: #f5bb54;
+}
+
+.pc-reax svg {
+  display: block;
+}
+
+.pc-reax-num {
+  font-weight: 500;
+  color: var(--muted);
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.pc-reactions:hover .pc-reax-num {
+  color: #0073b1;
+  text-decoration: underline;
+}
+
+@media (width >= 1180px) and (height <= 950px) {
+  .post-card .pc-foot {
+    padding: 8px 12px;
+  }
+}

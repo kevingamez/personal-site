@@ -1,0 +1,269 @@
+/* Console part 1: section frame, terminal window chrome, and output stream (split from console.css) */
+
+/* ─── Console section · Warp-style dark glass on cream ─── */
+.console-section {
+  position: relative;
+  padding: clamp(76px, 9svh, 92px) 0 clamp(72px, 8svh, 88px);
+  border-bottom: 1px solid var(--line);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.console-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.console-head {
+  margin-bottom: 30px;
+}
+
+/* The terminal - dark translucent glass floating on cream */
+.console-shell {
+  position: relative;
+
+  /* The terminal window stays dark on the light page, like a code block. */
+  background: #141310;
+  border: 1px solid rgb(24 23 26 / 20%);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -20px rgb(31 29 26 / 45%),
+    0 12px 28px -10px rgb(31 29 26 / 30%),
+    inset 0 1px 0 rgb(255 255 255 / 8%);
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgb(232 232 236 / 95%);
+}
+
+/* Title bar */
+.cs-tabs {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  background: rgb(0 0 0 / 18%);
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
+  font-size: 11.5px;
+  color: rgb(232 232 236 / 60%);
+}
+
+.ct-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.ct-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: block;
+}
+
+.ct-dots i:nth-child(1) {
+  background: #ff5f56;
+}
+
+.ct-dots i:nth-child(2) {
+  background: #ffbd2e;
+}
+
+.ct-dots i:nth-child(3) {
+  background: #27c93f;
+}
+
+.ct-prompt {
+  color: rgb(232 232 236 / 85%);
+}
+
+.ct-grow {
+  flex: 1;
+}
+
+.ct-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+.ct-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5be59f;
+  box-shadow: 0 0 8px #5be59f;
+  animation: ct-pulse 2s ease-in-out infinite;
+}
+
+@keyframes ct-pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-led,
+  .cm-streaming::after,
+  .cs-block {
+    animation: none;
+  }
+
+  .cs-stream {
+    scroll-behavior: auto;
+  }
+}
+
+/* Output stream */
+.cs-stream {
+  padding: 18px 18px 8px;
+  min-height: 150px;
+  max-height: 430px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.cs-stream::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cs-stream::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 10%);
+  border-radius: 4px;
+}
+
+/* Each interaction is a Warp-style block */
+.cs-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgb(255 255 255 / 3%);
+  border: 1px solid rgb(255 255 255 / 6%);
+  border-radius: 8px;
+  animation: cs-block-in 0.3s ease-out both;
+}
+
+@keyframes cs-block-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.cs-line {
+  font-family: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+
+.cs-cmd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  color: rgb(232 232 236 / 95%);
+}
+
+.cs-cmd .ci-host {
+  color: #5be59f;
+}
+
+.cs-cmd .ci-sep {
+  color: rgb(232 232 236 / 55%);
+}
+
+.cs-cmd .ci-prompt {
+  color: var(--coral-on-dark);
+}
+
+.cs-cmd-text {
+  color: rgb(232 232 236 / 98%);
+  overflow-wrap: anywhere;
+  flex: 1;
+  min-width: 0;
+}
+
+.cs-out {
+  color: rgb(232 232 236 / 85%);
+  padding-left: 0;
+}
+
+.cs-out b,
+.cs-out strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.cs-out code {
+  color: #ffb066;
+  background: rgb(255 176 102 / 8%);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 12.5px;
+}
+
+.cs-out a {
+  color: #6b8eff;
+  border-bottom: 1px dashed currentcolor;
+}
+
+.cs-tool {
+  color: rgb(232 232 236 / 70%);
+  font-size: 12px;
+  padding: 2px 0;
+}
+
+.cs-tool-tag {
+  color: var(--coral-on-dark);
+  margin-right: 8px;
+}
+
+/* Streaming caret */
+.cm-streaming::after {
+  content: '▍';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--coral-on-dark);
+  animation: caret-blink 0.9s steps(2, end) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (width <= 700px) {
+  .console-section {
+    padding: 64px 0;
+  }
+
+  .cs-stream {
+    padding: 14px 12px 6px;
+    min-height: 140px;
+    max-height: 380px;
+  }
+}
+
+@media (width >= 1180px) and (height <= 950px) {
+  .console-section {
+    padding: 52px 0 54px;
+  }
+
+  .console-head {
+    margin-bottom: 24px;
+  }
+
+  .cs-stream {
+    min-height: 140px;
+    max-height: 360px;
+  }
+}

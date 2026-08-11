@@ -14,6 +14,7 @@
   font-family: 'JetBrains Mono', monospace;
   color: var(--ink-2);
 }
+
 .profile-panel[hidden] {
   display: none;
 }
@@ -25,6 +26,7 @@
   padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
 }
+
 .pf-avatar-wrap {
   position: relative;
   width: 58px;
@@ -34,6 +36,7 @@
   padding: 2px;
   background: conic-gradient(from 220deg, var(--coral), var(--purple), var(--blue), var(--coral));
 }
+
 .pf-avatar {
   width: 100%;
   height: 100%;
@@ -42,6 +45,7 @@
   display: block;
   object-fit: cover;
 }
+
 .pf-status {
   position: absolute;
   bottom: 2px;
@@ -60,26 +64,31 @@
   flex-direction: column;
   gap: 2px;
 }
+
 .pf-name {
-  font-family: 'Newsreader', serif;
+  font-family: Newsreader, serif;
   font-size: 22px;
   font-weight: 400;
   line-height: 1;
   color: var(--ink);
   letter-spacing: -0.01em;
 }
+
 .pf-name i {
   font-style: italic;
   color: var(--coral);
 }
+
 .pf-role {
   font-size: 11.5px;
   color: var(--mute);
   letter-spacing: 0.02em;
 }
+
 .pf-role .pf-at {
   color: var(--coral);
 }
+
 .pf-status-line {
   font-size: 10.5px;
   color: var(--mute);
@@ -89,6 +98,7 @@
   align-items: center;
   gap: 6px;
 }
+
 .pf-status-dot {
   width: 6px;
   height: 6px;
@@ -97,6 +107,7 @@
   box-shadow: 0 0 6px var(--green);
   animation: pf-pulse 2s ease-in-out infinite;
 }
+
 @keyframes pf-pulse {
   50% {
     opacity: 0.5;
@@ -108,6 +119,7 @@
   flex-direction: column;
   gap: 8px;
 }
+
 .pf-block-label {
   font-size: 10px;
   color: var(--mute-2);
@@ -115,6 +127,7 @@
   letter-spacing: 0.16em;
   margin-bottom: 2px;
 }
+
 .pf-row {
   display: inline-flex;
   align-items: center;
@@ -122,12 +135,14 @@
   font-size: 12px;
   color: var(--ink-2);
 }
+
 .pf-ico {
   font-size: 14px;
   color: var(--coral);
   width: 16px;
   text-align: center;
 }
+
 .pf-tz {
   margin-left: auto;
   color: var(--mute);
@@ -140,6 +155,7 @@
   flex-wrap: wrap;
   gap: 5px;
 }
+
 .pf-chip {
   font-size: 10.5px;
   background: var(--panel-2);
@@ -161,6 +177,7 @@
   border-bottom: 1px solid transparent;
   transition: color 0.15s;
 }
+
 .pf-link:hover {
   color: var(--coral);
 }
@@ -170,6 +187,7 @@
   padding-top: 14px;
   border-top: 1px dashed var(--line);
 }
+
 .pf-meta-row {
   display: flex;
   justify-content: space-between;
@@ -178,6 +196,7 @@
   letter-spacing: 0.06em;
   padding: 3px 0;
 }
+
 .pf-meta-row b {
   color: var(--ink-2);
   font-weight: 500;

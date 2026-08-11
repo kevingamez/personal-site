@@ -7,7 +7,12 @@ export function ActivityBar() {
       <button className="ab-item" data-ab="search" title="Search (⌘P)" aria-label="Search">
         <span className="material-symbols-outlined">search</span>
       </button>
-      <button className="ab-item" data-ab="source-control" title="Source control" aria-label="Source control">
+      <button
+        className="ab-item"
+        data-ab="source-control"
+        title="Source control"
+        aria-label="Source control"
+      >
         <span className="material-symbols-outlined">commit</span>
       </button>
       <div className="ab-grow"></div>

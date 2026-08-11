@@ -10,8 +10,12 @@ export function Profile() {
           <img className="pf-avatar" src="/kevin.jpg" alt="" />
         </div>
         <div className="pf-id">
-          <div className="pf-name">Kevin <i>Gámez</i></div>
-          <div className="pf-role">Founding engineer <span className="pf-at">@ Enttor</span></div>
+          <div className="pf-name">
+            Kevin <i>Gámez</i>
+          </div>
+          <div className="pf-role">
+            Founding engineer <span className="pf-at">@ Enttor</span>
+          </div>
         </div>
       </header>
 
@@ -41,22 +45,41 @@ export function Profile() {
 
       <section className="pf-block">
         <div className="pf-block-label">Links</div>
-        <a className="pf-link" href="https://github.com/kevingamez" target="_blank" rel="noopener">
-          <span className="material-symbols-outlined pf-ico">code</span><span>github.com/kevingamez</span>
+        <a
+          className="pf-link"
+          href="https://github.com/kevingamez"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="material-symbols-outlined pf-ico">code</span>
+          <span>github.com/kevingamez</span>
         </a>
-        <a className="pf-link" href="https://co.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">
-          <span className="material-symbols-outlined pf-ico">badge</span><span>linkedin/kevin-gamez</span>
+        <a
+          className="pf-link"
+          href="https://co.linkedin.com/in/kevin-gamez/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="material-symbols-outlined pf-ico">badge</span>
+          <span>linkedin/kevin-gamez</span>
         </a>
         <a className="pf-link" href="mailto:kevingamez.kg@gmail.com">
-          <span className="material-symbols-outlined pf-ico">mail</span><span>kevingamez.kg@gmail.com</span>
+          <span className="material-symbols-outlined pf-ico">mail</span>
+          <span>kevingamez.kg@gmail.com</span>
         </a>
       </section>
 
       <section className="pf-block pf-meta">
         <div className="pf-block-label">Session</div>
-        <div className="pf-meta-row"><span>uptime</span><b id="pf-uptime">0s</b></div>
-        <div className="pf-meta-row"><span>started</span><b id="pf-started">--</b></div>
+        <div className="pf-meta-row">
+          <span>uptime</span>
+          <b id="pf-uptime">0s</b>
+        </div>
+        <div className="pf-meta-row">
+          <span>started</span>
+          <b id="pf-started">--</b>
+        </div>
       </section>
     </aside>
-  );
+  )
 }

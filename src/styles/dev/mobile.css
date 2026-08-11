@@ -1,30 +1,36 @@
 /* Small screens: the IDE chrome is desktop-shaped. Hide the decorative bits
    so the top bar and status bar stop colliding, and let the tab strip scroll.
    The editor and cards below already stack correctly. */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .titlebar .ttl {
     display: none;
   }
+
   /* "live · build" badge - decorative, collides with the exit link. */
   .titlebar .r > span {
     display: none;
   }
+
   .tabsbar {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
+
   .tabsbar::-webkit-scrollbar {
     display: none;
   }
+
   /* Clock chip - duplicated info, overflows the tab strip. */
   .tabsbar .live {
     display: none;
   }
+
   /* Synthetic latency metrics - decorative, overlap on narrow bars. */
   .statusbar .r {
     display: none;
   }
+
   .statusbar .l {
     min-width: 0;
     overflow: hidden;

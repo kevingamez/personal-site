@@ -1,14 +1,19 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["work"]
+  t: HomeStrings['work']
 }
 
 export function Work({ t }: Props) {
   const sideProjects = [
-    { name: t.p2Name, desc: t.p2Desc, meta: "Astro · TypeScript", href: "https://github.com/kevingamez" },
-    { name: t.p3Name, desc: t.p3Desc, meta: "This site · /dev", href: "/dev/" },
-    { name: t.p4Name, desc: t.p4Desc, meta: "Claude API · Vercel", href: "#console" },
+    {
+      name: t.p2Name,
+      desc: t.p2Desc,
+      meta: 'Astro · TypeScript',
+      href: 'https://github.com/kevingamez',
+    },
+    { name: t.p3Name, desc: t.p3Desc, meta: 'This site · /dev', href: '/dev/' },
+    { name: t.p4Name, desc: t.p4Desc, meta: 'Claude API · Vercel', href: '#console' },
   ]
 
   return (
@@ -36,12 +41,22 @@ export function Work({ t }: Props) {
               <span>Supabase</span>
             </div>
 
-            <a className="work-link" href="https://www.enttor.ai/" target="_blank" rel="noopener">
+            <a
+              className="work-link"
+              href="https://www.enttor.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {t.p1Link}
             </a>
           </div>
 
-          <a className="wf-visual" href="https://www.enttor.ai/" target="_blank" rel="noopener">
+          <a
+            className="wf-visual"
+            href="https://www.enttor.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <picture>
               <source srcSet="/posts/lessons-turbo.webp" type="image/webp" />
               <img
@@ -59,7 +74,7 @@ export function Work({ t }: Props) {
         <div className="work-grid">
           {sideProjects.map((p, i) => (
             <a className="work-card" href={p.href} key={i}>
-              <div className="wc-index">{String(i + 2).padStart(2, "0")}</div>
+              <div className="wc-index">{String(i + 2).padStart(2, '0')}</div>
               <div>
                 <h3>{p.name}</h3>
                 <p>{p.desc}</p>
@@ -70,7 +85,14 @@ export function Work({ t }: Props) {
         </div>
 
         <div className="work-more">
-          <a className="arrow-link" href="https://github.com/kevingamez" target="_blank" rel="noopener">{t.allRepos} ↗</a>
+          <a
+            className="arrow-link"
+            href="https://github.com/kevingamez"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t.allRepos} ↗
+          </a>
         </div>
       </div>
     </section>
