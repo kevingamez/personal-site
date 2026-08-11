@@ -191,6 +191,8 @@ main:focus {
 
 .wrap {
   max-width: 1200px;
+
+  /* Widened for large displays via the media query below. */
   margin: 0 auto;
   padding: 0 48px;
 }
@@ -198,5 +200,19 @@ main:focus {
 @media (width <= 760px) {
   .wrap {
     padding: 0 24px;
+  }
+}
+
+/* Large displays: a 1200px island floats in space on 27"+ screens; give every
+   section a wider canvas so the composition owns the viewport. */
+@media (width >= 1680px) {
+  .wrap {
+    max-width: 1400px;
+  }
+}
+
+@media (width >= 2200px) {
+  .wrap {
+    max-width: 1560px;
   }
 }
