@@ -9,20 +9,11 @@ import dynamic from 'next/dynamic'
 
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
 
-import { CUBE_VARIANTS, DEFAULT_CUBE_VARIANT } from './cube-variants'
-
 export function CubeStage() {
   const host = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(false)
   const [visible, setVisible] = useState(false)
   const [reduced, setReduced] = useState(false)
-  const [variant, setVariant] = useState(DEFAULT_CUBE_VARIANT)
-
-  useEffect(() => {
-    // Comparison escape hatch: ?cube=A..E previews a variant.
-    const q = new URLSearchParams(window.location.search).get('cube')
-    if (q && CUBE_VARIANTS[q]) setVariant(q)
-  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -61,13 +52,7 @@ export function CubeStage() {
 
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
-      {near && (
-        <ParticleCube
-          animate={visible && !reduced}
-          reduced={reduced}
-          cfg={CUBE_VARIANTS[variant]}
-        />
-      )}
+      {near && <ParticleCube animate={visible && !reduced} reduced={reduced} />}
     </div>
   )
 }
