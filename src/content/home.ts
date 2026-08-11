@@ -40,6 +40,7 @@ export interface HomeStrings {
     experience: string
     work: string
     github: string
+    resume: string
     devMode: string
     sayHi: string
   }

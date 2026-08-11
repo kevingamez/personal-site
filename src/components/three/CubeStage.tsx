@@ -9,6 +9,19 @@ import dynamic from 'next/dynamic'
 
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
 const CubeJourney = dynamic(() => import('./CubeJourney'), { ssr: false })
+const LifeCube = dynamic(() => import('./LifeCube'), { ssr: false })
+const NeuralNet = dynamic(() => import('./NeuralNet'), { ssr: false })
+
+// Preview switch for the idea round: ?fx=A1|A2|B1|B2 swaps the docked figure.
+const FX: Record<
+  string,
+  { kind: 'life'; v: 'ink' | 'prism' } | { kind: 'net'; v: 'flat' | 'depth' }
+> = {
+  A1: { kind: 'life', v: 'ink' },
+  A2: { kind: 'life', v: 'prism' },
+  B1: { kind: 'net', v: 'flat' },
+  B2: { kind: 'net', v: 'depth' },
+}
 
 export function CubeStage() {
   const host = useRef<HTMLDivElement>(null)
@@ -16,6 +29,12 @@ export function CubeStage() {
   const [visible, setVisible] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [journey, setJourney] = useState(false)
+  const [fx, setFx] = useState<string | null>(null)
+
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('fx')
+    if (q && FX[q]) setFx(q)
+  }, [])
 
   useEffect(() => {
     // The scroll-choreographed figure needs a wide viewport; phones get the
@@ -66,7 +85,14 @@ export function CubeStage() {
 
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
-      {journey ? (
+      {fx ? (
+        near &&
+        (FX[fx].kind === 'life' ? (
+          <LifeCube variant={FX[fx].v as 'ink' | 'prism'} />
+        ) : (
+          <NeuralNet variant={FX[fx].v as 'flat' | 'depth'} />
+        ))
+      ) : journey ? (
         <CubeJourney />
       ) : (
         near && <ParticleCube animate={visible && !reduced} reduced={reduced} />

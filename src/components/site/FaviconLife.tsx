@@ -12,7 +12,7 @@ const GRID = 9
 const CELL = 4
 const GENS = 6
 const STEP_MS = 600
-const BURST_EVERY_MS = 60_000
+const BURST_EVERY_MS = 30_000
 
 const SEED: string[] = []
 for (let r = 1; r <= 7; r++) SEED.push(`1,${r}`, `2,${r}`)
@@ -44,17 +44,22 @@ function step(prev: Set<string>): Set<string> {
 export function FaviconLife() {
   useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const link = document.querySelector<HTMLLinkElement>('link[rel="icon"][type="image/svg+xml"]')
-    if (!link) return
+    const head = document.head
+    const staticLinks = Array.from(head.querySelectorAll<HTMLLinkElement>('link[rel="icon"]'))
+    if (staticLinks.length === 0) return
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = GRID * CELL
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const staticHref = link.href
     const dark = matchMedia('(prefers-color-scheme: dark)')
+    let animLink: HTMLLinkElement | null = null
 
-    const draw = (cells: Set<string>, gen: number) => {
+    // Chrome scores every rel=icon candidate and often keeps showing a static
+    // one, and it repaints the tab far more reliably on link-node swaps than
+    // on href mutation. So a burst frame removes the static links and inserts
+    // one fresh node (the favico.js technique); restore() puts them back.
+    const showFrame = (cells: Set<string>, gen: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       for (const key of cells) {
         const [x, y] = key.split(',').map(Number)
@@ -68,13 +73,21 @@ export function FaviconLife() {
               : '#161616'
         ctx.fillRect(x * CELL, y * CELL, CELL, CELL)
       }
-      link.type = 'image/png'
-      link.href = canvas.toDataURL('image/png')
+      for (const l of staticLinks) l.remove()
+      animLink?.remove()
+      animLink = document.createElement('link')
+      animLink.rel = 'icon'
+      animLink.type = 'image/png'
+      animLink.href = canvas.toDataURL('image/png')
+      head.appendChild(animLink)
     }
 
     const restore = () => {
-      link.type = 'image/svg+xml'
-      link.href = staticHref
+      animLink?.remove()
+      animLink = null
+      for (const l of staticLinks) {
+        if (!l.isConnected) head.appendChild(l)
+      }
     }
 
     let cells = new Set(SEED)
@@ -94,12 +107,16 @@ export function FaviconLife() {
         }
         cells = step(cells)
         gen++
-        draw(cells, gen)
+        showFrame(cells, gen)
       }, STEP_MS)
     }
 
+    // First burst soon after load so the icon is discoverable, then one
+    // evolution every half minute.
+    const firstTimer = setTimeout(burst, 3_000)
     const burstTimer = setInterval(burst, BURST_EVERY_MS)
     return () => {
+      clearTimeout(firstTimer)
       clearInterval(burstTimer)
       if (stepTimer) clearInterval(stepTimer)
       restore()

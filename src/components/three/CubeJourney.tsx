@@ -102,8 +102,8 @@ function Scene() {
     const dockX = (rect.left + rect.width / 2) / vw
     const dockY = (rect.top + rect.height / 2) / vh
     const dockS = (rect.height / vh) * 0.86
-    let xf = MathUtils.lerp(0.95, dockX, e)
-    let yf = MathUtils.lerp(0.88, dockY, e)
+    const xf = MathUtils.lerp(0.95, dockX, e)
+    const yf = MathUtils.lerp(0.88, dockY, e)
     const sf = MathUtils.lerp(0.14, dockS, e)
     let assemble = MathUtils.lerp(0.25, 1, e)
     let alpha = e
