@@ -20,10 +20,10 @@ const FOV = 40
 // margin toward the dock, which also sits right - so the figure never
 // travels across text at reading height.
 const KEYS: [number, number, number, number, number, number][] = [
-  // Born big in the hero gutter (between the copy and the portrait).
-  [0.0, 0.57, 0.55, 0.38, 0.35, 0.95],
-  [0.22, 0.94, 0.75, 0.26, 0.5, 0.85],
-  [0.6, 0.95, 0.42, 0.28, 0.75, 0.9],
+  // Absent over the hero; fades in on the right margin once you scroll.
+  [0.0, 0.94, 0.88, 0.16, 0.25, 0.0],
+  [0.15, 0.94, 0.75, 0.2, 0.4, 0.6],
+  [0.6, 0.95, 0.42, 0.26, 0.75, 0.9],
   [1.0, 0.5, 0.5, 0.5, 1.0, 1.0], // placeholder: replaced by the dock rect
 ]
 
