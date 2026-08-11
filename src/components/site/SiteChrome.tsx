@@ -4,12 +4,21 @@
 // content below it paints (it gates the intro curtain), and nothing renders
 // above it.
 
+import { FaviconLife } from './FaviconLife'
+
 export function SiteChrome() {
   return (
     <>
       {/* Blocking on purpose: the intro-curtain gate must land before first
           paint, and the file is ~1KB. */}
       <script src="/head-init.js" />
+
+      {/* The K as a Game of Life seed; FaviconLife evolves it in the tab. */}
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+      <FaviconLife />
 
       <link rel="me" href="https://co.linkedin.com/in/kevin-gamez/" />
       <link rel="me" href="https://github.com/kevingamez" />
