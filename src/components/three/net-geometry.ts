@@ -7,14 +7,14 @@
 import { Color } from 'three'
 import { buildSizes } from './particle-material'
 
-export const NODES = 7500
+export const NODES = 10500
 const LINKS_PER_NODE = 2
 const LINK_MAX_DIST = 0.3
 export const AUTO_WAVE_S = 3.4
 export const TOUCH_WAVE_SPEED = 2.6 // world units per second
 export const WAVE_BAND = 0.5
 export const INK = new Color('#0b0b0c')
-export const FAINT = new Color('#0b0b0c').lerp(new Color('#f4f4f2'), 0.78)
+export const FAINT = new Color('#0b0b0c').lerp(new Color('#f4f4f2'), 0.5)
 export const VIOLET = new Color('#7c5cff')
 
 // Side-profile outline of a human brain, authored by hand: (z, y) pairs,
@@ -161,6 +161,36 @@ export function buildVolume() {
   }
   const origins: number[] = []
   for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * NODES))
-  const sizes = buildSizes(NODES, rand, 0.92)
-  return { base, phase, edges, origins, sizes }
+  // Base colors: ink dust with prismatic glints scattered through the body,
+  // the reference brain's sparkle in the Vela palette.
+  const baseColors = new Float32Array(NODES * 3)
+  const accented = new Uint8Array(NODES)
+  {
+    const c = new Color()
+    const ACCENTS: [string, number][] = [
+      ['#7c5cff', 0.08],
+      ['#e9a521', 0.03],
+      ['#3e8e6e', 0.03],
+    ]
+    for (let i = 0; i < NODES; i++) {
+      const r = rand()
+      let acc = 0
+      c.copy(FAINT)
+      for (const [hex, share] of ACCENTS) {
+        acc += share
+        if (r < acc) {
+          c.set(hex)
+          break
+        }
+      }
+      baseColors[i * 3] = c.r
+      baseColors[i * 3 + 1] = c.g
+      baseColors[i * 3 + 2] = c.b
+      accented[i] = r < acc ? 1 : 0
+    }
+  }
+  const sizes = buildSizes(NODES, rand, 1.0)
+  // Colored neurons double as the reference brain's bright glints.
+  for (let i = 0; i < NODES; i++) if (accented[i]) sizes[i] *= 1.4
+  return { base, phase, edges, origins, sizes, baseColors }
 }
