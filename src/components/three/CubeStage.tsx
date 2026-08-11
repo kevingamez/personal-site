@@ -1,13 +1,13 @@
 'use client'
 
-// Lazy mount for the contact-section Rubik's cube: the three.js chunk loads
+// Lazy mount for the contact-section particle cube: the three.js chunk loads
 // only when the section approaches, self-motion runs only while visible and
 // motion is allowed. Dragging always works - it is user-initiated.
 
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
-const RubikCube = dynamic(() => import('./RubikCube'), { ssr: false })
+const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
 
 export function CubeStage() {
   const host = useRef<HTMLDivElement>(null)
@@ -52,7 +52,7 @@ export function CubeStage() {
 
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
-      {near && <RubikCube animate={visible && !reduced} />}
+      {near && <ParticleCube animate={visible && !reduced} reduced={reduced} />}
     </div>
   )
 }
