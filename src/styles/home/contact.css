@@ -104,3 +104,22 @@
     margin-bottom: 26px;
   }
 }
+
+/* Full-screen stage for the ?fx= idea previews. */
+.fx-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: var(--paper);
+}
+
+.fx-preview-tag {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
