@@ -1,37 +1,22 @@
 'use client'
 
-// The Dala move, in Vela form: a figure MADE OF particles. ~7200 points form
-// a cube whose six faces carry the prism hues. On first sight the particles
-// fly in from a scattered cloud and assemble into the figure; drag spins it
-// with inertia and the cursor pushes nearby particles off the surface, where
-// they spring back. Under prefers-reduced-motion the cube starts assembled
-// and only direct manipulation (drag, cursor) moves anything.
+// A figure MADE OF particles: ~7200 soft dots form a cube whose six faces
+// carry the prism hues. On first sight the particles fly in from a scattered
+// cloud and assemble; drag spins the figure with inertia and the cursor
+// pushes nearby particles off the surface, where they spring back. Under
+// prefers-reduced-motion the cube starts assembled and only direct
+// manipulation (drag, cursor) moves anything.
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Color, MathUtils, Vector3, type Group, type Points } from 'three'
 import { buildSizes, makeParticleMaterial } from './particle-material'
-import { type CubeVariant } from './cube-variants'
 
+const PER_FACE = 1200
+const COUNT = PER_FACE * 6
 const HALF = 1.35 // cube half-size
 // One prism hue per face; dark-leaning so the figure reads on paper.
 const FACE_COLORS = ['#7c5cff', '#e9a521', '#3e8e6e', '#d2617a', '#0b0b0c', '#a3a3a9']
-// ink-violet palette: ink dust with violet glints, amber as a rare accent
-// (the judges' one note on the winning look: keep amber scarce).
-const INK_VIOLET = [
-  '#0b0b0c',
-  '#0b0b0c',
-  '#0b0b0c',
-  '#0b0b0c',
-  '#0b0b0c',
-  '#0b0b0c',
-  '#3a3a3e',
-  '#3a3a3e',
-  '#7c5cff',
-  '#7c5cff',
-  '#7c5cff',
-  '#e9a521',
-]
 const FACES: [number, number, number][] = [
   [1, 0, 0],
   [-1, 0, 0],
@@ -41,103 +26,59 @@ const FACES: [number, number, number][] = [
   [0, 0, -1],
 ]
 
-function buildCube(cfg: CubeVariant) {
-  const count = cfg.count
-  const target = new Float32Array(count * 3)
-  const scatter = new Float32Array(count * 3)
-  const colors = new Float32Array(count * 3)
-  const stagger = new Float32Array(count)
+function buildCube() {
+  const target = new Float32Array(COUNT * 3)
+  const scatter = new Float32Array(COUNT * 3)
+  const colors = new Float32Array(COUNT * 3)
+  const stagger = new Float32Array(COUNT)
   const color = new Color()
   let seed = 99
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 4294967296
     return seed / 4294967296
   }
-  const setColor = (i: number, f: number) => {
-    if (cfg.palette === 'faces') color.set(FACE_COLORS[f])
-    else if (cfg.palette === 'ink') color.set(rand() < 0.9 ? '#0b0b0c' : '#3a3a3e')
-    else color.set(INK_VIOLET[Math.floor(rand() * INK_VIOLET.length)])
-    colors[i * 3] = color.r
-    colors[i * 3 + 1] = color.g
-    colors[i * 3 + 2] = color.b
-  }
-  for (let i = 0; i < count; i++) {
-    const j = i * 3
-    const f = Math.floor(rand() * 6)
+  for (let f = 0; f < 6; f++) {
     const [nx, ny, nz] = FACES[f]
-    const u = (rand() * 2 - 1) * HALF
-    const w = (rand() * 2 - 1) * HALF
-    const jit = (rand() - 0.5) * cfg.jitter * 2
-    if (cfg.distribution === 'volume') {
-      // Fill the body, biased toward the shell so the form still reads.
-      const r = Math.cbrt(rand())
-      target[j] = (rand() * 2 - 1) * HALF * r
-      target[j + 1] = (rand() * 2 - 1) * HALF * r
-      target[j + 2] = (rand() * 2 - 1) * HALF * r
-    } else if (cfg.distribution === 'edges' && rand() < (cfg.edgeShare ?? 0.45)) {
-      // Concentrate on the 12 edges: two coordinates pinned, one free.
-      const e1 = rand() < 0.5 ? -HALF : HALF
-      const e2 = rand() < 0.5 ? -HALF : HALF
-      const axis = Math.floor(rand() * 3)
-      const t = (rand() * 2 - 1) * HALF
-      const soft = () => (rand() - 0.5) * 0.08
-      if (axis === 0) {
-        target[j] = t
-        target[j + 1] = e1 + soft()
-        target[j + 2] = e2 + soft()
-      } else if (axis === 1) {
-        target[j] = e1 + soft()
-        target[j + 1] = t
-        target[j + 2] = e2 + soft()
-      } else {
-        target[j] = e1 + soft()
-        target[j + 1] = e2 + soft()
-        target[j + 2] = t
-      }
-    } else {
-      target[j] = nx ? nx * (HALF + jit) : u
-      target[j + 1] = ny ? ny * (HALF + jit) : nx ? u : w
-      target[j + 2] = nz ? nz * (HALF + jit) : w
+    color.set(FACE_COLORS[f])
+    for (let k = 0; k < PER_FACE; k++) {
+      const i = f * PER_FACE + k
+      const u = (rand() * 2 - 1) * HALF
+      const w = (rand() * 2 - 1) * HALF
+      const jitter = (rand() - 0.5) * 0.03
+      const j = i * 3
+      target[j] = nx ? nx * (HALF + jitter) : u
+      target[j + 1] = ny ? ny * (HALF + jitter) : nx ? u : w
+      target[j + 2] = nz ? nz * (HALF + jitter) : w
+      // Scatter start: a wide loose sphere the particles fly in from.
+      const th = rand() * Math.PI * 2
+      const ph = Math.acos(rand() * 2 - 1)
+      const rr = 3.4 + rand() * 2.2
+      scatter[j] = Math.sin(ph) * Math.cos(th) * rr
+      scatter[j + 1] = Math.cos(ph) * rr
+      scatter[j + 2] = Math.sin(ph) * Math.sin(th) * rr
+      stagger[i] = rand() * 0.45
+      colors[j] = color.r
+      colors[j + 1] = color.g
+      colors[j + 2] = color.b
     }
-    // Scatter start: a wide loose sphere the particles fly in from.
-    const th = rand() * Math.PI * 2
-    const ph = Math.acos(rand() * 2 - 1)
-    const rr = 3.4 + rand() * 2.2
-    scatter[j] = Math.sin(ph) * Math.cos(th) * rr
-    scatter[j + 1] = Math.cos(ph) * rr
-    scatter[j + 2] = Math.sin(ph) * Math.sin(th) * rr
-    stagger[i] = rand() * 0.45
-    setColor(i, f)
   }
-  const sizes = buildSizes(count, rand, cfg.sizeScale)
-  return { target, scatter, colors, stagger, sizes, count }
+  const sizes = buildSizes(COUNT, rand, 1.15)
+  return { target, scatter, colors, stagger, sizes }
 }
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3)
 }
 
-function Scene({
-  animate,
-  reduced,
-  cfg,
-}: {
-  animate: boolean
-  reduced: boolean
-  cfg: CubeVariant
-}) {
+function Scene({ animate, reduced }: { animate: boolean; reduced: boolean }) {
   const group = useRef<Group>(null)
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const camera = useThree((s) => s.camera)
-  const { target, scatter, colors, stagger, sizes, count } = useMemo(() => buildCube(cfg), [cfg])
+  const { target, scatter, colors, stagger, sizes } = useMemo(buildCube, [])
   const material = useMemo(
-    () =>
-      makeParticleMaterial({
-        opacity: cfg.opacity,
-        pixelRatio: Math.min(gl.getPixelRatio(), 1.75),
-      }),
-    [gl, cfg]
+    () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
+    [gl]
   )
   const positions = useMemo(
     () => (reduced ? target.slice() : scatter.slice()),
@@ -212,7 +153,7 @@ function Scene({
     g.worldToLocal(local)
     const pos = geo.attributes.position.array as Float32Array
     const p = progress.current
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < COUNT; i++) {
       const j = i * 3
       const t = easeOutCubic(MathUtils.clamp((p - stagger[i]) / 0.55, 0, 1))
       let tx = scatter[j] + (target[j] - scatter[j]) * t
@@ -250,15 +191,7 @@ function Scene({
   )
 }
 
-export default function ParticleCube({
-  animate,
-  reduced,
-  cfg,
-}: {
-  animate: boolean
-  reduced: boolean
-  cfg: CubeVariant
-}) {
+export default function ParticleCube({ animate, reduced }: { animate: boolean; reduced: boolean }) {
   return (
     <Canvas
       dpr={[1, 1.75]}
@@ -266,7 +199,7 @@ export default function ParticleCube({
       gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
       frameloop="always"
     >
-      <Scene animate={animate} reduced={reduced} cfg={cfg} />
+      <Scene animate={animate} reduced={reduced} />
     </Canvas>
   )
 }
