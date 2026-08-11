@@ -1,10 +1,13 @@
 ---
 import Layout from "@/components/Layout.astro"
 import Nav from "@/components/home/Nav.astro"
+import IntroCurtain from "@/components/home/IntroCurtain.astro"
 import Hero from "@/components/home/Hero.astro"
-import Work from "@/components/home/Work.astro"
 import About from "@/components/home/About.astro"
+import Stack from "@/components/home/Stack.astro"
 import Experience from "@/components/home/Experience.astro"
+import Work from "@/components/home/Work.astro"
+import Deck from "@/components/home/Deck.astro"
 import Github from "@/components/home/Github.astro"
 import Strava from "@/components/home/Strava.astro"
 import Writing from "@/components/home/Writing.astro"
@@ -23,12 +26,15 @@ const githubStats = await loadHomeStats()
 <Layout meta={t.meta}>
   <a class="skip" href="#main">{t.meta.skip}</a>
 
+  <IntroCurtain name="Kevin Gámez" />
   <Nav meta={t.meta} t={t.nav} />
   <main id="main" tabindex="-1">
     <Hero t={t.hero} />
-    <Work t={t.work} />
-    <About t={t.about} />
+    <About t={t.about} tGol={t.hero} />
+    <Stack t={t.stack} />
     <Experience t={t.experience} />
+    <Work t={t.work} />
+    <Deck t={t.deck} />
     <Github t={t.github} stats={githubStats} />
     <div class="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
     <Strava t={t.strava} />

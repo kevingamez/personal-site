@@ -73,7 +73,7 @@
   min-width: 0;
 }
 .pc-name {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 600;
   color: var(--ink);
@@ -107,7 +107,7 @@
   font-size: 12.5px;
 }
 .pc-headline {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   color: var(--muted);
   line-height: 1.3;
@@ -117,7 +117,7 @@
   text-overflow: ellipsis;
 }
 .pc-meta {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 11.5px;
   color: var(--ink-2);
   margin-top: 2px;
@@ -159,7 +159,7 @@
   min-height: 0;
 }
 .pc-text {
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--ink-2);
@@ -172,7 +172,7 @@
 }
 .pc-more {
   align-self: flex-start;
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 600;
   color: var(--muted);
@@ -236,7 +236,7 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 22px;
   font-weight: 600;
 }
@@ -252,7 +252,7 @@
   gap: 8px;
   padding: 10px 14px;
   border-top: 1px solid var(--line);
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
 }
 .pc-meta-right {

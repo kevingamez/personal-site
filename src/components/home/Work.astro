@@ -7,7 +7,11 @@ interface Props {
 
 const { t } = Astro.props
 
-const sideProjects = [{ name: t.p2Name, desc: t.p2Desc, meta: "Astro · TypeScript" }]
+const sideProjects = [
+  { name: t.p2Name, desc: t.p2Desc, meta: "Astro · TypeScript", href: "https://github.com/kevingamez" },
+  { name: t.p3Name, desc: t.p3Desc, meta: "This site · /dev", href: "/dev/" },
+  { name: t.p4Name, desc: t.p4Desc, meta: "Claude API · Vercel", href: "#console" },
+]
 ---
 
 <section id="work" class="work-section">
@@ -57,16 +61,20 @@ const sideProjects = [{ name: t.p2Name, desc: t.p2Desc, meta: "Astro · TypeScri
     <div class="work-grid">
       {
         sideProjects.map((p, i) => (
-          <article class="work-card">
+          <a class="work-card" href={p.href}>
             <div class="wc-index">{String(i + 2).padStart(2, "0")}</div>
             <div>
               <h3>{p.name}</h3>
               <p>{p.desc}</p>
             </div>
             <div class="wc-meta">{p.meta}</div>
-          </article>
+          </a>
         ))
       }
+    </div>
+
+    <div class="work-more">
+      <a class="arrow-link" href="https://github.com/kevingamez" target="_blank" rel="noopener">{t.allRepos} ↗</a>
     </div>
   </div>
 </section>

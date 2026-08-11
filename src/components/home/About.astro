@@ -3,9 +3,12 @@ import type { HomeStrings } from "@/content/home"
 
 interface Props {
   t: HomeStrings["about"]
+  // Game of Life strings live under hero.* historically; the canvas moved here
+  // when the Vela hero took the portrait.
+  tGol: HomeStrings["hero"]
 }
 
-const { t } = Astro.props
+const { t, tGol } = Astro.props
 ---
 
 <section id="about">
@@ -18,14 +21,33 @@ const { t } = Astro.props
       <p class="sec-blurb">{t.blurb}</p>
     </div>
     <div class="about-grid">
-      <div>
-        <div class="portrait">
-          <picture>
-            <source srcset="/kevin.webp" type="image/webp" />
-            <img src="/kevin.jpg" alt={t.portraitAlt} width="640" height="800" loading="lazy" decoding="async" />
-          </picture>
-          <span class="badge">K. Gámez · 2026</span>
+      <div class="gol-wrap">
+        <div class="gol-frame">
+          <canvas id="gol" role="img" aria-label={tGol.golAriaLabel}></canvas>
+          <div class="gol-controls">
+            <button
+              class="gol-btn"
+              id="gol-pause"
+              title={tGol.pauseTitle}
+              aria-label={tGol.pauseTitle}
+              aria-pressed="false">⏸</button
+            >
+            <button class="gol-btn" id="gol-reset" title={tGol.resetTitle} aria-label={tGol.resetTitle}>↻</button>
+          </div>
+          <div class="gol-stamps">
+            <button class="gol-stamp on" data-stamp="glider" aria-pressed="true">{tGol.stampGlider}</button>
+            <button class="gol-stamp" data-stamp="lwss" aria-pressed="false">{tGol.stampLwss}</button>
+            <button class="gol-stamp" data-stamp="pulsar" aria-pressed="false">{tGol.stampPulsar}</button>
+            <button class="gol-stamp" data-stamp="gun" aria-pressed="false">{tGol.stampGun}</button>
+            <button class="gol-stamp" data-stamp="clear">{tGol.stampClear}</button>
+          </div>
         </div>
+        <div class="gol-readout">
+          <span>{tGol.gen} <b id="gol-gen">0</b></span>
+          <span>{tGol.alive} <b id="gol-alive">0</b></span>
+          <span>{tGol.fps} <b id="gol-fps">0</b></span>
+        </div>
+        <p class="gol-note"><Fragment set:html={tGol.golCaptionHtml} /></p>
       </div>
       <div class="about-prose">
         <p><Fragment set:html={t.p1Html} /></p>

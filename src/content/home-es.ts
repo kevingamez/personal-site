@@ -31,18 +31,24 @@ export const es: HomeStrings = {
   },
   nav: {
     about: 'Sobre mí',
+    stack: 'Stack',
     experience: 'Experiencia',
     work: 'Proyectos',
     github: 'GitHub',
     devMode: 'Modo dev',
-    sayHi: 'Saludar →',
+    sayHi: 'Escríbeme ↗',
   },
   hero: {
     metaRole: 'Founding engineer @ Enttor',
     metaPlace: 'Bogotá',
-    titleHtml: 'Construyo <i>software.</i>',
+    titleHtml: 'Hola',
     lede: 'Soy founding engineer en <b>Enttor</b>, donde construimos outbound con IA: automatización de navegador y\n            pipelines de OpenAI que encuentran y califican prospectos. Antes lancé un marketplace de e-commerce en\n            <b>Samsam</b>. Maestría en deep learning en la Universidad de los Andes.',
-    btnSeeWork: 'Ver proyectos →',
+    stat1Num: '02',
+    stat1Label: 'Startups como founding engineer',
+    stat2Num: '07',
+    stat2Label: 'Años en GitHub',
+    portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
+    scrollDown: 'Sigue bajando',
     btnGetInTouch: 'Hablemos',
     pauseTitle: 'pausar / reproducir',
     resetTitle: 're-sembrar aleatorio',
@@ -62,7 +68,6 @@ export const es: HomeStrings = {
     secNum: 'Sobre mí',
     titleHtml: 'Sobre mí.',
     blurb: 'Founding engineer, full-stack, egresado de deep learning.',
-    portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
     p1Html:
       'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero: la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
     p2Html:
@@ -77,6 +82,25 @@ export const es: HomeStrings = {
     qfStackV: 'TypeScript · Next.js · Postgres',
     qfObsessed: 'Cacharreando con',
     qfObsessedV: 'Browser automation &amp; pipelines de LLM',
+  },
+  stack: {
+    secNum: 'Stack',
+    titleHtml: 'Las herramientas con las que construyo.',
+    blurb: 'El stack detrás del motor de outbound de Enttor y de este sitio.',
+    cols: [
+      { name: 'Lenguajes', items: ['TypeScript', 'Python', 'SQL', 'Swift'] },
+      { name: 'Frameworks', items: ['Next.js', 'React Native', 'NestJS', 'Astro'] },
+      { name: 'Infraestructura', items: ['Postgres', 'Supabase', 'Vercel', 'Inngest'] },
+      {
+        name: 'IA & ML',
+        items: [
+          'Pipelines de OpenAI',
+          'Automatización de navegador',
+          'Deep learning',
+          'Imágenes satelitales',
+        ],
+      },
+    ],
   },
   experience: {
     secNum: 'Trayectoria',
@@ -139,6 +163,50 @@ export const es: HomeStrings = {
     p1Link: 'Ver Enttor →',
     p2Name: 'este sitio',
     p2Desc: 'La página en la que estás. Open-source, construida con Astro y TypeScript.',
+    p3Name: 'modo dev',
+    p3Desc: 'Un easter egg estilo VS Code escondido en /dev: explorador, pestañas, terminal.',
+    p4Name: 'consola claude',
+    p4Desc:
+      'La shell al final de esta página. Transmite respuestas de Claude a través de una función de Vercel.',
+    allRepos: 'Todos los repositorios',
+  },
+  deck: {
+    secNum: 'Elige una carta',
+    titleHtml: 'Lo que un CV no cuenta.',
+    blurb: 'Cinco cartas. Todo lo que dicen es verdad.',
+    hint: 'Elige una carta',
+    items: [
+      {
+        label: 'Cómo trabajo',
+        statement: 'Habla simple.',
+        bodyHtml:
+          'De un post que escribí en LinkedIn: puedes ser un gran ingeniero y aun así ser pobre. No porque no sepas programar. Porque no sabes hablar simple. El post completo está en <a href="#writing">Escritos</a>.',
+      },
+      {
+        label: 'Ahora mismo',
+        statement: 'Outbound con IA en Enttor.',
+        bodyHtml:
+          'Automatización de navegador que encuentra prospectos en Instagram y LinkedIn, y pipelines de OpenAI que los califican. Next.js, NestJS, Inngest, Supabase.',
+      },
+      {
+        label: 'En paralelo',
+        statement: 'Este sitio es uno.',
+        bodyHtml:
+          'Open source, construido con Astro y TypeScript. Esconde un <a href="/dev/">modo dev</a> estilo VS Code y corre una <a href="#console">consola de Claude</a> de verdad.',
+      },
+      {
+        label: 'Pregúntame por',
+        statement: 'Automatización, pipelines, satélites.',
+        bodyHtml:
+          'Automatización de navegador a escala, pipelines de calificación con LLM, o los modelos de deep learning que entrené sobre imágenes satelitales en la maestría.',
+      },
+      {
+        label: 'Fuera del teclado',
+        statement: 'Correr y montar bici por Bogotá.',
+        bodyHtml:
+          'La <a href="#strava">sección de Strava</a> más abajo es en vivo: distancia, horas y el esfuerzo más largo de cada tipo, directo de la API.',
+      },
+    ],
   },
   github: {
     secNum: 'GitHub',
@@ -254,13 +322,12 @@ export const es: HomeStrings = {
     errorMsg: 'algo falló. intenta de nuevo o recarga.',
   },
   contact: {
-    titleHtml: 'Un gusto <i>conocerte</i>.',
-    body: 'Gracias por leer hasta acá. Si quieres hablar de trabajo, o solo saludar, escríbeme un correo.',
+    titleHtml: '¿Encajamos? <i>Averigüémoslo</i>.',
+    body: 'Una llamada de 30 minutos, sin slides. Trae el problema en su versión desordenada. O solo saluda.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnDev: 'Abrir modo dev',
   },
   footer: {
-    h4Page: 'La página',
     pBlurb: 'Founding engineer y egresado de deep learning. Hecho en Bogotá.',
     h4Sections: 'Secciones',
     sectionsAbout: 'Sobre mí',
@@ -269,7 +336,7 @@ export const es: HomeStrings = {
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'En otros lados',
     elsewhereDev: 'Modo dev →',
-    fonts: 'Tipografías Newsreader e Hanken Grotesk',
+    fonts: 'Tipografías Archivo y JetBrains Mono',
     estab: 'Est. 2026 · Bogotá',
   },
 }
