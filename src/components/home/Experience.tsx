@@ -16,7 +16,7 @@ export function Experience({ t }: Props) {
           <p className="sec-blurb">{t.blurb}</p>
         </div>
         <div className="timeline">
-          <div className="tl-item now">
+          <div className="tl-item">
             <div className="tl-year">{t.e1Year}</div>
             <div className="tl-content">
               <h3 className="tl-role">Founding engineer <span className="at">@ Enttor</span></h3>

@@ -102,7 +102,7 @@ export const en: HomeStrings = {
     titleHtml: "Two startups and a master's.",
     blurb:
       "Founding engineer at Samsam, then at Enttor. The master's in deep learning ran in parallel with the first job.",
-    e1Year: 'Jun 2025 · now',
+    e1Year: 'Jun 2025 · Jul 2026',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
       'I built the system that finds prospects on Instagram and LinkedIn and qualifies them with AI. Full-stack:\n                Next.js dashboards, NestJS APIs, Inngest queues, all running on Vercel and Supabase.',

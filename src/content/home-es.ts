@@ -107,7 +107,7 @@ export const es: HomeStrings = {
     titleHtml: 'Dos startups y una maestría.',
     blurb:
       'Ingeniero fundador en Samsam y luego en Enttor. La maestría en deep learning fue en paralelo con el primer trabajo.',
-    e1Year: 'Jun 2025 · hoy',
+    e1Year: 'Jun 2025 · Jul 2026',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
       'Construí el sistema que encuentra prospectos en Instagram y LinkedIn y los califica con IA. Full-stack:\n                dashboards en Next.js, APIs en NestJS, colas en Inngest, todo sobre Vercel y Supabase.',
