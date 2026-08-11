@@ -1,4 +1,5 @@
 /* ─── Scroll reveal (Vela: fade + 16px rise, 720ms, soft ease-out) ─── */
+
 /* `reveal-on` is set on <html> by reveal.ts only when motion is allowed, so
    the hidden state never applies without JS or under reduced motion. */
 .reveal-on .reveal {
@@ -9,18 +10,22 @@
     transform var(--dur-reveal) var(--ease-out-soft);
   will-change: opacity, transform;
 }
+
 .reveal-on .reveal.in {
   opacity: 1;
   transform: none;
 }
+
 /* Role-differentiated reveals: section headers settle in place (opacity only);
    repo rows just nudge, so a 6-row list does not do a long cascade. */
 .reveal-on .sec-head.reveal {
   transform: none;
 }
+
 .reveal-on .repo.reveal {
   transform: translateY(6px);
 }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal-on .reveal {
     opacity: 1;

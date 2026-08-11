@@ -1,5 +1,7 @@
 import js from '@eslint/js'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
@@ -21,6 +23,38 @@ export default tseslint.config(
   {
     files: ['**/*.tsx'],
     ...jsxA11y.flatConfigs.recommended,
+  },
+  {
+    files: ['**/*.tsx'],
+    ...react.configs.flat.recommended,
+    settings: { react: { version: 'detect' } },
+  },
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      // New JSX transform: no React import needed.
+      'react/react-in-jsx-scope': 'off',
+      // The vanilla-script architecture passes trusted static *Html strings.
+      'react/no-danger': 'off',
+      // Copy lives in typed content files; the few JSX literals read better
+      // with real apostrophes than with &apos; entities.
+      'react/no-unescaped-entities': 'off',
+    },
+  },
+  {
+    // React Three Fiber elements use three.js props unknown to the DOM.
+    files: ['src/components/three/**'],
+    rules: {
+      'react/no-unknown-property': 'off',
+    },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+    },
   },
   {
     languageOptions: {

@@ -1,0 +1,195 @@
+/* ─── GitHub activity: contributions card (part 1 of the original file) ─── */
+.gh-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: stretch;
+}
+
+@media (width <= 900px) {
+  .gh-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Two-column layout: the repo list is the taller side, so let the card grow to
+   match it and anchor its stats to the bottom (no empty gap). */
+@media (width >= 901px) {
+  .gh-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #github .gh-card .contrib-stats {
+    margin-top: auto;
+  }
+}
+
+.gh-card {
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 22px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.gh-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+.gh-card-head h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.gh-card-head .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.contrib-frame {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 6px;
+  min-width: 0;
+}
+
+.contrib-months {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--contrib-weeks, 52), minmax(0, 1fr));
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.contrib-months span {
+  text-align: left;
+}
+
+/* SSR ships 12 placeholder labels that would pile into the first 12 of 52
+   columns; keep them hidden until contrib.ts lays out the real ones. */
+.contrib-months[data-ssr] span {
+  visibility: hidden;
+}
+
+.contrib-dows {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  gap: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: var(--muted);
+  align-items: center;
+}
+
+.contrib-dows span {
+  line-height: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.contrib-dows span.hide {
+  visibility: hidden;
+}
+
+.contrib {
+  display: grid;
+  grid-template-columns: repeat(var(--contrib-weeks, 52), minmax(0, 1fr));
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  min-width: 0;
+}
+
+.contrib .day {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1/1;
+  background: var(--cream-3);
+  border: 1px solid rgb(31 29 26 / 4%);
+  border-radius: 2px;
+  opacity: 0;
+  transform: scale(0.25);
+  transition:
+    transform 0.55s var(--ease-spring),
+    opacity 0.4s var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+  transition-delay: calc(var(--w, 0) * 14ms + var(--d, 0) * 5ms);
+}
+
+.contrib.contrib-on .day {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.contrib .day.l1 {
+  background: #9be9a8;
+}
+
+.contrib .day.l2 {
+  background: #40c463;
+}
+
+.contrib .day.l3 {
+  background: #30a14e;
+}
+
+.contrib .day.l4 {
+  background: #216e39;
+}
+
+.contrib .day:hover {
+  /* A box-shadow ring fades in via the transition above, instead of an outline
+     that hard-pops (the entrance is a spring, so the hover should not jar). */
+  box-shadow: 0 0 0 1.5px var(--ink);
+  z-index: 2;
+  cursor: crosshair;
+}
+
+.contrib-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-2);
+}
+
+.cs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cs-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.cs-num.coral {
+  color: var(--coral);
+}
+
+.cs-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-top: 4px;
+}

@@ -1,12 +1,15 @@
 /* ─── Intro curtain ─── */
+
 /* Hidden by default; only html.intro-pending (set pre-paint by head-init.js)
    shows it, so no-JS visitors and reduced-motion users never see a flash. */
 .intro {
   display: none;
 }
+
 html.intro-pending {
   overflow: hidden;
 }
+
 html.intro-pending .intro {
   display: flex;
   position: fixed;
@@ -17,9 +20,11 @@ html.intro-pending .intro {
   justify-content: center;
   transition: transform 0.48s var(--ease-emph);
 }
+
 html.intro-pending .intro.intro-out {
   transform: translateY(-100%);
 }
+
 .intro-word {
   font-family: var(--font-display);
   font-weight: 400;
@@ -30,11 +35,13 @@ html.intro-pending .intro.intro-out {
   clip-path: inset(0 100% 0 0);
   animation: kg-wipe 0.9s var(--ease-out-soft) 0.12s forwards;
 }
+
 @keyframes kg-wipe {
   to {
     clip-path: inset(0 0 0 0);
   }
 }
+
 .intro-meta {
   position: absolute;
   left: 48px;
@@ -48,12 +55,14 @@ html.intro-pending .intro.intro-out {
   letter-spacing: 0.02em;
   color: var(--muted);
 }
+
 .intro-bar {
   flex: 1;
   height: 1px;
   background: var(--line);
   overflow: hidden;
 }
+
 .intro-bar-fill {
   display: block;
   height: 100%;
@@ -62,7 +71,8 @@ html.intro-pending .intro.intro-out {
   transform: scaleX(0);
   transform-origin: left;
 }
-@media (max-width: 760px) {
+
+@media (width <= 760px) {
   .intro-meta {
     left: 24px;
     right: 24px;

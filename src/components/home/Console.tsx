@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["console"]
+  t: HomeStrings['console']
 }
 
 export function Console({ t }: Props) {
@@ -11,7 +11,10 @@ export function Console({ t }: Props) {
         <div className="sec-head console-head">
           <div>
             <div className="sec-num console-secnum">{t.secNum}</div>
-            <h2 className="sec-title console-title" dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
+            <h2
+              className="sec-title console-title"
+              dangerouslySetInnerHTML={{ __html: t.titleHtml }}
+            />
           </div>
           <p className="sec-blurb console-blurb" dangerouslySetInnerHTML={{ __html: t.blurb }} />
         </div>
@@ -59,7 +62,12 @@ export function Console({ t }: Props) {
             <span className="ci-host">kevin@gamez</span>
             <span className="ci-sep">~</span>
             <span className="ci-prompt">$</span>
-            <input id="console-msg" type="text" placeholder={t.placeholder} aria-label="Console input" />
+            <input
+              id="console-msg"
+              type="text"
+              placeholder={t.placeholder}
+              aria-label="Console input"
+            />
           </form>
         </div>
       </div>

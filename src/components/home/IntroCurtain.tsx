@@ -13,7 +13,9 @@ export function IntroCurtain({ name }: Props) {
       <span className="intro-word">{name}</span>
       <div className="intro-meta">
         <span data-intro-count="">000</span>
-        <span className="intro-bar"><span className="intro-bar-fill" data-intro-bar=""></span></span>
+        <span className="intro-bar">
+          <span className="intro-bar-fill" data-intro-bar=""></span>
+        </span>
       </div>
     </div>
   )

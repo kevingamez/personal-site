@@ -8,9 +8,11 @@
   padding: 6px 0;
   gap: 2px;
 }
+
 .activity-bar .ab-grow {
   flex: 1;
 }
+
 .activity-bar .ab-item {
   width: 44px;
   height: 44px;
@@ -26,13 +28,16 @@
   padding: 0;
   position: relative;
 }
+
 .activity-bar .ab-item:hover {
   color: var(--ink);
 }
+
 .activity-bar .ab-item.on {
   color: var(--ink);
   border-left-color: var(--coral);
 }
+
 .activity-bar .ab-item .material-symbols-outlined {
   font-size: 22px;
   opacity: 0.78;
@@ -46,10 +51,12 @@
     font-variation-settings 0.2s;
   pointer-events: none;
 }
+
 .activity-bar .ab-item:hover .material-symbols-outlined,
 .activity-bar .ab-item.on .material-symbols-outlined {
   opacity: 1;
 }
+
 .activity-bar .ab-item.on .material-symbols-outlined {
   font-variation-settings:
     'FILL' 1,

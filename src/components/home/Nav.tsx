@@ -1,15 +1,17 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  meta: HomeStrings["meta"]
-  t: HomeStrings["nav"]
+  meta: HomeStrings['meta']
+  t: HomeStrings['nav']
 }
 
 export function Nav({ meta, t }: Props) {
   return (
     <nav className="nav">
       <div className="wrap nav-in">
-        <a className="brand" href={meta.brandHref}><span className="dot"></span>Kevin Gámez</a>
+        <a className="brand" href={meta.brandHref}>
+          <span className="dot"></span>Kevin Gámez
+        </a>
         <div className="nav-links">
           <a href="#about">{t.about}</a>
           <a href="#stack">{t.stack}</a>
@@ -24,8 +26,13 @@ export function Nav({ meta, t }: Props) {
             hrefLang={meta.langSwitchHreflang}
             dangerouslySetInnerHTML={{ __html: meta.langSwitchLabelHtml }}
           />
-          <a className="dev-toggle" href="/dev/"><span className="led"></span>{t.devMode}</a>
-          <a className="say-hi" href="#contact">{t.sayHi}</a>
+          <a className="dev-toggle" href="/dev/">
+            <span className="led"></span>
+            {t.devMode}
+          </a>
+          <a className="say-hi" href="#contact">
+            {t.sayHi}
+          </a>
         </div>
       </div>
     </nav>

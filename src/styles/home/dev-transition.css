@@ -15,6 +15,7 @@
   pointer-events: none;
   transition: opacity 180ms ease-out;
 }
+
 .dev-transition.on {
   opacity: 1;
   pointer-events: auto;
@@ -28,12 +29,12 @@
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(217, 105, 68, 0.04),
-      rgba(217, 105, 68, 0.04) 1px,
+      rgb(217 105 68 / 4%),
+      rgb(217 105 68 / 4%) 1px,
       transparent 1px,
       transparent 3px
     ),
-    radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
+    radial-gradient(ellipse at center, transparent 40%, rgb(0 0 0 / 45%) 100%);
   pointer-events: none;
   mix-blend-mode: screen;
 }
@@ -49,29 +50,34 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(217, 105, 68, 0.6),
-    rgba(255, 220, 180, 0.85),
-    rgba(217, 105, 68, 0.6),
+    rgb(217 105 68 / 60%),
+    rgb(255 220 180 / 85%),
+    rgb(217 105 68 / 60%),
     transparent
   );
   filter: blur(2px);
   transform: translateY(-50%) scaleY(0);
   opacity: 0;
 }
+
 .dev-transition.on::after {
   animation: dev-scan 1000ms var(--ease-emph) forwards;
 }
+
 @keyframes dev-scan {
   0% {
     transform: translateY(calc(-50vh - 1px)) scaleY(140);
     opacity: 0;
   }
+
   18% {
     opacity: 1;
   }
+
   82% {
     opacity: 0.4;
   }
+
   100% {
     transform: translateY(calc(50vh - 1px)) scaleY(140);
     opacity: 0;
@@ -84,27 +90,34 @@
   gap: 4px;
   text-align: left;
   min-width: 240px;
-  filter: drop-shadow(0 0 8px rgba(217, 105, 68, 0.35));
+  filter: drop-shadow(0 0 8px rgb(217 105 68 / 35%));
 }
+
 .dev-transition-line {
   opacity: 0;
   transform: translateY(6px);
 }
+
 .dev-transition.on .dev-transition-line {
   animation: dev-line 260ms var(--ease-out) forwards;
 }
+
 .dev-transition.on .dev-transition-line:nth-child(1) {
   animation-delay: 120ms;
 }
+
 .dev-transition.on .dev-transition-line:nth-child(2) {
   animation-delay: 360ms;
 }
+
 .dev-transition.on .dev-transition-line:nth-child(3) {
   animation-delay: 600ms;
 }
+
 .dev-transition.on .dev-transition-line:nth-child(4) {
   animation-delay: 840ms;
 }
+
 @keyframes dev-line {
   to {
     opacity: 1;
@@ -113,8 +126,9 @@
 }
 
 .dev-transition-prompt {
-  color: rgba(241, 238, 231, 0.85);
+  color: rgb(241 238 231 / 85%);
 }
+
 .dev-transition-cursor {
   display: inline-block;
   width: 7px;
@@ -124,6 +138,7 @@
   background: var(--coral, #d96944);
   animation: dev-blink 0.55s steps(2) infinite;
 }
+
 @keyframes dev-blink {
   50% {
     opacity: 0;

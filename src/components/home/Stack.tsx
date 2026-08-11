@@ -1,7 +1,7 @@
-import type { HomeStrings } from "@/content/home"
+import type { HomeStrings } from '@/content/home'
 
 interface Props {
-  t: HomeStrings["stack"]
+  t: HomeStrings['stack']
 }
 
 export function Stack({ t }: Props) {

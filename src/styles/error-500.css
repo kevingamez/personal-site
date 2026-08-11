@@ -11,7 +11,11 @@
 
   background: var(--paper);
   color: var(--ink);
-  font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+  font-family:
+    Archivo,
+    system-ui,
+    -apple-system,
+    sans-serif;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -19,15 +23,18 @@
   text-align: center;
   padding: 24px;
 }
+
 .err500 *,
 .err500 *::before {
   box-sizing: border-box;
 }
+
 .err500 .wrap {
   width: min(720px, 100%);
   max-width: none;
   padding: 0;
 }
+
 .err500 .tag {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
@@ -39,25 +46,29 @@
   gap: 8px;
   margin-bottom: 20px;
 }
+
 .err500 h1 {
-  font-family: 'Archivo', system-ui, sans-serif;
+  font-family: Archivo, system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(80px, 18vw, 160px);
   line-height: 0.95;
   letter-spacing: -0.035em;
   margin: 0 0 8px;
 }
+
 .err500 h1 i {
   font-family: 'Instrument Serif', Georgia, serif;
   font-style: italic;
 }
+
 .err500 h2 {
-  font-family: 'Archivo', system-ui, sans-serif;
+  font-family: Archivo, system-ui, sans-serif;
   font-weight: 400;
   font-size: 24px;
   letter-spacing: -0.02em;
   margin: 0 0 12px;
 }
+
 .err500 p {
   font-size: 17px;
   color: var(--ink-2);
@@ -65,12 +76,14 @@
   margin: 0 0 28px;
   text-wrap: balance;
 }
+
 .err500 .ctas {
   display: inline-flex;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .err500 .btn {
   display: inline-flex;
   align-items: center;
@@ -88,22 +101,27 @@
     background-color 0.16s,
     border-color 0.16s;
 }
+
 .err500 .btn-primary {
   background: var(--ink);
   color: #fff;
   border: 0;
 }
+
 .err500 .btn-primary:hover {
   background: #1f1f22;
 }
+
 .err500 .btn-ghost {
   border: 1px solid var(--line-2);
   color: var(--ink);
   background: transparent;
 }
+
 .err500 .btn-ghost:hover {
   border-color: var(--ink);
 }
+
 .err500 .console {
   width: min(620px, 100%);
   margin: 36px auto 0;
@@ -117,35 +135,43 @@
   text-align: left;
   line-height: 1.7;
 }
+
 .err500 .console .ln {
   display: flex;
   gap: 10px;
 }
+
 .err500 .console .ln .nm {
   color: var(--muted);
   width: 14px;
   text-align: right;
   flex-shrink: 0;
 }
+
 .err500 .console .err {
   color: var(--ink);
   font-weight: 600;
 }
+
 .err500 .console .ok {
   color: var(--green);
 }
+
 .err500 .console .key {
   color: var(--ink);
   font-weight: 600;
 }
+
 .err500 .console .mute {
   color: var(--muted);
 }
-@media (max-width: 640px) {
+
+@media (width <= 640px) {
   .err500 {
     align-items: flex-start;
     padding-top: 56px;
   }
+
   .err500 .console {
     font-size: 11px;
     padding: 12px;

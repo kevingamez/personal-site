@@ -11,7 +11,11 @@
 
   background: var(--paper);
   color: var(--ink);
-  font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+  font-family:
+    Archivo,
+    system-ui,
+    -apple-system,
+    sans-serif;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -19,15 +23,18 @@
   text-align: center;
   padding: 24px;
 }
+
 .err404 *,
 .err404 *::before {
   box-sizing: border-box;
 }
+
 .err404 .wrap {
   width: min(720px, 100%);
   max-width: none;
   padding: 0;
 }
+
 .err404 .tag {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
@@ -39,18 +46,21 @@
   gap: 8px;
   margin-bottom: 20px;
 }
+
 .err404 h1 {
-  font-family: 'Archivo', system-ui, sans-serif;
+  font-family: Archivo, system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(80px, 18vw, 160px);
   line-height: 0.95;
   letter-spacing: -0.035em;
   margin: 0 0 16px;
 }
+
 .err404 h1 i {
   font-family: 'Instrument Serif', Georgia, serif;
   font-style: italic;
 }
+
 .err404 p {
   font-size: 17px;
   color: var(--ink-2);
@@ -58,12 +68,14 @@
   margin: 0 0 28px;
   text-wrap: balance;
 }
+
 .err404 .ctas {
   display: inline-flex;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .err404 .btn {
   display: inline-flex;
   align-items: center;
@@ -81,22 +93,27 @@
     background-color 0.16s,
     border-color 0.16s;
 }
+
 .err404 .btn-primary {
   background: var(--ink);
   color: #fff;
   border: 0;
 }
+
 .err404 .btn-primary:hover {
   background: #1f1f22;
 }
+
 .err404 .btn-ghost {
   border: 1px solid var(--line-2);
   color: var(--ink);
   background: transparent;
 }
+
 .err404 .btn-ghost:hover {
   border-color: var(--ink);
 }
+
 .err404 .console {
   width: min(620px, 100%);
   margin: 36px auto 0;
@@ -110,42 +127,52 @@
   text-align: left;
   line-height: 1.7;
 }
+
 .err404 .console .ln {
   display: flex;
   gap: 10px;
 }
+
 .err404 .console .ln .nm {
   color: var(--muted);
   width: 14px;
   text-align: right;
   flex-shrink: 0;
 }
+
 .err404 .console .err {
   color: var(--ink);
   font-weight: 600;
 }
+
 .err404 .console .ok {
   color: var(--green);
 }
+
 .err404 .console .key {
   color: var(--ink);
   font-weight: 600;
 }
+
 .err404 .console .mute {
   color: var(--muted);
 }
+
 .err404 .console a {
   color: var(--ink);
   text-decoration: underline;
 }
+
 .err404 #missing-path {
   word-break: break-all;
 }
-@media (max-width: 640px) {
+
+@media (width <= 640px) {
   .err404 {
     align-items: flex-start;
     padding-top: 56px;
   }
+
   .err404 .console {
     font-size: 11px;
     padding: 12px;
