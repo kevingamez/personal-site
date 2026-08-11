@@ -88,7 +88,7 @@ export function Github({ t, stats }: Props) {
               <span className="num">{t.last12Months}</span>
             </div>
             <div className="contrib-frame">
-              <div className="contrib-months" aria-hidden="true">
+              <div className="contrib-months" aria-hidden="true" data-ssr="">
                 {t.months.map((m, i) => <span key={i}>{m}</span>)}
               </div>
               <div className="contrib-dows" aria-hidden="true">

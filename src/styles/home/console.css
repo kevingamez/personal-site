@@ -280,6 +280,9 @@
 }
 #console-msg::placeholder {
   color: rgba(232, 232, 236, 0.35);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .cs-input-busy {
   opacity: 0.5;

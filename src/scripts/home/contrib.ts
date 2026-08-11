@@ -102,19 +102,30 @@ function renderMonthLabels(days: ContribDay[]): void {
   const fmt = new Intl.DateTimeFormat(lang, { month: 'short' })
   const labels = Array.from({ length: WEEKS }, () => '')
   let prevMonth = ''
+  // Each label sits on a 1/52-width column that is far narrower than the text,
+  // so adjacent labels overlap. Enforce a minimum gap in weeks - wider on
+  // narrow screens, where a column is only a few px.
+  const minGapWeeks = holder.clientWidth < 520 ? 8 : 4
+  let lastLabeledWeek = -minGapWeeks
 
   days.forEach((day, i) => {
     const date = new Date(`${day.date}T00:00:00`)
     const monthKey = `${date.getFullYear()}-${date.getMonth()}`
     const week = Math.floor(i / DAYS)
     if (i === 0 || monthKey !== prevMonth) {
-      labels[week] = fmt.format(date).replace('.', '')
       prevMonth = monthKey
+      if (week - lastLabeledWeek >= minGapWeeks) {
+        labels[week] = fmt.format(date).replace('.', '')
+        lastLabeledWeek = week
+      }
     }
   })
 
   holder.textContent = ''
   holder.style.setProperty('--contrib-weeks', String(WEEKS))
+  // The SSR markup ships 12 placeholder labels hidden via [data-ssr] (it can't
+  // know week positions); from here on the real, positioned labels take over.
+  holder.removeAttribute('data-ssr')
   labels.forEach((label) => {
     const el = document.createElement('span')
     el.textContent = label

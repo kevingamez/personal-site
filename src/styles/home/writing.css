@@ -31,7 +31,9 @@
 
 .post-card {
   flex: 0 0 420px;
-  max-width: calc(100vw - 56px);
+  /* Account for the wrap gutter AND the feed's own inline padding, so the
+     card's right edge is visible at rest on phones. */
+  max-width: calc(100vw - 96px);
   scroll-snap-align: start;
   background: var(--cream-2);
   border: 1px solid var(--line-2);

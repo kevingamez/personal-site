@@ -207,6 +207,18 @@ h1.hero-title i {
     max-width: 440px;
   }
 }
+/* Rotated phones (844-900px wide, short): copy and portrait side by side
+   instead of a single column that leaves half the screen empty. */
+@media (max-width: 900px) and (min-width: 700px) and (orientation: landscape) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 36px;
+  }
+  .hero-media {
+    max-width: 300px;
+    justify-self: end;
+  }
+}
 @media (max-width: 520px) {
   .hero-stats {
     gap: 28px;
