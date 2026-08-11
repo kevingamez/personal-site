@@ -7,11 +7,9 @@ import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initDevTransition } from './dev-transition'
 import { initIntro } from './intro'
-import { initSmoothScroll } from './smooth-scroll'
 
 bootstrapClient()
 initIntro()
-initSmoothScroll()
 initBogotaClock()
 initConway()
 initDevTransition()

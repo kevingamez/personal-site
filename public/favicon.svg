@@ -1,4 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" fill="#000"/>
-  <text x="64" y="92" text-anchor="middle" font-family="Helvetica Neue, Arial Black, Inter, system-ui, sans-serif" font-weight="900" font-size="78" fill="#fff" letter-spacing="-4">KG</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" shape-rendering="crispEdges">
+  <style>
+    .c { fill: #161616 }
+    .a { fill: #0500ff }
+    @media (prefers-color-scheme: dark) {
+      .c { fill: #ecebe6 }
+      .a { fill: #3d5afe }
+    }
+  </style>
+  <g class="c">
+    <rect x="6" y="4" width="8" height="28"/>
+    <rect x="26" y="4" width="4" height="4"/>
+    <rect x="22" y="8" width="4" height="4"/>
+    <rect x="18" y="12" width="4" height="4"/>
+    <rect x="14" y="16" width="4" height="4"/>
+    <rect x="18" y="20" width="4" height="4"/>
+    <rect x="22" y="24" width="4" height="4"/>
+  </g>
+  <rect class="a" x="26" y="28" width="4" height="4"/>
 </svg>
