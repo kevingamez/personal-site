@@ -11,9 +11,11 @@ const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
 const CubeJourney = dynamic(() => import('./CubeJourney'), { ssr: false })
 const LifeCube = dynamic(() => import('./LifeCube'), { ssr: false })
 const NeuralNet = dynamic(() => import('./NeuralNet'), { ssr: false })
+const BrainJourney = dynamic(() => import('./BrainJourney'), { ssr: false })
 
-// Preview switch: ?fx=A1|A2 Cube of Life, ?fx=B the neural figure
-// (B1/B2 kept as aliases so older links keep working).
+// Preview switch: ?fx=A1|A2 Cube of Life, ?fx=B the neural figure,
+// ?fx=scroll the brain riding the scroll choreography into the contact
+// slot (B1/B2 kept as aliases so older links keep working).
 const FX: Record<string, { kind: 'life'; v: 'ink' | 'prism' } | { kind: 'net' }> = {
   A1: { kind: 'life', v: 'ink' },
   A2: { kind: 'life', v: 'prism' },
@@ -32,7 +34,7 @@ export function CubeStage() {
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('fx')
-    if (q && FX[q]) setFx(q)
+    if (q && (FX[q] || q === 'scroll')) setFx(q)
   }, [])
 
   useEffect(() => {
@@ -81,6 +83,16 @@ export function CubeStage() {
       runIo.disconnect()
     }
   }, [])
+
+  // Scroll-demo mode: the brain replaces the cube on the journey into the
+  // contact slot; the page itself renders and scrolls normally.
+  if (fx === 'scroll') {
+    return (
+      <div ref={host} className="cube-stage" aria-hidden="true">
+        <BrainJourney />
+      </div>
+    )
+  }
 
   // Preview mode takes the whole screen immediately - no scrolling needed.
   if (fx) {
