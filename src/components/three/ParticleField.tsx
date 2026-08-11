@@ -8,7 +8,8 @@
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { AdditiveBlending, Color, Vector3, type Points } from 'three'
+import { Color, Vector3, type Points } from 'three'
+import { buildSizes, makeParticleMaterial } from './particle-material'
 
 const COUNT = 2400
 const PRISM = ['#ffffff', '#7c5cff', '#9b82ff', '#e9a521', '#3e8e6e']
@@ -18,7 +19,12 @@ const REPULSE_RADIUS = 1.7
 const REPULSE_FORCE = 1.15
 const EASE = 0.09
 
-function buildField(): { base: Float32Array; colors: Float32Array; phase: Float32Array } {
+function buildField(): {
+  base: Float32Array
+  colors: Float32Array
+  phase: Float32Array
+  sizes: Float32Array
+} {
   const base = new Float32Array(COUNT * 3)
   const colors = new Float32Array(COUNT * 3)
   const phase = new Float32Array(COUNT)
@@ -50,7 +56,8 @@ function buildField(): { base: Float32Array; colors: Float32Array; phase: Float3
     colors[i * 3 + 1] = color.g
     colors[i * 3 + 2] = color.b
   }
-  return { base, colors, phase }
+  const sizes = buildSizes(COUNT, rand)
+  return { base, colors, phase, sizes }
 }
 
 function Field({ animate }: { animate: boolean }) {
@@ -58,7 +65,16 @@ function Field({ animate }: { animate: boolean }) {
   const camera = useThree((s) => s.camera)
   const gl = useThree((s) => s.gl)
   const cursor = useRef({ x: 9e9, y: 9e9 })
-  const { base, colors, phase } = useMemo(buildField, [])
+  const { base, colors, phase, sizes } = useMemo(buildField, [])
+  const material = useMemo(
+    () =>
+      makeParticleMaterial({
+        additive: true,
+        opacity: 0.9,
+        pixelRatio: Math.min(gl.getPixelRatio(), 1.5),
+      }),
+    [gl]
+  )
   const positions = useMemo(() => base.slice(), [base])
 
   useEffect(() => {
@@ -130,16 +146,9 @@ function Field({ animate }: { animate: boolean }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+        <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.05}
-        sizeAttenuation
-        vertexColors
-        transparent
-        opacity={0.85}
-        depthWrite={false}
-        blending={AdditiveBlending}
-      />
+      <primitive object={material} attach="material" />
     </points>
   )
 }
