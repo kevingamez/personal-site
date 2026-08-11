@@ -23,7 +23,6 @@ import { makeParticleMaterial } from './particle-material'
 import {
   AUTO_WAVE_S,
   buildVolume,
-  FAINT,
   INK,
   NODES,
   TOUCH_WAVE_SPEED,
@@ -36,21 +35,13 @@ function Scene() {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const camera = useThree((s) => s.camera)
-  const { base, phase, edges, origins, sizes } = useMemo(buildVolume, [])
+  const { base, phase, edges, origins, sizes, baseColors } = useMemo(buildVolume, [])
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
   )
   const positions = useMemo(() => base.slice(), [base])
-  const nodeColors = useMemo(() => {
-    const c = new Float32Array(NODES * 3)
-    for (let i = 0; i < NODES; i++) {
-      c[i * 3] = FAINT.r
-      c[i * 3 + 1] = FAINT.g
-      c[i * 3 + 2] = FAINT.b
-    }
-    return c
-  }, [])
+  const nodeColors = useMemo(() => baseColors.slice(), [baseColors])
   const lineGeo = useMemo(() => {
     const g = new BufferGeometry()
     g.setAttribute('position', new BufferAttribute(new Float32Array(edges.length * 6), 3))
@@ -182,7 +173,7 @@ function Scene() {
         heat = Math.max(heat, MathUtils.clamp(1 - Math.abs(dt - touchFront) / WAVE_BAND, 0, 1))
       }
       scratch
-        .copy(FAINT)
+        .setRGB(baseColors[j], baseColors[j + 1], baseColors[j + 2])
         .lerp(INK, Math.min(1, heat * 1.4))
         .lerp(VIOLET, heat * 0.85)
       col[j] = scratch.r
