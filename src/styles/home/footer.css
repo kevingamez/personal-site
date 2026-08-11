@@ -128,16 +128,3 @@
     padding-top: 18px;
   }
 }
-
-/* Prismatic particle wash (Dala's field on its native dark ground). */
-.fx-backdrop {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.footer > .wrap,
-.foot-marquee {
-  position: relative;
-  z-index: 1;
-}

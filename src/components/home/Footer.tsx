@@ -1,5 +1,4 @@
 import type { HomeStrings } from '@/content/home'
-import { ParticleBackdrop } from '@/components/three/ParticleBackdrop'
 
 interface Props {
   t: HomeStrings['footer']
@@ -9,7 +8,6 @@ interface Props {
 export function Footer({ t }: Props) {
   return (
     <footer className="footer">
-      <ParticleBackdrop />
       <div className="wrap">
         <div className="foot-grid">
           <div>
