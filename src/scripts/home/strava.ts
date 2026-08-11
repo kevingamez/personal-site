@@ -232,8 +232,7 @@ const countUp = (id: string, target: number, fmt: (n: number) => string): void =
 
 // Mapbox Static map for a route. Public token, light style, ink path. 640x400
 // @2x = 1280x800 (Mapbox max); 16:10 matches the card so it never crops.
-const MAPBOX_TOKEN = (import.meta.env as unknown as Record<string, string | undefined>)
-  .PUBLIC_MAPBOX_TOKEN
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
 function mapboxUrl(polyline: string): string {
   const path = `path-6+1f1d1a-0.9(${encodeURIComponent(polyline)})`
   return `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/${path}/auto/640x400@2x?access_token=${MAPBOX_TOKEN}&padding=34`
@@ -329,9 +328,9 @@ export async function initStrava(): Promise<void> {
   } catch {
     /* ignore - may fall back to the dev sample below */
   }
-  // `astro dev` doesn't route /api/strava; in dev fall back to a baked snapshot
-  // (stripped from prod builds by the import.meta.env.DEV guard).
-  if (!data && import.meta.env.DEV) {
+  // Local dev may not serve /api/strava with real credentials; fall back to a
+  // baked snapshot (stripped from prod builds by the NODE_ENV guard).
+  if (!data && process.env.NODE_ENV !== 'production') {
     try {
       data = (await import('./strava-sample')).devSample() as Payload
     } catch {

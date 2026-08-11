@@ -87,3 +87,5 @@ Every animation must check `prefers-reduced-motion`. For canvas/JS animations, g
 - Don't add a new font, analytics, or image host without updating CSP in **both** `vercel.json` and `src/middleware.ts`.
 - Don't commit binary screenshots or build artifacts to the repo root · they belong in `/public` if they ship, otherwise `.gitignore` them.
 - Don't introduce backwards-compatibility shims for visual changes · change the design directly.
+- **Never add decorative vertical accent bars** (`border-left` rails next to stat numbers, cards, or quotes). Numbers and headings stand on their own; hairlines are horizontal, structural, and full-width or nothing.
+- **Never use em-dashes** in user-facing copy · use a period, comma, or middot instead.
