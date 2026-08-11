@@ -54,7 +54,7 @@ export function ParticleBackdrop() {
 
   return (
     <div ref={host} className="fx-backdrop" aria-hidden="true">
-      {near && <ParticleField animate={visible && !reduced} />}
+      {near && <ParticleField active={visible} animate={visible && !reduced} />}
     </div>
   )
 }
