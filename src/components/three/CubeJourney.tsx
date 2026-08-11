@@ -1,11 +1,11 @@
 'use client'
 
 // The reference site's integration, adapted: ONE fixed canvas behind the
-// page (z-index -1, so white cards occlude it) where the particle cube lives
-// for the whole scroll. It starts as loose dust near the hero copy, travels
-// across the margins while assembling as you scroll, docks precisely into
-// the contact section's .cube-stage slot, and disperses past it. Cursor
-// repulsion works everywhere; grabbing it inside its own bounds spins it.
+// page where the particle cube lives. Its existence is anchored to the
+// CONTACT SECTION's position - it cannot appear during earlier sections,
+// no matter the page length: fully transparent until the contact slot is
+// within ~1.4 viewports, then it rides in from the right margin, assembles,
+// docks into the slot, and disperses once you scroll past.
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -15,40 +15,6 @@ import { makeParticleMaterial } from './particle-material'
 
 const CAM_Z = 10
 const FOV = 40
-// Journey keyframes before the dock: [progress, xFrac, yFrac, viewportScale, assemble, alpha]
-// The path crosses the page LOW (empty paper) and then climbs the right
-// margin toward the dock, which also sits right - so the figure never
-// travels across text at reading height.
-const KEYS: [number, number, number, number, number, number][] = [
-  // The figure does not exist until three quarters of the way down; it
-  // materializes on the right margin approaching contact and docks.
-  [0.0, 0.95, 0.9, 0.14, 0.2, 0.0],
-  [0.72, 0.95, 0.85, 0.16, 0.3, 0.0],
-  [0.86, 0.94, 0.6, 0.24, 0.65, 0.8],
-  [1.0, 0.5, 0.5, 0.5, 1.0, 1.0], // placeholder: replaced by the dock rect
-]
-
-function lerpKeys(p: number): [number, number, number, number, number] {
-  const t = MathUtils.clamp(p, 0, 1)
-  let a = KEYS[0]
-  let b = KEYS[KEYS.length - 1]
-  for (let i = 0; i < KEYS.length - 1; i++) {
-    if (t >= KEYS[i][0] && t <= KEYS[i + 1][0]) {
-      a = KEYS[i]
-      b = KEYS[i + 1]
-      break
-    }
-  }
-  const f = a[0] === b[0] ? 0 : (t - a[0]) / (b[0] - a[0])
-  return [
-    MathUtils.lerp(a[1], b[1], f),
-    MathUtils.lerp(a[2], b[2], f),
-    MathUtils.lerp(a[3], b[3], f),
-    MathUtils.lerp(a[4], b[4], f),
-    MathUtils.lerp(a[5], b[5], f),
-  ]
-}
-
 function Scene() {
   const reduced =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -126,40 +92,32 @@ function Scene() {
     const aspect = vw / vh
     const scrollY = window.scrollY
 
-    // Scroll progress toward the dock: p=1 exactly when the contact slot is
-    // centered in the viewport; robust to dynamic layout because the slot's
-    // live rect feeds the equation every frame.
+    // Section-anchored visibility: everything derives from the live position
+    // of the contact slot. approach: 0 (far below) -> 1 (slot centered).
     const slot = document.querySelector('.cube-stage')
     const rect = slot?.getBoundingClientRect()
-    let p = 0
-    let dockTarget: [number, number, number, number, number] | null = null
-    if (rect && rect.height > 0) {
-      const dockScroll = scrollY + rect.top - (vh - rect.height) / 2
-      p = dockScroll > 1 ? scrollY / dockScroll : 1
-      dockTarget = [
-        (rect.left + rect.width / 2) / vw,
-        (rect.top + rect.height / 2) / vh,
-        (rect.height / vh) * 0.86,
-        1,
-        1,
-      ]
+    if (!rect || rect.height === 0) return
+    const approach = MathUtils.clamp((vh * 1.4 - rect.top) / (vh * 0.9), 0, 1)
+    const e = approach * approach * (3 - 2 * approach)
+    const dockX = (rect.left + rect.width / 2) / vw
+    const dockY = (rect.top + rect.height / 2) / vh
+    const dockS = (rect.height / vh) * 0.86
+    let xf = MathUtils.lerp(0.95, dockX, e)
+    let yf = MathUtils.lerp(0.88, dockY, e)
+    const sf = MathUtils.lerp(0.14, dockS, e)
+    let assemble = MathUtils.lerp(0.25, 1, e)
+    let alpha = e
+    // Scrolled past the dock: disperse into dust and fade out.
+    const past = MathUtils.clamp(((vh - rect.height) / 2 - rect.top) / (vh * 0.5), 0, 1)
+    if (past > 0) {
+      assemble = MathUtils.lerp(assemble, 0.05, past)
+      alpha = MathUtils.lerp(alpha, 0, past)
     }
 
-    let [xf, yf, sf, assemble, alpha] = lerpKeys(p)
-    if (dockTarget && p > 0.9) {
-      // Blend the final approach into the live dock rect.
-      const f = MathUtils.clamp((p - 0.9) / 0.1, 0, 1)
-      xf = MathUtils.lerp(xf, dockTarget[0], f)
-      yf = MathUtils.lerp(yf, dockTarget[1], f)
-      sf = MathUtils.lerp(sf, dockTarget[2], f)
-      assemble = MathUtils.lerp(assemble, 1, f)
-      alpha = MathUtils.lerp(alpha, 1, f)
-    }
-    // Past the dock: drift up with the page and disperse into dust.
-    if (p > 1.001) {
-      const o = MathUtils.clamp((p - 1) * (vh / 220) * 0.5, 0, 1)
-      assemble = MathUtils.lerp(assemble, 0.05, o)
-      alpha = MathUtils.lerp(alpha, 0, o)
+    // Nothing on screen: park the material at zero and skip the heavy loop.
+    if (alpha < 0.01 && state.current.alpha < 0.01) {
+      material.uniforms.uOpacity.value = 0
+      return
     }
 
     // Damped follow so travel feels cinematic rather than glued to the wheel.
