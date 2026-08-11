@@ -42,11 +42,13 @@
   --ink-rgb: 11 11 12;
   --coral-rgb: 11 11 12;
 
-  /* Type - Archivo carries display and body; Instrument Serif Italic is the
-     one serif register (italic spans in titles); JetBrains Mono is meta. */
-  --font-sans: 'Archivo', 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-display: 'Archivo', 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-serif-italic: 'Instrument Serif', georgia, serif;
+  /* Type - Inter (Display cut via the variable opsz axis, same face Finox
+     ships) carries display and body; italic spans render Inter Italic;
+     JetBrains Mono is meta. --font-serif-italic is kept as an alias so the
+     italic-register selectors need no rename. */
+  --font-sans: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
+  --font-display: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
+  --font-serif-italic: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, sfmono-regular, menlo, monospace;
   --ls-display: -0.035em;
   --ls-heading: -0.02em;

@@ -19,7 +19,7 @@ Always run `npm run check`, `npm run lint`, `npm run format:check`, and `npm tes
 
 ## Architecture Overview
 
-Personal portfolio site built with **Next.js 16 (App Router, React 19)**, deployed on **Vercel**. Bilingual (EN/ES). Vela visual system: paper `#F4F4F2`, ink `#0B0B0C`, violet `#7C5CFF` as the only interactive accent; Archivo + Instrument Serif Italic + JetBrains Mono (Google Fonts).
+Personal portfolio site built with **Next.js 16 (App Router, React 19)**, deployed on **Vercel**. Bilingual (EN/ES). Vela visual system: paper `#F4F4F2`, ink `#0B0B0C`, violet `#7C5CFF` as the only interactive accent; Inter (Display cut via the variable opsz axis) + JetBrains Mono (Google Fonts).
 
 ### Routing
 

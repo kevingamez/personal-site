@@ -133,7 +133,7 @@ export const enSections: Pick<
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
-    fonts: 'Set in Archivo, Instrument Serif &amp; JetBrains Mono',
+    fonts: 'Set in Inter &amp; JetBrains Mono',
     estab: 'Est. 2026 · Bogotá',
   },
 }
