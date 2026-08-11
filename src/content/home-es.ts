@@ -313,7 +313,7 @@ export const es: HomeStrings = {
     streaming: 'listo',
     greeting:
       'bienvenido · una pequeña shell que indexa este sitio. escribe <span class="ac">help</span> para ver comandos, o pregúntale a la IA: <span class="ac">kevin "¿qué hace enttor?"</span>',
-    placeholder: 'escribe un comando, enter para enviar…',
+    placeholder: 'escribe un comando…',
     suggest1: 'help',
     suggest2: 'whoami',
     suggest3: 'experience',
