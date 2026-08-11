@@ -7,7 +7,7 @@
 import { Color } from 'three'
 import { buildSizes } from './particle-material'
 
-export const NODES = 10500
+export const NODES = 13000
 const LINKS_PER_NODE = 2
 const LINK_MAX_DIST = 0.3
 export const AUTO_WAVE_S = 3.4
@@ -65,10 +65,23 @@ function edgeDistance(z: number, y: number): number {
 export function buildVolume() {
   const base = new Float32Array(NODES * 3)
   const phase = new Float32Array(NODES)
+  const region = new Uint8Array(NODES) // 0 cerebrum, 1 cerebellum, 2 stem
+  const rim = new Float32Array(NODES) // 1 = at the silhouette outline
+  const crease = new Float32Array(NODES) // 1 = inside a fold furrow
   let seed = 424242
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 4294967296
     return seed / 4294967296
+  }
+
+  // Perimeter table so the contour band can sample the outline directly.
+  const segLen: number[] = []
+  let perim = 0
+  for (let i = 0; i < PROFILE.length; i++) {
+    const [z1, y1] = PROFILE[i]
+    const [z2, y2] = PROFILE[(i + 1) % PROFILE.length]
+    segLen.push(Math.hypot(z2 - z1, y2 - y1))
+    perim += segLen[i]
   }
 
   const place = (i: number) => {
@@ -76,45 +89,69 @@ export function buildVolume() {
     let x = 0
     let y = 0
     let z = 0
-    if (pick < 0.8) {
-      // Cerebrum: rejection-sample the authored profile, then give the point
-      // lateral width that thins toward the outline (a rounded 3D body).
+    if (pick < 0.78) {
+      // Cerebrum: mostly rejection-sampled from the authored profile; a
+      // dense contour band rides the outline itself so the silhouette
+      // reads as a drawn stroke, not a fading dust edge.
       let py = 0
       let pz = 0
-      do {
-        pz = rand() * 2.9 - 1.45
-        py = rand() * 1.95 - 0.8
-      } while (!inProfile(pz, py))
+      if (rand() < 0.16) {
+        let along = rand() * perim
+        let si = 0
+        while (along > segLen[si]) {
+          along -= segLen[si]
+          si++
+        }
+        const [z1, y1] = PROFILE[si]
+        const [z2, y2] = PROFILE[(si + 1) % PROFILE.length]
+        const tt = along / segLen[si]
+        const u = (0.02 + rand() * 0.08) * 0.5
+        pz = z1 + (z2 - z1) * tt
+        py = y1 + (y2 - y1) * tt
+        pz += (0 - pz) * u
+        py += (0.18 - py) * u
+      } else {
+        do {
+          pz = rand() * 2.9 - 1.45
+          py = rand() * 1.95 - 0.8
+        } while (!inProfile(pz, py))
+      }
       const d = edgeDistance(pz, py)
-      const w = Math.min(1, Math.sqrt(d) * 1.35) * 0.92
+      const w = Math.min(1, Math.sqrt(d) * 1.55) * 0.92
       const side = rand() < 0.5 ? -1 : 1
       const shell = rand() < 0.86
       let lx = shell ? w * (0.8 + 0.2 * rand()) : w * rand() * 0.75
+      rim[i] = Math.max(0, 1 - d / 0.3)
       if (shell) {
         // Gyri: creased ridge bands sweeping around the profile.
         const th = Math.atan2(py - 0.1, pz)
-        lx += (1 - Math.abs(Math.sin(th * 6.5 + Math.sin(py * 4.2) * 1.2))) * 0.14
+        const furrow = Math.abs(Math.sin(th * 6.5 + Math.sin(py * 4.2) * 1.2))
+        crease[i] = furrow
+        lx += (1 - furrow) * 0.14
       }
       x = side * Math.max(lx, 0.05) // tight central fissure
       y = py + (rand() - 0.5) * 0.03
       z = pz + (rand() - 0.5) * 0.03
-    } else if (pick < 0.95) {
+    } else if (pick < 0.94) {
+      region[i] = 1
       // Cerebellum: distinct striated mass tucked under the occipital back.
       const th = rand() * Math.PI * 2
       const ph = Math.acos(rand() * 2 - 1)
-      const stria = (1 - Math.abs(Math.sin(Math.cos(ph) * 16))) * 0.05
+      crease[i] = Math.abs(Math.sin(Math.cos(ph) * 16))
+      const stria = (1 - crease[i]) * 0.09
       const sc = 0.94 + stria
-      x = Math.sin(ph) * Math.cos(th) * 0.56 * sc
+      x = Math.sin(ph) * Math.cos(th) * 0.6 * sc
       y = Math.cos(ph) * 0.32 * sc - 0.52
-      z = Math.sin(ph) * Math.sin(th) * 0.44 * sc - 0.82
+      z = Math.sin(ph) * Math.sin(th) * 0.48 * sc - 0.84
     } else {
       // Brainstem: a short column angling down from under the center.
+      region[i] = 2
       const t = rand()
       const a = rand() * Math.PI * 2
-      const r = Math.sqrt(rand()) * 0.13
+      const r = Math.sqrt(rand()) * 0.17 * (1 - t * 0.45)
       x = Math.cos(a) * r
-      y = -0.55 - t * 0.55
-      z = -0.35 + t * 0.12 + Math.sin(a) * r
+      y = -0.5 - t * 0.5
+      z = -0.35 + t * 0.1 + Math.sin(a) * r
     }
     base[i * 3] = x
     base[i * 3 + 1] = y
@@ -161,36 +198,68 @@ export function buildVolume() {
   }
   const origins: number[] = []
   for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * NODES))
-  // Base colors: ink dust with prismatic glints scattered through the body,
-  // the reference brain's sparkle in the Vela palette.
+  // Base colors: the reference brain's pointillist full-color mix, mapped
+  // onto anatomy - frontal violet flowing through rose to occipital amber,
+  // an emerald cerebellum, an ink brainstem. Per-neuron jitter plus darker
+  // and lighter stipple make it read as colored dust, not flat paint.
   const baseColors = new Float32Array(NODES * 3)
   const accented = new Uint8Array(NODES)
   {
     const c = new Color()
-    const ACCENTS: [string, number][] = [
-      ['#7c5cff', 0.08],
-      ['#e9a521', 0.03],
-      ['#3e8e6e', 0.03],
-    ]
+    const mixc = new Color()
+    const paper = new Color('#f4f4f2')
+    const amber = new Color('#e9a521')
+    const rose = new Color('#d2617a')
+    const violet = new Color('#7c5cff')
+    const emerald = new Color('#3e8e6e')
     for (let i = 0; i < NODES; i++) {
-      const r = rand()
-      let acc = 0
-      c.copy(FAINT)
-      for (const [hex, share] of ACCENTS) {
-        acc += share
-        if (r < acc) {
-          c.set(hex)
-          break
-        }
+      if (region[i] === 1) {
+        c.copy(emerald).lerp(violet, rand() * 0.35)
+      } else if (region[i] === 2) {
+        c.copy(INK).lerp(paper, 0.25 + rand() * 0.15)
+      } else {
+        const tt = Math.min(1, Math.max(0, (base[i * 3 + 2] + 1.45) / 2.9 + (rand() - 0.5) * 0.22))
+        if (tt < 0.5) c.copy(amber).lerp(rose, tt * 2)
+        else c.copy(rose).lerp(violet, (tt - 0.5) * 2)
       }
+      // The anatomy is drawn with darkness: an inked contour right at the
+      // silhouette, a dark ring fading inward, and shaded fold furrows.
+      if (region[i] === 0 && rim[i] > 0.78) {
+        c.copy(INK).lerp(mixc.copy(paper), 0.15)
+      } else {
+        c.lerp(mixc.copy(INK), 0.15)
+        c.lerp(
+          mixc.copy(INK),
+          region[i] === 1
+            ? 0.12 + crease[i] * 0.5
+            : Math.min(0.75, rim[i] * 0.55 + crease[i] * 0.34)
+        )
+      }
+      // Stipple: some neurons sink toward ink, a few lift toward paper.
+      const v = rand()
+      if (v < 0.16) c.lerp(mixc.copy(INK), 0.5)
+      else if (v < 0.24) c.lerp(mixc.copy(paper), 0.3)
+      accented[i] = rand() < 0.1 ? 1 : 0
       baseColors[i * 3] = c.r
       baseColors[i * 3 + 1] = c.g
       baseColors[i * 3 + 2] = c.b
-      accented[i] = r < acc ? 1 : 0
     }
   }
   const sizes = buildSizes(NODES, rand, 1.0)
   // Colored neurons double as the reference brain's bright glints.
   for (let i = 0; i < NODES; i++) if (accented[i]) sizes[i] *= 1.4
-  return { base, phase, edges, origins, sizes, baseColors }
+  // Journey extras: a loose dust cloud to assemble from, and a per-neuron
+  // stagger so formation sweeps from the frontal pole toward the back.
+  const scatter = new Float32Array(NODES * 3)
+  const stagger = new Float32Array(NODES)
+  for (let i = 0; i < NODES; i++) {
+    const th = rand() * Math.PI * 2
+    const ph = Math.acos(rand() * 2 - 1)
+    const r = 2.2 + Math.pow(rand(), 0.6) * 3.4
+    scatter[i * 3] = Math.sin(ph) * Math.cos(th) * r
+    scatter[i * 3 + 1] = Math.cos(ph) * r * 0.7
+    scatter[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * r
+    stagger[i] = (1 - (base[i * 3 + 2] + 1.45) / 2.9) * 0.6 + rand() * 0.4
+  }
+  return { base, phase, edges, origins, sizes, baseColors, scatter, stagger }
 }

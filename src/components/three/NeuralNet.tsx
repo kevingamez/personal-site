@@ -56,6 +56,7 @@ function Scene() {
   const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
   const autoWave = useRef({ cycle: -1, ox: 0, oy: 0, oz: 0 })
+  const spin = useRef(0)
   const local = useMemo(() => new Vector3(), [])
   const scratch = useMemo(() => new Color(), [])
 
@@ -100,15 +101,17 @@ function Scene() {
     }
   }, [gl, camera])
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const g = group.current
     const geo = points.current?.geometry
     if (!g || !geo) return
     const t = state.clock.elapsedTime
 
-    // Spin: drag with inertia; otherwise a slow turn plus a subtle tilt
-    // toward the cursor, like the reference brain tracking your hand.
-    g.rotation.y += drag.current.vy + (drag.current.on ? 0 : delta * 0.06)
+    // Spin: sway around the legible profile view; drag adds an offset
+    // that slowly relaxes back, like the reference brain settling.
+    spin.current += drag.current.vy
+    spin.current *= 0.985
+    g.rotation.y = 1.35 + Math.sin(t * 0.12) * 0.22 + spin.current
     const tiltX = MathUtils.clamp(-cursor.current.ny * 0.22, -0.35, 0.35)
     g.rotation.x = MathUtils.lerp(g.rotation.x + drag.current.vx, tiltX, 0.02)
     drag.current.vx *= 0.93
