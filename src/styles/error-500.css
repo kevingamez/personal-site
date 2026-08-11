@@ -56,11 +56,6 @@
   margin: 0 0 8px;
 }
 
-.err500 h1 i {
-  font-family: Inter, system-ui, sans-serif;
-  font-style: italic;
-}
-
 .err500 h2 {
   font-family: Inter, system-ui, sans-serif;
   font-weight: 400;

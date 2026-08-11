@@ -94,12 +94,6 @@ h1.hero-title {
   text-wrap: balance;
 }
 
-h1.hero-title i {
-  font-family: var(--font-serif-italic);
-  font-style: italic;
-  letter-spacing: 0;
-}
-
 .hero-lede {
   font-size: 17px;
   line-height: 1.55;

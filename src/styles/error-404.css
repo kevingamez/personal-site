@@ -56,11 +56,6 @@
   margin: 0 0 16px;
 }
 
-.err404 h1 i {
-  font-family: Inter, system-ui, sans-serif;
-  font-style: italic;
-}
-
 .err404 p {
   font-size: 17px;
   color: var(--ink-2);

@@ -55,17 +55,6 @@ section {
   text-wrap: balance;
 }
 
-/* The serif-italic register: italic spans inside display type. */
-.sec-title i,
-.wf-title i,
-.tl-role i,
-.ach-title i,
-.contact h2 i {
-  font-family: var(--font-serif-italic);
-  font-style: italic;
-  letter-spacing: 0;
-}
-
 .sec-blurb {
   font-size: 15px;
   color: var(--muted);
