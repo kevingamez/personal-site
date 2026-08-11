@@ -68,9 +68,6 @@
 .deck-panel {
   min-height: 170px;
 }
-.deck-panel:focus {
-  outline: none;
-}
 .dp-statement {
   font-family: var(--font-display);
   font-weight: 400;
@@ -109,6 +106,10 @@
 @media (prefers-reduced-motion: reduce) {
   .deck-panel.dp-in {
     animation: none;
+  }
+  /* State changes still happen, but as instant jumps, not movement. */
+  .deck-card {
+    transition: none;
   }
 }
 @media (max-width: 640px) {

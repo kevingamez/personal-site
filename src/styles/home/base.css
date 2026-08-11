@@ -8,7 +8,9 @@
   --white: #ffffff;
   --ink-900: #0b0b0c;
   --ink-600: #3a3a3e;
-  --ink-400: #7c7c83;
+  /* Darkened from the Vela spec's #7C7C83: this token carries 10-15px text
+     everywhere here, and needs 4.5:1 on paper for WCAG AA. */
+  --ink-400: #6e6e74;
   --ink-300: #a3a3a9;
   --ink-150: #dedee0;
   --ink-050: #f0f0ee;

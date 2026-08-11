@@ -336,7 +336,7 @@ export const es: HomeStrings = {
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'En otros lados',
     elsewhereDev: 'Modo dev →',
-    fonts: 'Tipografías Archivo y JetBrains Mono',
+    fonts: 'Tipografías Archivo, Instrument Serif y JetBrains Mono',
     estab: 'Est. 2026 · Bogotá',
   },
 }
