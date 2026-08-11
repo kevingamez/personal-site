@@ -214,7 +214,7 @@ function Scene() {
   })
 
   return (
-    <group ref={group} rotation={[0.15, -0.4, 0]}>
+    <group ref={group} rotation={[0.16, 1.05, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
       <points ref={points}>
         <bufferGeometry>
