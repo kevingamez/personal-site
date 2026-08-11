@@ -83,16 +83,23 @@ export function CubeStage() {
     }
   }, [])
 
-  return (
-    <div ref={host} className="cube-stage" aria-hidden="true">
-      {fx ? (
-        near &&
-        (FX[fx].kind === 'life' ? (
+  // Preview mode takes the whole screen immediately - no scrolling needed.
+  if (fx) {
+    return (
+      <div className="fx-preview" aria-hidden="true">
+        <div className="fx-preview-tag">preview · {fx}</div>
+        {FX[fx].kind === 'life' ? (
           <LifeCube variant={FX[fx].v as 'ink' | 'prism'} />
         ) : (
           <NeuralNet variant={FX[fx].v as 'flat' | 'depth'} />
-        ))
-      ) : journey ? (
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div ref={host} className="cube-stage" aria-hidden="true">
+      {journey ? (
         <CubeJourney />
       ) : (
         near && <ParticleCube animate={visible && !reduced} reduced={reduced} />
