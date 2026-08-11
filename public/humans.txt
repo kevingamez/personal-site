@@ -18,7 +18,7 @@
 /* SITE */
   Last update: 2026
   Standards: HTML5, CSS3, ES2024, TypeScript
-  Built with: Astro 5, Preact, Vercel
+  Built with: Next.js, React, Vercel
   Components: Hero with Conway's Game of Life, animated GitHub stats,
               live Claude console, Warp-style /dev terminal view.
   Languages: English, Español

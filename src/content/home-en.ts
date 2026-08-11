@@ -36,6 +36,7 @@ export const en: HomeStrings = {
     experience: 'Experience',
     work: 'Work',
     github: 'GitHub',
+    resume: 'Résumé',
     devMode: 'Dev mode',
     sayHi: 'Email me ↗',
   },

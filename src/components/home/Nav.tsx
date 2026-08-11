@@ -18,6 +18,7 @@ export function Nav({ meta, t }: Props) {
           <a href="#experience">{t.experience}</a>
           <a href="#work">{t.work}</a>
           <a href="#github">{t.github}</a>
+          <a href="/resume/">{t.resume}</a>
         </div>
         <div className="nav-right">
           <a

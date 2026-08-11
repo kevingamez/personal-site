@@ -1,0 +1,164 @@
+.resume-page {
+  background: var(--cream);
+  min-height: 100vh;
+  padding: 80px 0 120px;
+}
+
+.resume-article {
+  max-width: 720px;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.resume-article header {
+  margin-bottom: 44px;
+}
+
+.resume-article .kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--coral-strong);
+  margin: 0 0 12px;
+}
+
+.resume-article h1 {
+  font-family: Inter, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.resume-contact {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.resume-contact a {
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.resume-summary {
+  margin: 18px 0 0;
+  max-width: 60ch;
+  color: var(--ink-2);
+}
+
+.resume-article h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral-strong);
+  margin: 44px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.resume-entry {
+  margin-top: 22px;
+}
+
+.resume-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.resume-entry-head h3 {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.resume-entry-head h3 .at {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.resume-dates {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.resume-meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 2px 0 8px;
+}
+
+.resume-entry ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.resume-entry li {
+  margin: 4px 0;
+}
+
+.resume-skills {
+  margin: 16px 0 0;
+}
+
+.resume-skills dt {
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 10px;
+}
+
+.resume-skills dd {
+  margin: 2px 0 0;
+}
+
+.resume-back {
+  display: inline-block;
+  margin-top: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Print: a resume page should survive Cmd+P. Plain ink on paper, no chrome. */
+@media print {
+  .resume-page {
+    background: #fff;
+    padding: 0;
+  }
+
+  .resume-article,
+  .resume-article h1,
+  .resume-entry-head h3,
+  .resume-skills dt {
+    color: #000;
+  }
+
+  .resume-article .kicker,
+  .resume-article h2 {
+    color: #444;
+  }
+
+  .resume-back,
+  .resume-pdf {
+    display: none;
+  }
+
+  .resume-contact,
+  .resume-meta,
+  .resume-dates {
+    color: #333;
+  }
+}
