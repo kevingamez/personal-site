@@ -59,8 +59,6 @@
 .sv-mini {
   display: flex;
   flex-direction: column;
-  border-left: 2px solid rgba(255, 122, 92, 0.55);
-  padding-left: 14px;
 }
 .sv-mini span {
   font-family: 'JetBrains Mono', monospace;
@@ -153,8 +151,6 @@
 .sv-feat-stats > div {
   display: flex;
   flex-direction: column;
-  border-left: 2px solid var(--coral);
-  padding-left: 10px;
 }
 .sv-feat-stats span {
   font-family: var(--font-sans);

@@ -35,8 +35,6 @@
 .gh-stat {
   display: flex;
   flex-direction: column;
-  border-left: 2px solid var(--coral);
-  padding-left: 18px;
   opacity: 0;
   transform: translateY(10px);
   transition:

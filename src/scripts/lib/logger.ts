@@ -4,7 +4,7 @@
 
 type Level = 'debug' | 'info' | 'warn' | 'error'
 
-const isProd = import.meta.env.PROD
+const isProd = process.env.NODE_ENV === 'production'
 
 function emit(level: Level, scope: string, msg: string, data?: unknown): void {
   if (isProd && level === 'debug') return
