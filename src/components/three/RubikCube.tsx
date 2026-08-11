@@ -4,7 +4,8 @@
 // It scrambles itself with eased quarter-turns (the classic pivot-group
 // technique: attach a layer to a pivot, rotate, re-attach and snap), and the
 // whole cube can be grabbed and spun with the pointer, with inertia. Under
-// prefers-reduced-motion nothing moves on its own; dragging still works.
+// prefers-reduced-motion nothing moves on its own, but direct manipulation
+// always works: drag spins the cube and a click/tap twists a layer.
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -74,7 +75,7 @@ function Scene({ animate }: { animate: boolean }) {
     seed.current = (seed.current * 1664525 + 1013904223) % 4294967296
     return seed.current / 4294967296
   }
-  const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
+  const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0, sx: 0, sy: 0, click: false })
 
   useEffect(() => {
     const el = gl.domElement
@@ -83,6 +84,8 @@ function Scene({ animate }: { animate: boolean }) {
       drag.current.on = true
       drag.current.px = e.clientX
       drag.current.py = e.clientY
+      drag.current.sx = e.clientX
+      drag.current.sy = e.clientY
       el.style.cursor = 'grabbing'
     }
     const move = (e: PointerEvent) => {
@@ -92,7 +95,12 @@ function Scene({ animate }: { animate: boolean }) {
       drag.current.px = e.clientX
       drag.current.py = e.clientY
     }
-    const up = () => {
+    const up = (e: PointerEvent) => {
+      if (drag.current.on) {
+        // A press without meaningful movement is a click: twist one layer.
+        const moved = Math.abs(e.clientX - drag.current.sx) + Math.abs(e.clientY - drag.current.sy)
+        if (moved < 6) drag.current.click = true
+      }
       drag.current.on = false
       el.style.cursor = 'grab'
     }
@@ -152,14 +160,17 @@ function Scene({ animate }: { animate: boolean }) {
       drag.current.vy *= 0.92
       if (animate && !drag.current.on) sp.rotation.y += delta * 0.12
     }
-    if (!animate) return
+    if (drag.current.click) {
+      drag.current.click = false
+      if (!turn.current) startTurn()
+    }
     if (turn.current && pivot.current) {
       turn.current.t += (delta * 1000) / TURN_MS
       const angle = easeInOut(Math.min(turn.current.t, 1)) * (Math.PI / 2) * turn.current.dir
       pivot.current.rotation.set(0, 0, 0)
       pivot.current.rotation[turn.current.axis] = angle
       if (turn.current.t >= 1) finishTurn()
-    } else {
+    } else if (animate) {
       wait.current -= delta * 1000
       if (wait.current <= 0) startTurn()
     }

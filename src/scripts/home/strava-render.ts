@@ -43,7 +43,11 @@ function drawnRoute(routeEl: Element, a: Activity, card: Element, failedImg?: HT
   line.setAttribute('points', r.points.map(([x, y]) => `${x},${y}`).join(' '))
   line.setAttribute('fill', 'none')
   line.setAttribute('stroke', 'currentColor')
-  line.setAttribute('stroke-width', String(Math.max(2, Math.max(r.w, r.h) / 140)))
+  // Constant screen-pixel stroke (like Strava's own thumbnails): dense
+  // out-and-back routes stay a fine line instead of smearing into a blob.
+  line.setAttribute('stroke-width', '1.75')
+  line.setAttribute('vector-effect', 'non-scaling-stroke')
+  line.setAttribute('stroke-opacity', '0.9')
   line.setAttribute('stroke-linecap', 'round')
   line.setAttribute('stroke-linejoin', 'round')
   svg.appendChild(line)
