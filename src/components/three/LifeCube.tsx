@@ -10,11 +10,14 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Color, MathUtils, type Group, type Points } from 'three'
 import { makeParticleMaterial } from './particle-material'
 
-const N = 22 // cells per face side
+const N = 16 // cells per face side - big enough to read individual cells
 const FACE_CELLS = N * N
 const COUNT = FACE_CELLS * 6
 const HALF = 1.35
-const STEP_MS = 480
+const STEP_MS = 620
+const SIZE_DEAD = 0.048
+const SIZE_ALIVE = 0.105
+const SIZE_BORN = 0.13
 const FACE_COLORS = ['#7c5cff', '#e9a521', '#3e8e6e', '#d2617a', '#0b0b0c', '#a3a3a9']
 const FACES: [number, number, number][] = [
   [1, 0, 0],
@@ -40,11 +43,21 @@ function buildGrid() {
       positions[j] = nx ? nx * HALF : u * HALF
       positions[j + 1] = ny ? ny * HALF : nx ? u * HALF : w * HALF
       positions[j + 2] = nz ? nz * HALF : w * HALF
-      sizes[i] = 0.052
+      sizes[i] = SIZE_DEAD
     }
   }
   return { positions, sizes }
 }
+
+// Sparse dust plus seeded gliders: recognizable structures crawling across
+// each face instead of homogeneous soup that reads as static noise.
+const GLIDER: [number, number][] = [
+  [1, 0],
+  [2, 1],
+  [0, 2],
+  [1, 2],
+  [2, 2],
+]
 
 function seedBoards(): Uint8Array[] {
   let seed = 1234
@@ -54,9 +67,20 @@ function seedBoards(): Uint8Array[] {
   }
   return Array.from({ length: 6 }, () => {
     const b = new Uint8Array(FACE_CELLS)
-    for (let i = 0; i < FACE_CELLS; i++) b[i] = rand() < 0.32 ? 1 : 0
+    for (let i = 0; i < FACE_CELLS; i++) b[i] = rand() < 0.13 ? 1 : 0
+    for (let g = 0; g < 3; g++) {
+      const ox = 1 + Math.floor(rand() * (N - 5))
+      const oy = 1 + Math.floor(rand() * (N - 5))
+      for (const [dx, dy] of GLIDER) b[((oy + dy) % N) * N + ((ox + dx) % N)] = 1
+    }
     return b
   })
+}
+
+function population(b: Uint8Array): number {
+  let n = 0
+  for (let i = 0; i < FACE_CELLS; i++) n += b[i]
+  return n
 }
 
 // One B3/S23 step on a toroidal N x N board.
@@ -99,7 +123,7 @@ function Scene({ variant }: { variant: LifeVariant }) {
     const paper = new Color('#f4f4f2')
     for (let f = 0; f < 6; f++) {
       c.set(variant === 'ink' ? '#0b0b0c' : FACE_COLORS[f])
-      const d = c.clone().lerp(paper, variant === 'ink' ? 0.88 : 0.85)
+      const d = c.clone().lerp(paper, variant === 'ink' ? 0.72 : 0.7)
       for (let k = 0; k < FACE_CELLS; k++) {
         const i = (f * FACE_CELLS + k) * 3
         alive[i] = c.r
@@ -148,7 +172,7 @@ function Scene({ variant }: { variant: LifeVariant }) {
     const g = group.current
     const geo = points.current?.geometry
     if (!g || !geo) return
-    g.rotation.y += drag.current.vy + (drag.current.on ? 0 : delta * 0.14)
+    g.rotation.y += drag.current.vy + (drag.current.on ? 0 : delta * 0.07)
     g.rotation.x = MathUtils.clamp(g.rotation.x + drag.current.vx, -1.1, 1.1)
     drag.current.vx *= 0.93
     drag.current.vy *= 0.93
@@ -156,22 +180,39 @@ function Scene({ variant }: { variant: LifeVariant }) {
     const now = state.clock.elapsedTime * 1000
     if (now - lastStep.current > STEP_MS) {
       lastStep.current = now
-      boards.current = boards.current.map(stepBoard)
+      const prev = boards.current
+      boards.current = prev.map((b, f) => {
+        const next = stepBoard(b)
+        // A face that dies out or freezes gets fresh gliders.
+        return population(next) < 5 ? seedBoards()[f] : next
+      })
+      // Newborn cells flash oversized, then settle - the visible heartbeat.
+      const sz = geo.attributes.aSize.array as Float32Array
+      for (let f = 0; f < 6; f++) {
+        for (let k = 0; k < FACE_CELLS; k++) {
+          if (boards.current[f][k] && !prev[f][k]) sz[f * FACE_CELLS + k] = SIZE_BORN
+        }
+      }
     }
-    // Ease every cell's color toward its current alive/dead target.
+    // Snap colors and sizes toward the live state - fast enough that each
+    // generation reads as a discrete beat.
     const col = geo.attributes.color.array as Float32Array
+    const sz = geo.attributes.aSize.array as Float32Array
     const { alive, dead } = palette
     for (let f = 0; f < 6; f++) {
       const b = boards.current[f]
       for (let k = 0; k < FACE_CELLS; k++) {
-        const i = (f * FACE_CELLS + k) * 3
+        const idx = f * FACE_CELLS + k
+        const i = idx * 3
         const t = b[k] ? alive : dead
-        col[i] += (t[i] - col[i]) * 0.12
-        col[i + 1] += (t[i + 1] - col[i + 1]) * 0.12
-        col[i + 2] += (t[i + 2] - col[i + 2]) * 0.12
+        col[i] += (t[i] - col[i]) * 0.3
+        col[i + 1] += (t[i + 1] - col[i + 1]) * 0.3
+        col[i + 2] += (t[i + 2] - col[i + 2]) * 0.3
+        sz[idx] += ((b[k] ? SIZE_ALIVE : SIZE_DEAD) - sz[idx]) * 0.25
       }
     }
     geo.attributes.color.needsUpdate = true
+    geo.attributes.aSize.needsUpdate = true
   })
 
   return (
