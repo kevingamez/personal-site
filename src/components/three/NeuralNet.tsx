@@ -1,10 +1,11 @@
 'use client'
 
-// Idea B, rebuilt the way the reference brain is built: a VOLUMETRIC figure.
-// ~2800 neuron-particles fill a 3D body, short synapse-like connections web
-// the volume, and activation waves ripple THROUGH it from firing points -
-// neurons flash violet as the wavefront passes. Drag to spin. Two bodies:
-// 'cloud' (one ellipsoid) and 'lobes' (two-lobed, brain-silhouetted).
+// The neural figure, built and behaving like the reference brain:
+// a two-lobed volumetric body of ~2800 neuron-particles webbed with short
+// synapses. It breathes, tilts subtly toward the cursor, and - the core
+// interaction - TOUCHING it stimulates it: ripples fire from wherever the
+// cursor grazes the body, neurons flash ink-to-violet as fronts pass, and
+// the ones under your hand shy away elastically. Drag spins it.
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -14,99 +15,33 @@ import {
   Color,
   LineBasicMaterial,
   MathUtils,
+  Vector3,
   type Group,
   type Points,
 } from 'three'
-import { buildSizes, makeParticleMaterial } from './particle-material'
+import { makeParticleMaterial } from './particle-material'
+import {
+  AUTO_WAVE_S,
+  buildVolume,
+  FAINT,
+  INK,
+  NODES,
+  TOUCH_WAVE_SPEED,
+  VIOLET,
+  WAVE_BAND,
+} from './net-geometry'
 
-const NODES = 2800
-const LINKS_PER_NODE = 2
-const LINK_MAX_DIST = 0.42
-const WAVE_S = 3.2 // seconds per wave
-const WAVE_BAND = 0.55
-const INK = new Color('#0b0b0c')
-const FAINT = new Color('#0b0b0c').lerp(new Color('#f4f4f2'), 0.78)
-const VIOLET = new Color('#7c5cff')
-
-export type NetVariant = 'cloud' | 'lobes'
-
-function buildVolume(variant: NetVariant) {
-  const positions = new Float32Array(NODES * 3)
-  let seed = 424242
-  const rand = () => {
-    seed = (seed * 1664525 + 1013904223) % 4294967296
-    return seed / 4294967296
-  }
-  for (let i = 0; i < NODES; i++) {
-    // Dense-core ellipsoid sampling (cube-root bias keeps the body solid).
-    const th = rand() * Math.PI * 2
-    const ph = Math.acos(rand() * 2 - 1)
-    const r = Math.cbrt(rand())
-    let x = Math.sin(ph) * Math.cos(th) * r * 1.9
-    const y = Math.cos(ph) * r * 1.35
-    const z = Math.sin(ph) * Math.sin(th) * r * 1.45
-    if (variant === 'lobes') {
-      // Two lobes with a soft central fissure, like the reference figure.
-      const side = i % 2 === 0 ? 1 : -1
-      x = x * 0.62 + side * 0.72
-    }
-    positions[i * 3] = x
-    positions[i * 3 + 1] = y
-    positions[i * 3 + 2] = z
-  }
-
-  // Synapses: each node links to its nearest few neighbors within reach,
-  // found via a coarse spatial hash so build time stays trivial.
-  const cell = LINK_MAX_DIST
-  const hash = new Map<string, number[]>()
-  const keyOf = (x: number, y: number, z: number) =>
-    `${Math.floor(x / cell)},${Math.floor(y / cell)},${Math.floor(z / cell)}`
-  for (let i = 0; i < NODES; i++) {
-    const k = keyOf(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2])
-    const arr = hash.get(k)
-    if (arr) arr.push(i)
-    else hash.set(k, [i])
-  }
-  const edges: [number, number][] = []
-  for (let i = 0; i < NODES; i++) {
-    const x = positions[i * 3]
-    const y = positions[i * 3 + 1]
-    const z = positions[i * 3 + 2]
-    const near: { j: number; d: number }[] = []
-    for (let cx = -1; cx <= 1; cx++)
-      for (let cy = -1; cy <= 1; cy++)
-        for (let cz = -1; cz <= 1; cz++) {
-          const bucket = hash.get(keyOf(x + cx * cell, y + cy * cell, z + cz * cell))
-          if (!bucket) continue
-          for (const j of bucket) {
-            if (j <= i) continue
-            const dx = positions[j * 3] - x
-            const dy = positions[j * 3 + 1] - y
-            const dz = positions[j * 3 + 2] - z
-            const d = Math.sqrt(dx * dx + dy * dy + dz * dz)
-            if (d < LINK_MAX_DIST) near.push({ j, d })
-          }
-        }
-    near.sort((a, b) => a.d - b.d)
-    for (let n = 0; n < Math.min(LINKS_PER_NODE, near.length); n++) edges.push([i, near[n].j])
-  }
-
-  // Firing origins for the activation waves: a handful of scattered nodes.
-  const origins: number[] = []
-  for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * NODES))
-  const sizes = buildSizes(NODES, rand, 1.5)
-  return { positions, edges, origins, sizes }
-}
-
-function Scene({ variant }: { variant: NetVariant }) {
+function Scene() {
   const group = useRef<Group>(null)
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
-  const { positions, edges, origins, sizes } = useMemo(() => buildVolume(variant), [variant])
+  const camera = useThree((s) => s.camera)
+  const { base, phase, edges, origins, sizes } = useMemo(buildVolume, [])
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
   )
+  const positions = useMemo(() => base.slice(), [base])
   const nodeColors = useMemo(() => {
     const c = new Float32Array(NODES * 3)
     for (let i = 0; i < NODES; i++) {
@@ -118,37 +53,43 @@ function Scene({ variant }: { variant: NetVariant }) {
   }, [])
   const lineGeo = useMemo(() => {
     const g = new BufferGeometry()
-    const pos = new Float32Array(edges.length * 6)
-    const col = new Float32Array(edges.length * 6)
-    edges.forEach(([a, b], e) => {
-      pos.set(positions.slice(a * 3, a * 3 + 3), e * 6)
-      pos.set(positions.slice(b * 3, b * 3 + 3), e * 6 + 3)
-    })
-    col.fill(0)
-    g.setAttribute('position', new BufferAttribute(pos, 3))
-    g.setAttribute('color', new BufferAttribute(col, 3))
+    g.setAttribute('position', new BufferAttribute(new Float32Array(edges.length * 6), 3))
+    g.setAttribute('color', new BufferAttribute(new Float32Array(edges.length * 6), 3))
     return g
-  }, [edges, positions])
+  }, [edges])
   const lineMat = useMemo(
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.22 }),
     []
   )
-  const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
+  const drag = useRef({ on: false, moved: 0, vx: 0, vy: 0, px: 0, py: 0 })
+  const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
+  const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
+  const autoWave = useRef({ cycle: -1, ox: 0, oy: 0, oz: 0 })
+  const local = useMemo(() => new Vector3(), [])
   const scratch = useMemo(() => new Color(), [])
-  // Per-node distance to the currently firing origin, recomputed on switch.
-  const waveState = useRef({ origin: -1, dists: new Float32Array(NODES) })
 
   useEffect(() => {
     const el = gl.domElement
     el.style.cursor = 'grab'
+    const v = new Vector3()
     const down = (e: PointerEvent) => {
       drag.current.on = true
+      drag.current.moved = 0
       drag.current.px = e.clientX
       drag.current.py = e.clientY
       el.style.cursor = 'grabbing'
     }
     const move = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect()
+      cursor.current.nx = ((e.clientX - r.left) / r.width) * 2 - 1
+      cursor.current.ny = -((e.clientY - r.top) / r.height) * 2 + 1
+      v.set(cursor.current.nx, cursor.current.ny, 0.5)
+      v.unproject(camera).sub(camera.position).normalize()
+      const t = -camera.position.z / v.z
+      cursor.current.x = camera.position.x + v.x * t
+      cursor.current.y = camera.position.y + v.y * t
       if (!drag.current.on) return
+      drag.current.moved += Math.abs(e.clientX - drag.current.px)
       drag.current.vy = (e.clientX - drag.current.px) * 0.005
       drag.current.vx = (e.clientY - drag.current.py) * 0.005
       drag.current.px = e.clientX
@@ -166,60 +107,109 @@ function Scene({ variant }: { variant: NetVariant }) {
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', up)
     }
-  }, [gl])
+  }, [gl, camera])
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const g = group.current
     const geo = points.current?.geometry
     if (!g || !geo) return
-    g.rotation.y += drag.current.vy + (drag.current.on ? 0 : 0.0022)
-    g.rotation.x = MathUtils.clamp(g.rotation.x + drag.current.vx, -0.9, 0.9)
+    const t = state.clock.elapsedTime
+
+    // Spin: drag with inertia; otherwise a slow turn plus a subtle tilt
+    // toward the cursor, like the reference brain tracking your hand.
+    g.rotation.y += drag.current.vy + (drag.current.on ? 0 : delta * 0.06)
+    const tiltX = MathUtils.clamp(-cursor.current.ny * 0.22, -0.35, 0.35)
+    g.rotation.x = MathUtils.lerp(g.rotation.x + drag.current.vx, tiltX, 0.02)
     drag.current.vx *= 0.93
     drag.current.vy *= 0.93
 
-    // Each wave cycle fires from the next origin; the front expands through
-    // the volume and neurons flash as it passes.
-    const t = state.clock.elapsedTime
-    const cycle = Math.floor(t / WAVE_S)
-    const originIdx = origins[cycle % origins.length]
-    if (waveState.current.origin !== originIdx) {
-      waveState.current.origin = originIdx
-      const ox = positions[originIdx * 3]
-      const oy = positions[originIdx * 3 + 1]
-      const oz = positions[originIdx * 3 + 2]
-      for (let i = 0; i < NODES; i++) {
-        const dx = positions[i * 3] - ox
-        const dy = positions[i * 3 + 1] - oy
-        const dz = positions[i * 3 + 2] - oz
-        waveState.current.dists[i] = Math.sqrt(dx * dx + dy * dy + dz * dz)
+    // Cursor into local space; touching the body re-fires the touch ripple.
+    local.set(cursor.current.x, cursor.current.y, 0)
+    g.worldToLocal(local)
+    const withinBody = local.length() < 2.3
+    if (withinBody) {
+      const dx = local.x - touch.current.ox
+      const dy = local.y - touch.current.oy
+      if (dx * dx + dy * dy > 0.5 || t - touch.current.start > 1.6) {
+        touch.current = { ox: local.x, oy: local.y, oz: 0, start: t }
       }
     }
-    const front = ((t % WAVE_S) / WAVE_S) * 4.6
+    const touchFront = (t - touch.current.start) * TOUCH_WAVE_SPEED
+
+    // Automatic wave: a new origin fires every cycle.
+    const cycle = Math.floor(t / AUTO_WAVE_S)
+    if (autoWave.current.cycle !== cycle) {
+      const o = origins[cycle % origins.length]
+      autoWave.current = { cycle, ox: base[o * 3], oy: base[o * 3 + 1], oz: base[o * 3 + 2] }
+    }
+    const autoFront = ((t % AUTO_WAVE_S) / AUTO_WAVE_S) * 4.6
+
+    const pos = geo.attributes.position.array as Float32Array
     const col = geo.attributes.color.array as Float32Array
-    const dists = waveState.current.dists
+    const aw = autoWave.current
+    const tc = touch.current
     for (let i = 0; i < NODES; i++) {
-      const heat = MathUtils.clamp(1 - Math.abs(dists[i] - front) / WAVE_BAND, 0, 1)
+      const j = i * 3
+      // Breathing: each neuron drifts on its own tiny orbit.
+      const b = 0.035
+      let tx = base[j] + Math.sin(t * 0.6 + phase[i]) * b
+      let ty = base[j + 1] + Math.cos(t * 0.5 + phase[i] * 1.3) * b
+      let tz = base[j + 2] + Math.sin(t * 0.7 + phase[i] * 0.7) * b
+      // Neurons shy away from the cursor within a small radius.
+      const rx = tx - local.x
+      const ry = ty - local.y
+      const rz = tz - local.z
+      const rd2 = rx * rx + ry * ry + rz * rz
+      if (rd2 < 0.6) {
+        const rd = Math.sqrt(rd2) || 0.001
+        const f = ((0.77 - rd) / 0.77) * 0.5
+        tx += (rx / rd) * f
+        ty += (ry / rd) * f
+        tz += (rz / rd) * f
+      }
+      pos[j] += (tx - pos[j]) * 0.12
+      pos[j + 1] += (ty - pos[j + 1]) * 0.12
+      pos[j + 2] += (tz - pos[j + 2]) * 0.12
+      // Heat: the stronger of the automatic wave and your touch ripple.
+      const da = Math.sqrt(
+        (base[j] - aw.ox) ** 2 + (base[j + 1] - aw.oy) ** 2 + (base[j + 2] - aw.oz) ** 2
+      )
+      let heat = MathUtils.clamp(1 - Math.abs(da - autoFront) / WAVE_BAND, 0, 1) * 0.8
+      if (touchFront < 5) {
+        const dt = Math.sqrt(
+          (base[j] - tc.ox) ** 2 + (base[j + 1] - tc.oy) ** 2 + (base[j + 2] - tc.oz) ** 2
+        )
+        heat = Math.max(heat, MathUtils.clamp(1 - Math.abs(dt - touchFront) / WAVE_BAND, 0, 1))
+      }
       scratch
         .copy(FAINT)
         .lerp(INK, Math.min(1, heat * 1.4))
         .lerp(VIOLET, heat * 0.85)
-      col[i * 3] = scratch.r
-      col[i * 3 + 1] = scratch.g
-      col[i * 3 + 2] = scratch.b
+      col[j] = scratch.r
+      col[j + 1] = scratch.g
+      col[j + 2] = scratch.b
     }
+    geo.attributes.position.needsUpdate = true
     geo.attributes.color.needsUpdate = true
-    // Synapses inherit their endpoints' heat.
+
+    // Synapses follow their (displaced) endpoints and inherit their heat.
+    const lpos = lineGeo.attributes.position.array as Float32Array
     const lcol = lineGeo.attributes.color.array as Float32Array
-    edges.forEach(([a, b], e) => {
-      for (const [v, n] of [
+    edges.forEach(([a, b2], e) => {
+      const ea = e * 6
+      for (const [off, n] of [
         [0, a],
-        [3, b],
+        [3, b2],
       ] as const) {
-        lcol[e * 6 + v] = col[n * 3]
-        lcol[e * 6 + v + 1] = col[n * 3 + 1]
-        lcol[e * 6 + v + 2] = col[n * 3 + 2]
+        lpos[ea + off] = pos[n * 3]
+        lpos[ea + off + 1] = pos[n * 3 + 1]
+        lpos[ea + off + 2] = pos[n * 3 + 2]
+        lcol[ea + off] = col[n * 3]
+        lcol[ea + off + 1] = col[n * 3 + 1]
+        lcol[ea + off + 2] = col[n * 3 + 2]
       }
     })
+    lineGeo.attributes.position.needsUpdate = true
     lineGeo.attributes.color.needsUpdate = true
   })
 
@@ -238,7 +228,7 @@ function Scene({ variant }: { variant: NetVariant }) {
   )
 }
 
-export default function NeuralNet({ variant }: { variant: NetVariant }) {
+export default function NeuralNet() {
   return (
     <Canvas
       dpr={[1, 1.75]}
@@ -246,7 +236,7 @@ export default function NeuralNet({ variant }: { variant: NetVariant }) {
       gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
       frameloop="always"
     >
-      <Scene variant={variant} />
+      <Scene />
     </Canvas>
   )
 }
