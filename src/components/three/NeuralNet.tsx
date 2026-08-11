@@ -58,7 +58,7 @@ function Scene() {
     return g
   }, [edges])
   const lineMat = useMemo(
-    () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.22 }),
+    () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.13 }),
     []
   )
   const drag = useRef({ on: false, moved: 0, vx: 0, vy: 0, px: 0, py: 0 })
@@ -214,7 +214,7 @@ function Scene() {
   })
 
   return (
-    <group ref={group} rotation={[0.16, 1.05, 0]}>
+    <group ref={group} rotation={[0.08, 1.35, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
       <points ref={points}>
         <bufferGeometry>
@@ -232,7 +232,7 @@ export default function NeuralNet() {
   return (
     <Canvas
       dpr={[1, 1.75]}
-      camera={{ position: [0, 0, 5.4], fov: 42 }}
+      camera={{ position: [0, 0.1, 4.9], fov: 42 }}
       gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
       frameloop="always"
     >
