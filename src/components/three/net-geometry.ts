@@ -23,17 +23,59 @@ export function buildVolume() {
     seed = (seed * 1664525 + 1013904223) % 4294967296
     return seed / 4294967296
   }
-  for (let i = 0; i < NODES; i++) {
-    const th = rand() * Math.PI * 2
-    const ph = Math.acos(rand() * 2 - 1)
-    const r = Math.cbrt(rand())
-    // Two lobes with a soft central fissure, like the reference figure.
-    const side = i % 2 === 0 ? 1 : -1
-    base[i * 3] = Math.sin(ph) * Math.cos(th) * r * 1.25 + side * 0.68
-    base[i * 3 + 1] = Math.cos(ph) * r * 1.35
-    base[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * r * 1.45
+  // Anatomical brain, sampled on the surface so the form reads instantly:
+  // two cerebral hemispheres split by a central fissure, gyri as wavy fold
+  // ridges, a finely striated cerebellum tucked low at the back, and a
+  // short brainstem. x = left/right, y = up/down, z = back(-)/front(+).
+  const place = (i: number) => {
+    const pick = rand()
+    let x = 0
+    let y = 0
+    let z = 0
+    if (pick < 0.82) {
+      // Cerebrum hemisphere.
+      const side = rand() < 0.5 ? -1 : 1
+      const th = rand() * Math.PI * 2
+      const ph = Math.acos(rand() * 2 - 1)
+      const dx = Math.sin(ph) * Math.cos(th)
+      let dy = Math.cos(ph)
+      const dz = Math.sin(ph) * Math.sin(th)
+      if (dy < 0) dy *= 0.72 // flatter underside
+      // Gyri: creased ridge bands over the surface.
+      const fold =
+        (1 - Math.abs(Math.sin(th * 5.5 + Math.sin(ph * 3.2) * 1.4))) * 0.12 +
+        (1 - Math.abs(Math.sin(ph * 7 + th * 1.3))) * 0.06
+      const sc = 0.96 + fold
+      // Tight central fissure: the inner wall sits just off the midline.
+      x = side * (0.36 + Math.max(dx * side, -0.46) * 0.66 * sc)
+      y = dy * 1.0 * sc + 0.06
+      z = dz * 1.42 * sc
+      if (Math.abs(x) < 0.05) x = side * 0.05
+    } else if (pick < 0.95) {
+      // Cerebellum: small, low, at the back, with fine horizontal striations.
+      const th = rand() * Math.PI * 2
+      const ph = Math.acos(rand() * 2 - 1)
+      const stria = (1 - Math.abs(Math.sin(ph * 14))) * 0.05
+      const sc = 0.97 + stria
+      x = Math.sin(ph) * Math.cos(th) * 0.66 * sc
+      y = Math.cos(ph) * 0.38 * sc - 0.72
+      z = Math.sin(ph) * Math.sin(th) * 0.5 * sc - 0.78
+    } else {
+      // Brainstem: short angled column under the center-back.
+      const t = rand()
+      const a = rand() * Math.PI * 2
+      const r = Math.sqrt(rand()) * 0.15
+      x = Math.cos(a) * r
+      y = -0.5 - t * 0.62
+      z = -0.3 - t * 0.18 + Math.sin(a) * r
+    }
+    base[i * 3] = x
+    base[i * 3 + 1] = y
+    base[i * 3 + 2] = z
     phase[i] = rand() * Math.PI * 2
   }
+  for (let i = 0; i < NODES; i++) place(i)
+
   // Synapses via a coarse spatial hash: nearest few neighbors within reach.
   const cell = LINK_MAX_DIST
   const hash = new Map<string, number[]>()
@@ -62,6 +104,8 @@ export function buildVolume() {
             const dy = base[j * 3 + 1] - y
             const dz = base[j * 3 + 2] - z
             const d = Math.sqrt(dx * dx + dy * dy + dz * dz)
+            // Keep the central fissure crisp: no links across hemispheres.
+            if (x * base[j * 3] < 0 && Math.abs(x) > 0.05 && Math.abs(base[j * 3]) > 0.05) continue
             if (d < LINK_MAX_DIST) near.push({ j, d })
           }
         }
