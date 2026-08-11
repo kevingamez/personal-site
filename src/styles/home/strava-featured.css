@@ -50,12 +50,6 @@
   display: none;
 }
 
-/* Drawn-route fallback: the line renders in ink on the faint sunken fill. */
-.sv-feat-drawn {
-  color: var(--ink);
-  background: var(--ink-050);
-}
-
 .sv-feat-body {
   padding: 14px 16px 15px;
 }

@@ -22,38 +22,6 @@ import {
   spdVal,
 } from './strava-units'
 
-// No Mapbox token (or the static map failed to load): draw the route line
-// itself as an inline SVG - an ink stroke on the card, in place of the map.
-function drawnRoute(routeEl: Element, a: Activity, card: Element, failedImg?: HTMLElement): void {
-  const r = a.route
-  if (!r || !Array.isArray(r.points) || r.points.length < 2 || !r.w || !r.h) {
-    card.classList.add('sv-feat--noroute')
-    return
-  }
-  failedImg?.remove()
-  const NS = 'http://www.w3.org/2000/svg'
-  const pad = Math.round(Math.max(r.w, r.h) * 0.06)
-  const svg = document.createElementNS(NS, 'svg')
-  svg.setAttribute('viewBox', `${-pad} ${-pad} ${r.w + pad * 2} ${r.h + pad * 2}`)
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
-  svg.setAttribute('class', 'sv-feat-map sv-feat-drawn')
-  svg.setAttribute('role', 'img')
-  svg.setAttribute('aria-label', `Route line · ${a.name}`)
-  const line = document.createElementNS(NS, 'polyline')
-  line.setAttribute('points', r.points.map(([x, y]) => `${x},${y}`).join(' '))
-  line.setAttribute('fill', 'none')
-  line.setAttribute('stroke', 'currentColor')
-  // Constant screen-pixel stroke (like Strava's own thumbnails): dense
-  // out-and-back routes stay a fine line instead of smearing into a blob.
-  line.setAttribute('stroke-width', '1.75')
-  line.setAttribute('vector-effect', 'non-scaling-stroke')
-  line.setAttribute('stroke-opacity', '0.9')
-  line.setAttribute('stroke-linecap', 'round')
-  line.setAttribute('stroke-linejoin', 'round')
-  svg.appendChild(line)
-  routeEl.appendChild(svg)
-}
-
 export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts: Activity[]): void {
   host.replaceChildren()
   for (const a of acts) {
@@ -75,11 +43,9 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
       img.alt = `Route map · ${a.name}`
       img.loading = 'lazy'
       img.decoding = 'async'
-      img.addEventListener('error', () => drawnRoute(routeEl, a, card, img))
+      img.addEventListener('error', () => card.classList.add('sv-feat--noroute'))
       img.src = mapboxUrl(a.polyline)
       routeEl.appendChild(img)
-    } else if (routeEl) {
-      drawnRoute(routeEl, a, card)
     } else {
       card.classList.add('sv-feat--noroute')
     }
