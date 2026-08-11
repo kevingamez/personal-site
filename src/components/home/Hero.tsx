@@ -17,11 +17,11 @@ export function Hero({ t }: Props) {
         <div className="hero-copy">
           <div className="hero-stats">
             <div className="stat">
-              <div className="stat-num">[ {t.stat1Num} ]</div>
+              <div className="stat-num">{t.stat1Num}</div>
               <div className="stat-cap">{t.stat1Label}</div>
             </div>
             <div className="stat">
-              <div className="stat-num">[ {t.stat2Num} ]</div>
+              <div className="stat-num">{t.stat2Num}</div>
               <div className="stat-cap">{t.stat2Label}</div>
             </div>
           </div>
