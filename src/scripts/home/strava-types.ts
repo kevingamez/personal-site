@@ -15,6 +15,12 @@ export interface Effort {
   elevationM: number
   avgSpeedMs: number
 }
+// Normalized route line for the no-Mapbox fallback drawing.
+export interface RoutePreview {
+  points: [number, number][]
+  w: number
+  h: number
+}
 export interface Activity {
   name: string
   sportType: string
@@ -25,6 +31,7 @@ export interface Activity {
   startDate: string
   url: string
   polyline?: string | null
+  route?: RoutePreview | null
 }
 export interface Insights {
   biggestWeekStart: string | null

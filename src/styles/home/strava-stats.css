@@ -84,7 +84,9 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: rgb(250 247 240 / 55%);
+
+  /* Was the old dark-band cream at 55%, invisible on the white panel. */
+  color: var(--muted);
   margin-top: 7px;
 }
 
