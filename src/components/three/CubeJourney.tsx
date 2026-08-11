@@ -20,10 +20,11 @@ const FOV = 40
 // margin toward the dock, which also sits right - so the figure never
 // travels across text at reading height.
 const KEYS: [number, number, number, number, number, number][] = [
-  // Absent over the hero; fades in on the right margin once you scroll.
-  [0.0, 0.94, 0.88, 0.16, 0.25, 0.0],
-  [0.15, 0.94, 0.75, 0.2, 0.4, 0.6],
-  [0.6, 0.95, 0.42, 0.26, 0.75, 0.9],
+  // The figure does not exist until three quarters of the way down; it
+  // materializes on the right margin approaching contact and docks.
+  [0.0, 0.95, 0.9, 0.14, 0.2, 0.0],
+  [0.72, 0.95, 0.85, 0.16, 0.3, 0.0],
+  [0.86, 0.94, 0.6, 0.24, 0.65, 0.8],
   [1.0, 0.5, 0.5, 0.5, 1.0, 1.0], // placeholder: replaced by the dock rect
 ]
 
