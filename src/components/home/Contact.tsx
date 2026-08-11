@@ -1,4 +1,5 @@
 import type { HomeStrings } from '@/content/home'
+import { ContactParticles } from '@/components/three/ContactParticles'
 
 interface Props {
   t: HomeStrings['contact']
@@ -7,6 +8,7 @@ interface Props {
 export function Contact({ t }: Props) {
   return (
     <section id="contact" className="contact">
+      <ContactParticles />
       <div className="wrap">
         <h2 dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
         <p>{t.body}</p>

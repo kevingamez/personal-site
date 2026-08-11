@@ -1,7 +1,23 @@
 /* ─── Contact (Vela: centered invitation, one solid pill) ─── */
 .contact {
+  position: relative;
+  overflow: hidden;
   padding: clamp(96px, 14svh, 160px) 0;
   text-align: center;
+}
+
+/* The prismatic particle wash (Dala's field, at Vela's low-opacity setting).
+   Decorative: behind the content, no pointer events. */
+.contact-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.contact .wrap {
+  position: relative;
+  z-index: 1;
 }
 
 .contact h2 {
