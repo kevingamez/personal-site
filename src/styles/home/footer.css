@@ -1,5 +1,6 @@
 /* ─── Footer (Vela: the dark slab with a clipped marquee wordmark) ─── */
 .footer {
+  position: relative;
   background: var(--ink-900);
   color: rgb(255 255 255 / 72%);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
@@ -126,4 +127,17 @@
   .colophon {
     padding-top: 18px;
   }
+}
+
+/* Prismatic particle wash (Dala's field on its native dark ground). */
+.fx-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.footer > .wrap,
+.foot-marquee {
+  position: relative;
+  z-index: 1;
 }

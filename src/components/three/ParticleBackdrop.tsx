@@ -1,6 +1,7 @@
 'use client'
 
-// Lazy mount for the contact-section particle wash. three.js is a heavy
+// Lazy mount for the footer particle wash (Dala's field glows on the dark
+// slab, its native context). three.js is a heavy
 // chunk, so it only loads when the section approaches the viewport, and the
 // frameloop only runs while the section is actually on screen. Under
 // prefers-reduced-motion the field renders once, static.
@@ -10,7 +11,7 @@ import dynamic from 'next/dynamic'
 
 const ParticleField = dynamic(() => import('./ParticleField'), { ssr: false })
 
-export function ContactParticles() {
+export function ParticleBackdrop() {
   const host = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -52,7 +53,7 @@ export function ContactParticles() {
   }, [])
 
   return (
-    <div ref={host} className="contact-fx" aria-hidden="true">
+    <div ref={host} className="fx-backdrop" aria-hidden="true">
       {near && <ParticleField animate={visible && !reduced} />}
     </div>
   )
