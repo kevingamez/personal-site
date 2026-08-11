@@ -33,13 +33,19 @@ export async function initStrava(): Promise<void> {
   } catch {
     /* ignore - may fall back to the dev sample below */
   }
-  // Local dev may not serve /api/strava with real credentials; fall back to a
-  // baked snapshot (stripped from prod builds by the NODE_ENV guard).
-  if (!data && process.env.NODE_ENV !== 'production') {
+  // Local machines rarely have the Strava credentials, and since the Next
+  // migration the local preview runs a production build, so a NODE_ENV guard
+  // would hide the section there too. Gate on the hostname instead: any
+  // localhost visit (dev server or preview) falls back to the baked snapshot;
+  // the deployed site never does.
+  const isLocalhost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)
+  // Unlike the Astro dev server, the Next API route exists locally and answers
+  // configured:false without credentials - treat that the same as no data.
+  if ((!data || !data.configured) && isLocalhost) {
     try {
       data = (await import('./strava-sample')).devSample() as Payload
     } catch {
-      /* dev sample unavailable (e.g. transient Vite 504) - stay hidden */
+      /* dev sample unavailable - stay hidden */
     }
   }
   if (!data || !data.configured || !data.totals || data.totals.count === 0) return
