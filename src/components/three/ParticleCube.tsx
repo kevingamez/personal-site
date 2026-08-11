@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Color, MathUtils, Vector3, type Group, type Points } from 'three'
+import { buildSizes, makeParticleMaterial } from './particle-material'
 
 const PER_FACE = 1200
 const COUNT = PER_FACE * 6
@@ -43,7 +44,7 @@ function buildCube() {
       const i = f * PER_FACE + k
       const u = (rand() * 2 - 1) * HALF
       const w = (rand() * 2 - 1) * HALF
-      const jitter = (rand() - 0.5) * 0.05
+      const jitter = (rand() - 0.5) * 0.03
       const j = i * 3
       target[j] = nx ? nx * (HALF + jitter) : u
       target[j + 1] = ny ? ny * (HALF + jitter) : nx ? u : w
@@ -61,7 +62,8 @@ function buildCube() {
       colors[j + 2] = color.b
     }
   }
-  return { target, scatter, colors, stagger }
+  const sizes = buildSizes(COUNT, rand, 1.15)
+  return { target, scatter, colors, stagger, sizes }
 }
 
 function easeOutCubic(t: number): number {
@@ -73,7 +75,11 @@ function Scene({ animate, reduced }: { animate: boolean; reduced: boolean }) {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const camera = useThree((s) => s.camera)
-  const { target, scatter, colors, stagger } = useMemo(buildCube, [])
+  const { target, scatter, colors, stagger, sizes } = useMemo(buildCube, [])
+  const material = useMemo(
+    () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
+    [gl]
+  )
   const positions = useMemo(
     () => (reduced ? target.slice() : scatter.slice()),
     [reduced, target, scatter]
@@ -177,8 +183,9 @@ function Scene({ animate, reduced }: { animate: boolean; reduced: boolean }) {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
           <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+          <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
         </bufferGeometry>
-        <pointsMaterial size={0.032} sizeAttenuation vertexColors depthWrite={false} />
+        <primitive object={material} attach="material" />
       </points>
     </group>
   )
