@@ -8,12 +8,24 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
+const CubeJourney = dynamic(() => import('./CubeJourney'), { ssr: false })
 
 export function CubeStage() {
   const host = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(false)
   const [visible, setVisible] = useState(false)
   const [reduced, setReduced] = useState(false)
+  const [journey, setJourney] = useState(false)
+
+  useEffect(() => {
+    // The scroll-choreographed figure needs a wide viewport and motion;
+    // phones and reduced-motion users get the section-local cube instead.
+    const mq = window.matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)')
+    setJourney(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setJourney(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -52,7 +64,11 @@ export function CubeStage() {
 
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
-      {near && <ParticleCube animate={visible && !reduced} reduced={reduced} />}
+      {journey ? (
+        <CubeJourney />
+      ) : (
+        near && <ParticleCube animate={visible && !reduced} reduced={reduced} />
+      )}
     </div>
   )
 }
