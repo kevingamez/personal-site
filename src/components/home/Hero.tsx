@@ -48,7 +48,15 @@ export function Hero({ t }: Props) {
           </div>
           <p className="hero-media-cap">
             <span className="live">{t.metaPlace}</span>
-            <span>· <span data-bogota-clock>{formatBogotaTime()}</span></span>
+            {/* The static build bakes one time; the client re-renders with the
+                current one before the clock script takes over - suppress the
+                expected text mismatch. */}
+            <span>
+              ·{' '}
+              <span data-bogota-clock suppressHydrationWarning>
+                {formatBogotaTime()}
+              </span>
+            </span>
           </p>
         </div>
       </div>

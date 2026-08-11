@@ -1,7 +1,7 @@
-/* 404 page. Every rule is namespaced under .err404: in Next, imported global
-   CSS ends up in the shared bundle, so bare body/h1/.wrap rules here would
-   leak into every route. Tokens match the Vela palette. */
-.err404 {
+/* 500 page. Namespaced under .err500 for the same reason as error-404.css:
+   global CSS in Next is bundle-wide, so nothing here may use bare selectors.
+   Tokens match the Vela palette. */
+.err500 {
   --paper: #f4f4f2;
   --ink: #0b0b0c;
   --ink-2: #3a3a3e;
@@ -19,16 +19,16 @@
   text-align: center;
   padding: 24px;
 }
-.err404 *,
-.err404 *::before {
+.err500 *,
+.err500 *::before {
   box-sizing: border-box;
 }
-.err404 .wrap {
+.err500 .wrap {
   width: min(720px, 100%);
   max-width: none;
   padding: 0;
 }
-.err404 .tag {
+.err500 .tag {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11.5px;
   color: var(--ink);
@@ -39,32 +39,39 @@
   gap: 8px;
   margin-bottom: 20px;
 }
-.err404 h1 {
+.err500 h1 {
   font-family: 'Archivo', system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(80px, 18vw, 160px);
   line-height: 0.95;
   letter-spacing: -0.035em;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
 }
-.err404 h1 i {
+.err500 h1 i {
   font-family: 'Instrument Serif', Georgia, serif;
   font-style: italic;
 }
-.err404 p {
+.err500 h2 {
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.err500 p {
   font-size: 17px;
   color: var(--ink-2);
   line-height: 1.55;
   margin: 0 0 28px;
   text-wrap: balance;
 }
-.err404 .ctas {
+.err500 .ctas {
   display: inline-flex;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
-.err404 .btn {
+.err500 .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -81,23 +88,23 @@
     background-color 0.16s,
     border-color 0.16s;
 }
-.err404 .btn-primary {
+.err500 .btn-primary {
   background: var(--ink);
   color: #fff;
   border: 0;
 }
-.err404 .btn-primary:hover {
+.err500 .btn-primary:hover {
   background: #1f1f22;
 }
-.err404 .btn-ghost {
+.err500 .btn-ghost {
   border: 1px solid var(--line-2);
   color: var(--ink);
   background: transparent;
 }
-.err404 .btn-ghost:hover {
+.err500 .btn-ghost:hover {
   border-color: var(--ink);
 }
-.err404 .console {
+.err500 .console {
   width: min(620px, 100%);
   margin: 36px auto 0;
   padding: 14px 16px;
@@ -110,43 +117,36 @@
   text-align: left;
   line-height: 1.7;
 }
-.err404 .console .ln {
+.err500 .console .ln {
   display: flex;
   gap: 10px;
 }
-.err404 .console .ln .nm {
+.err500 .console .ln .nm {
   color: var(--muted);
   width: 14px;
   text-align: right;
   flex-shrink: 0;
 }
-.err404 .console .err {
+.err500 .console .err {
   color: var(--ink);
   font-weight: 600;
 }
-.err404 .console .ok {
+.err500 .console .ok {
   color: var(--green);
 }
-.err404 .console .key {
+.err500 .console .key {
   color: var(--ink);
   font-weight: 600;
 }
-.err404 .console .mute {
+.err500 .console .mute {
   color: var(--muted);
 }
-.err404 .console a {
-  color: var(--ink);
-  text-decoration: underline;
-}
-.err404 #missing-path {
-  word-break: break-all;
-}
 @media (max-width: 640px) {
-  .err404 {
+  .err500 {
     align-items: flex-start;
     padding-top: 56px;
   }
-  .err404 .console {
+  .err500 .console {
     font-size: 11px;
     padding: 12px;
   }

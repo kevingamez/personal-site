@@ -43,21 +43,27 @@ export function Strava({ t }: Props) {
 
         {/* Longest effort per sport (cards built by the client from the template) */}
         <div className="sv-longest" id="sv-longest"></div>
-        <template id="sv-feat-tpl">
-          <article className="sv-feat">
-            <div className="sv-feat-route" data-route="" aria-hidden="true"></div>
-            <div className="sv-feat-body">
-              <div className="sv-feat-label">{t.featuredLabel} · <span data-sport=""></span></div>
-              <a className="sv-feat-name" data-name="" href="https://www.strava.com" target="_blank" rel="noopener">-</a>
-              <div className="sv-feat-stats">
-                <div><span data-dist="">0</span><em>{t.featDist}</em></div>
-                <div><span data-elev="">0</span><em>{t.featElev}</em></div>
-                <div><span data-time="">0</span><em>{t.featTime}</em></div>
-                <div><span data-speed="">0</span><em data-speedlabel="">{t.featSpeed}</em></div>
-              </div>
-            </div>
-          </article>
-        </template>
+        {/* React cannot reconcile children of <template> (the browser parses
+            them into template.content, not childNodes), so the markup ships as
+            innerHTML. The interpolated strings are trusted static copy from
+            the content files - same invariant as the *Html fields. */}
+        <template
+          id="sv-feat-tpl"
+          dangerouslySetInnerHTML={{
+            __html:
+              '<article class="sv-feat">' +
+              '<div class="sv-feat-route" data-route aria-hidden="true"></div>' +
+              '<div class="sv-feat-body">' +
+              `<div class="sv-feat-label">${t.featuredLabel} · <span data-sport></span></div>` +
+              '<a class="sv-feat-name" data-name href="https://www.strava.com" target="_blank" rel="noopener">-</a>' +
+              '<div class="sv-feat-stats">' +
+              `<div><span data-dist>0</span><em>${t.featDist}</em></div>` +
+              `<div><span data-elev>0</span><em>${t.featElev}</em></div>` +
+              `<div><span data-time>0</span><em>${t.featTime}</em></div>` +
+              `<div><span data-speed>0</span><em data-speedlabel>${t.featSpeed}</em></div>` +
+              '</div></div></article>',
+          }}
+        />
 
         {/* Metric tiles */}
         <div className="sv-insights">
