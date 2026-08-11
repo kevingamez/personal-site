@@ -18,9 +18,11 @@ export function CubeStage() {
   const [journey, setJourney] = useState(false)
 
   useEffect(() => {
-    // The scroll-choreographed figure needs a wide viewport and motion;
-    // phones and reduced-motion users get the section-local cube instead.
-    const mq = window.matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)')
+    // The scroll-choreographed figure needs a wide viewport; phones get the
+    // section-local cube. It mounts even under prefers-reduced-motion because
+    // its choreography is scroll-scrubbed (user-driven); only the self-running
+    // idle spin is gated inside the scene.
+    const mq = window.matchMedia('(min-width: 900px)')
     setJourney(mq.matches)
     const onChange = (e: MediaQueryListEvent) => setJourney(e.matches)
     mq.addEventListener('change', onChange)

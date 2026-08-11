@@ -20,9 +20,10 @@ const FOV = 40
 // margin toward the dock, which also sits right - so the figure never
 // travels across text at reading height.
 const KEYS: [number, number, number, number, number, number][] = [
-  [0.0, 0.1, 0.84, 0.24, 0.15, 0.7],
-  [0.22, 0.94, 0.78, 0.18, 0.35, 0.75],
-  [0.6, 0.95, 0.42, 0.2, 0.7, 0.85],
+  // Born big in the hero gutter (between the copy and the portrait).
+  [0.0, 0.57, 0.55, 0.38, 0.35, 0.95],
+  [0.22, 0.94, 0.75, 0.26, 0.5, 0.85],
+  [0.6, 0.95, 0.42, 0.28, 0.75, 0.9],
   [1.0, 0.5, 0.5, 0.5, 1.0, 1.0], // placeholder: replaced by the dock rect
 ]
 
@@ -48,6 +49,8 @@ function lerpKeys(p: number): [number, number, number, number, number] {
 }
 
 function Scene() {
+  const reduced =
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const group = useRef<Group>(null)
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
@@ -171,7 +174,9 @@ function Scene() {
     // Spin: idle + a kick from scroll velocity + drag with inertia.
     const scrollVel = scrollY - state.current.lastScroll
     state.current.lastScroll = scrollY
-    g.rotation.y += drag.current.vy + delta * 0.14 + scrollVel * 0.0005
+    // Idle spin only when motion is allowed; drag and scroll kicks are
+    // user-driven and always apply.
+    g.rotation.y += drag.current.vy + (reduced ? 0 : delta * 0.14) + scrollVel * 0.0005
     g.rotation.x = MathUtils.clamp(g.rotation.x + drag.current.vx, -1.1, 1.1)
     drag.current.vx *= 0.93
     drag.current.vy *= 0.93
