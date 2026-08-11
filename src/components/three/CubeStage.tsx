@@ -10,17 +10,11 @@ import dynamic from 'next/dynamic'
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
 const CubeJourney = dynamic(() => import('./CubeJourney'), { ssr: false })
 const LifeCube = dynamic(() => import('./LifeCube'), { ssr: false })
-const NeuralNet = dynamic(() => import('./NeuralNet'), { ssr: false })
 
-// Preview switch for the idea round: ?fx=A1|A2|B1|B2 swaps the docked figure.
-const FX: Record<
-  string,
-  { kind: 'life'; v: 'ink' | 'prism' } | { kind: 'net'; v: 'flat' | 'depth' }
-> = {
-  A1: { kind: 'life', v: 'ink' },
-  A2: { kind: 'life', v: 'prism' },
-  B1: { kind: 'net', v: 'flat' },
-  B2: { kind: 'net', v: 'depth' },
+// Preview switch for the idea round: ?fx=A1|A2 previews the Cube of Life.
+const FX: Record<string, { v: 'ink' | 'prism' }> = {
+  A1: { v: 'ink' },
+  A2: { v: 'prism' },
 }
 
 export function CubeStage() {
@@ -88,11 +82,7 @@ export function CubeStage() {
     return (
       <div className="fx-preview" aria-hidden="true">
         <div className="fx-preview-tag">preview · {fx}</div>
-        {FX[fx].kind === 'life' ? (
-          <LifeCube variant={FX[fx].v as 'ink' | 'prism'} />
-        ) : (
-          <NeuralNet variant={FX[fx].v as 'flat' | 'depth'} />
-        )}
+        <LifeCube variant={FX[fx].v} />
       </div>
     )
   }
