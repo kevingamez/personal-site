@@ -1,51 +1,55 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+This file provides guidance to coding agents when working with code in this repository. It mirrors CLAUDE.md.
 
 ## Build & Development Commands
 
 ```bash
-npm run dev           # Dev server at localhost:4321
-npm run build         # Build static site to ./dist/
-npm run preview       # Preview production build locally
-npm run check         # Type-check .astro and .ts (astro check)
+npm run dev           # Next dev server at localhost:3000
+npm run build         # Production build (next build)
+npm run preview       # Serve the production build at 127.0.0.1:4321
+npm run check         # Type-check (tsc --noEmit)
+npm run lint          # ESLint (typescript-eslint + jsx-a11y)
 npm run format        # Apply Prettier
 npm run format:check  # Verify formatting (CI)
-npm test              # Playwright smoke tests against ./dist via preview
+npm test              # Playwright smoke tests (builds, then serves on :4321)
 ```
 
-Always run `npm run check`, `npm run format:check`, and `npm test` before pushing. The `check` + `smoke` + `lighthouse` jobs run on every PR via `.github/workflows/ci.yml`.
+Always run `npm run check`, `npm run lint`, `npm run format:check`, and `npm test` before pushing.
 
 ## Architecture Overview
 
-Personal portfolio site built with **Astro 5**, deployed as a static build on **Vercel**. Bilingual (EN/ES). Editorial visual design (cream + coral, Instrument Serif + Inter Tight + JetBrains Mono).
+Personal portfolio site built with **Next.js 16 (App Router, React 19)**, deployed on **Vercel**. Bilingual (EN/ES). Vela visual system: paper `#F4F4F2`, ink `#0B0B0C`, violet `#7C5CFF` as the only interactive accent; Archivo + Instrument Serif Italic + JetBrains Mono (Google Fonts).
 
-### Tech Stack
+### Routing
 
-- **Astro 5** · static site generation, no SSR adapter
-- **Preact** · installed (islands allowed when needed)
-- **TypeScript** · strict mode (`astro/tsconfigs/strict`)
-- **Prettier** + `prettier-plugin-astro` · formatting
-- **Playwright** · smoke tests (`tests/`)
+Three **route groups, each with its own root layout** (that's how the `<html lang>` attribute differs per locale):
 
-### Pages
+- `app/(en)/` · `/` home, `/privacy`, `/500`, `/lab` (unlisted R3F playground), `not-found.tsx` + a `[...notFound]` catch-all
+- `app/(es)/es/` · Spanish home
+- `app/(dev)/dev/` · terminal/IDE-styled "dev mode" (own dark theme + fonts, noindex)
+- `app/api/` · route handlers: `chat` (Claude console SSE), `strava`, `geo`
 
-- `src/pages/index.astro` · English home (Conway hero)
-- `src/pages/es/index.astro` · Spanish mirror
-- `src/pages/dev.astro` · terminal/IDE-styled "dev mode"
-- `src/pages/404.astro` · themed not-found
+Content lives in `src/content/home-{en,es}.ts`, typed by `src/content/home.ts` (`HomeStrings`). Fields suffixed `*Html` are trusted static markup rendered via `dangerouslySetInnerHTML` - never source them from user input.
 
-### Client logic
+### Components & client logic
 
-Interactive logic lives in **`src/scripts/*.ts`** and is imported from pages with a normal `<script>` tag (Astro bundles & type-checks it). Avoid `is:inline` for anything beyond ~10 lines or analytics snippets · bundled scripts are typechecked, tree-shaken, and don't need `'unsafe-inline'` in CSP.
+Sections are **server components** in `src/components/home/*.tsx` (and `dev/`). Interactivity comes from **vanilla TS modules** in `src/scripts/`, loaded after hydration by the tiny client shims `HomeScripts.tsx` / `DevScripts.tsx` (`useEffect` + dynamic import). The scripts find elements by id/class, so markup fidelity matters more than React idioms. React Three Fiber lives in `src/components/three/` (client components).
 
-If a feature needs shared state, build it as a Preact island under `src/components/` and import with a `client:` directive.
+Pre-paint logic (intro-curtain gate) lives in `public/head-init.js`, loaded as a blocking script at the top of `<body>` by `SiteChrome.tsx`; both root layouts set `suppressHydrationWarning` on `<html>` because that script stamps a class before React hydrates.
+
+### CSS
+
+Per-section files in `src/styles/home/`, aggregated by `index.css` (imported by `HomePage.tsx`); Vela tokens in `base.css`. **Global CSS in Next is bundle-wide**: `not-found.tsx` is compiled into every `(en)` route, so any stylesheet a shared-tree page imports leaks everywhere. Namespace page-specific stylesheets under a wrapper class (see `error-404.css` / `error-500.css`) - never write bare `body`/`h1`/`.wrap` rules outside `base.css`.
 
 ### Security headers
 
-Headers (CSP, X-Frame-Options, Permissions-Policy, etc.) are served by **`vercel.json`** at the edge for the static deploy. `src/middleware.ts` mirrors the same set as a fallback for any future SSR adapter · keep both in sync.
+CSP and friends live in **`vercel.json`** (edge) and **`next.config.ts`** `headers()` - keep both in sync. `script-src` includes `'unsafe-inline'` because the App Router streams its RSC payload through inline scripts. When adding a third-party host, update **both** files.
 
-When adding a new third-party host (analytics, fonts, image CDN), update **both** files.
+### Hydration rules
+
+- Time-dependent render output (the Bogotá clock) needs `suppressHydrationWarning` on its element.
+- React cannot reconcile children of `<template>`: ship template content via `dangerouslySetInnerHTML` (see `Strava.tsx`).
 
 ### Path Aliases
 
@@ -55,37 +59,34 @@ When adding a new third-party host (analytics, fonts, image CDN), update **both*
 
 ### File size
 
-**Hard cap: 300 lines per file.** When a page or module grows past that, split it:
-
-- Extract scripts to `src/scripts/<name>.ts` and import with `<script>`.
-- Extract repeated markup to a component under `src/components/`.
-- Long inline `<style>` blocks can be moved to a `.css` file imported from the page.
+**Hard cap: 300 lines per file.** Split scripts into `src/scripts/<name>.ts`, markup into components, long styles into their own `.css`.
 
 ### Style
 
-- Prettier: 2-space indent, single quotes (TS/JS), double quotes (.astro/HTML), no semicolons in TS.
+- Prettier: 2-space indent, single quotes (TS/TSX), no semicolons.
 - Don't fight the formatter · run `npm run format` instead of hand-formatting.
 
 ### Animations & accessibility
 
-Every animation must check `prefers-reduced-motion`. For canvas/JS animations, gate `requestAnimationFrame` loops on the media query. For CSS animations, wrap them in `@media (prefers-reduced-motion: no-preference)`. All `<img>` elements need an `alt` attribute (use `alt=""` for purely decorative images).
+Every animation must respect `prefers-reduced-motion` (gate rAF loops on the media query; wrap CSS animations in `@media (prefers-reduced-motion: no-preference)`). All `<img>` need `alt`. Text colors must hold WCAG AA (4.5:1) - `--muted` is calibrated for that; don't lighten it.
 
 ### SEO assets
 
-- Open Graph image: `public/og-dev-preview.png` (1200×630), wired site-wide in `src/components/Layout.astro` (one shared layout covers every page). The `/dev` page sets its own OG tags inline. Update the alt text in both places if you change branding.
-- Sitemap is generated by `@astrojs/sitemap` at build time.
-- `public/robots.txt` and `public/.well-known/security.txt` are committed and should not be deleted.
+- Metadata comes from `src/lib/seo.ts` (`buildMetadata`) + `JsonLd.tsx`; OG image `public/og-dev-preview.png` (1200×630).
+- `app/sitemap.ts` lists indexable routes only. `public/robots.txt` and `public/.well-known/security.txt` are committed and should not be deleted.
 
 ### Tests
 
-`tests/smoke.spec.ts` visits `/`, `/es/`, `/dev`, and a 404 route to catch console errors and broken renders. Add a smoke check whenever you ship a new page.
+`tests/smoke.spec.ts` visits `/`, `/es/`, `/dev`, `/privacy`, a 404 route, and `/500` to catch console errors (including hydration errors) and broken renders. Add a smoke check whenever you ship a new page.
 
 ### Things to avoid
 
-- Don't put heavy JS in `<script is:inline>` · it bypasses bundling, typechecking, and forces `'unsafe-inline'` in CSP.
-- Don't add a new font, analytics, or image host without updating CSP in **both** `vercel.json` and `src/middleware.ts`.
+- Don't add a new font, analytics, or image host without updating CSP in **both** `vercel.json` and `next.config.ts`.
 - Don't commit binary screenshots or build artifacts to the repo root · they belong in `/public` if they ship, otherwise `.gitignore` them.
 - Don't introduce backwards-compatibility shims for visual changes · change the design directly.
+- **Never add decorative vertical accent bars** (`border-left` rails next to stat numbers, cards, or quotes). Numbers and headings stand on their own; hairlines are horizontal, structural, and full-width or nothing.
+- **Never use em-dashes** in user-facing copy · use a period, comma, or middot instead.
+- Violet is for focus rings and selection only · never a violet heading, never a violet button.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
