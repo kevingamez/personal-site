@@ -37,30 +37,22 @@ export function Hero({ t }: Props) {
           </div>
         </div>
         <div className="hero-media">
-          <div className="media-frame">
-            <picture>
-              <source srcSet="/kevin.webp" type="image/webp" />
-              <img
-                src="/kevin.jpg"
-                alt={t.portraitAlt}
-                width="640"
-                height="800"
-                fetchPriority="high"
-                decoding="async"
-              />
-            </picture>
-          </div>
+          {/* Empty on purpose: the dust journey's brain renders into this slot.
+              journey-timeline.ts measures the box, so it must keep its
+              aspect-ratio and stay in the layout. */}
+          <div className="media-frame" aria-hidden="true" />
           <p className="hero-media-cap">
-            <span className="live">{t.metaPlace}</span>
+            <span className="hero-place">{t.metaPlace}</span>
             {/* The static build bakes one time; the client re-renders with the
                 current one before the clock script takes over - suppress the
                 expected text mismatch. */}
-            <span>
-              ·{' '}
-              <span data-bogota-clock suppressHydrationWarning>
-                {formatBogotaTime()}
-              </span>
+            <span data-bogota-clock suppressHydrationWarning>
+              {formatBogotaTime()}
             </span>
+            {/* Filled in by src/scripts/home/weather.ts; empty until it answers
+                so the caption never reserves space for a value that may not
+                arrive. */}
+            <span className="hero-weather" data-weather data-weather-labels={t.weatherLabels} />
           </p>
         </div>
       </div>

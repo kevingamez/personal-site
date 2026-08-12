@@ -14,9 +14,9 @@
   }
 }
 
-/* The dust journey's brain takes the portrait's place at every size: the
-   frame keeps its box so the figure has an exact slot to live in, while
-   the photo and the frame ground stay hidden. */
+/* The dust journey's brain takes the portrait's place at every size, so the
+   frame ships empty: it exists only to give the figure an exact slot to live
+   in, and journey-timeline.ts measures this box. */
 .media-frame {
   border-radius: var(--r-md);
   overflow: hidden;
@@ -24,14 +24,13 @@
   aspect-ratio: 4 / 5;
 }
 
-.media-frame img {
-  display: none;
-}
-
 .hero-media-cap {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+
+  /* no separators: the gap does the separating */
+  gap: 4px 14px;
   margin: 12px 0 0;
   font-family: var(--font-mono);
   font-size: 11.5px;
@@ -39,36 +38,13 @@
   color: var(--muted);
 }
 
-.hero-media-cap .live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.hero-weather {
+  opacity: 0;
 }
 
-.hero-media-cap .live::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--emerald-500);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.4;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-media-cap .live::before {
-    animation: none;
-  }
+.hero-weather.on {
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
 /* Short-but-wide laptops: keep the display type from swallowing the column. */

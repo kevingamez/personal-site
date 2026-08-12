@@ -89,7 +89,10 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
 
   try {
     armWatchdog()
-    const res = await fetch('/api/chat', {
+    // Trailing slash matches next.config.ts `trailingSlash: true`. A 308 keeps
+    // the method and body, so this worked, but it cost a round trip in front of
+    // the first streamed token.
+    const res = await fetch('/api/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: history.slice(-MAX_CLIENT_HISTORY) }),

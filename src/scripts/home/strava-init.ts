@@ -28,7 +28,9 @@ export async function initStrava(): Promise<void> {
 
   let data: Payload | null = null
   try {
-    const res = await fetch('/api/strava', { headers: { Accept: 'application/json' } })
+    // Trailing slash matches next.config.ts `trailingSlash: true`; without it
+    // the request eats a 308 redirect before it reaches the handler.
+    const res = await fetch('/api/strava/', { headers: { Accept: 'application/json' } })
     if (res.ok) data = (await res.json()) as Payload
   } catch {
     /* ignore - may fall back to the dev sample below */
