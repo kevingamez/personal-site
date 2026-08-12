@@ -46,14 +46,9 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
   const slot = document.querySelector('.media-frame')?.getBoundingClientRect()
   if (slot && slot.height > 0) {
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
-    stops.push({
-      x: (slot.left + slot.width / 2) / vw,
-      y: (slot.top + slot.height / 2) / vh,
-      s: (slot.height / vh) * 0.72,
-      a: 1,
-      fB: 1,
-      waves: 1,
-    })
+    // The reference hero: the figure is dominant, not boxed - most of the
+    // viewport tall, center-right, sharing space with the headline.
+    stops.push({ x: 0.71, y: 0.49, s: 0.8, a: 1, fB: 1, waves: 1 })
   }
   for (const k of KFS) {
     const el = document.querySelector(k.sel)
