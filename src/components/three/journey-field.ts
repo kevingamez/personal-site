@@ -1,10 +1,11 @@
-// The unified particle field for the full-page journey: one pool of NODES
-// particles that reads as loose dust or as the brain. Dust colors are the
-// brain's hues faded toward paper so the ambient cloud keeps a hint of
-// the palette.
+// The unified particle field for the full-page journey: one pool of
+// particles that reads as loose dust, as the brain, or as the cube the
+// page ends on. Dust colors are the brain's hues faded toward paper so
+// the ambient cloud keeps a hint of the palette.
 
 import { Color } from 'three'
 import { buildVolume, NODES } from './net-geometry'
+import { buildCubeFigure } from './cube-figure'
 
 export function buildField(count?: number) {
   const brain = buildVolume(count)
@@ -26,5 +27,17 @@ export function buildField(count?: number) {
     for (let i = 0; i < brain.count; i++) brain.sizes[i] *= boost
   }
 
-  return { brain, dustCol }
+  // The cube shares the pool: same particles, second destination.
+  let seed = 20260811
+  const rand = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296
+    return seed / 4294967296
+  }
+  const cube = buildCubeFigure(brain.count, rand)
+  if (brain.count < NODES) {
+    const boost = Math.min(1.32, Math.sqrt(NODES / brain.count))
+    for (let i = 0; i < brain.count; i++) cube.size[i] *= boost
+  }
+
+  return { brain, dustCol, cube }
 }
