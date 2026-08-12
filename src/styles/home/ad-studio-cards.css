@@ -1,0 +1,224 @@
+/* AI Ad Studio, the rendered ads and their three states. Skeleton, forming
+   (an intermediate render showing through blurred) and landed, ported from the
+   product's adgen.css. */
+
+/* the canvas, where ads land */
+.as-board {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56px;
+  bottom: calc(var(--as-cb, 150px) + 58px);
+  padding: 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.as-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.as-card {
+  /* Five across, whatever design box the fit settled on: bounded by the width
+     left after the gutters, and by the height left between the top of the
+     canvas and the composer, since a card is 4:5 plus its caption row. */
+  width: clamp(
+    56px,
+    min(
+      calc((var(--as-dw, 1053px) - 124px) / 5),
+      calc((var(--as-dh, 620px) - var(--as-cb, 150px) - 150px) / 1.25)
+    ),
+    128px
+  );
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a1c;
+  border: 1px solid var(--hair);
+  opacity: 0;
+  transform: translateY(12px) scale(0.97);
+  transition:
+    opacity 0.42s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.as-card.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.as-shot {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+/* skeleton, verbatim from adgen.css .cv-skel__frame.is-skeleton */
+.as-shot .as-skel {
+  position: absolute;
+  inset: 0;
+  background: #1c1c1e;
+  background-image: linear-gradient(
+    100deg,
+    rgb(255 255 255 / 4%) 25%,
+    rgb(255 255 255 / 9%) 50%,
+    rgb(255 255 255 / 4%) 75%
+  );
+  background-size: 220% 100%;
+  animation: adgen-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes adgen-shimmer {
+  0% {
+    background-position: 220% 0;
+  }
+
+  100% {
+    background-position: -220% 0;
+  }
+}
+
+/* the ad forming inside a still-pending tile: an intermediate render,
+     blurred and slightly scaled, with the shimmer still sweeping over it */
+.as-shot .as-art {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.06);
+  filter: blur(8px) saturate(1.05);
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* while forming, the tile stops being an opaque skeleton: the intermediate
+     render shows through and only the sweep stays on top of it */
+.as-shot.is-forming .as-art {
+  opacity: 0.85;
+}
+
+.as-shot.is-forming .as-skel {
+  background-color: transparent;
+  background-image: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgb(255 255 255 / 6%) 50%,
+    transparent 65%
+  );
+}
+
+.as-shot.is-landed .as-art {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.as-shot.is-landed .as-skel {
+  display: none;
+}
+
+.as-art .as-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.as-art .as-h {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 9%;
+  display: grid;
+  gap: 4px;
+}
+
+.as-art .as-h i {
+  display: block;
+  height: 5px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 92%);
+}
+
+.as-art .as-obj {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  width: 48%;
+  aspect-ratio: 1;
+  border-radius: 9px;
+}
+
+.as-art .as-cta {
+  position: absolute;
+  left: 9%;
+  bottom: 8%;
+  width: 40%;
+  height: 13px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.as-foot {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-top: 1px solid var(--hair);
+  font-size: 10px;
+  color: var(--dim2);
+}
+
+.as-foot .as-j {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.as-foot .as-j.is-in {
+  opacity: 1;
+}
+
+.as-j.is-keep {
+  color: #6ede9a;
+}
+
+.as-j.is-drop {
+  color: var(--dim2);
+}
+
+.as-lay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.as-lbox {
+  position: absolute;
+  border: 1.4px solid #f2f2f7;
+  border-radius: 3px;
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.as-shot.is-layered .as-lbox {
+  opacity: 1;
+  transform: none;
+}
+
+.as-lbox span {
+  position: absolute;
+  top: -13px;
+  left: -1px;
+  white-space: nowrap;
+  font-size: 7px;
+  background: #f2f2f7;
+  color: #111112;
+  padding: 1px 4px;
+  border-radius: 3px;
+}

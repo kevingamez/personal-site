@@ -1,0 +1,210 @@
+/* AI Ad Studio, the floating composer. 720px on rgba(22,22,24,.88) with a
+   1px rgba(255,255,255,.12) border and 16px radius, measured on the live site. */
+
+/* the floating composer: 720px, bottom centre */
+.as-handle {
+  position: absolute;
+  left: 50%;
+  bottom: 214px;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 22%);
+}
+
+.as-composer {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 720px;
+  max-width: calc(100% - 48px);
+  background: var(--panel);
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.as-crow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.as-tile {
+  width: 96px;
+  flex: none;
+  border: 1px dashed rgb(255 255 255 / 22%);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.25;
+  color: var(--dim);
+}
+
+.as-tile .as-ic {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 8%);
+  display: grid;
+  place-items: center;
+}
+
+.as-tile.is-filled {
+  border-style: solid;
+  border-color: rgb(255 255 255 / 30%);
+  color: var(--fg);
+}
+
+.as-tile.is-filled .as-ic {
+  background: rgb(255 255 255 / 16%);
+}
+
+.as-brief {
+  flex: 1;
+  min-width: 180px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 88%);
+}
+
+.as-brief.is-ph {
+  color: rgb(255 255 255 / 34%);
+}
+
+.as-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--fg);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.as-brow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.as-vars {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--fg);
+}
+
+.as-vars b {
+  font-weight: 500;
+}
+
+.as-vars .as-track {
+  width: 108px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 20%);
+  position: relative;
+}
+
+.as-vars .as-knob {
+  position: absolute;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--fg);
+  transform: translate(-50%, -50%);
+  left: 45%;
+  transition: left 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.as-ratio {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.as-ratio .as-sq {
+  width: 13px;
+  height: 15px;
+  border: 1.4px solid var(--dim);
+  border-radius: 3px;
+}
+
+.as-create {
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 16px;
+  font-weight: 500;
+  transition: opacity 0.25s ease;
+}
+
+.as-create.is-off {
+  background: rgb(255 255 255 / 13%);
+  color: var(--dim2);
+}
+
+/* .cv-eta-bar, verbatim: pill, blurred backdrop, top centre of the canvas */
+.as-status {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+  background: rgb(18 17 14 / 88%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 99px;
+  padding: 6px 18px;
+  font-size: 13px;
+  color: rgb(255 255 255 / 72%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Centred it would run into the auth buttons on a phone-width canvas. */
+.as.is-narrow .as-status {
+  left: 18px;
+  transform: none;
+}
+
+.as-status.is-in {
+  opacity: 1;
+}

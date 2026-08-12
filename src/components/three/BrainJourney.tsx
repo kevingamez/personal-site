@@ -197,10 +197,13 @@ function Scene() {
     pulses.update(delta, reduced ? 0 : s.fB * s.a, pos)
     updateParticles({
       count,
-      t,
+      // Freezing the clock and the wave amplitude is what actually stills the
+      // dust. Gating rotation alone left every grain drifting, which is the
+      // motion a reduced-motion request is asking us to stop.
+      t: reduced ? 0 : t,
       fB: s.fB,
       fC: s.fC,
-      waves: s.waves,
+      waves: reduced ? 0 : s.waves,
       local,
       scratch,
       base,

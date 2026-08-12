@@ -68,7 +68,9 @@ function imperialByTimezone(): boolean | null {
 
 export async function fetchCountry(): Promise<string | null> {
   try {
-    const res = await fetch('/api/geo', { headers: { Accept: 'application/json' } })
+    // Trailing slash matches next.config.ts `trailingSlash: true`; without it
+    // the request eats a 308 redirect before it reaches the handler.
+    const res = await fetch('/api/geo/', { headers: { Accept: 'application/json' } })
     if (!res.ok) return null
     const j = (await res.json()) as { country?: string | null }
     return j.country && /^[A-Z]{2}$/.test(j.country) ? j.country : null

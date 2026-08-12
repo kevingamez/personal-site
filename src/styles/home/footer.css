@@ -1,4 +1,4 @@
-/* ─── Footer (Vela: the dark slab with a clipped marquee wordmark) ─── */
+/* ─── Footer (Vela: the dark slab) ─── */
 .footer {
   position: relative;
   background: var(--ink-900);
@@ -80,36 +80,6 @@
 }
 
 /* Oversized wordmark, clipped by the slab and drifting on a 28s loop. */
-.foot-marquee {
-  margin-top: 28px;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.fm-track {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-  font-family: var(--font-display);
-  font-size: clamp(72px, 11vw, 132px);
-  letter-spacing: var(--ls-display);
-  line-height: 1;
-  color: rgb(255 255 255 / 10%);
-  transform: translateY(0.18em);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .fm-track {
-    animation: fm-drift 28s linear infinite;
-  }
-}
-
-@keyframes fm-drift {
-  to {
-    transform: translateY(0.18em) translateX(-50%);
-  }
-}
-
 @media (width >= 1180px) and (height <= 950px) {
   .footer {
     padding-top: 40px;

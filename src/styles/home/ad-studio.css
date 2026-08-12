@@ -1,0 +1,111 @@
+/* AI Ad Studio surface. Values taken from the live enttor.ai DOM and from the
+   product's own adgen.css: #111112 canvas with a 24px dot grid, a 247px rail,
+   a 720px composer on rgba(22,22,24,.88), and the three tile states
+   (skeleton, forming, landed). */
+
+/* ── the product surface ── */
+.as-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--as-dw, 1053px);
+  height: var(--as-dh, 620px);
+  transform: scale(var(--as-scale, 1));
+  transform-origin: top left;
+}
+
+.as {
+  --bg: #111112;
+  --fg: #f2f2f7;
+  --dim: rgb(255 255 255 / 55%);
+  --dim2: rgb(255 255 255 / 34%);
+  --hair: rgb(255 255 255 / 12%);
+  --panel: rgb(22 22 24 / 88%);
+
+  position: relative;
+  height: 100%;
+  min-height: 340px;
+  overflow: hidden;
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgb(255 255 255 / 15%) 1px, rgb(0 0 0 / 0%) 1px);
+  background-size: 24px 24px;
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.as-auth {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.as-auth span {
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.as-auth .as-login {
+  border: 1px solid var(--hair);
+  color: var(--fg);
+}
+
+.as-auth .as-signup {
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 500;
+}
+
+.as-zoom {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--hair);
+  border-radius: 9px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.as.is-tight .as-zoom {
+  bottom: calc(var(--as-cb, 150px) + 40px);
+}
+
+.as-zoom i {
+  padding: 5px 11px;
+  color: var(--dim);
+  font-style: normal;
+}
+
+.as-zoom b {
+  padding: 5px 11px;
+  font-weight: 400;
+  border-left: 1px solid var(--hair);
+  border-right: 1px solid var(--hair);
+}
+
+/* Reduced motion: the surface still tells the whole story, it just arrives at
+   the finished board instead of animating there. The two infinite loops (the
+   skeleton shimmer and the caret) are the ones that must not survive. */
+@media (prefers-reduced-motion: reduce) {
+  .as .as-shot .as-skel,
+  .as .as-caret {
+    animation: none;
+  }
+
+  .as .as-card,
+  .as .as-shot .as-art,
+  .as .as-foot .as-j,
+  .as .as-lbox,
+  .as .as-create,
+  .as .as-status,
+  .as .as-vars .as-knob {
+    transition: none;
+  }
+}
