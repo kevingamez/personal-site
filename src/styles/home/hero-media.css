@@ -29,6 +29,19 @@
   transition: transform var(--dur-slow) var(--ease-out-soft);
 }
 
+/* Desktop: the dust journey's brain takes the portrait's place. The frame
+   keeps its box so the figure has an exact slot to live in; the photo and
+   the frame ground hide. */
+@media (width >= 900px) {
+  .media-frame {
+    background: transparent;
+  }
+
+  .media-frame img {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .media-frame:hover img {
     transform: scale(1.03);
