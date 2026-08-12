@@ -20,7 +20,7 @@ import {
   type Points,
 } from 'three'
 import { makeParticleMaterial } from './particle-material'
-import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
+import { AUTO_WAVE_S, INK, NODES, PAPER, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
@@ -133,6 +133,19 @@ function Scene() {
       const dy = local.y - touch.current.oy
       if (dx * dx + dy * dy > 0.5 || t - touch.current.start > 1.6) {
         touch.current = { ox: local.x, oy: local.y, oz: 0, start: t }
+        // The signal cascade starts at the neuron under the cursor.
+        let ni = 0
+        let nd = Infinity
+        for (let i = 0; i < NODES; i++) {
+          const ddx = base[i * 3] - local.x
+          const ddy = base[i * 3 + 1] - local.y
+          const d2 = ddx * ddx + ddy * ddy
+          if (d2 < nd) {
+            nd = d2
+            ni = i
+          }
+        }
+        pulses.spawnAt(ni, 30)
       }
     }
     const touchFront = (t - touch.current.start) * TOUCH_WAVE_SPEED
@@ -150,6 +163,10 @@ function Scene() {
     const aw = autoWave.current
     const tc = touch.current
     const doWaves = s.waves > 0.02
+    // Aerial perspective: the far side of the volume fades toward paper,
+    // the near side stays full strength - depth you can feel.
+    const sinR = Math.sin(g.rotation.y)
+    const cosR = Math.cos(g.rotation.y)
     for (let i = 0; i < NODES; i++) {
       const j = i * 3
       // Formation staggers per particle so shapes stream, not snap; the
@@ -167,9 +184,9 @@ function Scene() {
       const ry = ty - local.y
       const rz = tz - local.z
       const rd2 = rx * rx + ry * ry + rz * rz
-      if (rd2 < 0.6) {
+      if (rd2 < 0.85) {
         const rd = Math.sqrt(rd2) || 0.001
-        const f = ((0.77 - rd) / 0.77) * (0.2 + 0.3 * fb)
+        const f = ((0.95 - rd) / 0.95) * (0.28 + 0.38 * fb)
         tx += (rx / rd) * f
         ty += (ry / rd) * f
         tz += (rz / rd) * f
@@ -193,6 +210,8 @@ function Scene() {
       }
       // Pulse arrivals flash their neuron regardless of the slow waves.
       if (pulses.flash[i] > 0.02) heat = Math.max(heat, pulses.flash[i] * 0.9 * fb)
+      const wz = tx * sinR + tz * cosR
+      const dfar = MathUtils.clamp(0.22 - wz * 0.16, 0, 0.22) * fb
       scratch
         .setRGB(
           dustCol[j] * fd + baseColors[j] * fb,
@@ -201,6 +220,7 @@ function Scene() {
         )
         .lerp(INK, Math.min(1, heat * 1.4))
         .lerp(VIOLET, heat * 0.85)
+        .lerp(PAPER, dfar * (1 - Math.min(1, heat * 2)))
       col[j] = scratch.r
       col[j + 1] = scratch.g
       col[j + 2] = scratch.b
