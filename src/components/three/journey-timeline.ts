@@ -43,15 +43,18 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
   const ys: number[] = []
   const stops: (KF | Pose)[] = []
   // Opening stop: the brain lives fully formed in the hero portrait slot.
+  // Figures are sized by viewport HEIGHT, so narrow windows would let
+  // them swallow the copy; damp every stop by the aspect ratio.
+  const fit = MathUtils.clamp(vw / vh / 1.68, 0.6, 1)
   const slot = document.querySelector('.media-frame')?.getBoundingClientRect()
   if (slot && slot.height > 0) {
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
-    // The reference hero: the figure is dominant, not boxed - most of the
-    // viewport tall, center-right, sharing space with the headline.
-    // Dominant like the reference, but the FULL silhouette stays in
-    // frame - the complete profile outline is what makes it instantly
-    // read as a brain.
-    stops.push({ x: 0.73, y: 0.52, s: 0.92, a: 1, fB: 1, waves: 1 })
+    // Dominant like the reference with the FULL silhouette in frame -
+    // the complete profile outline is what makes it read as a brain.
+    // Narrow windows shrink it and tuck it against the right edge.
+    const heroS = Math.min(0.92, (0.54 * vw) / vh)
+    const heroX = Math.min(0.73, 1 - ((heroS * vh * 0.97) / 2 + 20) / vw)
+    stops.push({ x: heroX, y: 0.52, s: heroS, a: 1, fB: 1, waves: 1 })
   }
   for (const k of KFS) {
     const el = document.querySelector(k.sel)
@@ -59,7 +62,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     const r = el.getBoundingClientRect()
     if (r.height === 0) continue
     ys.push(scrollY + r.top + Math.min(r.height, vh) * 0.5 - vh * 0.5)
-    stops.push(k)
+    stops.push({ ...k, s: k.s * fit })
   }
   // Final stop: the brain docks into the live contact slot.
   const dock = document.querySelector('.cube-stage')?.getBoundingClientRect()

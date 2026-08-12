@@ -46,6 +46,23 @@ export class PulseLayer {
     return this.seed / 4294967296
   }
 
+  // A burst of impulses radiating out of one neuron - fired when the
+  // visitor touches the body, so the cascade starts under their cursor.
+  spawnAt(node: number, count: number): void {
+    const es = this.adj[node]
+    if (es.length === 0) return
+    let spawned = 0
+    for (let i = 0; i < MAX && spawned < count; i++) {
+      if (this.live[i]) continue
+      this.live[i] = 1
+      this.edgeIdx[i] = es[Math.floor(this.rand() * es.length)]
+      this.dir[i] = this.edges[this.edgeIdx[i]][0] === node ? 1 : -1
+      this.t01[i] = 0
+      this.speed[i] = 3.5 + this.rand() * 3
+      spawned++
+    }
+  }
+
   // intensity 0..1 scales how many pulses stay alive; pos is the live
   // (displaced) particle position buffer so pulses ride the breathing body.
   update(dt: number, intensity: number, pos: Float32Array): void {

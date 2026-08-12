@@ -16,6 +16,7 @@ export const WAVE_BAND = 0.5
 export const INK = new Color('#0b0b0c')
 export const FAINT = new Color('#0b0b0c').lerp(new Color('#f4f4f2'), 0.5)
 export const VIOLET = new Color('#7c5cff')
+export const PAPER = new Color('#f4f4f2')
 
 // Side-profile outline of a human brain, authored by hand: (z, y) pairs,
 // +z toward the face, y up. Clockwise from the front-bottom.
@@ -211,7 +212,9 @@ export function buildVolume() {
     const violet = new Color('#7c5cff')
     for (let i = 0; i < NODES; i++) {
       if (region[i] === 1) {
-        c.copy(INK).lerp(paper, 0.42 + rand() * 0.22)
+        c.copy(INK)
+          .lerp(paper, 0.42 + rand() * 0.22)
+          .lerp(mixc.set('#2fae7d'), 0.3)
       } else if (region[i] === 2) {
         c.copy(INK).lerp(paper, 0.32 + rand() * 0.18)
       } else {
@@ -228,8 +231,17 @@ export function buildVolume() {
               Math.sin(base[i * 3 + 1] * 3.3 + base[i * 3 + 2] * 2.1)
           )
         )
-        if (fil > 0.68 && rand() < 0.6) {
-          c.copy(violet).lerp(mixc.copy(INK), fil > 0.88 ? 0.35 : rand() * 0.2)
+        if (fil > 0.64 && rand() < 0.72) {
+          // Each filament carries ONE saturated hue - clustered color
+          // reads rich instead of collapsing into confetti mud.
+          const h = Math.abs(
+            Math.sin(base[i * 3] * 1.3 + base[i * 3 + 1] * 2.1 + base[i * 3 + 2] * 1.7)
+          )
+          if (h < 0.5) c.copy(violet)
+          else if (h < 0.72) c.set('#e05a7e')
+          else if (h < 0.88) c.set('#e8981e')
+          else c.set('#2fae7d')
+          c.lerp(mixc.copy(INK), fil > 0.88 ? 0.28 : rand() * 0.12)
           accented[i] = 1
         } else {
           c.copy(INK).lerp(paper, 0.34 + rand() * 0.32)
@@ -255,7 +267,7 @@ export function buildVolume() {
       baseColors[i * 3 + 2] = c.b
     }
   }
-  const sizes = buildSizes(NODES, rand, 1.0)
+  const sizes = buildSizes(NODES, rand, 1.1)
   // Violet filaments read as glints; gray furrow dust recedes so the
   // gyri appear as density variation, not just shading.
   for (let i = 0; i < NODES; i++) {
