@@ -6,7 +6,7 @@ export const es: HomeStrings = {
     htmlLang: 'es',
     title: 'Kevin Gámez - Founding Engineer en Enttor',
     description:
-      'Kevin Gámez es founding engineer en Enttor, basado en Bogotá. Outbound con IA, automatización de navegador, pipelines de OpenAI, Next.js / NestJS / Postgres.',
+      'Kevin Gámez es founding engineer en Enttor y vive en Bogotá. Construye automatización de navegador y pipelines de OpenAI que encuentran y califican prospectos, con Next.js, NestJS y Postgres.',
     canonical: 'https://kevingamez.co/es/',
     ogUrl: 'https://kevingamez.co/es/',
     ogTitle: 'Kevin Gámez - Founding Engineer en Enttor',
@@ -69,11 +69,11 @@ export const es: HomeStrings = {
   about: {
     secNum: 'Sobre mí',
     titleHtml: 'Sobre mí.',
-    blurb: 'Founding engineer, full-stack, egresado de deep learning.',
+    blurb: 'Founding engineer full-stack, con maestría en deep learning.',
     p1Html:
-      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el motor de outbound con IA desde cero: la\n              automatización de navegador que encuentra prospectos en Instagram y LinkedIn, los pipelines de OpenAI que\n              los califican, los dashboards en Next.js donde todo vive, y las APIs en NestJS y colas de Inngest que lo\n              sostienen.',
+      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el sistema de outbound con IA desde cero. La\n              automatización de navegador encuentra prospectos en Instagram y LinkedIn y los pipelines de OpenAI los\n              califican. Todo corre sobre dashboards en Next.js, APIs en NestJS y colas de Inngest.',
     p2Html:
-      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Trabajos\n              anteriores cruzaron analítica (pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones) y\n              deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
+      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Antes de eso\n              trabajé en analítica: pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones. Y en deep\n              learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
     p3Html:
       'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management.',
     qfBased: 'Ubicación',
@@ -83,12 +83,12 @@ export const es: HomeStrings = {
     qfStack: 'Stack favorito',
     qfStackV: 'TypeScript · Next.js · Postgres',
     qfObsessed: 'Cacharreando con',
-    qfObsessedV: 'Browser automation &amp; pipelines de LLM',
+    qfObsessedV: 'Automatización de navegador y pipelines de LLM',
   },
   stack: {
     secNum: 'Stack',
     titleHtml: 'Las herramientas con las que construyo.',
-    blurb: 'El stack detrás del motor de outbound de Enttor y de este sitio.',
+    blurb: 'Con esto construí el outbound de Enttor y este sitio.',
     cols: [
       { name: 'Lenguajes', items: ['TypeScript', 'Python', 'SQL', 'Swift'] },
       { name: 'Frameworks', items: ['Next.js', 'React Native', 'NestJS', 'Astro'] },
@@ -105,10 +105,10 @@ export const es: HomeStrings = {
     ],
   },
   experience: {
-    secNum: 'Trayectoria',
+    secNum: 'Experiencia',
     titleHtml: 'Dos startups y una maestría.',
     blurb:
-      'Ingeniero fundador en Samsam y luego en Enttor. La maestría en deep learning fue en paralelo con el primer trabajo.',
+      'Ingeniero fundador en Samsam y luego en Enttor. Hice la maestría en deep learning mientras trabajaba en el primer empleo.',
     e1Year: 'Jun 2025 · Jul 2026',
     e1Meta: 'New York · remoto · outbound con IA',
     e1Desc:
@@ -128,7 +128,7 @@ export const es: HomeStrings = {
       'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
     e4Meta: 'Minor en Management',
     e4Desc:
-      'Cinco años en los fundamentos: sistemas, algoritmos, ML aplicado y un minor en Management. Side projects\n                en Python, TypeScript, Java y Swift en el camino.',
+      'Cinco años en los fundamentos: sistemas, algoritmos y ML aplicado. Además, proyectos propios en Python,\n                TypeScript, Java y Swift.',
     achievementsTitle: 'Honores y certificaciones',
     achievementsBlurb: 'Una distinción nacional y dos certificaciones de AWS.',
     achievements: [
@@ -136,13 +136,13 @@ export const es: HomeStrings = {
         year: '2018',
         titleHtml: 'Distinción <i>Andrés Bello</i>',
         meta: 'Ministerio de Educación · Colombia · categoría nacional',
-        desc: 'Otorgada por estar entre los mejores puntajes del examen Saber 11 a nivel nacional. Uno de los reconocimientos estudiantiles más altos del país.',
+        desc: 'Otorgada por el Ministerio de Educación por estar entre los mejores puntajes del examen Saber 11 del país.',
       },
       {
         year: '2022',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
         meta: 'Certificación · Amazon Web Services',
-        desc: 'Construir, desplegar y escalar apps cloud-native en AWS: IAM, Lambda, DynamoDB, S3 y el resto del kit.',
+        desc: 'Construir, desplegar y escalar apps en AWS: IAM, Lambda, DynamoDB y S3.',
       },
       {
         year: '2021',
@@ -155,7 +155,7 @@ export const es: HomeStrings = {
   work: {
     secNum: 'Proyectos',
     titleHtml: 'Cosas que he construido.',
-    blurb: 'Lo que he construido en el trabajo y por mi cuenta.',
+    blurb: 'Uno del trabajo, tres por mi cuenta.',
     p1Featured: '01 / Destacado',
     p1NameHtml: 'enttor.ai · <i>outbound con IA.</i>',
     p1ImageAlt:
@@ -173,7 +173,7 @@ export const es: HomeStrings = {
     allRepos: 'Todos los repositorios',
   },
   deck: {
-    secNum: 'Elige una carta',
+    secNum: 'Las cartas',
     titleHtml: 'Lo que un CV no cuenta.',
     blurb: 'Cinco cartas. Todo lo que dicen es verdad.',
     hint: 'Elige una carta',
@@ -200,13 +200,13 @@ export const es: HomeStrings = {
         label: 'Pregúntame por',
         statement: 'Automatización, pipelines, satélites.',
         bodyHtml:
-          'Automatización de navegador a escala, pipelines de calificación con LLM, o los modelos de deep learning que entrené sobre imágenes satelitales en la maestría.',
+          'Automatización de navegador, pipelines de LLM que califican prospectos, o los modelos de deep learning que entrené sobre imágenes satelitales en la maestría.',
       },
       {
         label: 'Fuera del teclado',
         statement: 'Correr y montar bici por Bogotá.',
         bodyHtml:
-          'La <a href="#strava">sección de Strava</a> más abajo es en vivo: distancia, horas y el esfuerzo más largo de cada tipo, directo de la API.',
+          'La <a href="#strava">sección de Strava</a> más abajo es en vivo: distancia, horas y mi salida más larga de cada tipo, directo de la API.',
       },
     ],
   },
