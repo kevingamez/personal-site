@@ -3,25 +3,25 @@ import '@/styles/error-404.css'
 
 export const metadata: Metadata = {
   title: '404 - Kevin Gámez',
-  description: "The page could not be found on Kevin Gámez's site.",
+  description: 'La página no existe en el sitio de Kevin Gámez.',
   robots: 'noindex,nofollow',
 }
 
 export default function NotFound() {
   return (
-    <div className="err404" lang="en">
+    <div className="err404" lang="es">
       <div className="wrap">
-        <div className="tag">route not found</div>
+        <div className="tag">ruta no encontrada</div>
         <h1>
           4<i>0</i>4
         </h1>
-        <p>This page doesn't exist. The URL may be mistyped or out of date.</p>
+        <p>Esta página no existe. La URL puede estar mal escrita o haber quedado obsoleta.</p>
         <div className="ctas">
-          <a className="btn btn-primary" href="/">
-            ← Back home
+          <a className="btn btn-primary" href="/es/">
+            ← Volver al inicio
           </a>
           <a className="btn btn-ghost" href="/dev/">
-            Open dev mode
+            Abrir dev mode
           </a>
         </div>
 
@@ -39,17 +39,17 @@ export default function NotFound() {
           <div className="ln">
             <span className="nm">3</span>
             <span className="mute">
-              fallbacks: <a href="/">/</a>, <a href="/dev/">/dev/</a>
+              alternativas: <a href="/es/">/es/</a>, <a href="/dev/">/dev/</a>
             </span>
           </div>
           <div className="ln">
             <span className="nm">4</span>
-            <span className="ok">hint: read /humans.txt for context</span>
+            <span className="ok">pista: /humans.txt tiene más contexto</span>
           </div>
         </div>
       </div>
 
-      {/* head-init.js already runs from SiteChrome in the (en) root layout. */}
+      {/* head-init.js already runs from SiteChrome in the (es) root layout. */}
       <script src="/error-page.js" defer></script>
     </div>
   )
