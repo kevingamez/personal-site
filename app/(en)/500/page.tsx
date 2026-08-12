@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ErrorPage() {
   return (
-    <div className="err500">
+    <div className="err500" lang="en">
       <div className="wrap">
         <div className="tag">Server error</div>
         <h1>
