@@ -19,10 +19,6 @@ export const en: HomeStrings = {
       "Founding engineer in Bogotá, open to what's next. Browser automation, LLM pipelines, full-stack TypeScript.",
     includeJsonLd: true,
     brandHref: '/',
-    langSwitchHref: '/es/',
-    langSwitchHreflang: 'es',
-    langSwitchAriaLabel: 'Cambiar a español',
-    langSwitchLabelHtml: '<b>EN</b>, ES',
     skip: 'Skip to content',
     hreflang: [
       { lang: 'en', href: 'https://kevingamez.co/' },
@@ -42,14 +38,15 @@ export const en: HomeStrings = {
   },
   hero: {
     metaRole: "Founding engineer, open to what's next",
-    metaPlace: 'Bogotá',
+    metaPlace: 'Bogotá, Colombia',
+    weatherLabels:
+      '{"clear": "clear", "partly cloudy": "partly cloudy", "cloudy": "cloudy", "fog": "fog", "drizzle": "drizzle", "rain": "rain", "showers": "showers", "snow": "snow", "storm": "storm"}',
     titleHtml: 'Hello',
     lede: "I'm a founding engineer in Bogotá, open to what's next. Most recently at <b>Enttor</b>, where I built\n            the AI ad-creation platform and the browser agents behind its outbound. Before that, an e-commerce\n            marketplace at <b>Samsam</b>. M.Sc. in deep learning from Universidad de los Andes.",
     stat1Num: '02',
     stat1Label: 'Startups as founding engineer',
     stat2Num: '07',
     stat2Label: 'Years on GitHub',
-    portraitAlt: 'Kevin Gámez in front of Royce Hall, UCLA',
     scrollDown: 'Scroll down',
     btnGetInTouch: 'Get in touch',
     pauseTitle: 'pause/play',
@@ -107,7 +104,7 @@ export const en: HomeStrings = {
     e1Year: 'Jun 2025, Jul 2026',
     e1Meta: 'New York, remote, AI outbound',
     e1Desc:
-      'I built the system that finds prospects on Instagram and LinkedIn and qualifies them with AI. Full-stack:\n                Next.js dashboards, NestJS APIs, Inngest queues, all running on Vercel and Supabase.',
+      'I built the outbound engine end to end: browser automation that sourced prospects on Instagram and LinkedIn, OpenAI pipelines that filtered them and drafted the messages, and the campaigns that sent them at scale. Next.js dashboards, NestJS APIs and Inngest queues on Vercel and Supabase, from scratch.',
     e2Year: 'Feb 2024, Mar 2025',
     e2Meta: 'Bogotá, e-commerce platform',
     e2Desc:
@@ -154,21 +151,17 @@ export const en: HomeStrings = {
       'Kevin Gámez workstation with the Enttor site open on a laptop and code on a monitor',
     p1Desc:
       "Enttor's last product. Give it a brand's website and it scrapes the logos, colors and fonts, writes ad concepts with Claude, renders finished images, then checks its own work with a vision pass. It also takes an existing ad apart into editable layers: OCR and instance segmentation recover the real text, fonts and boxes, so a media buyer edits on a canvas instead of rebuilding from scratch. The CV pipeline runs on GPUs.",
+    p1Meta: 'Next.js, NestJS, OpenAI, Inngest, Supabase',
     projects: [
       {
         name: 'Slack Agent',
-        desc: 'The same product with a second front door: a Slack bot media buyers talk to like a coworker. 165 tools across the Meta and TikTok ad APIs, so it launches campaigns, diagnoses creative fatigue and moves budget, instead of just answering questions.',
-        meta: 'Claude tool use, Drizzle, Postgres',
+        desc: 'The same product with a second front door: a Slack bot media buyers talk to like a coworker. 165 tools across the Meta and TikTok ad APIs, so it launches campaigns, diagnoses creative fatigue and moves budget instead of just answering questions. Launching an ad takes three steps instead of the thirty clicks Ads Manager asks for, and creatives import in bulk straight from a Drive folder.',
+        meta: 'Claude tool use, Meta and TikTok APIs, Postgres',
       },
       {
         name: 'Enttor Platform',
         desc: 'Two years of the GTM product: it sourced prospects from Instagram and LinkedIn engagement, wrote personalized DMs with AI, auto-replied through Meta webhooks and tracked it all in one inbox. 132 API routes over four Postgres schemas.',
         meta: 'Next.js, Supabase, Inngest',
-      },
-      {
-        name: 'AdsUploads',
-        desc: 'Launching a Meta ad takes about thirty clicks in Ads Manager. This takes three: upload the creative, pick a budget, go live. It builds the campaign, ad set, creative and ad in the right order, and imports in bulk straight from a Drive folder.',
-        meta: 'Meta Marketing API, Stripe',
       },
       {
         name: 'MakeMotionGraphics',

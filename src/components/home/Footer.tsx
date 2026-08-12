@@ -72,14 +72,7 @@ export function Footer({ t }: Props) {
           </div>
         </div>
         <div className="colophon">
-          <span dangerouslySetInnerHTML={{ __html: t.fonts }} />
           <span>{t.estab}</span>
-        </div>
-      </div>
-      <div className="foot-marquee" aria-hidden="true">
-        <div className="fm-track">
-          <span className="fm-set">Kevin Gámez, Kevin Gámez, Kevin Gámez,&nbsp;</span>
-          <span className="fm-set">Kevin Gámez, Kevin Gámez, Kevin Gámez,&nbsp;</span>
         </div>
       </div>
     </footer>

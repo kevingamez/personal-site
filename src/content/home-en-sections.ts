@@ -152,7 +152,6 @@ export const enSections: Pick<
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
     elsewherePrivacy: 'Privacy',
-    fonts: 'Set in Inter &amp; JetBrains Mono',
     estab: 'Est. 2026, Bogotá',
   },
 }
