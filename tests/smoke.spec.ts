@@ -5,6 +5,8 @@ const routes = [
   { path: '/es/', title: /Kevin G[áa]mez/ },
   { path: '/dev', title: /Kevin G[áa]mez|dev/i },
   { path: '/privacy', title: /Privacy|Kevin G[áa]mez/ },
+  { path: '/resume', title: /R[ée]sum[ée]|Kevin G[áa]mez/ },
+  { path: '/es/resume', title: /Hoja de vida|Kevin G[áa]mez/ },
 ]
 
 // Ignore noise that's expected when running against the preview server:
