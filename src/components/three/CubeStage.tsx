@@ -8,14 +8,13 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
-const CubeJourney = dynamic(() => import('./CubeJourney'), { ssr: false })
 const LifeCube = dynamic(() => import('./LifeCube'), { ssr: false })
 const NeuralNet = dynamic(() => import('./NeuralNet'), { ssr: false })
 const BrainJourney = dynamic(() => import('./BrainJourney'), { ssr: false })
 
-// Preview switch: ?fx=A1|A2 Cube of Life, ?fx=B the neural figure,
-// ?fx=scroll the brain riding the scroll choreography into the contact
-// slot (B1/B2 kept as aliases so older links keep working).
+// The full-page dust journey IS the default desktop experience. Preview
+// switch: ?fx=A1|A2 Cube of Life, ?fx=B the brain figure fullscreen
+// (B1/B2/scroll kept as aliases so older links keep working).
 const FX: Record<string, { kind: 'life'; v: 'ink' | 'prism' } | { kind: 'net' }> = {
   A1: { kind: 'life', v: 'ink' },
   A2: { kind: 'life', v: 'prism' },
@@ -84,18 +83,8 @@ export function CubeStage() {
     }
   }, [])
 
-  // Scroll-demo mode: the brain replaces the cube on the journey into the
-  // contact slot; the page itself renders and scrolls normally.
-  if (fx === 'scroll') {
-    return (
-      <div ref={host} className="cube-stage" aria-hidden="true">
-        <BrainJourney />
-      </div>
-    )
-  }
-
   // Preview mode takes the whole screen immediately - no scrolling needed.
-  if (fx) {
+  if (fx && fx !== 'scroll') {
     return (
       <div className="fx-preview" aria-hidden="true">
         <div className="fx-preview-tag">preview · {fx}</div>
@@ -111,7 +100,7 @@ export function CubeStage() {
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
       {journey ? (
-        <CubeJourney />
+        <BrainJourney />
       ) : (
         near && <ParticleCube animate={visible && !reduced} reduced={reduced} />
       )}
