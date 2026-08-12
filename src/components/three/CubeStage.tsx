@@ -1,27 +1,15 @@
 'use client'
 
-// Lazy mount for the contact-section particle cube: the three.js chunk loads
-// only when the section approaches, self-motion runs only while visible and
-// motion is allowed. Dragging always works - it is user-initiated.
+// Mount for the particle experience. Desktop gets the full-page dust
+// journey (the brain in the hero, dust between sections, the dock at
+// contact); narrow screens get the section-local cube. The old ?fx=
+// preview modes are gone - every URL shows the real experience.
 
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 
 const ParticleCube = dynamic(() => import('./ParticleCube'), { ssr: false })
-const LifeCube = dynamic(() => import('./LifeCube'), { ssr: false })
-const NeuralNet = dynamic(() => import('./NeuralNet'), { ssr: false })
 const BrainJourney = dynamic(() => import('./BrainJourney'), { ssr: false })
-
-// The full-page dust journey IS the default desktop experience. Preview
-// switch: ?fx=A1|A2 Cube of Life, ?fx=B the brain figure fullscreen
-// (B1/B2/scroll kept as aliases so older links keep working).
-const FX: Record<string, { kind: 'life'; v: 'ink' | 'prism' } | { kind: 'net' }> = {
-  A1: { kind: 'life', v: 'ink' },
-  A2: { kind: 'life', v: 'prism' },
-  B: { kind: 'net' },
-  B1: { kind: 'net' },
-  B2: { kind: 'net' },
-}
 
 export function CubeStage() {
   const host = useRef<HTMLDivElement>(null)
@@ -29,18 +17,12 @@ export function CubeStage() {
   const [visible, setVisible] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [journey, setJourney] = useState(false)
-  const [fx, setFx] = useState<string | null>(null)
 
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get('fx')
-    if (q && (FX[q] || q === 'scroll')) setFx(q)
-  }, [])
-
-  useEffect(() => {
-    // The scroll-choreographed figure needs a wide viewport; phones get the
-    // section-local cube. It mounts even under prefers-reduced-motion because
-    // its choreography is scroll-scrubbed (user-driven); only the self-running
-    // idle spin is gated inside the scene.
+    // The journey needs a wide viewport; phones get the section-local
+    // cube. It mounts even under prefers-reduced-motion because its
+    // choreography is scroll-scrubbed (user-driven); only self-running
+    // motion is gated inside the scene.
     const mq = window.matchMedia('(min-width: 900px)')
     setJourney(mq.matches)
     const onChange = (e: MediaQueryListEvent) => setJourney(e.matches)
@@ -82,20 +64,6 @@ export function CubeStage() {
       runIo.disconnect()
     }
   }, [])
-
-  // Preview mode takes the whole screen immediately - no scrolling needed.
-  if (fx && fx !== 'scroll') {
-    return (
-      <div className="fx-preview" aria-hidden="true">
-        <div className="fx-preview-tag">preview · {fx}</div>
-        {FX[fx].kind === 'life' ? (
-          <LifeCube variant={(FX[fx] as { kind: 'life'; v: 'ink' | 'prism' }).v} />
-        ) : (
-          <NeuralNet />
-        )}
-      </div>
-    )
-  }
 
   return (
     <div ref={host} className="cube-stage" aria-hidden="true">
