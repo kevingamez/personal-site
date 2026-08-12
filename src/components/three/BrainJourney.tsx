@@ -10,7 +10,6 @@
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import {
   BufferAttribute,
   BufferGeometry,
@@ -290,9 +289,6 @@ export default function BrainJourney() {
         frameloop="always"
       >
         <Scene />
-        <EffectComposer>
-          <Bloom intensity={0.35} luminanceThreshold={0.55} luminanceSmoothing={0.4} mipmapBlur />
-        </EffectComposer>
       </Canvas>
     </div>
   )
