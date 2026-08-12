@@ -10,6 +10,7 @@
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import {
   BufferAttribute,
   BufferGeometry,
@@ -54,9 +55,9 @@ function Scene() {
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
   )
-  const st = useRef({ a: 0, fB: 0, waves: 0, rot: 1.35, spin: 0, lastScroll: 0 })
+  const st = useRef({ a: 0, fB: 0, waves: 0, rot: 1.5, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
-  const cursor = useRef({ x: 9e9, y: 9e9, ny: 0 })
+  const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
   const autoWave = useRef({ cycle: -1, ox: 0, oy: 0, oz: 0 })
   const local = useMemo(() => new Vector3(), [])
@@ -89,6 +90,7 @@ function Scene() {
       const [wx, wy] = toWorld(e.clientX, e.clientY)
       cursor.current.x = wx
       cursor.current.y = wy
+      cursor.current.nx = (e.clientX / window.innerWidth) * 2 - 1
       cursor.current.ny = -(e.clientY / window.innerHeight) * 2 + 1
       if (!drag.current.on) return
       drag.current.vy = (e.clientX - drag.current.px) * 0.005
@@ -131,8 +133,17 @@ function Scene() {
       lineMat.opacity = 0
       return
     }
-    g.position.x = MathUtils.lerp(g.position.x, (pose.x - 0.5) * worldH * (vw / vh), k)
-    g.position.y = MathUtils.lerp(g.position.y, (0.5 - pose.y) * worldH, k)
+    const par = s.fB * 0.18
+    g.position.x = MathUtils.lerp(
+      g.position.x,
+      (pose.x - 0.5) * worldH * (vw / vh) + cursor.current.nx * par,
+      k
+    )
+    g.position.y = MathUtils.lerp(
+      g.position.y,
+      (0.5 - pose.y) * worldH + cursor.current.ny * par * 0.6,
+      k
+    )
     g.scale.setScalar(MathUtils.lerp(g.scale.x, (pose.s * worldH) / (2 * R), k))
     material.uniforms.uPx.value = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
     lineMat.opacity = s.a * s.fB * 0.1
@@ -146,9 +157,9 @@ function Scene() {
     // Tumble while dust; settle by the shortest path into the brain's
     // legible profile pose as it forms.
     s.rot += reduced ? 0 : delta * 0.2 * (1 - s.fB)
-    const wrapped = 1.35 + Math.round((s.rot - 1.35) / (Math.PI * 2)) * Math.PI * 2
+    const wrapped = 1.5 + Math.round((s.rot - 1.5) / (Math.PI * 2)) * Math.PI * 2
     s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * s.fB)
-    g.rotation.y = s.rot + (reduced ? 0 : Math.sin(t * 0.12) * 0.22 * s.fB) + s.spin
+    g.rotation.y = s.rot + (reduced ? 0 : Math.sin(t * 0.12) * 0.12 * s.fB) + s.spin
     const tiltX = 0.08 + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * s.fB
     g.rotation.x = MathUtils.lerp(g.rotation.x + drag.current.vx, tiltX, 0.02)
     drag.current.vx *= 0.93
@@ -279,6 +290,9 @@ export default function BrainJourney() {
         frameloop="always"
       >
         <Scene />
+        <EffectComposer>
+          <Bloom intensity={0.35} luminanceThreshold={0.55} luminanceSmoothing={0.4} mipmapBlur />
+        </EffectComposer>
       </Canvas>
     </div>
   )
