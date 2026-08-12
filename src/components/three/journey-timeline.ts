@@ -1,8 +1,8 @@
 // Scroll timeline for the full-page dust journey, in the reference site's
 // style: the swarm is present from the hero on, and each section is a
-// keyframe it travels through - forming the brain beside About, melting
-// back to dust, forming the cube at Experience, and finally docking the
-// brain into the contact slot. Keyframe positions are resolved from the
+// keyframe it travels through - the brain forming beside About, melting
+// back to dust, half-condensing at Experience, and finally docking fully
+// formed into the contact slot. Keyframe positions are resolved from the
 // LIVE section rects every frame, never from hardcoded page fractions.
 
 import { MathUtils } from 'three'
@@ -13,8 +13,7 @@ export interface Pose {
   s: number // figure height as a fraction of viewport height
   a: number // alpha
   fB: number // 1 = fully formed brain
-  fC: number // 1 = fully formed cube
-  waves: number // neural wave intensity (brain only)
+  waves: number // neural wave intensity
 }
 
 interface KF extends Pose {
@@ -22,14 +21,14 @@ interface KF extends Pose {
 }
 
 const KFS: KF[] = [
-  { sel: '', x: 0.82, y: 0.6, s: 0.52, a: 0.4, fB: 0, fC: 0, waves: 0 },
-  { sel: '#about', x: 0.87, y: 0.64, s: 0.3, a: 0.95, fB: 1, fC: 0, waves: 1 },
-  { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
-  { sel: '#experience', x: 0.8, y: 0.55, s: 0.3, a: 0.95, fB: 0, fC: 1, waves: 0 },
-  { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, fC: 0.15, waves: 0 },
-  { sel: '#github', x: 0.5, y: 0.66, s: 0.5, a: 0.4, fB: 0, fC: 0, waves: 0 },
-  { sel: '#writing', x: 0.85, y: 0.6, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
-  { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, fC: 0, waves: 0.3 },
+  { sel: '', x: 0.82, y: 0.6, s: 0.52, a: 0.4, fB: 0, waves: 0 },
+  { sel: '#about', x: 0.87, y: 0.64, s: 0.3, a: 0.95, fB: 1, waves: 1 },
+  { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, waves: 0 },
+  { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, waves: 0.25 },
+  { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, waves: 0 },
+  { sel: '#github', x: 0.5, y: 0.66, s: 0.5, a: 0.4, fB: 0, waves: 0 },
+  { sel: '#writing', x: 0.85, y: 0.6, s: 0.5, a: 0.35, fB: 0, waves: 0 },
+  { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, waves: 0.3 },
 ]
 
 const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
@@ -38,7 +37,6 @@ const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
   s: MathUtils.lerp(a.s, b.s, t),
   a: MathUtils.lerp(a.a, b.a, t),
   fB: MathUtils.lerp(a.fB, b.fB, t),
-  fC: MathUtils.lerp(a.fC, b.fC, t),
   waves: MathUtils.lerp(a.waves, b.waves, t),
 })
 
@@ -68,7 +66,6 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
       s: (dock.height / vh) * 1.05,
       a: 1,
       fB: 1,
-      fC: 0,
       waves: 1,
     })
   }
