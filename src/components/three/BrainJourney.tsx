@@ -37,6 +37,7 @@ import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
 import { updateParticles } from './journey-particles'
+import { FACE_NORMALS } from './cube-figure'
 import { PulseLayer } from './journey-pulses'
 
 const CAM_Z = 10
@@ -82,6 +83,8 @@ function Scene() {
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
   const autoWave = useRef({ cycle: -1, ox: 0, oy: 0, oz: 0 })
   const local = useMemo(() => new Vector3(), [])
+  const faceVis = useMemo(() => new Float32Array(6), [])
+  const normal = useMemo(() => new Vector3(), [])
   const scratch = useMemo(() => new Color(), [])
   const worldH = 2 * CAM_Z * Math.tan(((FOV / 2) * Math.PI) / 180)
 
@@ -178,6 +181,15 @@ function Scene() {
     }
     const autoFront = ((t % AUTO_WAVE_S) / AUTO_WAVE_S) * 4.6
 
+    // Which cube faces point at the camera this frame - the pass fades
+    // the rest so only three faces read, like a real cube.
+    if (s.fC > 0.01) {
+      for (let f = 0; f < 6; f++) {
+        const [nx, ny, nz] = FACE_NORMALS[f]
+        normal.set(nx, ny, nz).applyEuler(g.rotation)
+        faceVis[f] = MathUtils.clamp(normal.z * 4, 0, 1)
+      }
+    }
     const pos = geo.attributes.position.array as Float32Array
     const col = geo.attributes.color.array as Float32Array
     const gsz = geo.attributes.aSize.array as Float32Array
@@ -202,6 +214,8 @@ function Scene() {
       brainSize: sizes,
       cubeSize: cube.size,
       cubeKind: cube.kind,
+      cubeFace: cube.faceOf,
+      faceVis,
       pos,
       col,
       size: gsz,
