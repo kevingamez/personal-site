@@ -57,7 +57,7 @@ function run(cmdLine: string): void {
       err(cmd + ': ' + msg)
     }
   } else {
-    err('zsh: command not found: ' + cmd + '  · try help')
+    err('zsh: command not found: ' + cmd + ' , try help')
   }
 }
 

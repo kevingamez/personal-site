@@ -1,5 +1,5 @@
 // The full home page tree, shared by the EN (/) and ES (/es/) routes.
-// Sections are server components ported 1:1 from their .astro sources;
+// Sections are server components;
 // interactivity comes from the vanilla scripts loaded by <HomeScripts/>.
 
 import '@/styles/home/index.css'
@@ -15,6 +15,7 @@ import { Stack } from './Stack'
 import { Experience } from './Experience'
 import { Work } from './Work'
 import { Deck } from './Deck'
+import { YearRun } from './YearRun'
 import { Github } from './Github'
 import { Strava } from './Strava'
 import { Writing } from './Writing'
@@ -42,6 +43,7 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
         <Experience t={t.experience} />
         <Work t={t.work} />
         <Deck t={t.deck} />
+        <YearRun t={t.yearRun} stats={stats} />
         <Github t={t.github} stats={stats} />
         <div className="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
         <Strava t={t.strava} />

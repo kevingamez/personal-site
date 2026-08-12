@@ -6,7 +6,7 @@ export function CommandPalette() {
           <input
             className="palette-input"
             id="palette-input"
-            placeholder="search files… (⌘P · ↑↓ to navigate · ↵ open · esc cancel)"
+            placeholder="search files… (⌘P, ↑↓ to navigate, ↵ open, esc cancel)"
             autoComplete="off"
             spellCheck="false"
           />

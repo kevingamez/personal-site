@@ -45,7 +45,7 @@ export async function Sidebar() {
     <aside className="sidebar">
       <div className="panel">
         <div className="ph">
-          <b>github · @kevingamez</b>
+          <b>github, @kevingamez</b>
           <span className="pos">live</span>
         </div>
         <div className="row2">
@@ -55,7 +55,7 @@ export async function Sidebar() {
               <span> repos</span>
             </div>
             <div className="sub">
-              {stats.followers} followers · {stats.following} following
+              {stats.followers} followers, {stats.following} following
             </div>
           </div>
           <div className="metric">
@@ -85,7 +85,7 @@ export async function Sidebar() {
         <div className="flight-list">
           <a
             className="flight-row"
-            href="https://www.enttor.ai/"
+            href="https://www.linkedin.com/company/enttor/"
             target="_blank"
             rel="noopener noreferrer"
             title="Enttor - ai outbound platform"
@@ -93,9 +93,9 @@ export async function Sidebar() {
             <span className="fl-num">01</span>
             <div className="fl-body">
               <div className="fl-title">
-                ai outbound · <span className="fl-where">enttor</span>
+                ai outbound, <span className="fl-where">enttor</span>
               </div>
-              <div className="fl-meta">browser automation · openai pipelines · ig/linkedin</div>
+              <div className="fl-meta">browser automation, openai pipelines, ig/linkedin</div>
             </div>
             <span className="fl-status fl-live">live</span>
           </a>
@@ -109,9 +109,9 @@ export async function Sidebar() {
             <span className="fl-num">02</span>
             <div className="fl-body">
               <div className="fl-title">
-                this site · <span className="fl-where">open source</span>
+                this site, <span className="fl-where">open source</span>
               </div>
-              <div className="fl-meta">astro · typescript · live console + dev mode</div>
+              <div className="fl-meta">next.js, typescript, live console + dev mode</div>
             </div>
             <span className="fl-status fl-ship">ship</span>
           </a>
@@ -120,14 +120,14 @@ export async function Sidebar() {
             href="https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders"
             target="_blank"
             rel="noopener noreferrer"
-            title="AD ASTRA · aerial deforestation detection"
+            title="AD ASTRA, aerial deforestation detection"
           >
             <span className="fl-num">03</span>
             <div className="fl-body">
               <div className="fl-title">
-                AD_ASTRA · <span className="fl-where">m.sc. thesis</span>
+                AD_ASTRA, <span className="fl-where">m.sc. thesis</span>
               </div>
-              <div className="fl-meta">python · opencv · yolov5 · fastapi · amazon basin</div>
+              <div className="fl-meta">python, opencv, yolov5, fastapi, amazon basin</div>
             </div>
             <span className="fl-status fl-research">research</span>
           </a>
@@ -137,7 +137,7 @@ export async function Sidebar() {
       <div className="panel">
         <div className="ph">
           <b>tail -f /var/log/commits</b>
-          <span className="pos">github · live</span>
+          <span className="pos">github, live</span>
         </div>
         <div className="reqs commit-tail" id="reqs">
           {recentCommits.length === 0 && (
@@ -165,7 +165,7 @@ export async function Sidebar() {
 
       <div className="panel">
         <div className="ph">
-          <b>contributions · 12mo</b>
+          <b>contributions, 12mo</b>
           <span className="pos">github</span>
         </div>
         <div
@@ -212,16 +212,16 @@ export async function Sidebar() {
           }}
         >
           <div>
-            <span className="ac">building</span> · ai outbound @ enttor
+            <span className="ac">status</span>, open to what's next
           </div>
           <div>
-            <span className="ac">stack</span> · next.js + nestjs + postgres
+            <span className="ac">stack</span>, next.js + nestjs + postgres
           </div>
           <div>
-            <span className="ac">studying</span> · deep learning, browser automation
+            <span className="ac">studying</span>, deep learning, browser automation
           </div>
           <div>
-            <span className="ac">based</span> · bogotá, co · utc-5
+            <span className="ac">based</span>, bogotá, co, utc-5
           </div>
         </div>
       </div>

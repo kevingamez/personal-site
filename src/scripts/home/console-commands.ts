@@ -29,7 +29,7 @@ export const COMMANDS: Record<string, CommandFn> = {
   whoami: (_a, r) => {
     printOut(
       r.stream,
-      'kevin · founding engineer @ <span class="ac">enttor</span> · <span class="muted">bogotá / utc-5</span>'
+      'kevin, founding engineer @ <span class="ac">enttor</span>, <span class="muted">bogotá / utc-5</span>'
     )
   },
   about: (_a, r) => {
@@ -82,7 +82,7 @@ export const COMMANDS: Record<string, CommandFn> = {
       contact: CONTACT_LINES,
     }
     if (!f) {
-      printOut(r.stream, 'cat: missing operand · try `cat about`', 'err')
+      printOut(r.stream, 'cat: missing operand, try `cat about`', 'err')
       return
     }
     const lines = map[f.replace(/\.txt$|\.md$/, '')]
@@ -103,12 +103,12 @@ export const COMMANDS: Record<string, CommandFn> = {
     }
     printOut(
       r.stream,
-      `cd: <span class="muted">${escape(a[0] || '')}</span> · this site is mostly read-only. try <span class="ac">ls</span>.`,
+      `cd: <span class="muted">${escape(a[0] || '')}</span>, this site is mostly read-only. try <span class="ac">ls</span>.`,
       'err'
     )
   },
   uname: (_a, r) => {
-    printOut(r.stream, 'kevingamez.co · astro static build')
+    printOut(r.stream, 'kevingamez.co, next.js build')
   },
   uptime: (_a, r) => {
     const ms = Date.now() - r.bootTime
@@ -141,7 +141,7 @@ export const COMMANDS: Record<string, CommandFn> = {
   man: (a, r) => {
     const c = (a[0] || '').toLowerCase()
     if (!c) {
-      printOut(r.stream, 'man: missing operand · what page do you want?', 'err')
+      printOut(r.stream, 'man: missing operand, what page do you want?', 'err')
       return
     }
     const page = MAN_PAGES[c]

@@ -1,0 +1,255 @@
+/* "The year, and what was running": contribution curve + product lanes.
+   One-hue sequential ramp (the system violet), validated for monotone lightness
+   with the light end at 2.5:1 on paper. Text always wears text tokens. */
+
+.yr {
+  --yr-300: #9e8aff;
+  --yr-500: #7c5cff;
+  --yr-600: #5c3fd6;
+  --yr-700: #3f2a9e;
+}
+
+.yr-stats {
+  display: flex;
+  gap: 54px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding-bottom: 4px;
+}
+
+.yr-stat b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.yr-stat span {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The figure needs a clean ground: the site's ambient particle field renders
+   behind everything and reads as noise inside a chart. A paper panel isolates
+   the plot without introducing a new surface colour. */
+.yr .sec-head {
+  grid-template-columns: 1.55fr 1fr;
+}
+
+.yr-frame {
+  position: relative;
+  margin-top: 12px;
+  padding: 26px 0 4px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+#yr-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.yr-axis {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--muted);
+}
+
+.yr-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.yr-curve {
+  fill: none;
+  stroke: var(--yr-600);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.yr-area {
+  fill: url('#yr-wash');
+  opacity: 0;
+}
+
+.yr-area.on {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.yr-head {
+  fill: var(--yr-600);
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.yr-lane-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  fill: var(--muted);
+  dominant-baseline: middle;
+}
+
+.yr-lane-track {
+  fill: rgb(11 11 12 / 3.5%);
+}
+
+.yr-lane-bar {
+  rx: 3px;
+}
+
+.yr-lane-bar.is-v300 {
+  fill: var(--yr-300);
+}
+
+.yr-lane-bar.is-v500 {
+  fill: var(--yr-500);
+}
+
+.yr-lane-bar.is-v600 {
+  fill: var(--yr-600);
+}
+
+.yr-lane-bar.is-v700 {
+  fill: var(--yr-700);
+}
+
+.yr-lane-count {
+  font-size: 10.5px;
+  fill: var(--muted);
+  dominant-baseline: middle;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+}
+
+.yr-lane-count.on {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.yr-note {
+  opacity: 0;
+}
+
+.yr-note.on {
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.yr-note-dot {
+  fill: var(--yr-600);
+  stroke: var(--paper);
+  stroke-width: 2.5;
+}
+
+.yr-note-stem {
+  stroke: rgb(92 63 214 / 45%);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+/* the paper halo keeps annotations readable where they cross the curve */
+.yr-note-title {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 4;
+  paint-order: stroke;
+  stroke-linejoin: round;
+}
+
+.yr-note-sub {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: var(--muted);
+  stroke: var(--paper);
+  stroke-width: 3.5;
+  paint-order: stroke;
+  stroke-linejoin: round;
+}
+
+.yr-cross {
+  stroke: rgb(11 11 12 / 30%);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0;
+}
+
+.yr-cross.on {
+  opacity: 1;
+}
+
+.yr-hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.yr-tip {
+  position: absolute;
+  z-index: 4;
+  min-width: 150px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -118%);
+  transition: opacity 0.12s ease;
+}
+
+.yr-tip.on {
+  opacity: 1;
+}
+
+.yr-tip b {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.yr-tip-wk {
+  margin-top: 1px;
+  font-size: 11px;
+  color: rgb(244 244 242 / 55%);
+}
+
+.yr-tip ul {
+  margin: 7px 0 0;
+  padding: 6px 0 0;
+  border-top: 1px solid rgb(244 244 242 / 18%);
+  list-style: none;
+}
+
+.yr-tip li {
+  font-size: 11px;
+  color: rgb(244 244 242 / 86%);
+}
+
+.yr-tip-none {
+  color: rgb(244 244 242 / 45%);
+}
+
+@media (width <= 720px) {
+  .yr-stats {
+    gap: 32px;
+  }
+
+  .yr-stat b {
+    font-size: 30px;
+  }
+}

@@ -138,7 +138,7 @@ export function renderOutline(): void {
     return
   }
   const name = state.activeTab.split('/').pop() || ''
-  outlineHdEl.textContent = 'Outline · ' + name
+  outlineHdEl.textContent = 'Outline, ' + name
   outlineListEl.innerHTML = ''
   if (state.outlineMap[state.activeTab]) {
     for (const sym of state.outlineMap[state.activeTab]) {

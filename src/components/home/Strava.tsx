@@ -68,7 +68,7 @@ export function Strava({ t }: Props) {
               '<article class="sv-feat">' +
               '<div class="sv-feat-route" data-route aria-hidden="true"></div>' +
               '<div class="sv-feat-body">' +
-              `<div class="sv-feat-label">${t.featuredLabel} · <span data-sport></span></div>` +
+              `<div class="sv-feat-label">${t.featuredLabel}, <span data-sport></span></div>` +
               '<a class="sv-feat-name" data-name href="https://www.strava.com" target="_blank" rel="noopener">-</a>' +
               '<div class="sv-feat-stats">' +
               `<div><span data-dist>0</span><em>${t.featDist}</em></div>` +

@@ -18,7 +18,7 @@
           }
         },
         {
-          "matchingUrlPattern": ".*localhost(:\\d+)?/(es/)?$",
+          "matchingUrlPattern": ".*(localhost|127\\.0\\.0\\.1)(:\\d+)?/(es/)?$",
           "assertions": {
             "categories:performance": ["warn", { "minScore": 0.85 }],
             "categories:accessibility": ["error", { "minScore": 0.9 }],

@@ -20,26 +20,27 @@ export function initWriting(): void {
     feed.scrollTo({ left: target.offsetLeft - feed.offsetLeft - 24, behavior })
   }
 
+  function maxScroll(): number {
+    return feed ? feed.scrollWidth - feed.clientWidth : 0
+  }
+
+  // Several cards fit per view, so the leftmost card never reaches the last
+  // index and the old card-based index left dead dots and a dead next-arrow
+  // at the end of the strip. Map scroll progress across the dots instead:
+  // start = first dot, fully scrolled = last dot.
   function activeIndex(): number {
     if (!feed) return 0
-    const x = feed.scrollLeft + 32
-    let best = 0
-    let bestDist = Infinity
-    cards.forEach((c, i) => {
-      const d = Math.abs(c.offsetLeft - feed.offsetLeft - x)
-      if (d < bestDist) {
-        bestDist = d
-        best = i
-      }
-    })
-    return best
+    const max = maxScroll()
+    if (max <= 0) return 0
+    return Math.round((feed.scrollLeft / max) * (cards.length - 1))
   }
 
   function update(): void {
+    if (!feed) return
     const i = activeIndex()
     dots.forEach((d, j) => d.classList.toggle('on', j === i))
-    if (prev) prev.hidden = i === 0
-    if (next) next.hidden = i >= cards.length - 1
+    if (prev) prev.hidden = feed.scrollLeft <= 4
+    if (next) next.hidden = feed.scrollLeft >= maxScroll() - 4
   }
 
   prev?.addEventListener('click', () => scrollToIndex(activeIndex() - 1))
@@ -54,6 +55,7 @@ export function initWriting(): void {
       update()
     })
   })
+  window.addEventListener('resize', update)
   feed.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
       e.preventDefault()

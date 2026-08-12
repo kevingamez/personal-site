@@ -26,7 +26,7 @@ function saveActive(): void {
     path: r.path,
     ok: r.ok,
   })
-  if (r.ok) showToast('✓ saved · ' + r.path)
+  if (r.ok) showToast('✓ saved, ' + r.path)
   else showToast('⚠ couldn’t save (storage blocked)')
   renderEditor()
   renderExplorer()
@@ -75,10 +75,10 @@ function init(): void {
   addLine(
     '<span class="gr">welcome to ~/' +
       esc(PROJECT_NAME) +
-      ' · type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
+      ', type</span> <span class="ac">help</span> <span class="gr">to see what works.</span>'
   )
   addLine(
-    '<span class="gr">try:</span> <span class="ac">ls</span> · <span class="ac">cat README.md</span> · <span class="ac">tree</span>'
+    '<span class="gr">try:</span> <span class="ac">ls</span>, <span class="ac">cat README.md</span>, <span class="ac">tree</span>'
   )
   // No trailing $-with-cursor line: the live input bar below already plays
   // that role. Two visual prompts read like duplicate terminals.

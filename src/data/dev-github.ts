@@ -229,13 +229,13 @@ export async function loadRecentCommits(): Promise<RecentCommit[]> {
 
 export function generateOverview(repos: Repo[]): string {
   const ls: string[] = []
-  ls.push(`# ${GH_USER} · public repos`)
+  ls.push(`# ${GH_USER}, public repos`)
   ls.push('')
   if (!repos.length) {
     ls.push('_GitHub API was unreachable at build time. Check back later._')
     return ls.join('\n')
   }
-  ls.push(`> Auto-generated at build · ${repos.length} public repos · sorted by last updated.`)
+  ls.push(`> Auto-generated at build, ${repos.length} public repos, sorted by last updated.`)
   ls.push('')
   for (const r of repos) {
     ls.push(`## ${r.name}${r.archived ? ' *(archived)*' : ''}`)
@@ -245,7 +245,7 @@ export function generateOverview(repos: Repo[]): string {
     if (r.stars > 0) meta.push(`★ ${r.stars}`)
     meta.push(`updated ${fmtDate(r.updated)}`)
     ls.push('')
-    ls.push('`' + meta.join(' · ') + '`')
+    ls.push('`' + meta.join(', ') + '`')
     if (r.topics.length) {
       ls.push('')
       ls.push('tags: ' + r.topics.map((t) => '`' + t + '`').join(' '))

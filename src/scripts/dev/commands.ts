@@ -25,8 +25,7 @@ const relOf = (parts: string[]): string => parts.slice(1).join('/')
 export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): CommandMap {
   const commands: CommandMap = {
     pwd: () => addLine(esc(pathDisplay(state.cwd))),
-    whoami: () =>
-      addLine('kevin · founding engineer @ enttor · <span class="ac">bogotá / utc-5</span>'),
+    whoami: () => addLine('kevin, founding engineer, <span class="ac">bogotá / utc-5</span>'),
     date: () => addLine(esc(new Date().toString())),
     uname: () => addLine('Darwin ' + PROJECT_NAME + ' 25.4.0 arm64'),
     ls: (args) => {
@@ -230,26 +229,26 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
         '<span class="gr">about me:</span>   <span class="ac">whoami</span> <span class="ac">about</span> <span class="ac">work</span> <span class="ac">stack</span> <span class="ac">repos</span> <span class="ac">contact</span> <span class="ac">life</span>'
       )
       addLine(
-        '<span class="gr">utility:</span>    <span class="ac">date</span> <span class="ac">uname</span> <span class="ac">history</span> <span class="ac">clear</span>  ·  <span class="gr">↑/↓</span> history  <span class="gr">⌃L</span> clear'
+        '<span class="gr">utility:</span>    <span class="ac">date</span> <span class="ac">uname</span> <span class="ac">history</span> <span class="ac">clear</span> ,  <span class="gr">↑/↓</span> history  <span class="gr">⌃L</span> clear'
       )
     },
     about: () => {
-      addLine('kevin gámez · founding engineer @ enttor · bogotá')
+      addLine('kevin gámez, founding engineer, bogotá')
       addLine('b.sc. systems & computing + m.sc. info eng (deep learning) @ uniandes')
     },
     work: () => {
       addLine(
-        '<span class="ac">enttor</span>          → ai outbound · browser automation · openai pipelines'
+        '<span class="ac">enttor</span>          → ai outbound, browser automation, openai pipelines'
       )
       addLine(
-        '<span class="ac">samsam</span>          → e-commerce · ts/react native/next/prisma/postgres'
+        '<span class="ac">samsam</span>          → e-commerce, ts/react native/next/prisma/postgres'
       )
-      addLine('<span class="ac">personal-site</span>   → astro · this page')
+      addLine('<span class="ac">personal-site</span>   → next.js, this page')
     },
     stack: () => {
-      addLine('<span class="di">frontend</span>  next.js · react · react native · astro · tailwind')
-      addLine('<span class="di">backend</span>   nestjs · postgres · prisma · supabase · inngest')
-      addLine('<span class="di">ai/ml</span>     openai · pytorch · opencv · browser automation')
+      addLine('<span class="di">frontend</span>  next.js, react, react native, astro, tailwind')
+      addLine('<span class="di">backend</span>   nestjs, postgres, prisma, supabase, inngest')
+      addLine('<span class="di">ai/ml</span>     openai, pytorch, opencv, browser automation')
     },
     repos: () => {
       addLine('kevingamez/<span class="ac">personal-site</span>           typescript')

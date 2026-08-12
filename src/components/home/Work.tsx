@@ -5,17 +5,6 @@ interface Props {
 }
 
 export function Work({ t }: Props) {
-  const sideProjects = [
-    {
-      name: t.p2Name,
-      desc: t.p2Desc,
-      meta: 'Astro · TypeScript',
-      href: 'https://github.com/kevingamez',
-    },
-    { name: t.p3Name, desc: t.p3Desc, meta: 'This site · /dev', href: '/dev/' },
-    { name: t.p4Name, desc: t.p4Desc, meta: 'Claude API · Vercel', href: '#console' },
-  ]
-
   return (
     <section id="work" className="work-section">
       <div className="wrap">
@@ -29,7 +18,6 @@ export function Work({ t }: Props) {
 
         <article className="work-feature">
           <div className="wf-copy">
-            <div className="work-eyebrow">{t.p1Featured}</div>
             <h3 className="wf-title" dangerouslySetInnerHTML={{ __html: t.p1NameHtml }} />
             <p className="wf-desc">{t.p1Desc}</p>
 
@@ -40,20 +28,11 @@ export function Work({ t }: Props) {
               <span>Inngest</span>
               <span>Supabase</span>
             </div>
-
-            <a
-              className="work-link"
-              href="https://www.enttor.ai/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.p1Link}
-            </a>
           </div>
 
           <a
             className="wf-visual"
-            href="https://www.enttor.ai/"
+            href="https://www.linkedin.com/company/enttor/"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -72,16 +51,26 @@ export function Work({ t }: Props) {
         </article>
 
         <div className="work-grid">
-          {sideProjects.map((p, i) => (
-            <a className="work-card" href={p.href} key={i}>
-              <div className="wc-index">{String(i + 2).padStart(2, '0')}</div>
-              <div>
-                <h3>{p.name}</h3>
-                <p>{p.desc}</p>
+          {t.projects.map((p) => {
+            const body = (
+              <>
+                <div>
+                  <h3>{p.name}</h3>
+                  <p>{p.desc}</p>
+                </div>
+                <div className="wc-meta">{p.meta}</div>
+              </>
+            )
+            return p.href ? (
+              <a className="work-card" href={p.href} key={p.name}>
+                {body}
+              </a>
+            ) : (
+              <div className="work-card" key={p.name}>
+                {body}
               </div>
-              <div className="wc-meta">{p.meta}</div>
-            </a>
-          ))}
+            )
+          })}
         </div>
 
         <div className="work-more">

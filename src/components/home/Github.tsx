@@ -25,7 +25,7 @@ export function Github({ t, stats }: Props) {
   const [lead, second] = stats.languageMix
   const langSub =
     lead && second
-      ? `${lead.name} ${t.langLeads} · ${second.name} ${t.langSecond}`
+      ? `${lead.name} ${t.langLeads}, ${second.name} ${t.langSecond}`
       : t.languagesShippedSub
 
   const contribPayload = JSON.stringify({
@@ -91,7 +91,7 @@ export function Github({ t, stats }: Props) {
               {stats.languageMix.map((l, i) => (
                 <span key={i}>
                   <i style={{ background: l.color }} />
-                  {l.name} · {l.pct}%
+                  {l.name}, {l.pct}%
                 </span>
               ))}
             </div>

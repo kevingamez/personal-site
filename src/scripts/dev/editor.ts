@@ -144,7 +144,7 @@ export function renderEditor(): void {
 
 export function updateStatusPos(line: number, col: number): void {
   const el = document.getElementById('status-pos')
-  if (el) el.textContent = 'UTF-8 · LF · Ln ' + line + ', Col ' + (col || 1)
+  if (el) el.textContent = 'UTF-8, LF, Ln ' + line + ', Col ' + (col || 1)
 }
 
 export function refreshTabsDirty(): void {

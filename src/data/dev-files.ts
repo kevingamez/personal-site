@@ -15,7 +15,6 @@ const readSafe = (rel: string): string => {
 
 const langOf = (name: string): string => {
   const lower = name.toLowerCase()
-  if (lower.endsWith('.astro')) return 'astro'
   if (
     lower.endsWith('.ts') ||
     lower.endsWith('.tsx') ||
@@ -34,16 +33,16 @@ const langOf = (name: string): string => {
 }
 
 const LOCAL_FILE_PATHS = [
-  'src/pages/es/index.astro',
-  'src/pages/404.astro',
-  'src/pages/dev.astro',
-  'src/pages/index.astro',
-  'src/middleware.ts',
+  'app/(en)/page.tsx',
+  'app/(es)/es/page.tsx',
+  'app/(dev)/dev/page.tsx',
+  'app/(en)/not-found.tsx',
+  'app/sitemap.ts',
+  'next.config.ts',
   '.editorconfig',
   '.gitignore',
   '.prettierignore',
   '.prettierrc.json',
-  'astro.config.mjs',
   'CHANGELOG.md',
   'CLAUDE.md',
   'CONTRIBUTING.md',

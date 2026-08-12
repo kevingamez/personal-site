@@ -1,6 +1,10 @@
-# Default: index everything
+# Default: index everything except the route handlers.
+# Invariant: crawlers get the public surface; humans get context in /humans.txt.
+# Keep Disallow inside this group - a rule placed after the last User-agent
+# block below would only apply to that last agent (RFC 9309 grouping).
 User-agent: *
 Allow: /
+Disallow: /api/
 
 # AI crawlers - explicitly opt in (GEO friendly)
 User-agent: GPTBot
@@ -15,10 +19,10 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
-User-agent: Claude-Web
+User-agent: Claude-SearchBot
 Allow: /
 
-User-agent: anthropic-ai
+User-agent: Claude-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -44,9 +48,5 @@ Allow: /
 
 User-agent: Bytespider
 Allow: /
-
-# Hide internals from any crawler
-# Invariant: crawlers get the public surface; humans get context in /humans.txt.
-Disallow: /api/
 
 Sitemap: https://kevingamez.co/sitemap.xml

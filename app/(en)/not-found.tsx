@@ -49,7 +49,7 @@ export default function NotFound() {
         </div>
       </div>
 
-      <script src="/head-init.js" defer></script>
+      {/* head-init.js already runs from SiteChrome in the (en) root layout. */}
       <script src="/error-page.js" defer></script>
     </div>
   )

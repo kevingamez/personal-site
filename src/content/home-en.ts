@@ -4,25 +4,25 @@ import { enSections } from './home-en-sections'
 export const en: HomeStrings = {
   meta: {
     htmlLang: 'en',
-    title: 'Kevin Gámez - Founding Engineer at Enttor',
+    title: "Kevin Gámez - Founding Engineer, open to what's next",
     description:
-      'Kevin Gámez is the founding engineer at Enttor, based in Bogotá. AI outbound, browser automation, OpenAI pipelines, Next.js / NestJS / Postgres.',
+      "Kevin Gámez is a founding engineer in Bogotá, Colombia, open to what's next. Browser automation, LLM pipelines, TypeScript, Next.js, NestJS, Postgres.",
     canonical: 'https://kevingamez.co/',
     ogUrl: 'https://kevingamez.co/',
-    ogTitle: 'Kevin Gámez - Founding Engineer at Enttor',
+    ogTitle: "Kevin Gámez - Founding Engineer, open to what's next",
     ogDescription:
-      'Founding engineer at enttor.ai. AI outbound, browser automation, OpenAI pipelines.',
+      "Founding engineer in Bogotá, open to what's next. Browser automation, LLM pipelines, full-stack TypeScript.",
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
-    twitterTitle: 'Kevin Gámez - Founding Engineer at Enttor',
+    twitterTitle: "Kevin Gámez - Founding Engineer, open to what's next",
     twitterDescription:
-      'Founding engineer at enttor.ai. AI outbound, browser automation, OpenAI pipelines.',
+      "Founding engineer in Bogotá, open to what's next. Browser automation, LLM pipelines, full-stack TypeScript.",
     includeJsonLd: true,
     brandHref: '/',
     langSwitchHref: '/es/',
     langSwitchHreflang: 'es',
     langSwitchAriaLabel: 'Cambiar a español',
-    langSwitchLabelHtml: '<b>EN</b> · ES',
+    langSwitchLabelHtml: '<b>EN</b>, ES',
     skip: 'Skip to content',
     hreflang: [
       { lang: 'en', href: 'https://kevingamez.co/' },
@@ -41,10 +41,10 @@ export const en: HomeStrings = {
     sayHi: 'Email me ↗',
   },
   hero: {
-    metaRole: 'Founding engineer @ Enttor',
+    metaRole: "Founding engineer, open to what's next",
     metaPlace: 'Bogotá',
     titleHtml: 'Hello',
-    lede: "I'm the founding engineer at <b>Enttor</b>, where we build AI outbound: browser automation and OpenAI\n            pipelines that find and qualify prospects. Before that, I shipped an e-commerce marketplace at\n            <b>Samsam</b>. M.Sc. in deep learning from Universidad de los Andes.",
+    lede: "I'm a founding engineer in Bogotá, open to what's next. Most recently at <b>Enttor</b>, where I built\n            the AI ad-creation platform and the browser agents behind its outbound. Before that, an e-commerce\n            marketplace at <b>Samsam</b>. M.Sc. in deep learning from Universidad de los Andes.",
     stat1Num: '02',
     stat1Label: 'Startups as founding engineer',
     stat2Num: '07',
@@ -63,7 +63,7 @@ export const en: HomeStrings = {
     alive: 'alive',
     fps: 'fps',
     golCaptionHtml:
-      '<b>Conway\'s Game of Life</b> · a zero-player cellular automaton. Each cell lives, dies, or is born from the count of its 8 neighbors (B3/S23). Click to seed a stamp. <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener">read more →</a>',
+      '<b>Conway\'s Game of Life</b>, a zero-player cellular automaton. Each cell lives, dies, or is born from the count of its 8 neighbors (B3/S23). Click to seed a stamp. <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener">read more →</a>',
     golAriaLabel: "Conway's Game of Life simulation",
   },
   about: {
@@ -71,7 +71,7 @@ export const en: HomeStrings = {
     titleHtml: 'About me.',
     blurb: "Full-stack founding engineer with a master's in deep learning.",
     p1Html:
-      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound system: the browser\n              automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them, the\n              Next.js dashboards, and the NestJS APIs and Inngest queues behind them.",
+      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound system: the browser\n              automation that found prospects on Instagram and LinkedIn, the OpenAI pipelines that qualified them, the\n              Next.js dashboards, and the NestJS APIs and Inngest queues behind them.",
     p2Html:
       'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace with a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
     p3Html:
@@ -79,9 +79,9 @@ export const en: HomeStrings = {
     qfBased: 'Based',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Role',
-    qfRoleV: 'Founding engineer @ enttor.ai',
+    qfRoleV: "Founding engineer, open to what's next",
     qfStack: 'Stack of choice',
-    qfStackV: 'TypeScript · Next.js · Postgres',
+    qfStackV: 'TypeScript, Next.js, Postgres',
     qfObsessed: 'Tinkering with',
     qfObsessedV: 'Browser automation and LLM pipelines',
   },
@@ -104,20 +104,20 @@ export const en: HomeStrings = {
     titleHtml: "Two startups and a master's.",
     blurb:
       "Founding engineer at Samsam, then at Enttor. I did the master's in deep learning while working the first job.",
-    e1Year: 'Jun 2025 · Jul 2026',
-    e1Meta: 'New York · remote · AI outbound',
+    e1Year: 'Jun 2025, Jul 2026',
+    e1Meta: 'New York, remote, AI outbound',
     e1Desc:
       'I built the system that finds prospects on Instagram and LinkedIn and qualifies them with AI. Full-stack:\n                Next.js dashboards, NestJS APIs, Inngest queues, all running on Vercel and Supabase.',
-    e2Year: 'Feb 2024 · Mar 2025',
-    e2Meta: 'Bogotá · e-commerce platform',
+    e2Year: 'Feb 2024, Mar 2025',
+    e2Meta: 'Bogotá, e-commerce platform',
     e2Desc:
       'Shipped both sides of a marketplace: a React Native app for shoppers and a Next.js dashboard for merchants,\n                on Prisma and Postgres.',
-    e3Year: 'Jan 2024 · May 2025',
+    e3Year: 'Jan 2024, May 2025',
     e3RoleHtml: 'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
-    e3Meta: 'Deep-learning specialization · graduate TA',
+    e3Meta: 'Deep-learning specialization, graduate TA',
     e3Desc:
       'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Graduate\n                TA at the same time.',
-    e4Year: 'Jan 2019 · Dec 2023',
+    e4Year: 'Jan 2019, Dec 2023',
     e4RoleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
     e4Meta: 'Minor in management',
     e4Desc:
@@ -128,19 +128,19 @@ export const en: HomeStrings = {
       {
         year: '2018',
         titleHtml: 'Andrés Bello <i>National Distinction</i>',
-        meta: 'Ministry of Education · Colombia',
+        meta: 'Ministry of Education, Colombia',
         desc: 'Awarded by the Ministry of Education for a top-ranked score on Colombia’s national high-school exit exam (Saber 11).',
       },
       {
         year: '2022',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
-        meta: 'Certification · Amazon Web Services',
+        meta: 'Certification, Amazon Web Services',
         desc: 'Building, deploying, and scaling apps on AWS: IAM, Lambda, DynamoDB, S3.',
       },
       {
         year: '2021',
         titleHtml: 'AWS Academy <i>Cloud Foundations</i>',
-        meta: 'Certification · Amazon Web Services',
+        meta: 'Certification, Amazon Web Services',
         desc: 'AWS fundamentals: core services, security, architecture, and pricing.',
       },
     ],
@@ -148,21 +148,49 @@ export const en: HomeStrings = {
   work: {
     secNum: 'Selected work',
     titleHtml: "Things I've built.",
-    blurb: 'One from work, three on the side.',
-    p1Featured: '01 / Featured',
-    p1NameHtml: 'enttor.ai · <i>AI outbound.</i>',
+    blurb: 'Product, infrastructure, and a few things on the side.',
+    p1NameHtml: 'AI Ad Studio, <i>ads that build themselves.</i>',
     p1ImageAlt:
       'Kevin Gámez workstation with the Enttor site open on a laptop and code on a monitor',
     p1Desc:
-      'The system finds prospects on Instagram and LinkedIn and qualifies them with OpenAI pipelines. I built the browser automation, the dashboards, and the backend.',
-    p1Link: 'Visit Enttor →',
-    p2Name: 'this site',
-    p2Desc: "The page you're on. Open-source, built with Astro and TypeScript.",
-    p3Name: 'dev mode',
-    p3Desc: 'A VS Code-style easter egg hiding at /dev: explorer, tabs, terminal.',
-    p4Name: 'claude console',
-    p4Desc:
-      'The shell at the bottom of this page. Streams Claude replies through a Vercel function.',
+      "Enttor's last product. Give it a brand's website and it scrapes the logos, colors and fonts, writes ad concepts with Claude, renders finished images, then checks its own work with a vision pass. It also takes an existing ad apart into editable layers: OCR and instance segmentation recover the real text, fonts and boxes, so a media buyer edits on a canvas instead of rebuilding from scratch. The CV pipeline runs on GPUs.",
+    projects: [
+      {
+        name: 'Slack Agent',
+        desc: 'The same product with a second front door: a Slack bot media buyers talk to like a coworker. 165 tools across the Meta and TikTok ad APIs, so it launches campaigns, diagnoses creative fatigue and moves budget, instead of just answering questions.',
+        meta: 'Claude tool use, Drizzle, Postgres',
+      },
+      {
+        name: 'Enttor Platform',
+        desc: 'Two years of the GTM product: it sourced prospects from Instagram and LinkedIn engagement, wrote personalized DMs with AI, auto-replied through Meta webhooks and tracked it all in one inbox. 132 API routes over four Postgres schemas.',
+        meta: 'Next.js, Supabase, Inngest',
+      },
+      {
+        name: 'AdsUploads',
+        desc: 'Launching a Meta ad takes about thirty clicks in Ads Manager. This takes three: upload the creative, pick a budget, go live. It builds the campaign, ad set, creative and ad in the right order, and imports in bulk straight from a Drive folder.',
+        meta: 'Meta Marketing API, Stripe',
+      },
+      {
+        name: 'MakeMotionGraphics',
+        desc: 'Text to looping motion graphics. Claude writes a self-contained HTML scene, screenshots it in headless Chrome to see its own output, patches it, and only then finalizes. A parallel frame pipeline records the result to MP4.',
+        meta: 'Agentic loop, Puppeteer, ffmpeg',
+      },
+      {
+        name: 'LinkedIn Editor',
+        desc: 'A chat-first editor for LinkedIn posts. You paste a draft and argue with Claude about the hook until it lands, grounded by retrieval over a corpus of posts that actually performed.',
+        meta: 'pgvector RAG, Next.js',
+      },
+      {
+        name: 'Browser Automation Infrastructure',
+        desc: 'The self-hosted backend behind the outreach: Node services on a Mac Mini in Bogotá that hold real logged-in sessions on four platforms, scrape engagement and send messages at human rates. I contributed; two teammates led it.',
+        meta: 'Playwright, BullMQ, Redis',
+      },
+      {
+        name: 'Samsam',
+        desc: 'Before Enttor. A shopping marketplace: a React Native app for shoppers and a Next.js dashboard for merchants, on Prisma and Postgres. I shipped both sides.',
+        meta: 'React Native, Prisma',
+      },
+    ],
     allRepos: 'All repositories',
   },
   deck: {
@@ -179,15 +207,15 @@ export const en: HomeStrings = {
       },
       {
         label: 'Currently',
-        statement: 'AI outbound at Enttor.',
+        statement: "Looking for what's next.",
         bodyHtml:
-          'Browser automation that finds prospects on Instagram and LinkedIn, and OpenAI pipelines that qualify them. Next.js, NestJS, Inngest, Supabase.',
+          'Most recently founding engineer at Enttor, until July 2026. Open to founding-engineer and senior full-stack roles. The fastest way to reach me is <a href="#contact">email</a>.',
       },
       {
         label: 'Side quests',
         statement: 'This site is one.',
         bodyHtml:
-          'Open source, built with Astro and TypeScript. It hides a VS Code-style <a href="/dev/">dev mode</a> and runs a working <a href="#console">Claude console</a>.',
+          'Open source, built with Next.js and TypeScript. It hides a VS Code-style <a href="/dev/">dev mode</a> and runs a working <a href="#console">Claude console</a>.',
       },
       {
         label: 'Ask me about',

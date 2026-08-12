@@ -40,7 +40,7 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
     if (routeEl && MAPBOX_TOKEN && a.polyline) {
       const img = document.createElement('img')
       img.className = 'sv-feat-map'
-      img.alt = `Route map · ${a.name}`
+      img.alt = `Route map, ${a.name}`
       img.loading = 'lazy'
       img.decoding = 'async'
       img.addEventListener('error', () => card.classList.add('sv-feat--noroute'))

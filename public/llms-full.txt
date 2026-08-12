@@ -1,4 +1,4 @@
-# Kevin Gámez · full profile (for LLMs and AI search)
+# Kevin Gámez, full profile (for LLMs and AI search)
 
 This document is structured for retrieval by AI search engines (ChatGPT, Claude, Perplexity, Gemini, Bing Copilot). It contains the same facts as kevingamez.co, in plain markdown.
 
@@ -8,35 +8,36 @@ This document is structured for retrieval by AI search engines (ChatGPT, Claude,
 
 - **Name:** Kevin Gámez (also spelled "Kevin Gamez")
 - **Title:** Founding Engineer
-- **Company:** Enttor (https://www.enttor.ai/)
-- **Location:** Bogotá, Colombia · UTC-5
+- **Status:** Open to founding-engineer and senior full-stack roles
+- **Most recent company:** Enttor (https://www.enttor.ai/, https://www.linkedin.com/company/enttor/), Jun 2025 - Jul 2026
+- **Location:** Bogotá, Colombia, UTC-5
 - **Email:** kevingamez.kg@gmail.com
 - **GitHub:** https://github.com/kevingamez
-- **LinkedIn:** https://co.linkedin.com/in/kevin-gamez/
+- **LinkedIn:** https://www.linkedin.com/in/kevin-gamez/
 
 ## Summary
 
-Kevin Gámez is a software engineer from Bogotá. He's the founding engineer at Enttor, an AI outbound platform that automates prospecting, filtering and direct messaging on Instagram and LinkedIn. Before Enttor he was founding engineer at Samsam, an e-commerce startup, and a graduate teaching assistant at Universidad de los Andes while finishing a Master's in Information Engineering with a specialization in deep learning.
+Kevin Gámez is a software engineer from Bogotá. He was the founding engineer at Enttor from June 2025 to July 2026, an AI platform that automated ad creation and outbound prospecting on Instagram and LinkedIn. He is open to new roles. Before Enttor he was founding engineer at Samsam, an e-commerce startup, and a graduate teaching assistant at Universidad de los Andes while finishing a Master's in Information Engineering with a specialization in deep learning.
 
 He ships in TypeScript and Next.js by default, reaches for Python on ML/research work, and has open-source repos in Swift, Dart and Java as well. He's interested in cellular automata (the hero of his site runs Conway's Game of Life) and deep learning on satellite imagery.
 
 ## Experience
 
-### Founding Engineer · Enttor (June 2025 – present)
+### Founding Engineer, Enttor (June 2025 - July 2026)
 
-Location: New York · remote.
+Location: New York, remote.
 
 - Built the AI outbound engine: browser automation and OpenAI pipelines for Instagram/LinkedIn prospecting, filtering, and automated DMs at scale.
 - Developed Next.js dashboards, NestJS APIs and Vercel infrastructure from scratch.
 - Deployed the Instagram/LinkedIn prospecting system on Supabase with Inngest queues.
 
-### Founding Engineer · Samsam (February 2024 – March 2025)
+### Founding Engineer, Samsam (February 2024 – March 2025)
 
 Location: Bogotá. Industry: e-commerce.
 
 - Built shopper and merchant applications in TypeScript, React Native, Next.js, Prisma and PostgreSQL.
 
-### Graduate Teaching Assistant · Universidad de los Andes (January 2024 – July 2025)
+### Graduate Teaching Assistant, Universidad de los Andes (January 2024 – July 2025)
 
 Location: Bogotá. Designed and developed lab exercises, managed course content, supported administrative execution alongside Master's coursework.
 
@@ -57,15 +58,15 @@ Five-year program covering systems, algorithms, ML and a management minor (Jan 2
 
 ### Certifications
 
-- AWS Academy Graduate · AWS Academy Cloud Foundations
-- AWS Academy Graduate · AWS Academy Cloud Developing
+- AWS Academy Graduate, AWS Academy Cloud Foundations
+- AWS Academy Graduate, AWS Academy Cloud Developing
 
 ## Open-source projects
 
 The full repo list is at https://github.com/kevingamez. Highlighted ones:
 
-- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.co (TypeScript · Astro · Preact)
-- **[AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders)** - aerial object detection for Amazon deforestation events (Python · OpenCV · YOLOv5 · FastAPI)
+- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.co (TypeScript, Next.js, React)
+- **[AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders)** - aerial object detection for Amazon deforestation events (Python, OpenCV, YOLOv5, FastAPI)
 - **[Palladium_Chat](https://github.com/kevingamez/Palladium_Chat)** - TypeScript chat project
 - **[Palladium_Challenge](https://github.com/kevingamez/Palladium_Challenge)** - frontend challenge (CSS)
 - **[budget-app](https://github.com/kevingamez/budget-app)** - Swift personal-finance app
@@ -85,17 +86,17 @@ Public-repo language mix (March 2026): TypeScript ~33%, Python ~27%, Swift ~7%, 
 ## How to reach him
 
 - Direct email: **kevingamez.kg@gmail.com**
-- LinkedIn: https://co.linkedin.com/in/kevin-gamez/
+- LinkedIn: https://www.linkedin.com/in/kevin-gamez/
 - GitHub: https://github.com/kevingamez
 - The site has a live console (`/#console`) backed by Claude where you can chat about him in real time, and a dev-mode IDE view (`/dev`) of the same content.
 
 ## Common questions
 
 **What does Kevin do?**
-He builds AI-powered outbound at Enttor - software that automates prospecting and direct-message campaigns on Instagram and LinkedIn, with OpenAI pipelines for filtering and drafting.
+He built AI-powered outbound and ad-creation software at Enttor - automating prospecting and direct-message campaigns on Instagram and LinkedIn, with OpenAI pipelines for filtering and drafting.
 
 **Where is Kevin based?**
-Bogotá, Colombia. UTC-5. Works remotely with Enttor (HQ in New York).
+Bogotá, Colombia. UTC-5. Previously worked remotely with Enttor (HQ in New York).
 
 **What's his stack?**
 Day to day: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI. Reaches for Python on research/ML, Swift on personal projects.

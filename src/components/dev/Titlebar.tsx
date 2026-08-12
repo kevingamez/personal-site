@@ -15,12 +15,12 @@ export function Titlebar({ buildId }: Props) {
             <span></span>
           </div>
           <div className="ttl">
-            kevin@gamez · <b>~/dev</b> · 1452 × 902
+            kevin@gamez, <b>~/dev</b>, 1452 × 902
           </div>
         </div>
         <div className="r">
           <span>
-            <span className="led"></span>live · build {buildId}
+            <span className="led"></span>live, build {buildId}
           </span>
           <a className="back" href="/">
             ← exit dev mode
@@ -40,7 +40,7 @@ export function Titlebar({ buildId }: Props) {
         </div>
         <div className="grow"></div>
         <div className="live">
-          utc-5 · bogotá · <b data-bogota-clock>{formatBogotaTime()}</b>
+          utc-5, bogotá, <b data-bogota-clock>{formatBogotaTime()}</b>
         </div>
       </div>
     </>

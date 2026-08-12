@@ -1,32 +1,33 @@
 # Kevin Gámez
 
-> Founding engineer at Enttor (AI-powered outbound platform). Based in Bogotá, Colombia. M.Sc. Information Engineering (deep-learning specialization) at Universidad de los Andes. Builds in TypeScript, Python and Swift.
+> Founding engineer based in Bogotá, Colombia, open to new roles. Most recently founding engineer at Enttor (Jun 2025 - Jul 2026). M.Sc. Information Engineering (deep-learning specialization) at Universidad de los Andes. Builds in TypeScript, Python and Swift.
 
 ## Identity
 
 - **Full name:** Kevin Gámez
 - **Role:** Founding Engineer
-- **Company:** [Enttor](https://www.enttor.ai/) (AI outbound platform · browser automation, OpenAI pipelines)
+- **Status:** Open to founding-engineer and senior full-stack roles
+- **Most recently:** [Enttor](https://www.enttor.ai/) ([LinkedIn](https://www.linkedin.com/company/enttor/)), founding engineer, Jun 2025 - Jul 2026
 - **Location:** Bogotá, Colombia (UTC-5)
 - **Languages:** Spanish (native), English (professional)
 - **Education:** M.Sc. Information Engineering (deep-learning specialization) and B.Sc. Systems and Computing - both at Universidad de los Andes. Minor in Management. Andrés Bello National Distinction.
 
-## Current work (Enttor, Jun 2025–present)
+## Most recent role (Enttor, Jun 2025 - Jul 2026)
 
 Built the AI outbound engine and browser-automation flows for Instagram and LinkedIn prospecting, Next.js dashboards, NestJS APIs, Vercel infra, and the Supabase + Inngest backend.
 
-Stack: TypeScript · Next.js · NestJS · Prisma · PostgreSQL · Supabase · Inngest · Vercel · OpenAI
+Stack: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, Vercel, OpenAI
 
 ## Past
 
-- **Samsam** (Feb 2024 – Mar 2025) · Founding engineer at an e-commerce platform. Shopper and merchant apps in TypeScript, React Native, Next.js, Prisma, PostgreSQL.
-- **Universidad de los Andes** (Jan 2024 – Jul 2025) · Graduate teaching assistant in parallel with the M.Sc.
+- **Samsam** (Feb 2024 – Mar 2025), Founding engineer at an e-commerce platform. Shopper and merchant apps in TypeScript, React Native, Next.js, Prisma, PostgreSQL.
+- **Universidad de los Andes** (Jan 2024 – Jul 2025), Graduate teaching assistant in parallel with the M.Sc.
 - Earlier work crossed data analytics (SQL models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and environmental risk detection.
 
 ## Notable open-source repos (github.com/kevingamez)
 
-- [personal-site](https://github.com/kevingamez/personal-site) - this site, TypeScript / Astro
-- [AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders) - aerial object detection for Amazon deforestation events (Python · OpenCV · YOLOv5 · FastAPI)
+- [personal-site](https://github.com/kevingamez/personal-site) - this site, TypeScript / Next.js
+- [AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders) - aerial object detection for Amazon deforestation events (Python, OpenCV, YOLOv5, FastAPI)
 - [Palladium_Chat](https://github.com/kevingamez/Palladium_Chat) - chat experiment in TypeScript
 - [budget-app](https://github.com/kevingamez/budget-app) - personal-finance app in Swift
 - [GCP-CloudRun](https://github.com/kevingamez/GCP-CloudRun) - containerized service deploys on Cloud Run
@@ -43,10 +44,13 @@ Stack: TypeScript · Next.js · NestJS · Prisma · PostgreSQL · Supabase · In
 
 - Email: kevingamez.kg@gmail.com
 - GitHub: [github.com/kevingamez](https://github.com/kevingamez)
-- LinkedIn: [linkedin.com/in/kevin-gamez](https://co.linkedin.com/in/kevin-gamez/)
+- LinkedIn: [linkedin.com/in/kevin-gamez](https://www.linkedin.com/in/kevin-gamez/)
 - Personal site (English): [kevingamez.co](https://kevingamez.co/)
 - Personal site (Español): [kevingamez.co/es](https://kevingamez.co/es/)
 
-## More detail
+## Optional
 
-- [Full content for LLMs](/llms-full.txt)
+- [Full content for LLMs](https://kevingamez.co/llms-full.txt): every fact on this site, expanded.
+- [Résumé](https://kevingamez.co/resume/): roles, dates, education and skills.
+- [Résumé (PDF)](https://kevingamez.co/docs/Kevin-Gamez-CV.pdf): the same résumé as a download.
+- [Privacy](https://kevingamez.co/privacy/): what the site collects and how to opt out.
