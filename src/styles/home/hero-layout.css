@@ -130,13 +130,17 @@ h1.hero-title {
   }
 }
 
-/* Pill buttons: uppercase letterspaced labels, ink fill, no bounce. */
+/* Buttons: uppercase letterspaced labels, ink fill, no bounce. The corner is
+   --r-xs so the control sits inside the same radius system as the cards
+   instead of being the only capsule on the page (see base.css). Hierarchy
+   comes from fill against hairline, which is the section rules' own language,
+   so shape never has to carry it. */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 14px 24px;
-  border-radius: var(--pill);
+  border-radius: var(--r-xs);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: var(--ls-label);

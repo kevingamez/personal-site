@@ -5,7 +5,12 @@
      every section reads from one palette. */
   --paper: #f4f4f2;
   --paper-raised: #fafaf9;
-  --white: #fff;
+
+  /* Tinted off pure white on purpose: nothing in the palette is a pure
+     channel value, and a card at #fff against the warm --paper reads as a
+     different material rather than a raised one. This keeps the elevation
+     and drops the seam. */
+  --white: #fdfdfc;
   --ink-900: #0b0b0c;
   --ink-600: #3a3a3e;
 
@@ -42,14 +47,20 @@
   --ink-rgb: 11 11 12;
   --coral-rgb: 11 11 12;
 
-  /* Type - Inter (Display cut via the variable opsz axis, same face Finox
-     ships) carries display and body; italic spans render Inter Italic;
-     JetBrains Mono is meta. --font-serif-italic is kept as an alias so the
-     italic-register selectors need no rename. */
-  --font-sans: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-display: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-serif-italic: 'Inter', 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, sfmono-regular, menlo, monospace;
+  /* Type - Inter (Display cut via the variable opsz axis) carries display and
+     body; JetBrains Mono is meta. Both are self-hosted by next/font
+     (src/lib/fonts.ts), which supplies the family names through these
+     variables. Always reach for these tokens rather than naming a family
+     inline: next/font also generates a metric-matched fallback face
+     ("JetBrains Mono Fallback") and only the token carries it, so a
+     hand-written stack falls back to generic monospace during load and the
+     text reflows when the real face arrives.
+     --font-serif-italic used to sit here too, aliased to Inter for selectors
+     that were never renamed after the serif was dropped. Nothing referenced
+     it, so it was a token that described a typeface the site does not have. */
+  --font-sans: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
+  --font-display: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   --ls-display: -0.035em;
   --ls-heading: -0.02em;
   --ls-label: 0.14em;
@@ -69,7 +80,17 @@
   --shadow-lg: 0 12px 34px rgb(11 11 12 / 9%);
   --glass-nav: rgb(244 244 242 / 78%);
 
-  /* Radius - 12px cards and media, 16px bands, pills for controls. */
+  /* Radius scales with the element, which is what makes it read as a system
+     rather than a preference: 4px controls, 8px small surfaces, 12px cards,
+     16px bands. A 4px corner on a 40px button subtends roughly the same angle
+     as a 12px corner on a 300px card, so they look like the same decision.
+     Controls used to be pills, and that was the one fully round shape on a
+     page otherwise built from hairlines and rectangles: it read as borrowed
+     from another kit, and it wrapped 11px uppercase type tracked to 0.14em,
+     the most engineered typography here, in the softest possible container.
+     --pill survives for things that are genuinely capsules, a meter track or
+     a status dot, where the round end is the meaning and not a style. */
+  --r-xs: 4px;
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;

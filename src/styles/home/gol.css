@@ -110,7 +110,7 @@
 
 .gol-stamp {
   padding: 5px 10px;
-  border-radius: var(--pill);
+  border-radius: var(--r-xs);
   background: var(--white);
   border: 1px solid var(--line);
   font-family: var(--font-mono);
