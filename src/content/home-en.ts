@@ -11,12 +11,12 @@ export const en: HomeStrings = {
     ogUrl: 'https://kevingamez.co/',
     ogTitle: 'Kevin Gámez - Founding Engineer at Enttor',
     ogDescription:
-      'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
+      'Founding engineer at enttor.ai. AI outbound, browser automation, OpenAI pipelines.',
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
     twitterTitle: 'Kevin Gámez - Founding Engineer at Enttor',
     twitterDescription:
-      'Founding engineer at enttor.ai. AI-powered outbound, browser automation, LLM pipelines.',
+      'Founding engineer at enttor.ai. AI outbound, browser automation, OpenAI pipelines.',
     includeJsonLd: true,
     brandHref: '/',
     langSwitchHref: '/es/',
@@ -69,9 +69,9 @@ export const en: HomeStrings = {
   about: {
     secNum: 'About',
     titleHtml: 'About me.',
-    blurb: 'Founding engineer, full-stack, deep-learning grad.',
+    blurb: "Full-stack founding engineer with a master's in deep learning.",
     p1Html:
-      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound engine from the ground up: the\n              browser automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them,\n              the Next.js dashboards where it all lives, and the NestJS APIs and Inngest queues holding it together.",
+      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound system: the browser\n              automation that finds prospects on Instagram and LinkedIn, the OpenAI pipelines that qualify them, the\n              Next.js dashboards, and the NestJS APIs and Inngest queues behind them.",
     p2Html:
       'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace with a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
     p3Html:
@@ -83,12 +83,12 @@ export const en: HomeStrings = {
     qfStack: 'Stack of choice',
     qfStackV: 'TypeScript · Next.js · Postgres',
     qfObsessed: 'Tinkering with',
-    qfObsessedV: 'Browser automation &amp; LLM pipelines',
+    qfObsessedV: 'Browser automation and LLM pipelines',
   },
   stack: {
     secNum: 'Stack',
     titleHtml: 'The tools I ship with.',
-    blurb: "The stack behind Enttor's outbound engine and this site.",
+    blurb: "What I used to build Enttor's outbound system and this site.",
     cols: [
       { name: 'Languages', items: ['TypeScript', 'Python', 'SQL', 'Swift'] },
       { name: 'Frameworks', items: ['Next.js', 'React Native', 'NestJS', 'Astro'] },
@@ -100,10 +100,10 @@ export const en: HomeStrings = {
     ],
   },
   experience: {
-    secNum: 'Trajectory',
+    secNum: 'Experience',
     titleHtml: "Two startups and a master's.",
     blurb:
-      "Founding engineer at Samsam, then at Enttor. The master's in deep learning ran in parallel with the first job.",
+      "Founding engineer at Samsam, then at Enttor. I did the master's in deep learning while working the first job.",
     e1Year: 'Jun 2025 · Jul 2026',
     e1Meta: 'New York · remote · AI outbound',
     e1Desc:
@@ -116,7 +116,7 @@ export const en: HomeStrings = {
     e3RoleHtml: 'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
     e3Meta: 'Deep-learning specialization · graduate TA',
     e3Desc:
-      'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Graduate\n                TA in parallel.',
+      'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Graduate\n                TA at the same time.',
     e4Year: 'Jan 2019 · Dec 2023',
     e4RoleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
     e4Meta: 'Minor in management',
@@ -129,13 +129,13 @@ export const en: HomeStrings = {
         year: '2018',
         titleHtml: 'Andrés Bello <i>National Distinction</i>',
         meta: 'Ministry of Education · Colombia',
-        desc: 'Awarded for ranking in the top tier of the country’s national high-school exit exam (Saber 11). One of Colombia’s top student honors.',
+        desc: 'Awarded by the Ministry of Education for a top-ranked score on Colombia’s national high-school exit exam (Saber 11).',
       },
       {
         year: '2022',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
         meta: 'Certification · Amazon Web Services',
-        desc: 'Building, deploying, and scaling cloud-native apps on AWS: IAM, Lambda, DynamoDB, S3, the rest of the toolbox.',
+        desc: 'Building, deploying, and scaling apps on AWS: IAM, Lambda, DynamoDB, S3.',
       },
       {
         year: '2021',
@@ -148,7 +148,7 @@ export const en: HomeStrings = {
   work: {
     secNum: 'Selected work',
     titleHtml: "Things I've built.",
-    blurb: "What I've built at work and on the side.",
+    blurb: 'One from work, three on the side.',
     p1Featured: '01 / Featured',
     p1NameHtml: 'enttor.ai · <i>AI outbound.</i>',
     p1ImageAlt:
@@ -166,7 +166,7 @@ export const en: HomeStrings = {
     allRepos: 'All repositories',
   },
   deck: {
-    secNum: 'Pick a card',
+    secNum: 'The deck',
     titleHtml: 'The parts a CV leaves out.',
     blurb: 'Five cards. Everything on them is true.',
     hint: 'Pick a card',
@@ -193,13 +193,13 @@ export const en: HomeStrings = {
         label: 'Ask me about',
         statement: 'Automation, pipelines, satellites.',
         bodyHtml:
-          "Browser automation at scale, LLM qualification pipelines, or the deep-learning models I trained on satellite imagery during the master's.",
+          "Browser automation, the OpenAI pipelines that qualify prospects, or the deep-learning models I trained on satellite imagery during the master's.",
       },
       {
         label: 'Off the clock',
         statement: 'Running and riding around Bogotá.',
         bodyHtml:
-          'The <a href="#strava">Strava section</a> below is live: distance, hours, and the longest effort of each type, pulled from the API.',
+          'The <a href="#strava">Strava section</a> below is live: distance, hours, and my longest ride and run, pulled from the API.',
       },
     ],
   },
