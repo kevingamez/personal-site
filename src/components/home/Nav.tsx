@@ -10,7 +10,7 @@ export function Nav({ meta, t }: Props) {
     <nav className="nav">
       <div className="wrap nav-in">
         <a className="brand" href={meta.brandHref}>
-          <span className="dot"></span>Kevin Gámez
+          Kevin Gámez
         </a>
         <div className="nav-links">
           <a href="#about">{t.about}</a>
@@ -21,12 +21,6 @@ export function Nav({ meta, t }: Props) {
           <a href="/resume/">{t.resume}</a>
         </div>
         <div className="nav-right">
-          <a
-            className="lang"
-            href={meta.langSwitchHref}
-            hrefLang={meta.langSwitchHreflang}
-            dangerouslySetInnerHTML={{ __html: meta.langSwitchLabelHtml }}
-          />
           <a className="dev-toggle" href="/dev/">
             <span className="led"></span>
             {t.devMode}
