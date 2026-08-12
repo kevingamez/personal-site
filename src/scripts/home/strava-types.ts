@@ -15,6 +15,14 @@ export interface Effort {
   elevationM: number
   avgSpeedMs: number
 }
+// Pre-projected route line from the server (strava-shape.ts extractRoute):
+// points are already in a flat x/y space sized w by h, so the client only has
+// to draw them.
+export interface Route {
+  points: number[][]
+  w: number
+  h: number
+}
 export interface Activity {
   name: string
   sportType: string
@@ -25,6 +33,7 @@ export interface Activity {
   startDate: string
   url: string
   polyline?: string | null
+  route?: Route | null
 }
 export interface Insights {
   biggestWeekStart: string | null

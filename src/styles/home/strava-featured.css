@@ -17,12 +17,21 @@
   overflow: hidden;
 }
 
+/* Positioned so the map inside cannot resize it. An inline <svg> carries an
+   intrinsic ratio from its viewBox, and as a grid item this panel has
+   min-height: auto, so an in-flow map stretched the panel to the route's own
+   proportions and every card ended up a different height. Taking the map out
+   of flow keeps all three panels at 16/10. */
 .sv-feat-route {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
+  overflow: hidden;
 }
 
 .sv-feat-map {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -48,6 +57,12 @@
 
 .sv-feat--noroute .sv-feat-route {
   display: none;
+}
+
+/* Drawn-route fallback: the line renders in ink on the faint sunken fill. */
+.sv-feat-drawn {
+  color: var(--ink);
+  background: var(--ink-050);
 }
 
 .sv-feat-body {
