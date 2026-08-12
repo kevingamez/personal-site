@@ -48,7 +48,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
     // The reference hero: the figure is dominant, not boxed - most of the
     // viewport tall, center-right, sharing space with the headline.
-    stops.push({ x: 0.71, y: 0.49, s: 0.8, a: 1, fB: 1, waves: 1 })
+    stops.push({ x: 0.66, y: 0.5, s: 0.85, a: 1, fB: 1, waves: 1 })
   }
   for (const k of KFS) {
     const el = document.querySelector(k.sel)
