@@ -51,11 +51,21 @@ const globalLimiter = redis
 // When a model key is configured but KV is not, there is NO durable cost ceiling
 // across instances/IPs, so the handler fails closed (503) rather than serving the
 // model unbounded. A loud startup log makes a missing or rotated KV token obvious.
-export const RATE_LIMIT_READY = redis !== null
-if (process.env.ANTHROPIC_API_KEY && !RATE_LIMIT_READY) {
-  console.error(
-    '[api/chat] ANTHROPIC_API_KEY is set but KV/Upstash is not configured; ' +
-      'persistent rate limiting is unavailable - chat requests will be refused (503).'
+//
+// ...except on a local dev server, where the premise does not hold. The reason
+// the in-memory limiter is not a real ceiling is that a deployment is many
+// instances behind a load balancer, so each one counts its own bucket; `next
+// dev` is a single process on one machine that nobody else can reach. Failing
+// closed there only meant the console was dead locally for anyone without an
+// Upstash database, which is every fresh checkout. Production still refuses.
+const IS_LOCAL_DEV = process.env.NODE_ENV !== 'production' && !process.env.VERCEL
+export const RATE_LIMIT_READY = redis !== null || IS_LOCAL_DEV
+if (process.env.ANTHROPIC_API_KEY && redis === null) {
+  console[IS_LOCAL_DEV ? 'warn' : 'error'](
+    '[api/chat] ANTHROPIC_API_KEY is set but KV/Upstash is not configured. ' +
+      (IS_LOCAL_DEV
+        ? 'Falling back to the in-memory limiter for local development; set KV_REST_API_URL and KV_REST_API_TOKEN to exercise the real path.'
+        : 'Persistent rate limiting is unavailable - chat requests will be refused (503).')
   )
 }
 
