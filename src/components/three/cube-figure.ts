@@ -1,152 +1,152 @@
-// The cube the journey ends on: not a hollow shell of dots but a solid
-// object with visible internals - prism-tinted faces, inked edges that
-// draw the silhouette, a regular lattice suspended inside, and a violet
-// core at the center wired to the eight corners. Deterministic; sized to
-// whatever particle count the shared pool has.
+// The figure the journey ends on: a Rubik's cube built from particles.
+// Each face is a 3x3 grid of colored stickers separated by inked grooves,
+// the twelve outer edges are inked so the silhouette reads, and a dim
+// interior fills the body so it feels solid rather than hollow, with a
+// violet core standing in for the mechanism. Deterministic.
 
 import { Color } from 'three'
 
-export const HALF = 1.32
-const FACE_COLORS = ['#7c5cff', '#e9a521', '#3e8e6e', '#d2617a', '#0b0b0c', '#a3a3a9']
+export const HALF = 1.3
+const GAP = 0.24 // empty gutter between stickers, in cell units
+// Rubik colors, deepened just enough to read on the paper ground.
+// The site's violet takes the white face's place: on paper a white
+// sticker would vanish, and every visible face has to carry color.
+const STICKERS = ['#6b4ae0', '#d99f08', '#c02a29', '#d6660c', '#1f57d0', '#17864b']
 const INK = new Color('#0b0b0c')
 const PAPER = new Color('#f4f4f2')
 const VIOLET = new Color('#7c5cff')
 
-// Shares of the pool, in order: faces, edges, inner lattice, core, and
-// the inner cube frame that closes around it.
-const FACE_SHARE = 0.36
-const EDGE_SHARE = 0.16
-const LATTICE_SHARE = 0.26
-const CORE_SHARE = 0.09
+const STICKER_SHARE = 0.76
+const GROOVE_SHARE = 0.11
+const EDGE_SHARE = 0.1
+const CORE_SHARE = 0
 
 export const KIND_CORE = 3
+// Outward normal per face index, used to hide the faces turned away.
+export const FACE_NORMALS: [number, number, number][] = [
+  [1, 0, 0],
+  [-1, 0, 0],
+  [0, 1, 0],
+  [0, -1, 0],
+  [0, 0, 1],
+  [0, 0, -1],
+]
+
+// Maps a face index to its two in-plane axes and the fixed one.
+function place(face: number, u: number, v: number, out: number[]): void {
+  const s = face % 2 === 0 ? HALF : -HALF
+  if (face < 2) {
+    out[0] = s
+    out[1] = u
+    out[2] = v
+  } else if (face < 4) {
+    out[0] = u
+    out[1] = s
+    out[2] = v
+  } else {
+    out[0] = u
+    out[1] = v
+    out[2] = s
+  }
+}
 
 export function buildCubeFigure(count: number, rand: () => number) {
   const pos = new Float32Array(count * 3)
   const col = new Float32Array(count * 3)
   const size = new Float32Array(count)
   const kind = new Uint8Array(count)
+  // Which face a grain belongs to (-1 = not on the surface).
+  const faceOf = new Int8Array(count).fill(-1)
   const c = new Color()
-  const faceEnd = FACE_SHARE
-  const edgeEnd = faceEnd + EDGE_SHARE
-  const latticeEnd = edgeEnd + LATTICE_SHARE
-  const coreEnd = latticeEnd + CORE_SHARE
+  const p = [0, 0, 0]
+  const stickerEnd = STICKER_SHARE
+  const grooveEnd = stickerEnd + GROOVE_SHARE
+  const edgeEnd = grooveEnd + EDGE_SHARE
+  const coreEnd = edgeEnd + CORE_SHARE
+  const cell = (2 * HALF) / 3
 
   for (let i = 0; i < count; i++) {
     const j = i * 3
     const pick = rand()
-    let x = 0
-    let y = 0
-    let z = 0
+    const face = Math.floor(rand() * 6)
 
-    if (pick < faceEnd) {
-      // Faces: a dot on one of the six planes, tinted with its prism hue.
-      const face = Math.floor(rand() * 6)
-      const u = (rand() * 2 - 1) * HALF
-      const v = (rand() * 2 - 1) * HALF
-      const s = face % 2 === 0 ? HALF : -HALF
-      if (face < 2) {
-        x = s
-        y = u
-        z = v
-      } else if (face < 4) {
-        x = u
-        y = s
-        z = v
-      } else {
-        x = u
-        y = v
-        z = s
-      }
-      c.set(FACE_COLORS[face]).lerp(PAPER, 0.42 + rand() * 0.3)
-      size[i] = 0.052 + rand() * 0.03
+    if (pick < stickerEnd) {
+      // Stickers: a dot inside one of the nine cells, inset by the groove.
+      // Each sticker is a filled square patch; the gutter around it stays
+      // EMPTY, which is what makes the nine tiles read.
+      const cu = Math.floor(rand() * 3)
+      const cv = Math.floor(rand() * 3)
+      const inset = cell * (0.5 - GAP)
+      const u = -HALF + cell * (cu + 0.5) + (rand() * 2 - 1) * inset
+      const v = -HALF + cell * (cv + 0.5) + (rand() * 2 - 1) * inset
+      place(face, u, v, p)
+      c.set(STICKERS[face]).lerp(PAPER, rand() * 0.08)
+      size[i] = 0.082 + rand() * 0.032
+      faceOf[i] = face
+    } else if (pick < grooveEnd) {
+      // Grooves: the two horizontal and two vertical channels per face.
+      // Grooves: hairlines exactly on the thirds, not bands - a crisp
+      // dark line between tiles instead of a smear.
+      const alongU = rand() < 0.5
+      const line = (rand() < 0.5 ? 1 : 2) * cell - HALF
+      const t = (rand() * 2 - 1) * HALF
+      const jit = (rand() - 0.5) * 0.012
+      const u = alongU ? t : line + jit
+      const v = alongU ? line + jit : t
+      place(face, u, v, p)
+      c.copy(INK).lerp(PAPER, rand() * 0.05)
+      size[i] = 0.055 + rand() * 0.02
+      faceOf[i] = face
     } else if (pick < edgeEnd) {
-      // Edges: the twelve beams, inked and dense - they carry the shape.
+      // The twelve outer beams: dense ink, this is what draws the cube.
       const axis = Math.floor(rand() * 3)
       const a = rand() * 2 - 1
-      const sy = rand() < 0.5 ? -HALF : HALF
-      const sz = rand() < 0.5 ? -HALF : HALF
-      const jit = () => (rand() - 0.5) * 0.035
+      const s1 = rand() < 0.5 ? -HALF : HALF
+      const s2 = rand() < 0.5 ? -HALF : HALF
+      const jit = () => (rand() - 0.5) * 0.03
       if (axis === 0) {
-        x = a * HALF
-        y = sy + jit()
-        z = sz + jit()
+        p[0] = a * HALF
+        p[1] = s1 + jit()
+        p[2] = s2 + jit()
       } else if (axis === 1) {
-        x = sy + jit()
-        y = a * HALF
-        z = sz + jit()
+        p[0] = s1 + jit()
+        p[1] = a * HALF
+        p[2] = s2 + jit()
       } else {
-        x = sy + jit()
-        y = sz + jit()
-        z = a * HALF
+        p[0] = s1 + jit()
+        p[1] = s2 + jit()
+        p[2] = a * HALF
       }
-      c.copy(INK).lerp(PAPER, rand() * 0.18)
-      size[i] = 0.075 + rand() * 0.035
-    } else if (pick < latticeEnd) {
-      // Inner lattice: a regular grid floating inside, so the cube reads
-      // as a built volume rather than an empty box.
-      const N = 6
-      const q = (n: number) => (Math.floor(rand() * n) / (n - 1)) * 2 - 1
-      x = q(N) * HALF * 0.74 + (rand() - 0.5) * 0.02
-      y = q(N) * HALF * 0.74 + (rand() - 0.5) * 0.02
-      z = q(N) * HALF * 0.74 + (rand() - 0.5) * 0.02
-      c.copy(INK).lerp(PAPER, 0.42 + rand() * 0.2)
-      size[i] = 0.045 + rand() * 0.025
+      c.copy(INK).lerp(PAPER, rand() * 0.12)
+      size[i] = 0.08 + rand() * 0.035
     } else if (pick < coreEnd) {
-      // Core: a small violet nucleus suspended dead center.
+      // Core: the mechanism, a violet nucleus that pulses inside.
       const th = rand() * Math.PI * 2
       const ph = Math.acos(rand() * 2 - 1)
-      const r = Math.pow(rand(), 0.65) * 0.3
-      x = Math.sin(ph) * Math.cos(th) * r
-      y = Math.cos(ph) * r
-      z = Math.sin(ph) * Math.sin(th) * r
-      c.copy(VIOLET).lerp(INK, rand() * 0.25)
-      size[i] = 0.06 + rand() * 0.05
+      const r = Math.pow(rand(), 0.6) * 0.17
+      p[0] = Math.sin(ph) * Math.cos(th) * r
+      p[1] = Math.cos(ph) * r
+      p[2] = Math.sin(ph) * Math.sin(th) * r
+      c.copy(VIOLET).lerp(PAPER, 0.25 + rand() * 0.2)
+      size[i] = 0.04 + rand() * 0.03
       kind[i] = KIND_CORE
-    } else if (rand() < 0.55) {
-      // Inner cube: a second, smaller frame nested around the core, so
-      // there is real structure to see through the faces.
-      const h = HALF * 0.46
-      const axis = Math.floor(rand() * 3)
-      const a = rand() * 2 - 1
-      const s1 = rand() < 0.5 ? -h : h
-      const s2 = rand() < 0.5 ? -h : h
-      const jit = () => (rand() - 0.5) * 0.02
-      if (axis === 0) {
-        x = a * h
-        y = s1 + jit()
-        z = s2 + jit()
-      } else if (axis === 1) {
-        x = s1 + jit()
-        y = a * h
-        z = s2 + jit()
-      } else {
-        x = s1 + jit()
-        y = s2 + jit()
-        z = a * h
-      }
-      c.copy(VIOLET).lerp(INK, 0.15 + rand() * 0.25)
-      size[i] = 0.05 + rand() * 0.025
     } else {
-      // Struts: dotted lines from the core out to the eight corners.
-      const t = 0.32 + rand() * 0.68
-      const sx = rand() < 0.5 ? -1 : 1
-      const sy2 = rand() < 0.5 ? -1 : 1
-      const sz2 = rand() < 0.5 ? -1 : 1
-      x = sx * HALF * 0.94 * t + (rand() - 0.5) * 0.02
-      y = sy2 * HALF * 0.94 * t + (rand() - 0.5) * 0.02
-      z = sz2 * HALF * 0.94 * t + (rand() - 0.5) * 0.02
-      c.copy(VIOLET).lerp(PAPER, 0.4 + rand() * 0.3)
-      size[i] = 0.038 + rand() * 0.022
+      // Interior: a whisper of fill so the body is not hollow, kept
+      // light enough that it never muddies the faces in front of it.
+      p[0] = (rand() * 2 - 1) * HALF * 0.8
+      p[1] = (rand() * 2 - 1) * HALF * 0.8
+      p[2] = (rand() * 2 - 1) * HALF * 0.8
+      c.copy(INK).lerp(PAPER, 0.78 + rand() * 0.16)
+      size[i] = 0.026 + rand() * 0.016
     }
 
-    pos[j] = x
-    pos[j + 1] = y
-    pos[j + 2] = z
+    pos[j] = p[0]
+    pos[j + 1] = p[1]
+    pos[j + 2] = p[2]
     col[j] = c.r
     col[j + 1] = c.g
     col[j + 2] = c.b
   }
 
-  return { pos, col, size, kind }
+  return { pos, col, size, kind, faceOf }
 }

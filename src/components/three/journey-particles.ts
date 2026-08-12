@@ -5,7 +5,7 @@
 // heat only applies to the brain state.
 
 import { Color, MathUtils, Vector3 } from 'three'
-import { INK, VIOLET, WAVE_BAND } from './net-geometry'
+import { INK, PAPER, VIOLET, WAVE_BAND } from './net-geometry'
 import { KIND_CORE } from './cube-figure'
 
 export interface FrameInput {
@@ -29,6 +29,8 @@ export interface FrameInput {
   brainSize: Float32Array
   cubeSize: Float32Array
   cubeKind: Uint8Array
+  cubeFace: Int8Array
+  faceVis: Float32Array
   // live buffers
   pos: Float32Array
   col: Float32Array
@@ -106,12 +108,18 @@ export function updateParticles(p: FrameInput): void {
     }
     if (p.flash[i] > 0.02) heat = Math.max(heat, p.flash[i] * 0.65 * fb)
 
+    // A real cube hides its back: grains on faces turned away from the
+    // camera fade out, so only three faces read at a time.
+    const f = p.cubeFace[i]
+    const vis = f < 0 ? 1 : p.faceVis[f]
+    const hide = (1 - vis) * fc
     scratch
       .setRGB(
         p.dustCol[j] * fd + p.brainCol[j] * fb + p.cubeCol[j] * fc,
         p.dustCol[j + 1] * fd + p.brainCol[j + 1] * fb + p.cubeCol[j + 1] * fc,
         p.dustCol[j + 2] * fd + p.brainCol[j + 2] * fb + p.cubeCol[j + 2] * fc
       )
+      .lerp(PAPER, hide * 0.92)
       .lerp(INK, Math.min(1, heat * 1.4))
       .lerp(VIOLET, heat * 0.85)
     col[j] = scratch.r
@@ -121,7 +129,7 @@ export function updateParticles(p: FrameInput): void {
     // Grain size follows the shape the particle currently belongs to;
     // the cube's core breathes so the object feels powered.
     const pulse = p.cubeKind[i] === KIND_CORE ? 1 + Math.sin(t * 2.1 + p.phase[i]) * 0.3 : 1
-    const target = p.brainSize[i] * (1 - fc) + p.cubeSize[i] * pulse * fc
+    const target = p.brainSize[i] * (1 - fc) + p.cubeSize[i] * pulse * fc * (1 - hide * 0.75)
     size[i] += (target - size[i]) * 0.12
   }
 }
