@@ -54,7 +54,8 @@ function Scene() {
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
   )
-  const st = useRef({ a: 0, fB: 0, waves: 0, rot: 1.5, spin: 0, lastScroll: 0 })
+  const REST = 1.5 + Math.PI // legible profile, flipped 180deg horizontally
+  const st = useRef({ a: 0, fB: 0, waves: 0, rot: REST, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
   const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
@@ -156,7 +157,7 @@ function Scene() {
     // Tumble while dust; settle by the shortest path into the brain's
     // legible profile pose as it forms.
     s.rot += reduced ? 0 : delta * 0.2 * (1 - s.fB)
-    const wrapped = 1.5 + Math.round((s.rot - 1.5) / (Math.PI * 2)) * Math.PI * 2
+    const wrapped = REST + Math.round((s.rot - REST) / (Math.PI * 2)) * Math.PI * 2
     s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * s.fB)
     g.rotation.y = s.rot + (reduced ? 0 : Math.sin(t * 0.12) * 0.12 * s.fB) + s.spin
     const tiltX = 0.08 + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * s.fB
@@ -265,7 +266,7 @@ function Scene() {
   })
 
   return (
-    <group ref={group} rotation={[0.08, 1.35, 0]}>
+    <group ref={group} rotation={[0.08, 1.5 + Math.PI, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
       <points ref={points}>
         <bufferGeometry>
