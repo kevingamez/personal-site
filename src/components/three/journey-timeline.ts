@@ -48,9 +48,10 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
     // The reference hero: the figure is dominant, not boxed - most of the
     // viewport tall, center-right, sharing space with the headline.
-    // The reference composition: the brain is oversized and anchored to
-    // the right edge, cropping off-screen, frontal pole toward the copy.
-    stops.push({ x: 0.78, y: 0.53, s: 1.05, a: 1, fB: 1, waves: 1 })
+    // Dominant like the reference, but the FULL silhouette stays in
+    // frame - the complete profile outline is what makes it instantly
+    // read as a brain.
+    stops.push({ x: 0.73, y: 0.52, s: 0.92, a: 1, fB: 1, waves: 1 })
   }
   for (const k of KFS) {
     const el = document.querySelector(k.sel)

@@ -24,6 +24,7 @@ import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
+import { PulseLayer } from './journey-pulses'
 
 const CAM_Z = 10
 const FOV = 40
@@ -54,6 +55,11 @@ function Scene() {
   const lineMat = useMemo(
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
+  )
+  const pulses = useMemo(() => new PulseLayer(edges), [edges])
+  const pulseMat = useMemo(
+    () => makeParticleMaterial({ opacity: 0.9, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
+    [gl]
   )
   const st = useRef({ a: 0, fB: 0, waves: 0, rot: REST, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
@@ -98,8 +104,11 @@ function Scene() {
       k
     )
     g.scale.setScalar(MathUtils.lerp(g.scale.x, (pose.s * worldH) / (2 * R), k))
-    material.uniforms.uPx.value = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
-    lineMat.opacity = s.a * s.fB * 0.1
+    const px = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
+    material.uniforms.uPx.value = px
+    pulseMat.uniforms.uPx.value = px
+    pulseMat.uniforms.uOpacity.value = s.a * s.fB * 0.9
+    lineMat.opacity = s.a * s.fB * 0.13
 
     // Rotation: slow tumble as dust, settling by the shortest path into
     // the legible profile as the brain forms; drag and scroll kicks decay.
@@ -136,6 +145,8 @@ function Scene() {
 
     const pos = geo.attributes.position.array as Float32Array
     const col = geo.attributes.color.array as Float32Array
+    // Neural pulses ride the synapses while the brain is formed.
+    pulses.update(delta, reduced ? 0 : s.fB * s.a, pos)
     const aw = autoWave.current
     const tc = touch.current
     const doWaves = s.waves > 0.02
@@ -180,6 +191,8 @@ function Scene() {
         }
         heat *= s.waves * fb
       }
+      // Pulse arrivals flash their neuron regardless of the slow waves.
+      if (pulses.flash[i] > 0.02) heat = Math.max(heat, pulses.flash[i] * 0.9 * fb)
       scratch
         .setRGB(
           dustCol[j] * fd + baseColors[j] * fb,
@@ -228,6 +241,9 @@ function Scene() {
   return (
     <group ref={group} rotation={[0.08, REST, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
+      <points geometry={pulses.geometry}>
+        <primitive object={pulseMat} attach="material" />
+      </points>
       <points ref={points}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
