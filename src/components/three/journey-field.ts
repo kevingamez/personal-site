@@ -14,13 +14,9 @@ export function buildField() {
   const paper = new Color('#f4f4f2')
   for (let i = 0; i < NODES; i++) {
     const j = i * 3
-    c.setRGB(brain.baseColors[j], brain.baseColors[j + 1], brain.baseColors[j + 2]).lerp(
-      paper,
-      0.45
-    )
-    dustCol[j] = c.r
-    dustCol[j + 1] = c.g
-    dustCol[j + 2] = c.b
+    c.setRGB(brain.baseColors[j], brain.baseColors[j + 1], brain.baseColors[j + 2])
+      .lerp(paper, 0.45)
+      .toArray(dustCol, j)
   }
 
   return { brain, dustCol }

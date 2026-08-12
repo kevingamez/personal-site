@@ -208,19 +208,32 @@ export function buildVolume() {
     const c = new Color()
     const mixc = new Color()
     const paper = new Color('#f4f4f2')
-    const amber = new Color('#e9a521')
-    const rose = new Color('#d2617a')
     const violet = new Color('#7c5cff')
-    const emerald = new Color('#3e8e6e')
     for (let i = 0; i < NODES; i++) {
       if (region[i] === 1) {
-        c.copy(emerald).lerp(violet, rand() * 0.35)
+        c.copy(INK).lerp(paper, 0.42 + rand() * 0.22)
       } else if (region[i] === 2) {
-        c.copy(INK).lerp(paper, 0.25 + rand() * 0.15)
+        c.copy(INK).lerp(paper, 0.32 + rand() * 0.18)
       } else {
-        const tt = Math.min(1, Math.max(0, (base[i * 3 + 2] + 1.45) / 2.9 + (rand() - 0.5) * 0.22))
-        if (tt < 0.5) c.copy(amber).lerp(rose, tt * 2)
-        else c.copy(rose).lerp(violet, (tt - 0.5) * 2)
+        // Editorial ink field with the violet activity clustered into
+        // filaments winding through the mass; grays recede lighter so
+        // the clusters carry the contrast.
+        const fil = Math.max(
+          Math.abs(
+            Math.sin(base[i * 3] * 3.1 + base[i * 3 + 2] * 2.3) *
+              Math.sin(base[i * 3 + 1] * 2.7 - base[i * 3 + 2] * 1.9)
+          ),
+          Math.abs(
+            Math.sin(base[i * 3] * 2.2 - base[i * 3 + 2] * 3.4 + 1.7) *
+              Math.sin(base[i * 3 + 1] * 3.3 + base[i * 3 + 2] * 2.1)
+          )
+        )
+        if (fil > 0.68 && rand() < 0.6) {
+          c.copy(violet).lerp(mixc.copy(INK), fil > 0.88 ? 0.35 : rand() * 0.2)
+          accented[i] = 1
+        } else {
+          c.copy(INK).lerp(paper, 0.34 + rand() * 0.32)
+        }
       }
       // The anatomy is drawn with darkness: an inked contour right at the
       // silhouette, a dark ring fading inward, and shaded fold furrows.
@@ -231,23 +244,25 @@ export function buildVolume() {
         c.lerp(
           mixc.copy(INK),
           region[i] === 1
-            ? 0.12 + crease[i] * 0.5
+            ? 0.06 + crease[i] * 0.32
             : Math.min(0.75, rim[i] * 0.55 + crease[i] * 0.34)
         )
       }
-      // Stipple: some neurons sink toward ink, a few lift toward paper.
-      const v = rand()
-      if (v < 0.16) c.lerp(mixc.copy(INK), 0.5)
-      else if (v < 0.24) c.lerp(mixc.copy(paper), 0.3)
-      accented[i] = rand() < 0.1 ? 1 : 0
+      // Stipple: a few neurons sink toward ink for texture.
+      if (rand() < 0.12) c.lerp(mixc.copy(INK), 0.4)
       baseColors[i * 3] = c.r
       baseColors[i * 3 + 1] = c.g
       baseColors[i * 3 + 2] = c.b
     }
   }
   const sizes = buildSizes(NODES, rand, 1.0)
-  // Colored neurons double as the reference brain's bright glints.
-  for (let i = 0; i < NODES; i++) if (accented[i]) sizes[i] *= 1.4
+  // Violet filaments read as glints; gray furrow dust recedes so the
+  // gyri appear as density variation, not just shading.
+  for (let i = 0; i < NODES; i++) {
+    if (accented[i]) sizes[i] *= 1.45
+    else if (region[i] === 0) sizes[i] *= 0.8 + (1 - crease[i]) * 0.2
+    else sizes[i] *= 0.82
+  }
   // Journey extras: a loose dust cloud to assemble from, and a per-neuron
   // stagger so formation sweeps from the frontal pole toward the back.
   const scatter = new Float32Array(NODES * 3)
