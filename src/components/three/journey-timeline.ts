@@ -1,9 +1,9 @@
 // Scroll timeline for the full-page dust journey, in the reference site's
-// style: the swarm is present from the hero on, and each section is a
-// keyframe it travels through - the brain forming beside About, melting
-// back to dust, half-condensing at Experience, and finally docking fully
-// formed into the contact slot. Keyframe positions are resolved from the
-// LIVE section rects every frame, never from hardcoded page fractions.
+// style: the brain starts FULLY FORMED in the hero's portrait slot, melts
+// into traveling dust as you scroll, half-condenses at Experience, and
+// docks fully formed into the contact slot. Keyframe positions are
+// resolved from the LIVE section rects every frame, never from hardcoded
+// page fractions.
 
 import { MathUtils } from 'three'
 
@@ -21,8 +21,7 @@ interface KF extends Pose {
 }
 
 const KFS: KF[] = [
-  { sel: '', x: 0.82, y: 0.6, s: 0.52, a: 0.4, fB: 0, waves: 0 },
-  { sel: '#about', x: 0.87, y: 0.64, s: 0.3, a: 0.95, fB: 1, waves: 1 },
+  { sel: '#about', x: 0.6, y: 0.6, s: 0.5, a: 0.45, fB: 0, waves: 0 },
   { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, waves: 0 },
   { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, waves: 0.25 },
   { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, waves: 0 },
@@ -43,12 +42,20 @@ const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
 export function resolvePose(scrollY: number, vw: number, vh: number): Pose | null {
   const ys: number[] = []
   const stops: (KF | Pose)[] = []
+  // Opening stop: the brain lives fully formed in the hero portrait slot.
+  const slot = document.querySelector('.media-frame')?.getBoundingClientRect()
+  if (slot && slot.height > 0) {
+    ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
+    stops.push({
+      x: (slot.left + slot.width / 2) / vw,
+      y: (slot.top + slot.height / 2) / vh,
+      s: (slot.height / vh) * 0.72,
+      a: 1,
+      fB: 1,
+      waves: 1,
+    })
+  }
   for (const k of KFS) {
-    if (k.sel === '') {
-      ys.push(0)
-      stops.push(k)
-      continue
-    }
     const el = document.querySelector(k.sel)
     if (!el) continue
     const r = el.getBoundingClientRect()
