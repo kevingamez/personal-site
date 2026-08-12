@@ -2,7 +2,7 @@
 // `state`. The actual editor implementation lives in `dev-editor.ts` (mounted
 // onto `window.__cm` by that module).
 
-import { PROJECT_NAME, getNode, state } from './state'
+import { LOCAL_PROJECT, PROJECT_NAME, getNode, state } from './state'
 import { hydrateSaved, isDirty } from './persistence'
 import { esc } from './highlight'
 import { iconUrl } from './icons'
@@ -27,11 +27,47 @@ export function initEditor(): void {
   edBodyEl = document.querySelector('.ed-body')
 }
 
+// Paths already requested from /api/repo, so a second open of the same file
+// does not re-fetch and a failed fetch is not retried on every click.
+const fetched = new Set<string>()
+
+// The tree ships with empty bodies (see data/dev-files.ts), so the body is
+// pulled on first open. Deliberately fire-and-forget rather than making
+// openFile async: five call sites depend on its synchronous boolean, and the
+// tab should appear immediately with the editor filling in a moment later,
+// the way a real editor opens a file off a slow disk.
+function ensureBody(rel: string, node: { body: string }): void {
+  if (node.body || fetched.has(rel)) return
+  // Only this repository is served lazily. Other repos in the tree carry just
+  // a README, which the build already inlined, so they have a body and never
+  // reach here anyway.
+  const prefix = LOCAL_PROJECT + '/'
+  if (!rel.startsWith(prefix)) return
+  fetched.add(rel)
+  // Trailing slash on purpose: the project sets `trailingSlash`, so the
+  // unslashed form costs an extra 308 round trip before the body arrives.
+  void fetch('/api/repo/?path=' + encodeURIComponent(rel.slice(prefix.length)))
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data: { body?: string } | null) => {
+      if (!data || typeof data.body !== 'string') return
+      node.body = data.body
+      // Only repaint if this file is still the one on screen; the visitor may
+      // have moved on while the request was in flight.
+      if (state.activeTab === rel) renderEditor()
+      renderOutlineFn()
+    })
+    .catch(() => {
+      // Progressive enhancement: the tab stays open and empty rather than
+      // throwing. A reload retries.
+    })
+}
+
 export function openFile(parts: string[], via: OpenSource = 'tree'): boolean {
   const node = getNode(parts)
   if (!node || node.type !== 'file') return false
   if (parts[0] !== PROJECT_NAME) return false
   const rel = parts.slice(1).join('/')
+  ensureBody(rel, node)
   hydrateSaved(rel)
   if (!state.openTabs.includes(rel)) state.openTabs.push(rel)
   state.activeTab = rel

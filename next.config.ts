@@ -48,6 +48,20 @@ const nextConfig: NextConfig = {
   // The Astro site used trailing slashes (/es/, /dev/); preserve every URL.
   trailingSlash: true,
   poweredByHeader: false,
+  // /api/repo serves dev mode's source viewer. It walks the project to build
+  // the allowlist of paths it will serve, and reads a file off disk when
+  // GitHub is unreachable or does not have the deployed commit. Neither works
+  // unless the source ships with the function: a Next lambda carries compiled
+  // output, not the original tree, so without this the allowlist comes back
+  // empty in production and every file 404s while working perfectly in dev.
+  outputFileTracingIncludes: {
+    '/api/repo': [
+      './app/**/*.{ts,tsx}',
+      './src/**/*.{ts,tsx,css}',
+      './*.{ts,json,md}',
+      './.{editorconfig,gitignore,prettierignore}',
+    ],
+  },
   async headers() {
     return [{ source: '/(.*)', headers: SECURITY_HEADERS }]
   },
