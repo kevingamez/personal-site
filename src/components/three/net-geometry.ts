@@ -95,7 +95,7 @@ export function buildVolume() {
       // reads as a drawn stroke, not a fading dust edge.
       let py = 0
       let pz = 0
-      if (rand() < 0.16) {
+      if (rand() < 0.2) {
         let along = rand() * perim
         let si = 0
         while (along > segLen[si]) {
@@ -238,7 +238,7 @@ export function buildVolume() {
       // The anatomy is drawn with darkness: an inked contour right at the
       // silhouette, a dark ring fading inward, and shaded fold furrows.
       if (region[i] === 0 && rim[i] > 0.78) {
-        c.copy(INK).lerp(mixc.copy(paper), 0.15)
+        c.copy(INK).lerp(mixc.copy(paper), 0.08)
       } else {
         c.lerp(mixc.copy(INK), 0.15)
         c.lerp(
