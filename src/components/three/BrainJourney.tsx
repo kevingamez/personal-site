@@ -20,7 +20,18 @@ import {
   type Points,
 } from 'three'
 import { makeParticleMaterial } from './particle-material'
-import { AUTO_WAVE_S, INK, NODES, PAPER, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
+import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
+
+// Small screens build a lighter figure with the same silhouette so the
+// identity survives everywhere without burning a phone CPU; the shader
+// compensates with slightly larger grains so the mass still reads solid.
+const figureCount = (): number => {
+  if (typeof window === 'undefined') return NODES
+  const w = window.innerWidth
+  if (w < 700) return 5600
+  if (w < 1100) return 8600
+  return NODES
+}
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
@@ -38,8 +49,8 @@ function Scene() {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const size = useThree((s) => s.size)
-  const { brain, dustCol } = useMemo(buildField, [])
-  const { base, phase, edges, origins, sizes, baseColors, scatter, stagger } = brain
+  const { brain, dustCol } = useMemo(() => buildField(figureCount()), [])
+  const { count, base, phase, edges, origins, sizes, baseColors, scatter, stagger } = brain
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
@@ -56,7 +67,7 @@ function Scene() {
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
   )
-  const pulses = useMemo(() => new PulseLayer(edges), [edges])
+  const pulses = useMemo(() => new PulseLayer(edges, count), [edges, count])
   const pulseMat = useMemo(
     () => makeParticleMaterial({ opacity: 0.9, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
@@ -136,7 +147,7 @@ function Scene() {
         // The signal cascade starts at the neuron under the cursor.
         let ni = 0
         let nd = Infinity
-        for (let i = 0; i < NODES; i++) {
+        for (let i = 0; i < count; i++) {
           const ddx = base[i * 3] - local.x
           const ddy = base[i * 3 + 1] - local.y
           const d2 = ddx * ddx + ddy * ddy
@@ -163,11 +174,7 @@ function Scene() {
     const aw = autoWave.current
     const tc = touch.current
     const doWaves = s.waves > 0.02
-    // Aerial perspective: the far side of the volume fades toward paper,
-    // the near side stays full strength - depth you can feel.
-    const sinR = Math.sin(g.rotation.y)
-    const cosR = Math.cos(g.rotation.y)
-    for (let i = 0; i < NODES; i++) {
+    for (let i = 0; i < count; i++) {
       const j = i * 3
       // Formation staggers per particle so shapes stream, not snap; the
       // last few percent stay ambient grains drifting around the scene.
@@ -209,9 +216,7 @@ function Scene() {
         heat *= s.waves * fb
       }
       // Pulse arrivals flash their neuron regardless of the slow waves.
-      if (pulses.flash[i] > 0.02) heat = Math.max(heat, pulses.flash[i] * 0.9 * fb)
-      const wz = tx * sinR + tz * cosR
-      const dfar = MathUtils.clamp(0.22 - wz * 0.16, 0, 0.22) * fb
+      if (pulses.flash[i] > 0.02) heat = Math.max(heat, pulses.flash[i] * 0.65 * fb)
       scratch
         .setRGB(
           dustCol[j] * fd + baseColors[j] * fb,
@@ -220,7 +225,6 @@ function Scene() {
         )
         .lerp(INK, Math.min(1, heat * 1.4))
         .lerp(VIOLET, heat * 0.85)
-        .lerp(PAPER, dfar * (1 - Math.min(1, heat * 2)))
       col[j] = scratch.r
       col[j + 1] = scratch.g
       col[j + 2] = scratch.b

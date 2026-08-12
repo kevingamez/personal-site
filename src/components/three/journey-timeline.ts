@@ -42,19 +42,36 @@ const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
 export function resolvePose(scrollY: number, vw: number, vh: number): Pose | null {
   const ys: number[] = []
   const stops: (KF | Pose)[] = []
-  // Opening stop: the brain lives fully formed in the hero portrait slot.
   // Figures are sized by viewport HEIGHT, so narrow windows would let
-  // them swallow the copy; damp every stop by the aspect ratio.
-  const fit = MathUtils.clamp(vw / vh / 1.68, 0.6, 1)
+  // them swallow the copy; damp every stop by the aspect ratio, and on
+  // portrait-ish screens keep the travel closer to the center.
+  const narrow = vw < 900 || vw / vh < 1.05
+  const fit = MathUtils.clamp(vw / vh / 1.68, 0.55, 1)
   const slot = document.querySelector('.media-frame')?.getBoundingClientRect()
   if (slot && slot.height > 0) {
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
-    // Dominant like the reference with the FULL silhouette in frame -
-    // the complete profile outline is what makes it read as a brain.
-    // Narrow windows shrink it and tuck it against the right edge.
-    const heroS = Math.min(0.92, (0.54 * vw) / vh)
-    const heroX = Math.min(0.73, 1 - ((heroS * vh * 0.97) / 2 + 20) / vw)
-    stops.push({ x: heroX, y: 0.52, s: heroS, a: 1, fB: 1, waves: 1 })
+    if (narrow) {
+      // Phones and tablets: the figure simply takes the portrait slot,
+      // which the layout already places under the copy.
+      const w = Math.min(slot.width * 1.06, vw - 24)
+      stops.push({
+        x: (slot.left + slot.width / 2) / vw,
+        y: (slot.top + slot.height / 2) / vh,
+        s: w / (vh * 0.97),
+        a: 1,
+        fB: 1,
+        waves: 1,
+      })
+    } else {
+      // Wide screens: dominant like the reference, living in the free
+      // zone to the right of the live hero copy edge, never cropped.
+      const copy = document.querySelector('.hero-copy')?.getBoundingClientRect()
+      const left = copy ? copy.right + 10 : vw * 0.55
+      const avail = Math.max(220, vw - left)
+      const heroW = Math.min(0.92 * vh * 0.97, avail * 1.08)
+      const heroX = Math.min((left + avail * 0.52) / vw, 1 - (heroW / 2 + 10) / vw)
+      stops.push({ x: heroX, y: 0.52, s: heroW / (vh * 0.97), a: 1, fB: 1, waves: 1 })
+    }
   }
   for (const k of KFS) {
     const el = document.querySelector(k.sel)
@@ -62,7 +79,14 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     const r = el.getBoundingClientRect()
     if (r.height === 0) continue
     ys.push(scrollY + r.top + Math.min(r.height, vh) * 0.5 - vh * 0.5)
-    stops.push({ ...k, s: k.s * fit })
+    // On phones the traveling dust passes behind the copy, so it stays
+    // fainter there - the text has to win.
+    stops.push({
+      ...k,
+      x: narrow ? 0.5 + (k.x - 0.5) * 0.45 : k.x,
+      s: k.s * fit,
+      a: narrow ? k.a * 0.45 : k.a,
+    })
   }
   // Final stop: the brain docks into the live contact slot.
   const dock = document.querySelector('.cube-stage')?.getBoundingClientRect()

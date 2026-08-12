@@ -63,12 +63,13 @@ function edgeDistance(z: number, y: number): number {
   return min
 }
 
-export function buildVolume() {
-  const base = new Float32Array(NODES * 3)
-  const phase = new Float32Array(NODES)
-  const region = new Uint8Array(NODES) // 0 cerebrum, 1 cerebellum, 2 stem
-  const rim = new Float32Array(NODES) // 1 = at the silhouette outline
-  const crease = new Float32Array(NODES) // 1 = inside a fold furrow
+// count lets small screens build a lighter figure with the same shape.
+export function buildVolume(count: number = NODES) {
+  const base = new Float32Array(count * 3)
+  const phase = new Float32Array(count)
+  const region = new Uint8Array(count) // 0 cerebrum, 1 cerebellum, 2 stem
+  const rim = new Float32Array(count) // 1 = at the silhouette outline
+  const crease = new Float32Array(count) // 1 = inside a fold furrow
   let seed = 424242
   const rand = () => {
     seed = (seed * 1664525 + 1013904223) % 4294967296
@@ -96,7 +97,7 @@ export function buildVolume() {
       // reads as a drawn stroke, not a fading dust edge.
       let py = 0
       let pz = 0
-      if (rand() < 0.2) {
+      if (rand() < 0.16) {
         let along = rand() * perim
         let si = 0
         while (along > segLen[si]) {
@@ -159,21 +160,21 @@ export function buildVolume() {
     base[i * 3 + 2] = z
     phase[i] = rand() * Math.PI * 2
   }
-  for (let i = 0; i < NODES; i++) place(i)
+  for (let i = 0; i < count; i++) place(i)
 
   // Synapses via a coarse spatial hash: nearest few neighbors within reach.
   const cell = LINK_MAX_DIST
   const hash = new Map<string, number[]>()
   const keyOf = (x: number, y: number, z: number) =>
     `${Math.floor(x / cell)},${Math.floor(y / cell)},${Math.floor(z / cell)}`
-  for (let i = 0; i < NODES; i++) {
+  for (let i = 0; i < count; i++) {
     const k = keyOf(base[i * 3], base[i * 3 + 1], base[i * 3 + 2])
     const arr = hash.get(k)
     if (arr) arr.push(i)
     else hash.set(k, [i])
   }
   const edges: [number, number][] = []
-  for (let i = 0; i < NODES; i++) {
+  for (let i = 0; i < count; i++) {
     const x = base[i * 3]
     const y = base[i * 3 + 1]
     const z = base[i * 3 + 2]
@@ -198,23 +199,21 @@ export function buildVolume() {
     for (let n = 0; n < Math.min(LINKS_PER_NODE, near.length); n++) edges.push([i, near[n].j])
   }
   const origins: number[] = []
-  for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * NODES))
+  for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * count))
   // Base colors: the reference brain's pointillist full-color mix, mapped
   // onto anatomy - frontal violet flowing through rose to occipital amber,
   // an emerald cerebellum, an ink brainstem. Per-neuron jitter plus darker
   // and lighter stipple make it read as colored dust, not flat paint.
-  const baseColors = new Float32Array(NODES * 3)
-  const accented = new Uint8Array(NODES)
+  const baseColors = new Float32Array(count * 3)
+  const accented = new Uint8Array(count)
   {
     const c = new Color()
     const mixc = new Color()
     const paper = new Color('#f4f4f2')
     const violet = new Color('#7c5cff')
-    for (let i = 0; i < NODES; i++) {
+    for (let i = 0; i < count; i++) {
       if (region[i] === 1) {
-        c.copy(INK)
-          .lerp(paper, 0.42 + rand() * 0.22)
-          .lerp(mixc.set('#2fae7d'), 0.3)
+        c.copy(INK).lerp(paper, 0.42 + rand() * 0.22)
       } else if (region[i] === 2) {
         c.copy(INK).lerp(paper, 0.32 + rand() * 0.18)
       } else {
@@ -231,17 +230,8 @@ export function buildVolume() {
               Math.sin(base[i * 3 + 1] * 3.3 + base[i * 3 + 2] * 2.1)
           )
         )
-        if (fil > 0.64 && rand() < 0.72) {
-          // Each filament carries ONE saturated hue - clustered color
-          // reads rich instead of collapsing into confetti mud.
-          const h = Math.abs(
-            Math.sin(base[i * 3] * 1.3 + base[i * 3 + 1] * 2.1 + base[i * 3 + 2] * 1.7)
-          )
-          if (h < 0.5) c.copy(violet)
-          else if (h < 0.72) c.set('#e05a7e')
-          else if (h < 0.88) c.set('#e8981e')
-          else c.set('#2fae7d')
-          c.lerp(mixc.copy(INK), fil > 0.88 ? 0.28 : rand() * 0.12)
+        if (fil > 0.68 && rand() < 0.6) {
+          c.copy(violet).lerp(mixc.copy(INK), fil > 0.88 ? 0.35 : rand() * 0.2)
           accented[i] = 1
         } else {
           c.copy(INK).lerp(paper, 0.34 + rand() * 0.32)
@@ -250,7 +240,7 @@ export function buildVolume() {
       // The anatomy is drawn with darkness: an inked contour right at the
       // silhouette, a dark ring fading inward, and shaded fold furrows.
       if (region[i] === 0 && rim[i] > 0.78) {
-        c.copy(INK).lerp(mixc.copy(paper), 0.08)
+        c.copy(INK).lerp(mixc.copy(paper), 0.15)
       } else {
         c.lerp(mixc.copy(INK), 0.15)
         c.lerp(
@@ -267,19 +257,19 @@ export function buildVolume() {
       baseColors[i * 3 + 2] = c.b
     }
   }
-  const sizes = buildSizes(NODES, rand, 1.1)
+  const sizes = buildSizes(count, rand, 1.0)
   // Violet filaments read as glints; gray furrow dust recedes so the
   // gyri appear as density variation, not just shading.
-  for (let i = 0; i < NODES; i++) {
+  for (let i = 0; i < count; i++) {
     if (accented[i]) sizes[i] *= 1.45
     else if (region[i] === 0) sizes[i] *= 0.8 + (1 - crease[i]) * 0.2
     else sizes[i] *= 0.82
   }
   // Journey extras: a loose dust cloud to assemble from, and a per-neuron
   // stagger so formation sweeps from the frontal pole toward the back.
-  const scatter = new Float32Array(NODES * 3)
-  const stagger = new Float32Array(NODES)
-  for (let i = 0; i < NODES; i++) {
+  const scatter = new Float32Array(count * 3)
+  const stagger = new Float32Array(count)
+  for (let i = 0; i < count; i++) {
     const th = rand() * Math.PI * 2
     const ph = Math.acos(rand() * 2 - 1)
     const r = 2.2 + Math.pow(rand(), 0.6) * 3.4
@@ -288,5 +278,5 @@ export function buildVolume() {
     scatter[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * r
     stagger[i] = (1 - (base[i * 3 + 2] + 1.45) / 2.9) * 0.6 + rand() * 0.4
   }
-  return { base, phase, edges, origins, sizes, baseColors, scatter, stagger }
+  return { count, base, phase, edges, origins, sizes, baseColors, scatter, stagger }
 }
