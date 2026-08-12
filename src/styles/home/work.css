@@ -42,25 +42,9 @@
   text-wrap: pretty;
 }
 
-.wf-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: auto 0 22px;
-}
-
-.wf-stack span {
-  border: 1px solid var(--line);
-  border-radius: var(--pill);
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  padding: 6px 10px;
-}
-
 .wf-visual {
   min-height: 380px;
+  align-self: center;
   border-radius: var(--r-md);
   overflow: hidden;
   position: relative;
@@ -210,4 +194,13 @@
   .work-more {
     margin-top: 28px;
   }
+}
+
+/* The Ad Studio surface fits itself to whatever box it gets, so the visual
+   only has to guarantee one: the phone rules collapse .wf-visual to a 0.78
+   aspect ratio, which cropped the composer clean off the bottom. */
+.wf-visual:has(.as) {
+  align-self: stretch;
+  aspect-ratio: auto;
+  min-height: 340px;
 }

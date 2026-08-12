@@ -27,10 +27,6 @@ export interface HomeStrings {
     twitterDescription: string
     includeJsonLd: boolean
     brandHref: string // "/" or "/es/"
-    langSwitchHref: string // sister locale URL
-    langSwitchHreflang: 'en' | 'es'
-    langSwitchAriaLabel: string
-    langSwitchLabelHtml: string // contains <b>EN</b>, ES or EN, <b>ES</b>
     skip: string
     // hreflang alternates for this page. Bilingual home pages list en/es/
     // x-default; single-language pages (e.g. privacy) pass an empty array so
@@ -50,13 +46,13 @@ export interface HomeStrings {
   hero: {
     metaRole: string // rotated label on the vertical rail
     metaPlace: string // location label (live clock appended in the component)
+    weatherLabels: string // JSON map of condition key -> localized label
     titleHtml: string // contains <br/> and <i>
     lede: string // raw HTML allowed (b tags)
     stat1Num: string
     stat1Label: string
     stat2Num: string
     stat2Label: string
-    portraitAlt: string
     scrollDown: string
     btnGetInTouch: string
     pauseTitle: string
@@ -123,6 +119,9 @@ export interface HomeStrings {
     p1NameHtml: string
     p1ImageAlt: string
     p1Desc: string
+    // Same shape as each project's `meta` below: the featured card renders it
+    // with the same `.wc-meta` rule, so the whole section reads as one list.
+    p1Meta: string
     // Everything else, newest first. `href` is optional: most of the Enttor
     // work lives in private repos that a visitor cannot open.
     projects: {
@@ -286,7 +285,6 @@ export interface HomeStrings {
     h4Elsewhere: string
     elsewhereDev: string
     elsewherePrivacy: string
-    fonts: string
     estab: string
   }
 }

@@ -152,7 +152,6 @@ export const esSections: Pick<
     h4Elsewhere: 'En otros lados',
     elsewhereDev: 'Modo dev →',
     elsewherePrivacy: 'Privacidad',
-    fonts: 'Tipografías Inter y JetBrains Mono',
     estab: 'Est. 2026, Bogotá',
   },
 }

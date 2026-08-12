@@ -19,10 +19,6 @@ export const es: HomeStrings = {
       'Founding engineer en Bogotá, abierto a lo que sigue. Automatización de navegador, pipelines de LLM, TypeScript full-stack.',
     includeJsonLd: true,
     brandHref: '/es/',
-    langSwitchHref: '/',
-    langSwitchHreflang: 'en',
-    langSwitchAriaLabel: 'Switch to English',
-    langSwitchLabelHtml: 'EN, <b>ES</b>',
     skip: 'Saltar al contenido',
     hreflang: [
       { lang: 'en', href: 'https://kevingamez.co/' },
@@ -42,14 +38,15 @@ export const es: HomeStrings = {
   },
   hero: {
     metaRole: 'Founding engineer, abierto a lo que sigue',
-    metaPlace: 'Bogotá',
+    metaPlace: 'Bogotá, Colombia',
+    weatherLabels:
+      '{"clear": "despejado", "partly cloudy": "parcialmente nublado", "cloudy": "nublado", "fog": "niebla", "drizzle": "llovizna", "rain": "lluvia", "showers": "aguaceros", "snow": "nieve", "storm": "tormenta"}',
     titleHtml: 'Hola',
     lede: 'Soy founding engineer en Bogotá, abierto a lo que sigue. Estuve en <b>Enttor</b>, donde construí la\n            plataforma de creativos con IA y los agentes de navegador detrás de su outbound. Antes lancé un marketplace\n            de e-commerce en <b>Samsam</b>. Maestría en deep learning en la Universidad de los Andes.',
     stat1Num: '02',
     stat1Label: 'Startups como founding engineer',
     stat2Num: '07',
     stat2Label: 'Años en GitHub',
-    portraitAlt: 'Kevin Gámez frente a Royce Hall, UCLA',
     scrollDown: 'Sigue bajando',
     btnGetInTouch: 'Hablemos',
     pauseTitle: 'pausar / reproducir',
@@ -112,7 +109,7 @@ export const es: HomeStrings = {
     e1Year: 'Jun 2025, Jul 2026',
     e1Meta: 'New York, remoto, outbound con IA',
     e1Desc:
-      'Construí el sistema que encuentra prospectos en Instagram y LinkedIn y los califica con IA. Full-stack:\n                dashboards en Next.js, APIs en NestJS, colas en Inngest, todo sobre Vercel y Supabase.',
+      'Construí el motor de outbound de punta a punta: automatización de navegador que buscaba prospectos en Instagram y LinkedIn, pipelines de OpenAI que los filtraban y redactaban los mensajes, y las campañas que los enviaban a escala. Dashboards en Next.js, APIs en NestJS y colas en Inngest sobre Vercel y Supabase, desde cero.',
     e2Year: 'Feb 2024, Mar 2025',
     e2Meta: 'Bogotá, plataforma de e-commerce',
     e2Desc:
@@ -161,21 +158,17 @@ export const es: HomeStrings = {
       'Estación de trabajo de Kevin Gámez con el sitio de Enttor abierto en un portátil y código en un monitor',
     p1Desc:
       'El último producto de Enttor. Le das el sitio de una marca y extrae logos, colores y tipografías, escribe conceptos de anuncio con Claude, renderiza las imágenes finales y revisa su propio trabajo con una pasada de visión. También desarma un anuncio existente en capas editables: OCR y segmentación recuperan el texto, las fuentes y las cajas reales, así un media buyer edita sobre un canvas en vez de rehacerlo. El pipeline de visión corre en GPU.',
+    p1Meta: 'Next.js, NestJS, OpenAI, Inngest, Supabase',
     projects: [
       {
         name: 'Agente de Slack',
-        desc: 'El mismo producto con una segunda puerta: un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de anuncios de Meta y TikTok, así que lanza campañas, diagnostica fatiga de creativos y mueve presupuesto, no solo responde preguntas.',
-        meta: 'Claude tool use, Drizzle, Postgres',
+        desc: 'El mismo producto con una segunda puerta: un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de anuncios de Meta y TikTok, así que lanza campañas, diagnostica fatiga de creativos y mueve presupuesto, no solo responde preguntas. Lanzar un anuncio toma tres pasos en vez de los treinta clics que pide Ads Manager, y los creativos se importan en lote desde una carpeta de Drive.',
+        meta: 'Claude tool use, APIs de Meta y TikTok, Postgres',
       },
       {
         name: 'Plataforma Enttor',
         desc: 'Dos años del producto de GTM: sacaba prospectos de la interacción en Instagram y LinkedIn, escribía DMs personalizados con IA, respondía solo por webhooks de Meta y lo dejaba todo en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres.',
         meta: 'Next.js, Supabase, Inngest',
-      },
-      {
-        name: 'AdsUploads',
-        desc: 'Lanzar un anuncio en Meta toma unos treinta clics en Ads Manager. Aquí toma tres: subes el creativo, eliges presupuesto y sale. Crea campaña, ad set, creativo y anuncio en el orden correcto, e importa en lote desde una carpeta de Drive.',
-        meta: 'Meta Marketing API, Stripe',
       },
       {
         name: 'MakeMotionGraphics',
