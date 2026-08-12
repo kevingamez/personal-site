@@ -53,7 +53,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     if (narrow) {
       // Phones and tablets: the figure simply takes the portrait slot,
       // which the layout already places under the copy.
-      const w = Math.min(slot.width * 1.06, vw - 24)
+      const w = Math.min(slot.width * 0.92, vw - 48)
       stops.push({
         x: (slot.left + slot.width / 2) / vw,
         y: (slot.top + slot.height / 2) / vh,
@@ -68,8 +68,10 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
       const copy = document.querySelector('.hero-copy')?.getBoundingClientRect()
       const left = copy ? copy.right + 10 : vw * 0.55
       const avail = Math.max(220, vw - left)
-      const heroW = Math.min(0.92 * vh * 0.97, avail * 1.08)
-      const heroX = Math.min((left + avail * 0.52) / vw, 1 - (heroW / 2 + 10) / vw)
+      const heroW = Math.min(0.68 * vh * 0.97, avail * 0.88)
+      // Keep a real margin at the right edge - the figure should sit in
+      // the composition, not bleed off it.
+      const heroX = Math.min((left + avail * 0.48) / vw, 1 - (heroW / 2 + vw * 0.045) / vw)
       stops.push({ x: heroX, y: 0.52, s: heroW / (vh * 0.97), a: 1, fB: 1, waves: 1 })
     }
   }
