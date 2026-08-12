@@ -135,9 +135,11 @@
   border-color: var(--ink);
 }
 
-/* Mobile: keep wayfinding instead of hiding it. The section links drop to a
-   second, horizontally scrollable row so every section stays reachable. */
-@media (width <= 780px) {
+/* Mobile and small tablets: keep wayfinding instead of hiding it. The
+   section links drop to a second, horizontally scrollable row so every
+   section stays reachable. The switch happens at the same 900px boundary
+   the rest of the layout uses - below it the one-row nav collides. */
+@media (width <= 899px) {
   .nav-in {
     flex-wrap: wrap;
   }

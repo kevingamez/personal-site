@@ -6,17 +6,24 @@
 import { Color } from 'three'
 import { buildVolume, NODES } from './net-geometry'
 
-export function buildField() {
-  const brain = buildVolume()
+export function buildField(count?: number) {
+  const brain = buildVolume(count)
 
-  const dustCol = new Float32Array(NODES * 3)
+  const dustCol = new Float32Array(brain.count * 3)
   const c = new Color()
   const paper = new Color('#f4f4f2')
-  for (let i = 0; i < NODES; i++) {
+  for (let i = 0; i < brain.count; i++) {
     const j = i * 3
     c.setRGB(brain.baseColors[j], brain.baseColors[j + 1], brain.baseColors[j + 2])
       .lerp(paper, 0.45)
       .toArray(dustCol, j)
+  }
+
+  // Lighter figures get proportionally bigger grains so the body reads
+  // as solid as the full-density one.
+  if (brain.count < NODES) {
+    const boost = Math.min(1.32, Math.sqrt(NODES / brain.count))
+    for (let i = 0; i < brain.count; i++) brain.sizes[i] *= boost
   }
 
   return { brain, dustCol }

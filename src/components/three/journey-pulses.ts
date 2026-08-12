@@ -4,13 +4,14 @@
 // of pulse slots is recycled; deterministic LCG randomness.
 
 import { BufferAttribute, BufferGeometry } from 'three'
-import { NODES, VIOLET } from './net-geometry'
+import { VIOLET } from './net-geometry'
 
-const MAX = 240
+const MAX = 120
 
 export class PulseLayer {
   geometry = new BufferGeometry()
-  flash = new Float32Array(NODES)
+  flash: Float32Array
+  private count: number
   private edges: [number, number][]
   private adj: number[][]
   private edgeIdx = new Int32Array(MAX)
@@ -20,9 +21,11 @@ export class PulseLayer {
   private live = new Uint8Array(MAX)
   private seed = 7777
 
-  constructor(edges: [number, number][]) {
+  constructor(edges: [number, number][], count: number) {
     this.edges = edges
-    this.adj = Array.from({ length: NODES }, () => [])
+    this.count = count
+    this.flash = new Float32Array(count)
+    this.adj = Array.from({ length: count }, () => [])
     edges.forEach(([a, b], i) => {
       this.adj[a].push(i)
       this.adj[b].push(i)
@@ -31,7 +34,7 @@ export class PulseLayer {
     const sizes = new Float32Array(MAX)
     const col = new Float32Array(MAX * 3)
     for (let i = 0; i < MAX; i++) {
-      sizes[i] = 0.13 + this.rand() * 0.07
+      sizes[i] = 0.1 + this.rand() * 0.05
       col[i * 3] = VIOLET.r
       col[i * 3 + 1] = VIOLET.g
       col[i * 3 + 2] = VIOLET.b
@@ -68,13 +71,13 @@ export class PulseLayer {
   update(dt: number, intensity: number, pos: Float32Array): void {
     const p = this.geometry.attributes.position.array as Float32Array
     const dec = Math.max(0, 1 - dt * 2.2)
-    for (let i = 0; i < NODES; i++) this.flash[i] *= dec
+    for (let i = 0; i < this.count; i++) this.flash[i] *= dec
     const want = Math.round(MAX * intensity)
     let alive = 0
     for (let i = 0; i < MAX; i++) alive += this.live[i]
     for (let i = 0; i < MAX && alive < want; i++) {
       if (this.live[i]) continue
-      const es = this.adj[Math.floor(this.rand() * NODES)]
+      const es = this.adj[Math.floor(this.rand() * this.count)]
       if (es.length === 0) continue
       this.live[i] = 1
       this.edgeIdx[i] = es[Math.floor(this.rand() * es.length)]
