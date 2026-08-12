@@ -1,10 +1,12 @@
 'use client'
 
-// Scroll choreography for the brain, in the reference site's style: ONE
-// fixed canvas behind the page, anchored to the contact slot. Transparent
-// until the slot nears, then dust streams in from the right margin and
-// assembles into the brain (frontal pole first) while it docks. Formed, it
-// fires waves and reacts to touch and drag; scrolled past, it disperses.
+// The full-page dust journey, the reference site's effect: ONE fixed
+// canvas whose particle swarm is alive from the hero on. Scrolling walks
+// it through section keyframes - ambient dust beside the hero, the brain
+// forming next to About, melting to dust, the prism cube at Experience,
+// dust again through GitHub and Writing, then the brain re-forming and
+// docking into the contact slot, where touch fires neural waves and drag
+// spins it. Past the dock it melts out. See journey-timeline.ts.
 
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -19,19 +21,13 @@ import {
   type Points,
 } from 'three'
 import { makeParticleMaterial } from './particle-material'
-import {
-  AUTO_WAVE_S,
-  buildVolume,
-  INK,
-  NODES,
-  TOUCH_WAVE_SPEED,
-  VIOLET,
-  WAVE_BAND,
-} from './net-geometry'
+import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
+import { buildField } from './journey-field'
+import { resolvePose } from './journey-timeline'
 
 const CAM_Z = 10
 const FOV = 40
-const BRAIN_R = 1.5 // local half-extent used to fit the dock slot
+const R = 1.5 // local half-extent used to fit poses
 
 function Scene() {
   const reduced =
@@ -40,16 +36,14 @@ function Scene() {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const size = useThree((s) => s.size)
-  const { base, phase, edges, origins, sizes, baseColors, scatter, stagger } = useMemo(
-    buildVolume,
-    []
-  )
+  const { brain, cubePos, cubeCol, dustCol } = useMemo(buildField, [])
+  const { base, phase, edges, origins, sizes, baseColors, scatter, stagger } = brain
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
   )
   const positions = useMemo(() => scatter.slice(), [scatter])
-  const nodeColors = useMemo(() => baseColors.slice(), [baseColors])
+  const nodeColors = useMemo(() => dustCol.slice(), [dustCol])
   const lineGeo = useMemo(() => {
     const g = new BufferGeometry()
     g.setAttribute('position', new BufferAttribute(new Float32Array(edges.length * 6), 3))
@@ -60,7 +54,7 @@ function Scene() {
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
   )
-  const st = useRef({ assemble: 0.1, alpha: 0, lastScroll: 0, spin: 0 })
+  const st = useRef({ a: 0, fB: 0, fC: 0, waves: 0, rot: 1.35, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
   const cursor = useRef({ x: 9e9, y: 9e9, ny: 0 })
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
@@ -77,15 +71,15 @@ function Scene() {
         (0.5 - sy / window.innerHeight) * worldH,
       ]
     }
-    const overBrain = (sx: number, sy: number): boolean => {
+    const overFigure = (sx: number, sy: number): boolean => {
       const g = group.current
       if (!g) return false
       const [wx, wy] = toWorld(sx, sy)
-      const r = g.scale.x * BRAIN_R * 1.8
+      const r = g.scale.x * R * 1.8
       return Math.abs(wx - g.position.x) < r && Math.abs(wy - g.position.y) < r
     }
     const down = (e: PointerEvent) => {
-      if (e.pointerType === 'touch' || !overBrain(e.clientX, e.clientY)) return
+      if (e.pointerType === 'touch' || !overFigure(e.clientX, e.clientY)) return
       drag.current.on = true
       drag.current.px = e.clientX
       drag.current.py = e.clientY
@@ -124,61 +118,48 @@ function Scene() {
     const t = state.clock.elapsedTime
     const vw = size.width
     const vh = size.height
-    const aspect = vw / vh
+    const pose = resolvePose(window.scrollY, vw, vh)
+    if (!pose) return
 
-    // Section-anchored: everything derives from the live contact-slot rect.
-    const rect = document.querySelector('.cube-stage')?.getBoundingClientRect()
-    if (!rect || rect.height === 0) return
-    const approach = MathUtils.clamp((vh * 1.4 - rect.top) / (vh * 0.9), 0, 1)
-    const e = approach * approach * (3 - 2 * approach)
-    const xf = MathUtils.lerp(0.95, (rect.left + rect.width / 2) / vw, e)
-    const yf = MathUtils.lerp(0.88, (rect.top + rect.height / 2) / vh, e)
-    const sf = MathUtils.lerp(0.14, (rect.height / vh) * 1.05, e)
-    let assemble = MathUtils.lerp(0.2, 1, e)
-    let alpha = Math.min(1, e * 1.6)
-    const past = MathUtils.clamp(((vh - rect.height) / 2 - rect.top) / (vh * 0.5), 0, 1)
-    if (past > 0) {
-      assemble = MathUtils.lerp(assemble, 0.04, past)
-      alpha = MathUtils.lerp(alpha, 0, past)
-    }
-    if (alpha < 0.01 && st.current.alpha < 0.01) {
-      material.uniforms.uOpacity.value = 0
+    const k = 1 - Math.exp(-6 * delta)
+    const s = st.current
+    s.a = MathUtils.lerp(s.a, pose.a, k)
+    s.fB = MathUtils.lerp(s.fB, pose.fB, k)
+    s.fC = MathUtils.lerp(s.fC, pose.fC, k)
+    s.waves = MathUtils.lerp(s.waves, pose.waves, k)
+    material.uniforms.uOpacity.value = s.a * 0.95
+    if (s.a < 0.01 && pose.a < 0.01) {
       lineMat.opacity = 0
       return
     }
+    g.position.x = MathUtils.lerp(g.position.x, (pose.x - 0.5) * worldH * (vw / vh), k)
+    g.position.y = MathUtils.lerp(g.position.y, (0.5 - pose.y) * worldH, k)
+    g.scale.setScalar(MathUtils.lerp(g.scale.x, (pose.s * worldH) / (2 * R), k))
+    material.uniforms.uPx.value = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
+    lineMat.opacity = s.a * s.fB * 0.1
 
-    // Damped travel toward the dock; scale fits the slot.
-    const k = 1 - Math.exp(-6 * delta)
-    g.position.x = MathUtils.lerp(g.position.x, (xf - 0.5) * worldH * aspect, k)
-    g.position.y = MathUtils.lerp(g.position.y, (0.5 - yf) * worldH, k)
-    g.scale.setScalar(MathUtils.lerp(g.scale.x, (sf * worldH) / (2 * BRAIN_R), k))
-    // Particle pixel size follows the figure's scale so the docked brain
-    // keeps the fullscreen render's density; flying dust stays visible.
-    material.uniforms.uPx.value = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.6, g.scale.x)
-    st.current.assemble = MathUtils.lerp(st.current.assemble, assemble, k)
-    st.current.alpha = MathUtils.lerp(st.current.alpha, alpha, k)
-    material.uniforms.uOpacity.value = st.current.alpha * 0.95
-    const es = st.current.assemble
-    // Waves and synapses ignite only once the figure has mostly formed.
-    const fw = MathUtils.clamp((es - 0.72) / 0.28, 0, 1)
-    lineMat.opacity = st.current.alpha * fw * 0.07
-
-    // Spin: the brain sways around its legible profile view instead of
-    // drifting freely; drag and scroll kicks add offset that relaxes back.
-    const scrollVel = window.scrollY - st.current.lastScroll
-    st.current.lastScroll = window.scrollY
-    st.current.spin += drag.current.vy + scrollVel * 0.0004
-    st.current.spin *= 0.985
-    g.rotation.y = 1.35 + (reduced ? 0 : Math.sin(t * 0.12) * 0.22) + st.current.spin
-    const tiltX = 0.08 + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * fw
+    // Rotation: a slow tumble while it is dust or cube, settling into the
+    // brain's legible profile as it forms; drag and scroll kicks decay.
+    const scrollVel = window.scrollY - s.lastScroll
+    s.lastScroll = window.scrollY
+    s.spin += drag.current.vy + scrollVel * 0.0004
+    s.spin *= 0.985
+    // Tumble while dust; settle by the shortest path into each shape's
+    // legible rest pose (brain profile / cube three-quarter) as it forms.
+    s.rot += reduced ? 0 : delta * 0.2 * (1 - Math.max(s.fB, s.fC))
+    const rest = s.fC > s.fB ? -0.6 : 1.35
+    const wrapped = rest + Math.round((s.rot - rest) / (Math.PI * 2)) * Math.PI * 2
+    s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * Math.max(s.fB, s.fC))
+    g.rotation.y = s.rot + (reduced ? 0 : Math.sin(t * 0.12) * 0.22 * s.fB) + s.spin
+    const tiltX = 0.08 + 0.34 * s.fC + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * s.fB
     g.rotation.x = MathUtils.lerp(g.rotation.x + drag.current.vx, tiltX, 0.02)
     drag.current.vx *= 0.93
     drag.current.vy *= 0.93
 
-    // Cursor into local space; grazing the formed body re-fires the ripple.
+    // Cursor in local space; grazing the formed brain re-fires the ripple.
     local.set(cursor.current.x, cursor.current.y, 0)
     g.worldToLocal(local)
-    if (fw > 0.5 && local.length() < 2.3) {
+    if (s.fB > 0.7 && local.length() < 2.3) {
       const dx = local.x - touch.current.ox
       const dy = local.y - touch.current.oy
       if (dx * dx + dy * dy > 0.5 || t - touch.current.start > 1.6) {
@@ -197,43 +178,60 @@ function Scene() {
     const col = geo.attributes.color.array as Float32Array
     const aw = autoWave.current
     const tc = touch.current
+    const doWaves = s.waves > 0.02
     for (let i = 0; i < NODES; i++) {
       const j = i * 3
-      // Assembly: each neuron streams from its dust position on its own cue.
-      const a = MathUtils.clamp((es - stagger[i] * 0.45) / 0.55, 0, 1)
-      const b = 0.035 * a
-      let tx = MathUtils.lerp(scatter[j], base[j], a) + Math.sin(t * 0.6 + phase[i]) * b
+      // Per-particle formation staggers so shapes stream, not snap.
+      const fb = MathUtils.clamp((s.fB - stagger[i] * 0.35) / 0.65, 0, 1)
+      const fc = MathUtils.clamp((s.fC - stagger[i] * 0.35) / 0.65, 0, 1)
+      const fd = Math.max(0, 1 - fb - fc)
+      const wob = 0.03 + 0.3 * fd
+      let tx =
+        scatter[j] * 0.75 * fd + base[j] * fb + cubePos[j] * fc + Math.sin(t * 0.5 + phase[i]) * wob
       let ty =
-        MathUtils.lerp(scatter[j + 1], base[j + 1], a) + Math.cos(t * 0.5 + phase[i] * 1.3) * b
+        scatter[j + 1] * 0.75 * fd +
+        base[j + 1] * fb +
+        cubePos[j + 1] * fc +
+        Math.cos(t * 0.4 + phase[i] * 1.3) * wob
       let tz =
-        MathUtils.lerp(scatter[j + 2], base[j + 2], a) + Math.sin(t * 0.7 + phase[i] * 0.7) * b
+        scatter[j + 2] * 0.75 * fd +
+        base[j + 2] * fb +
+        cubePos[j + 2] * fc +
+        Math.sin(t * 0.6 + phase[i] * 0.7) * wob
       const rx = tx - local.x
       const ry = ty - local.y
       const rz = tz - local.z
       const rd2 = rx * rx + ry * ry + rz * rz
-      if (fw > 0 && rd2 < 0.6) {
+      if (rd2 < 0.6) {
         const rd = Math.sqrt(rd2) || 0.001
-        const f = ((0.77 - rd) / 0.77) * 0.5 * fw
+        const f = ((0.77 - rd) / 0.77) * (0.2 + 0.3 * (fb + fc))
         tx += (rx / rd) * f
         ty += (ry / rd) * f
         tz += (rz / rd) * f
       }
-      pos[j] += (tx - pos[j]) * 0.12
-      pos[j + 1] += (ty - pos[j + 1]) * 0.12
-      pos[j + 2] += (tz - pos[j + 2]) * 0.12
-      const da = Math.sqrt(
-        (base[j] - aw.ox) ** 2 + (base[j + 1] - aw.oy) ** 2 + (base[j + 2] - aw.oz) ** 2
-      )
-      let heat = MathUtils.clamp(1 - Math.abs(da - autoFront) / WAVE_BAND, 0, 1) * 0.8
-      if (touchFront < 5) {
-        const dt = Math.sqrt(
-          (base[j] - tc.ox) ** 2 + (base[j + 1] - tc.oy) ** 2 + (base[j + 2] - tc.oz) ** 2
+      pos[j] += (tx - pos[j]) * 0.1
+      pos[j + 1] += (ty - pos[j + 1]) * 0.1
+      pos[j + 2] += (tz - pos[j + 2]) * 0.1
+      let heat = 0
+      if (doWaves && fb > 0.3) {
+        const da = Math.sqrt(
+          (base[j] - aw.ox) ** 2 + (base[j + 1] - aw.oy) ** 2 + (base[j + 2] - aw.oz) ** 2
         )
-        heat = Math.max(heat, MathUtils.clamp(1 - Math.abs(dt - touchFront) / WAVE_BAND, 0, 1))
+        heat = MathUtils.clamp(1 - Math.abs(da - autoFront) / WAVE_BAND, 0, 1) * 0.8
+        if (touchFront < 5) {
+          const dt = Math.sqrt(
+            (base[j] - tc.ox) ** 2 + (base[j + 1] - tc.oy) ** 2 + (base[j + 2] - tc.oz) ** 2
+          )
+          heat = Math.max(heat, MathUtils.clamp(1 - Math.abs(dt - touchFront) / WAVE_BAND, 0, 1))
+        }
+        heat *= s.waves * fb
       }
-      heat *= fw
       scratch
-        .setRGB(baseColors[j], baseColors[j + 1], baseColors[j + 2])
+        .setRGB(
+          dustCol[j] * fd + baseColors[j] * fb + cubeCol[j] * fc,
+          dustCol[j + 1] * fd + baseColors[j + 1] * fb + cubeCol[j + 1] * fc,
+          dustCol[j + 2] * fd + baseColors[j + 2] * fb + cubeCol[j + 2] * fc
+        )
         .lerp(INK, Math.min(1, heat * 1.4))
         .lerp(VIOLET, heat * 0.85)
       col[j] = scratch.r
@@ -243,25 +241,27 @@ function Scene() {
     geo.attributes.position.needsUpdate = true
     geo.attributes.color.needsUpdate = true
 
-    // Synapses follow their displaced endpoints and inherit their heat.
-    const lpos = lineGeo.attributes.position.array as Float32Array
-    const lcol = lineGeo.attributes.color.array as Float32Array
-    edges.forEach(([a2, b2], i2) => {
-      const ea = i2 * 6
-      for (const [off, n] of [
-        [0, a2],
-        [3, b2],
-      ] as const) {
-        lpos[ea + off] = pos[n * 3]
-        lpos[ea + off + 1] = pos[n * 3 + 1]
-        lpos[ea + off + 2] = pos[n * 3 + 2]
-        lcol[ea + off] = col[n * 3]
-        lcol[ea + off + 1] = col[n * 3 + 1]
-        lcol[ea + off + 2] = col[n * 3 + 2]
-      }
-    })
-    lineGeo.attributes.position.needsUpdate = true
-    lineGeo.attributes.color.needsUpdate = true
+    // Synapses render only while the brain is formed enough to read.
+    if (lineMat.opacity > 0.02) {
+      const lpos = lineGeo.attributes.position.array as Float32Array
+      const lcol = lineGeo.attributes.color.array as Float32Array
+      edges.forEach(([a2, b2], i2) => {
+        const ea = i2 * 6
+        for (const [off, n] of [
+          [0, a2],
+          [3, b2],
+        ] as const) {
+          lpos[ea + off] = pos[n * 3]
+          lpos[ea + off + 1] = pos[n * 3 + 1]
+          lpos[ea + off + 2] = pos[n * 3 + 2]
+          lcol[ea + off] = col[n * 3]
+          lcol[ea + off + 1] = col[n * 3 + 1]
+          lcol[ea + off + 2] = col[n * 3 + 2]
+        }
+      })
+      lineGeo.attributes.position.needsUpdate = true
+      lineGeo.attributes.color.needsUpdate = true
+    }
   })
 
   return (
