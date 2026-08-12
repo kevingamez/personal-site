@@ -1,3 +1,4 @@
+import Script from 'next/script'
 import type { Metadata } from 'next'
 import '@/styles/error-500.css'
 
@@ -46,8 +47,7 @@ export default function ErrorPage() {
         </div>
       </div>
 
-      {/* head-init.js already runs from SiteChrome in the (en) root layout. */}
-      <script src="/error-page.js" defer></script>
+      <Script src="/error-page.js" strategy="afterInteractive" />
     </div>
   )
 }
