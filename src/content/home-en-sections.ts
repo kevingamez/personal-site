@@ -3,13 +3,31 @@ import type { HomeStrings } from './home'
 
 export const enSections: Pick<
   HomeStrings,
-  'github' | 'strava' | 'writing' | 'wanderings' | 'console' | 'contact' | 'footer'
+  'yearRun' | 'github' | 'strava' | 'writing' | 'wanderings' | 'console' | 'contact' | 'footer'
 > = {
+  yearRun: {
+    secNum: 'GitHub',
+    titleHtml: 'The year, and what was running.',
+    blurb:
+      'The line is what I pushed, week by week. The bars underneath are the products that were alive at the time, so the peaks have a reason.',
+    statContributions: 'Contributions',
+    statStreak: 'Day streak',
+    statProjects: 'Products shipped',
+    chartAlt:
+      'Weekly GitHub contributions across the last year, with the products that were in active development underneath.',
+    tipContributions: 'contributions',
+    tipWeekOf: 'week of',
+    tipNothing: 'nothing running',
+    noteStreak: 'days without a gap',
+    noteWeek: 'in one week',
+    noteAtOnce: 'products running at once',
+    noteBegins: 'begins',
+  },
   github: {
     secNum: 'GitHub',
     titleHtml: 'Public repos and commits.',
     blurb: 'Repos, languages, and the last 12 months of commits, pulled from GitHub.',
-    snapshot: 'github.com/kevingamez · updated daily',
+    snapshot: 'github.com/kevingamez',
     publicRepos: 'repos',
     publicReposSub: 'public, private, and org repos I’ve contributed to',
     languagesShipped: 'languages used',
@@ -20,13 +38,13 @@ export const enSections: Pick<
     yearsOnGithubSub: 'joined April 2019',
     languageMix: 'language mix',
     acrossPublicRepos: 'across all repos I work on',
-    contributionsTitle: 'Contributions · @kevingamez',
+    contributionsTitle: 'Contributions, @kevingamez',
     last12Months: 'last 12 months',
     less: 'Less',
     more: 'More',
     months: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
     dows: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-    statCommits: 'Commits · 12mo',
+    statCommits: 'Commits, 12mo',
     statCurrent: 'Current streak',
     statLongest: 'Longest streak',
     repoSiteDesc: 'This page, source included.',
@@ -106,16 +124,16 @@ export const enSections: Pick<
     titleHtml: 'Try the shell. Or ask the AI a question.',
     blurb:
       'Type a command: <span class="ac">help</span>, <span class="ac">whoami</span>, <span class="ac">experience</span>… Want to ask something else? <span class="ac">kevin "your question"</span> sends it to the AI.',
-    promptLabel: 'kevin@gamez · ~',
+    promptLabel: 'kevin@gamez, ~',
     streaming: 'ready',
     greeting:
-      'welcome · a small shell for this site. type <span class="ac">help</span> for commands, or ask the AI directly: <span class="ac">kevin "what does enttor do?"</span>',
+      'welcome, a small shell for this site. type <span class="ac">help</span> for commands, or ask the AI directly: <span class="ac">kevin "what does enttor do?"</span>',
     placeholder: 'type a command, press enter…',
     suggest1: 'help',
     suggest2: 'whoami',
     suggest3: 'experience',
     suggest4: 'kevin what does enttor do?',
-    rateLimitMsg: 'rate limited · try again in a minute.',
+    rateLimitMsg: 'rate limited, try again in a minute.',
     errorMsg: 'something broke. try again or refresh.',
   },
   contact: {
@@ -133,7 +151,8 @@ export const enSections: Pick<
     sectionsGithub: 'GitHub',
     h4Elsewhere: 'Elsewhere',
     elsewhereDev: 'Dev mode →',
+    elsewherePrivacy: 'Privacy',
     fonts: 'Set in Inter &amp; JetBrains Mono',
-    estab: 'Est. 2026 · Bogotá',
+    estab: 'Est. 2026, Bogotá',
   },
 }

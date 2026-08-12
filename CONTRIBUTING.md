@@ -6,7 +6,7 @@ This is a personal portfolio. Feel free to fork it for your own use; if you spot
 
 ```bash
 npm install
-npm run dev    # localhost:4321
+npm run dev    # localhost:3000
 ```
 
 ## Before pushing
@@ -14,6 +14,8 @@ npm run dev    # localhost:4321
 ```bash
 npm run format
 npm run lint
+npm run lint:css
+npm run check:size
 npm run check
 npm run format:check
 npm test
@@ -26,9 +28,9 @@ CI also runs Lighthouse and Playwright on every PR.
 The full list is in `CLAUDE.md`. Highlights:
 
 - **300-line hard cap** on every file. Split into components, modules, or stylesheets when you cross it.
-- **No `<script is:inline>`** for anything beyond JSON-LD, GA, or small JSON data carriers. Put logic in `src/scripts/<area>/*.ts`.
+- **No inline `<script>`** for anything beyond JSON-LD or small JSON data carriers. Put logic in `src/scripts/<area>/*.ts`.
 - Every animation must respect `prefers-reduced-motion`.
-- Security headers live in **both** `vercel.json` (canonical, served at the edge) and `src/middleware.ts` (fallback). Update both when adding a new third-party host.
+- Security headers live in **both** `vercel.json` (served at the edge) and `next.config.ts` (`headers()`, used when Next serves directly). Update both when adding a new third-party host.
 - Run `npm run format` before opening a PR - Prettier config is enforced in CI.
 
 ## License

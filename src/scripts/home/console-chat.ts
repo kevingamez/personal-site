@@ -46,8 +46,7 @@ async function describeError(res: Response): Promise<string> {
   } catch {
     /* non-JSON error body */
   }
-  if (res.status === 429)
-    return message || 'rate limited · daily message cap reached. try tomorrow.'
+  if (res.status === 429) return message || 'rate limited, daily message cap reached. try tomorrow.'
   if (res.status === 413) return 'this conversation got too long. reload the page to start fresh.'
   if (res.status === 403) return 'this console only answers requests from kevingamez.co.'
   if (res.status === 500 && code === 'no_key')

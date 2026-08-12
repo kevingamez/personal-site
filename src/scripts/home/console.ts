@@ -133,7 +133,7 @@ function dispatch(refs: Refs, history: ChatMessage[], raw: string): void | Promi
   if (fn) return fn(args, refs, history, trimmed)
   printOut(
     refs.stream,
-    `zsh: command not found: ${escape(head)} · try <span class="ac">help</span>`,
+    `zsh: command not found: ${escape(head)}, try <span class="ac">help</span>`,
     'err'
   )
 }

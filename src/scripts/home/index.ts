@@ -65,9 +65,14 @@ whenVisible(
   '#github',
   () => {
     loadLazy(async () => {
-      const [contrib, ghStats] = await Promise.all([import('./contrib'), import('./gh-stats')])
+      const [contrib, ghStats, yearRun] = await Promise.all([
+        import('./contrib'),
+        import('./gh-stats'),
+        import('./year-run'),
+      ])
       contrib.initContribGraph()
       ghStats.initGhStats()
+      yearRun.initYearRun()
     })
   },
   '700px 0px'

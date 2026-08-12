@@ -1,12 +1,12 @@
-// Vite build/tail "loops" rendered into the secondary terminal tabs.
-// They simulate `vite dev` and JSON access logs respectively. Both pause when
+// Build/tail "loops" rendered into the secondary terminal tabs.
+// They simulate a dev server and JSON access logs respectively. Both pause when
 // the user prefers reduced motion (the captured lines stay visible).
 
 const VITE_FILES = [
-  'src/pages/index.astro',
-  'src/pages/dev.astro',
-  'src/pages/es/index.astro',
-  'src/middleware.ts',
+  'app/(en)/page.tsx',
+  'app/(dev)/dev/page.tsx',
+  'app/(es)/es/page.tsx',
+  'src/components/home/HomePage.tsx',
 ]
 
 function nowTs(): string {
@@ -62,7 +62,7 @@ const VITE_CYCLES: Array<(file: string) => Array<{ delay: number; html: string }
   () => [
     {
       delay: 0,
-      html: '<span class="lvl-warn">[warn]</span> slow type-check on <span class="arrow">src/pages/dev.astro</span> · <span class="ts">820ms</span>',
+      html: '<span class="lvl-warn">[warn]</span> slow type-check on <span class="arrow">app/(dev)/dev/page.tsx</span>, <span class="ts">820ms</span>',
     },
     {
       delay: 320,

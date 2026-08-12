@@ -1,4 +1,4 @@
-// Structured data for the home pages, ported verbatim from Layout.astro.
+// Structured data for the home pages.
 // The graph is static, trusted content - never sourced from user input.
 
 import type { HomeStrings } from '@/content/home'
@@ -18,22 +18,34 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
         image: 'https://kevingamez.co/og-dev-preview.png',
         jobTitle: 'Founding Engineer',
         description:
-          'Founding engineer at Enttor (AI-powered outbound: browser automation, OpenAI pipelines). M.Sc. Information Engineering (deep-learning specialization), Universidad de los Andes.',
-        email: 'mailto:kevingamez.kg@gmail.com',
-        worksFor: {
-          '@type': 'Organization',
-          '@id': 'https://www.enttor.ai/#org',
-          name: 'Enttor',
-          url: 'https://www.enttor.ai/',
-          description: 'AI-powered outbound platform · browser automation, LLM pipelines.',
+          'Founding engineer in Bogotá, Colombia, open to new roles. Previously founding engineer at Enttor and at Samsam. M.Sc. Information Engineering (deep-learning specialization), Universidad de los Andes.',
+        email: 'kevingamez.kg@gmail.com',
+        seeks: {
+          '@type': 'Demand',
+          name: 'Founding engineer and senior full-stack roles',
         },
+        // No `worksFor`: that property asserts a current employer. Past roles
+        // are expressed as OrganizationRole with explicit end dates.
         hasOccupation: [
           {
-            '@type': 'Occupation',
-            name: 'Founding Engineer',
-            occupationLocation: { '@type': 'City', name: 'Bogotá' },
-            skills:
-              'TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI, browser automation, LLM pipelines',
+            '@type': 'OrganizationRole',
+            roleName: 'Founding Engineer',
+            startDate: '2025-06',
+            endDate: '2026-07',
+            memberOf: {
+              '@type': 'Organization',
+              '@id': 'https://www.enttor.ai/#org',
+              name: 'Enttor',
+              url: 'https://www.enttor.ai/',
+              sameAs: ['https://www.linkedin.com/company/enttor/'],
+            },
+          },
+          {
+            '@type': 'OrganizationRole',
+            roleName: 'Product Engineer',
+            startDate: '2024-02',
+            endDate: '2025-03',
+            memberOf: { '@type': 'Organization', name: 'Samsam' },
           },
         ],
         knowsAbout: [
@@ -60,7 +72,7 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Bogotá',
-          addressRegion: 'Cundinamarca',
+          addressRegion: 'Bogotá D.C.',
           addressCountry: 'CO',
         },
         homeLocation: {
@@ -73,8 +85,28 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
             '@type': 'CollegeOrUniversity',
             name: 'Universidad de los Andes',
             url: 'https://uniandes.edu.co/',
-            department:
-              'M.Sc. Information Engineering (deep-learning specialization), 2024–2025; B.Sc. Systems and Computing, 2019–2023; Minor in Management',
+          },
+        ],
+        hasCredential: [
+          {
+            '@type': 'EducationalOccupationalCredential',
+            credentialCategory: 'degree',
+            name: 'M.Sc. Information Engineering (deep-learning specialization)',
+            educationalLevel: 'Master degree',
+            recognizedBy: { '@type': 'CollegeOrUniversity', name: 'Universidad de los Andes' },
+          },
+          {
+            '@type': 'EducationalOccupationalCredential',
+            credentialCategory: 'degree',
+            name: 'B.Sc. Systems and Computing Engineering',
+            educationalLevel: 'Bachelor degree',
+            recognizedBy: { '@type': 'CollegeOrUniversity', name: 'Universidad de los Andes' },
+          },
+          {
+            '@type': 'EducationalOccupationalCredential',
+            credentialCategory: 'certificate',
+            name: 'AWS Academy Cloud Developing',
+            recognizedBy: { '@type': 'Organization', name: 'Amazon Web Services' },
           },
         ],
         award: [
@@ -82,7 +114,12 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
           'AWS Academy Cloud Foundations',
           'AWS Academy Cloud Developing',
         ],
-        sameAs: ['https://co.linkedin.com/in/kevin-gamez/', 'https://github.com/kevingamez'],
+        sameAs: [
+          'https://www.linkedin.com/in/kevin-gamez/',
+          'https://github.com/kevingamez',
+          'https://x.com/KevinGamezA',
+          'https://www.strava.com/athletes/70612862',
+        ],
       },
       {
         '@type': 'WebSite',
@@ -91,11 +128,6 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
         name: 'Kevin Gámez',
         inLanguage: ['en', 'es'],
         publisher: { '@id': 'https://kevingamez.co/#kevin' },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: 'https://kevingamez.co/?q={search_term_string}',
-          'query-input': 'required name=search_term_string',
-        },
       },
       {
         '@type': 'ProfilePage',

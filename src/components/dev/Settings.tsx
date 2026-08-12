@@ -7,7 +7,7 @@ export function Settings() {
     <aside id="settings" className="settings-panel" hidden>
       <header className="st-head">
         <div className="st-title">Settings</div>
-        <div className="st-sub">Live · saved to this browser</div>
+        <div className="st-sub">Live, saved to this browser</div>
       </header>
 
       <section className="st-block">
@@ -18,7 +18,7 @@ export function Settings() {
             data-theme="cream"
             role="radio"
             aria-checked="true"
-            title="Cream (editorial · default)"
+            title="Cream (editorial, default)"
           >
             <div
               className="st-swatch"

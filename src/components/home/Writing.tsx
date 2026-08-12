@@ -5,12 +5,8 @@ interface Props {
   t: HomeStrings['writing']
 }
 
-// Highest-engagement first; tie-break with comments + reposts.
-const orderedPosts = [...posts].sort((a, b) => {
-  const score = (p: (typeof posts)[number]): number =>
-    p.reactions + (p.comments ?? 0) + (p.reposts ?? 0)
-  return score(b) - score(a)
-})
+// posts.ts is maintained newest-first; render in that order.
+const orderedPosts = posts
 
 // Char-based preview - predictable across cards regardless of paragraph
 // breaks, and lets us know whether the post was actually truncated.
@@ -70,11 +66,11 @@ export function Writing({ t }: Props) {
                       <span className="pc-badge" aria-label="LinkedIn">
                         in
                       </span>{' '}
-                      <span className="pc-degree">· 1st</span>
+                      <span className="pc-degree">, 1st</span>
                     </div>
                     <div className="pc-headline">Founding Engineer @ Enttor</div>
                     <div className="pc-meta">
-                      {p.date} <span className="pc-dot">·</span>{' '}
+                      {p.date} <span className="pc-dot"></span>{' '}
                       <span className="pc-globe" aria-hidden="true">
                         🌎
                       </span>
@@ -173,7 +169,7 @@ export function Writing({ t }: Props) {
                     {p.reposts ? (
                       <>
                         <span className="pc-meta-sep" aria-hidden="true">
-                          ·
+                          ,
                         </span>
                         <span className="pc-meta-item">
                           {p.reposts} <span className="pc-meta-label">{t.repostsLabel}</span>

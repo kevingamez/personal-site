@@ -177,8 +177,8 @@ function emptyCalendar(): ContribCalendar {
   return { totalContributions: 0, days: [], longestStreak: 0, currentStreak: 0 }
 }
 
-// Public entry point - used by frontmatter in src/pages/index.astro and
-// src/pages/es/index.astro. Returns cached stats if recent, refetches and
+// Public entry point - used by the home routes app/(en)/page.tsx and
+// app/(es)/es/page.tsx. Returns cached stats if recent, refetches and
 // rewrites cache when stale, falls back to stale cache if the refetch fails.
 // A result that has public repos but no language mix is degraded (a transient
 // GraphQL/REST language-fetch failure). Don't let it overwrite a good prior

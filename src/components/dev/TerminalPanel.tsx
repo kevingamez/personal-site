@@ -24,7 +24,7 @@ export function TerminalPanel() {
         <div className="ln">
           <span className="gut">2</span>
           <span className="txt">
-            kevin gámez · founding engineer @ enttor · <span className="ac">bogotá / utc-5</span>
+            kevin gámez, founding engineer, <span className="ac">bogotá / utc-5</span>
           </span>
         </div>
         <div className="ln">
@@ -75,7 +75,7 @@ export function TerminalPanel() {
           placeholder="try ls, cat src/about.ts, vim README.md, help…"
           autoComplete="off"
         />
-        <span className="hint">↵ run · ↑ history · ⌃L clear</span>
+        <span className="hint">↵ run, ↑ history, ⌃L clear</span>
       </div>
       <div className="term-body term-stream" id="term-build" hidden></div>
       <div className="term-body term-stream" id="term-tail" hidden></div>

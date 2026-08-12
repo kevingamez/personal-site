@@ -25,10 +25,10 @@ Personal portfolio site built with **Next.js 16 (App Router, React 19)**, deploy
 
 Three **route groups, each with its own root layout** (that's how the `<html lang>` attribute differs per locale):
 
-- `app/(en)/` · `/` home, `/privacy`, `/500`, `/lab` (unlisted R3F playground), `not-found.tsx` + a `[...notFound]` catch-all
-- `app/(es)/es/` · Spanish home
-- `app/(dev)/dev/` · terminal/IDE-styled "dev mode" (own dark theme + fonts, noindex)
-- `app/api/` · route handlers: `chat` (Claude console SSE), `strava`, `geo`
+- `app/(en)/`, `/` home, `/privacy`, `/500`, `/lab` (unlisted R3F playground), `not-found.tsx` + a `[...notFound]` catch-all
+- `app/(es)/es/`, Spanish home
+- `app/(dev)/dev/`, terminal/IDE-styled "dev mode" (own dark theme + fonts, noindex)
+- `app/api/`, route handlers: `chat` (Claude console SSE), `strava`, `geo`
 
 Content lives in `src/content/home-{en,es}.ts`, typed by `src/content/home.ts` (`HomeStrings`). Fields suffixed `*Html` are trusted static markup rendered via `dangerouslySetInnerHTML` - never source them from user input.
 
@@ -64,7 +64,7 @@ CSP and friends live in **`vercel.json`** (edge) and **`next.config.ts`** `heade
 ### Style
 
 - Prettier: 2-space indent, single quotes (TS/TSX), no semicolons.
-- Don't fight the formatter · run `npm run format` instead of hand-formatting.
+- Don't fight the formatter, run `npm run format` instead of hand-formatting.
 
 ### Animations & accessibility
 
@@ -82,11 +82,11 @@ Every animation must respect `prefers-reduced-motion` (gate rAF loops on the med
 ### Things to avoid
 
 - Don't add a new font, analytics, or image host without updating CSP in **both** `vercel.json` and `next.config.ts`.
-- Don't commit binary screenshots or build artifacts to the repo root · they belong in `/public` if they ship, otherwise `.gitignore` them.
-- Don't introduce backwards-compatibility shims for visual changes · change the design directly.
+- Don't commit binary screenshots or build artifacts to the repo root, they belong in `/public` if they ship, otherwise `.gitignore` them.
+- Don't introduce backwards-compatibility shims for visual changes, change the design directly.
 - **Never add decorative vertical accent bars** (`border-left` rails next to stat numbers, cards, or quotes). Numbers and headings stand on their own; hairlines are horizontal, structural, and full-width or nothing.
-- **Never use em-dashes** in user-facing copy · use a period, comma, or middot instead.
-- Violet is for focus rings and selection only · never a violet heading, never a violet button.
+- **Never use em-dashes** in user-facing copy, use a period, comma, or middot instead.
+- Violet is for focus rings and selection only, never a violet heading, never a violet button.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

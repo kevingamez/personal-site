@@ -1,6 +1,6 @@
 /* Console part 1: section frame, terminal window chrome, and output stream (split from console.css) */
 
-/* ─── Console section · Warp-style dark glass on cream ─── */
+/* ─── Console section - Warp-style dark glass on cream ─── */
 .console-section {
   position: relative;
   padding: clamp(76px, 9svh, 92px) 0 clamp(72px, 8svh, 88px);

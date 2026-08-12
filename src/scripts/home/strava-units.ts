@@ -73,7 +73,7 @@ export async function fetchCountry(): Promise<string | null> {
     const j = (await res.json()) as { country?: string | null }
     return j.country && /^[A-Z]{2}$/.test(j.country) ? j.country : null
   } catch {
-    return null // not routed in `astro dev`, or offline - fall back below
+    return null // route unavailable or offline - fall back below
   }
 }
 

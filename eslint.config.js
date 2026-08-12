@@ -8,7 +8,6 @@ import tseslint from 'typescript-eslint'
 export default tseslint.config(
   {
     ignores: [
-      'dist/',
       '.next/',
       'next-env.d.ts',
       'node_modules/',
@@ -16,6 +15,10 @@ export default tseslint.config(
       'playwright-report/',
       'test-results/',
       '.vercel/',
+      // Snapshot of the reverted hero-brain work, kept for reference only. It
+      // is gitignored and never built, and its modules import siblings that no
+      // longer exist, so linting it only produces noise.
+      'brain-archive/',
     ],
   },
   js.configs.recommended,

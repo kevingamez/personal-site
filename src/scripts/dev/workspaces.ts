@@ -52,7 +52,7 @@ export function initWorkspaces(): void {
     try {
       scratchEl.value =
         localStorage.getItem('dev-scratch') ||
-        '// scratch space\n// ⌃1 / ⌃2 / ⌃3 to switch workspaces · saved locally only\n\n'
+        '// scratch space\n// ⌃1 / ⌃2 / ⌃3 to switch workspaces, saved locally only\n\n'
     } catch {
       // localStorage may be blocked - fall through to placeholder
     }

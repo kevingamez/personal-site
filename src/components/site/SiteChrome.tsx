@@ -4,6 +4,7 @@
 // content below it paints (it gates the intro curtain), and nothing renders
 // above it.
 
+import { CleanAnchors } from './CleanAnchors'
 import { FaviconLife } from './FaviconLife'
 
 export function SiteChrome() {
@@ -16,8 +17,10 @@ export function SiteChrome() {
       {/* Icon links come from buildMetadata (src/lib/seo.ts). FaviconLife
           evolves the K favicon in the tab - it's a Game of Life seed. */}
       <FaviconLife />
+      {/* Section links scroll without leaving #fragments in the URL. */}
+      <CleanAnchors />
 
-      <link rel="me" href="https://co.linkedin.com/in/kevin-gamez/" />
+      <link rel="me" href="https://www.linkedin.com/in/kevin-gamez/" />
       <link rel="me" href="https://github.com/kevingamez" />
       <link rel="me" href="mailto:kevingamez.kg@gmail.com" />
 

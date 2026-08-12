@@ -1,15 +1,20 @@
 // Builds the Next.js Metadata object from the locale's typed meta strings -
-// the same data Layout.astro used to render its <head> tags.
+// the data behind every page's <head> tags.
 
 import type { Metadata } from 'next'
 import type { HomeStrings } from '@/content/home'
 
 const OG_IMAGE = 'https://kevingamez.co/og-dev-preview.png'
-const OG_IMAGE_ALT = 'Kevin Gámez · founding engineer at Enttor'
+const OG_IMAGE_ALT = 'Kevin Gámez, founding engineer at Enttor'
 
 export function buildMetadata(meta: HomeStrings['meta']): Metadata {
   const languages: Record<string, string> = {}
   for (const alt of meta.hreflang) languages[alt.lang] = alt.href
+
+  const isProfile = (meta.ogType ?? 'profile') === 'profile'
+  // A page with no hreflang cluster has no translation, so it must not claim
+  // an alternate locale either.
+  const hasAlternate = meta.hreflang.length > 0
 
   return {
     metadataBase: new URL('https://kevingamez.co'),
@@ -26,16 +31,20 @@ export function buildMetadata(meta: HomeStrings['meta']): Metadata {
       languages,
     },
     openGraph: {
-      type: 'profile',
+      ...(isProfile
+        ? {
+            type: 'profile' as const,
+            firstName: 'Kevin',
+            lastName: 'Gámez',
+            username: 'kevingamez',
+          }
+        : { type: 'website' as const }),
       url: meta.ogUrl,
       title: meta.ogTitle,
       description: meta.ogDescription,
       siteName: 'Kevin Gámez',
       locale: meta.ogLocale,
-      alternateLocale: [meta.ogLocaleAlternate],
-      firstName: 'Kevin',
-      lastName: 'Gámez',
-      username: 'kevingamez',
+      ...(hasAlternate ? { alternateLocale: [meta.ogLocaleAlternate] } : {}),
       images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: 'image/png' }],
     },
     twitter: {
@@ -43,7 +52,7 @@ export function buildMetadata(meta: HomeStrings['meta']): Metadata {
       title: meta.twitterTitle,
       description: meta.twitterDescription,
       creator: '@KevinGamezA',
-      images: [OG_IMAGE],
+      images: [{ url: OG_IMAGE, alt: OG_IMAGE_ALT }],
     },
     icons: {
       icon: [
@@ -54,7 +63,7 @@ export function buildMetadata(meta: HomeStrings['meta']): Metadata {
       apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
     },
     other: {
-      'geo.region': 'CO-CUN',
+      'geo.region': 'CO-DC',
       'geo.placename': 'Bogotá',
       'geo.position': '4.711;-74.0721',
       ICBM: '4.711, -74.0721',

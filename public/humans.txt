@@ -6,7 +6,7 @@
   From: Bogotá, Colombia
 
 /* THANKS */
-  Anthropic - Claude · powers the live console
+  Anthropic - Claude, powers the live console
   PKief / vscode-material-icon-theme - file tree icons in dev mode
   Conway, John Horton - for the game on the hero
 

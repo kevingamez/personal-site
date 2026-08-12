@@ -6,9 +6,9 @@ import '@/styles/privacy.css'
 
 const meta = {
   ...en.meta,
-  title: 'Privacy · Kevin Gámez',
-  ogTitle: 'Privacy · Kevin Gámez',
-  twitterTitle: 'Privacy · Kevin Gámez',
+  title: 'Privacy, Kevin Gámez',
+  ogTitle: 'Privacy, Kevin Gámez',
+  twitterTitle: 'Privacy, Kevin Gámez',
   description:
     'What kevingamez.co collects, why, and how to opt out. First-party analytics, error logs.',
   ogDescription:
@@ -17,6 +17,8 @@ const meta = {
     'What kevingamez.co collects, why, and how to opt out. First-party analytics, error logs.',
   canonical: 'https://kevingamez.co/privacy/',
   ogUrl: 'https://kevingamez.co/privacy/',
+  // A policy page is not a profile card: og:type website, no profile:* trio.
+  ogType: 'website' as const,
   includeJsonLd: false,
   // Standalone, English-only page: don't advertise a Spanish alternate (there
   // isn't one) or point hreflang at the homepage.
@@ -61,7 +63,7 @@ export default function Page() {
           country at country level. No persistent identifier.
         </p>
 
-        <h3>Anthropic (Claude · /api/chat)</h3>
+        <h3>Anthropic (Claude, /api/chat)</h3>
         <p>
           When you use the live console, your message and the conversation history of that session
           are sent to Anthropic's API to generate a reply. Your IP is hashed in memory at the Vercel

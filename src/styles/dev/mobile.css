@@ -6,7 +6,7 @@
     display: none;
   }
 
-  /* "live · build" badge - decorative, collides with the exit link. */
+  /* "live - build" badge - decorative, collides with the exit link. */
   .titlebar .r > span {
     display: none;
   }

@@ -7,7 +7,7 @@ import '@/styles/home/index.css'
 import { LabScene } from '@/components/three/LabScene'
 
 export const metadata: Metadata = {
-  title: 'Lab · Kevin Gámez',
+  title: 'Lab, Kevin Gámez',
   description: 'Unlisted experiments.',
   robots: { index: false, follow: false },
 }

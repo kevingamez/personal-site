@@ -15,7 +15,7 @@ export function Workspaces() {
           className="scratch-area"
           id="scratch"
           spellCheck="false"
-          placeholder="// scratch space · ⌃1/⌃2/⌃3 to switch workspaces · saved locally only"
+          placeholder="// scratch space, ⌃1/⌃2/⌃3 to switch workspaces, saved locally only"
         ></textarea>
       </section>
 

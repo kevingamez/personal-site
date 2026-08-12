@@ -52,6 +52,10 @@
   color: var(--ink-2);
 }
 
+.resume-download {
+  margin-top: 22px;
+}
+
 .resume-article h2 {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
@@ -152,7 +156,7 @@
   }
 
   .resume-back,
-  .resume-pdf {
+  .resume-download {
     display: none;
   }
 

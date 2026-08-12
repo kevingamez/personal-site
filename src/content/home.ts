@@ -1,7 +1,7 @@
 // Strongly typed strings for the home page (EN + ES share this shape).
 //
 // SECURITY INVARIANT - fields suffixed `*Html` (e.g. `titleHtml`, `p1Html`,
-// `lede`, `golCaptionHtml`) are rendered with Astro's `set:html` directive
+// `lede`, `golCaptionHtml`) are rendered with React's `dangerouslySetInnerHTML`
 // because they contain trusted markup like <i>, <b>, <span>, <a>. These
 // strings MUST be authored statically in `home-en.ts` / `home-es.ts` and
 // never sourced from user input, the runtime API, or any other untrusted
@@ -20,6 +20,9 @@ export interface HomeStrings {
     ogDescription: string
     ogLocale: 'en_US' | 'es_CO'
     ogLocaleAlternate: 'en_US' | 'es_CO'
+    // og:type. Only the two home pages are profile cards; utility pages like
+    // /privacy are plain websites and must not emit the profile:* trio.
+    ogType?: 'profile' | 'website'
     twitterTitle: string
     twitterDescription: string
     includeJsonLd: boolean
@@ -27,7 +30,7 @@ export interface HomeStrings {
     langSwitchHref: string // sister locale URL
     langSwitchHreflang: 'en' | 'es'
     langSwitchAriaLabel: string
-    langSwitchLabelHtml: string // contains <b>EN</b> · ES or EN · <b>ES</b>
+    langSwitchLabelHtml: string // contains <b>EN</b>, ES or EN, <b>ES</b>
     skip: string
     // hreflang alternates for this page. Bilingual home pages list en/es/
     // x-default; single-language pages (e.g. privacy) pass an empty array so
@@ -117,17 +120,17 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
-    p1Featured: string
     p1NameHtml: string
     p1ImageAlt: string
     p1Desc: string
-    p1Link: string
-    p2Name: string
-    p2Desc: string
-    p3Name: string
-    p3Desc: string
-    p4Name: string
-    p4Desc: string
+    // Everything else, newest first. `href` is optional: most of the Enttor
+    // work lives in private repos that a visitor cannot open.
+    projects: {
+      name: string
+      desc: string
+      meta: string
+      href?: string
+    }[]
     allRepos: string
   }
   deck: {
@@ -137,6 +140,22 @@ export interface HomeStrings {
     hint: string
     // `bodyHtml` follows the *Html invariant above: static, trusted markup only.
     items: { label: string; statement: string; bodyHtml: string }[]
+  }
+  yearRun: {
+    secNum: string
+    titleHtml: string
+    blurb: string
+    statContributions: string
+    statStreak: string
+    statProjects: string
+    chartAlt: string
+    tipContributions: string
+    tipWeekOf: string
+    tipNothing: string
+    noteStreak: string
+    noteWeek: string
+    noteAtOnce: string
+    noteBegins: string
   }
   github: {
     secNum: string
@@ -266,6 +285,7 @@ export interface HomeStrings {
     sectionsGithub: string
     h4Elsewhere: string
     elsewhereDev: string
+    elsewherePrivacy: string
     fonts: string
     estab: string
   }

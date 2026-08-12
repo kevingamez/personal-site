@@ -32,60 +32,60 @@ export const HELP_LINES = [
   '  <span class="ac">kevin</span> &lt;question&gt;  ask the LLM (powered by Claude)',
   '  <span class="ac">ask</span>   &lt;question&gt;  alias for <span class="ac">kevin</span>',
   '',
-  '<span class="muted">tip · <kbd>Tab</kbd> autocompletes · <kbd>↑</kbd>/<kbd>↓</kbd> for history · <kbd>Ctrl-W/U/K</kbd> to edit · <kbd>Ctrl-C</kbd> to cancel</span>',
+  '<span class="muted">tip, <kbd>Tab</kbd> autocompletes, <kbd>↑</kbd>/<kbd>↓</kbd> for history, <kbd>Ctrl-W/U/K</kbd> to edit, <kbd>Ctrl-C</kbd> to cancel</span>',
 ]
 
 export const ABOUT_LINES = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
-  '<b>now</b> · founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
+  '<b>now</b>, founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
   '       OpenAI pipelines on Next.js + NestJS + Postgres.',
-  '<b>before</b> · founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
-  '<b>school</b> · M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
+  '<b>before</b>, founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
+  '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
   '',
   'Type <span class="ac">experience</span> for the full timeline, or',
   '<span class="ac">kevin "your question"</span> to chat with the AI.',
 ]
 
 export const EXPERIENCE_LINES = [
-  '<span class="muted">Jun 2025 · now</span>      Founding engineer <span class="at">@ Enttor</span>',
-  '                       AI outbound · browser automation · OpenAI pipelines',
+  '<span class="muted">Jun 2025, now</span>      Founding engineer <span class="at">@ Enttor</span>',
+  '                       AI outbound, browser automation, OpenAI pipelines',
   '',
-  '<span class="muted">Feb 2024 · Mar 2025</span> Founding engineer <span class="at">@ Samsam</span>',
-  '                       E-commerce marketplace · React Native · Next.js',
+  '<span class="muted">Feb 2024, Mar 2025</span> Founding engineer <span class="at">@ Samsam</span>',
+  '                       E-commerce marketplace, React Native, Next.js',
   '',
-  '<span class="muted">Jan 2024 · May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
-  '                       Deep-learning specialization · graduate TA',
+  '<span class="muted">Jan 2024, May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
+  '                       Deep-learning specialization, graduate TA',
   '',
-  '<span class="muted">Jan 2019 · Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
-  '                       Andrés Bello National Distinction · AWS certs',
+  '<span class="muted">Jan 2019, Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
+  '                       Andrés Bello National Distinction, AWS certs',
 ]
 
 export const STACK_LINES = [
-  '<b>frontend</b>   next.js · react · react native · astro · tailwind',
-  '<b>backend </b>   nestjs · postgres · prisma · supabase · inngest',
-  '<b>ai / ml </b>   openai · pytorch · opencv · browser automation',
-  '<b>infra   </b>   vercel · aws · cloud run · docker',
+  '<b>frontend</b>   next.js, react, react native, astro, tailwind',
+  '<b>backend </b>   nestjs, postgres, prisma, supabase, inngest',
+  '<b>ai / ml </b>   openai, pytorch, opencv, browser automation',
+  '<b>infra   </b>   vercel, aws, cloud run, docker',
 ]
 
 export const REPOS_LINES = [
-  'kevingamez/<span class="ac">personal-site</span>            <span class="muted">typescript · this page</span>',
-  'kevingamez/<span class="ac">AD_ASTRA2023-SpaceInvaders</span>  <span class="muted">python · aerial deforestation, opencv + yolov5</span>',
+  'kevingamez/<span class="ac">personal-site</span>            <span class="muted">typescript, this page</span>',
+  'kevingamez/<span class="ac">AD_ASTRA2023-SpaceInvaders</span>  <span class="muted">python, aerial deforestation, opencv + yolov5</span>',
   'kevingamez/<span class="ac">Palladium_Chat</span>           <span class="muted">typescript</span>',
   'kevingamez/<span class="ac">budget-app</span>               <span class="muted">swift</span>',
   'kevingamez/<span class="ac">GCP-CloudRun</span>             <span class="muted">dockerfile</span>',
   '',
-  '→ <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a> · 28 public repos',
+  '→ <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>, 28 public repos',
 ]
 
 export const NOW_LINES = [
-  'building   · <b>AI outbound</b> at enttor - browser automation + OpenAI pipelines',
+  'building  , <b>AI outbound</b> at enttor - browser automation + OpenAI pipelines',
 ]
 
 export const CONTACT_LINES = [
   '<b>email   </b>  <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>',
   '<b>github  </b>  <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>',
-  '<b>linkedin</b>  <a href="https://co.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">linkedin.com/in/kevin-gamez</a>',
+  '<b>linkedin</b>  <a href="https://www.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">linkedin.com/in/kevin-gamez</a>',
   '<b>x       </b>  <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener">x.com/KevinGamezA</a>',
 ]
 
@@ -115,18 +115,18 @@ export const MAN_PAGES: Record<string, string[]> = {
   history: ['<b>HISTORY</b>(1)', '  list the commands you’ve typed in this session.'],
   which: [
     '<b>WHICH</b>(1)',
-    '  which &lt;cmd&gt;  · where a command lives. (always /usr/local/bin/X.)',
+    '  which &lt;cmd&gt; , where a command lives. (always /usr/local/bin/X.)',
   ],
-  man: ['<b>MAN</b>(1)', '  man &lt;cmd&gt;  · short docs for a command.'],
+  man: ['<b>MAN</b>(1)', '  man &lt;cmd&gt; , short docs for a command.'],
   clear: ['<b>CLEAR</b>(1)', '  clear the screen. <kbd>Ctrl-L</kbd> does the same.'],
-  echo: ['<b>ECHO</b>(1)', '  echo &lt;text&gt;  · print text back.'],
+  echo: ['<b>ECHO</b>(1)', '  echo &lt;text&gt; , print text back.'],
   ls: ['<b>LS</b>(1)', '  list available "files" in this fake fs.'],
   cat: [
     '<b>CAT</b>(1)',
-    '  cat &lt;name&gt;  · print a file. files: about, experience, stack, repos, now, contact.',
+    '  cat &lt;name&gt; , print a file. files: about, experience, stack, repos, now, contact.',
   ],
   pwd: ['<b>PWD</b>(1)', '  print working directory. always /home/kevin.'],
-  cd: ['<b>CD</b>(1)', '  cd &lt;dir&gt;  · only /home/kevin exists.'],
+  cd: ['<b>CD</b>(1)', '  cd &lt;dir&gt; , only /home/kevin exists.'],
   ps: ['<b>PS</b>(1)', '  list (fake) processes.'],
   mkdir: ['<b>MKDIR</b>(1)', '  this fs is read-only. mkdir always fails.'],
   rmdir: ['<b>RMDIR</b>(1)', '  this fs is read-only. rmdir always fails.'],
@@ -139,7 +139,7 @@ export const MAN_PAGES: Record<string, string[]> = {
   logout: ['<b>LOGOUT</b>(1)', '  does nothing. this is a web page.'],
   kevin: [
     '<b>KEVIN</b>(1)',
-    '  kevin &lt;question&gt;  · POST your question to /api/chat and stream back a Claude reply.',
+    '  kevin &lt;question&gt; , POST your question to /api/chat and stream back a Claude reply.',
     '  example: <span class="ac">kevin "what does enttor do?"</span>',
   ],
   ask: ['<b>ASK</b>(1)', '  alias for <span class="ac">kevin</span>.'],

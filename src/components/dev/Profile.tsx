@@ -7,14 +7,15 @@ export function Profile() {
     <aside id="profile" className="profile-panel" hidden>
       <header className="pf-head">
         <div className="pf-avatar-wrap" aria-hidden="true">
-          <img className="pf-avatar" src="/kevin.jpg" alt="" />
+          {/* 102x128 crop, not the 164 KB full portrait: this renders at 58px. */}
+          <img className="pf-avatar" src="/kevin-avatar.jpg" alt="" width={102} height={128} />
         </div>
         <div className="pf-id">
           <div className="pf-name">
             Kevin <i>Gámez</i>
           </div>
           <div className="pf-role">
-            Founding engineer <span className="pf-at">@ Enttor</span>
+            Founding engineer <span className="pf-at">, open to what&apos;s next</span>
           </div>
         </div>
       </header>
@@ -56,7 +57,7 @@ export function Profile() {
         </a>
         <a
           className="pf-link"
-          href="https://co.linkedin.com/in/kevin-gamez/"
+          href="https://www.linkedin.com/in/kevin-gamez/"
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -7,9 +7,16 @@ import type { NextConfig } from 'next'
 // CSP note: App Router streams its RSC payload through inline <script> tags,
 // so script-src needs 'unsafe-inline' here (Astro did not). Nonces would
 // require per-request dynamic rendering, which this static site avoids.
+//
+// 'unsafe-eval' is added in development ONLY: React's dev build uses eval() to
+// rebuild cross-environment callstacks, and without it the dev server throws
+// "eval() is not supported in this environment". React never calls eval() in
+// production, so the shipped policy stays strict and matches vercel.json.
+const isDev = process.env.NODE_ENV === 'development'
+
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://va.vercel-scripts.com`,
   "script-src-attr 'none'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",

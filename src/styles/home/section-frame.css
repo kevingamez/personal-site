@@ -23,9 +23,6 @@ section {
 
 /* Section eyebrow: dot-prefixed micro label, uppercase and letterspaced. */
 .sec-num {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 500;
@@ -33,15 +30,6 @@ section {
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   margin-bottom: 18px;
-}
-
-.sec-num::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--ink);
-  flex: none;
 }
 
 .sec-title {

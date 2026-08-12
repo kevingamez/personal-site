@@ -6,15 +6,15 @@ import '@/styles/resume.css'
 
 const meta = {
   ...en.meta,
-  title: 'Résumé · Kevin Gámez',
-  ogTitle: 'Résumé · Kevin Gámez',
-  twitterTitle: 'Résumé · Kevin Gámez',
+  title: 'Résumé, Kevin Gámez',
+  ogTitle: 'Résumé, Kevin Gámez',
+  twitterTitle: 'Résumé, Kevin Gámez',
   description:
-    'Résumé of Kevin Gámez: founding engineer at a MaC Venture Capital-backed startup, AI-native product engineering, TypeScript / Next.js / Postgres.',
+    'Résumé of Kevin Gámez, founding engineer at Enttor in Bogotá. AI-native product engineering: TypeScript, Next.js, NestJS, Postgres, LLM pipelines.',
   ogDescription:
-    'Résumé of Kevin Gámez: founding engineer at a MaC Venture Capital-backed startup, AI-native product engineering, TypeScript / Next.js / Postgres.',
+    'Résumé of Kevin Gámez, founding engineer at Enttor in Bogotá. AI-native product engineering: TypeScript, Next.js, NestJS, Postgres, LLM pipelines.',
   twitterDescription:
-    'Résumé of Kevin Gámez: founding engineer at a MaC Venture Capital-backed startup, AI-native product engineering, TypeScript / Next.js / Postgres.',
+    'Résumé of Kevin Gámez, founding engineer at Enttor in Bogotá. AI-native product engineering: TypeScript, Next.js, NestJS, Postgres, LLM pipelines.',
   canonical: 'https://kevingamez.co/resume/',
   ogUrl: 'https://kevingamez.co/resume/',
   includeJsonLd: false,
@@ -29,7 +29,7 @@ const experience = [
   {
     role: 'Founding Engineer',
     at: 'Enttor',
-    dates: 'Jun 2024 – Present',
+    dates: 'Jun 2025 – Jul 2026',
     meta: 'Bogotá, COL',
     bullets: [
       'Owned the entire engineering function on a six-person team; architected, developed, and maintained the platform behind $160K+ in 2026 revenue.',
@@ -73,7 +73,7 @@ const education = [
   {
     role: 'Minors in Mathematics and Management',
     at: 'Universidad de los Andes',
-    dates: 'Dec 2022 · Dec 2023',
+    dates: 'Dec 2022, Dec 2023',
     meta: 'Bogotá, COL',
     bullets: [],
   },
@@ -84,7 +84,7 @@ function Entry({ e }: { e: (typeof experience)[number] }) {
     <div className="resume-entry">
       <div className="resume-entry-head">
         <h3>
-          {e.role} <span className="at">· {e.at}</span>
+          {e.role} <span className="at">, {e.at}</span>
         </h3>
         <span className="resume-dates">{e.dates}</span>
       </div>
@@ -100,26 +100,98 @@ function Entry({ e }: { e: (typeof experience)[number] }) {
   )
 }
 
+// The résumé is the page a recruiter or an AI assistant is most likely to cite,
+// so it carries its own graph. It reuses the #kevin @id from the home page, so
+// crawlers merge both into one entity instead of inventing two people.
+const resumeJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfilePage',
+      '@id': 'https://kevingamez.co/resume/#page',
+      url: 'https://kevingamez.co/resume/',
+      inLanguage: 'en',
+      name: 'Résumé, Kevin Gámez',
+      description: meta.description,
+      isPartOf: { '@id': 'https://kevingamez.co/#site' },
+      about: { '@id': 'https://kevingamez.co/#kevin' },
+      mainEntity: { '@id': 'https://kevingamez.co/#kevin' },
+      breadcrumb: { '@id': 'https://kevingamez.co/resume/#breadcrumb' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://kevingamez.co/resume/#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Kevin Gámez', item: 'https://kevingamez.co/' },
+        { '@type': 'ListItem', position: 2, name: 'Résumé' },
+      ],
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://kevingamez.co/#kevin',
+      name: 'Kevin Gámez',
+      jobTitle: 'Founding Engineer',
+      email: 'kevingamez.kg@gmail.com',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Bogotá',
+        addressRegion: 'Bogotá D.C.',
+        addressCountry: 'CO',
+      },
+      sameAs: [
+        'https://www.linkedin.com/in/kevin-gamez/',
+        'https://github.com/kevingamez',
+        'https://x.com/KevinGamezA',
+      ],
+      hasOccupation: experience.map((e) => ({
+        '@type': 'OrganizationRole',
+        roleName: e.role,
+        description: e.bullets.join(' '),
+        memberOf: { '@type': 'Organization', name: e.at },
+      })),
+      knowsAbout: [
+        'LLM agents',
+        'Prompt engineering',
+        'Browser automation',
+        'OCR',
+        'Image segmentation',
+        'TypeScript',
+        'Next.js',
+        'NestJS',
+        'React Native',
+        'Python',
+        'PostgreSQL',
+        'AWS',
+      ],
+    },
+  ],
+})
+
 export default function Page() {
   return (
     <main className="resume-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: resumeJsonLd }} />
       <article className="wrap resume-article">
         <header>
           <p className="kicker">Résumé</p>
           <h1>Kevin Gámez</h1>
           <p className="resume-contact">
-            Bogotá, Colombia · <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>{' '}
-            · <a href="https://github.com/kevingamez">GitHub</a> ·{' '}
-            <a href="https://co.linkedin.com/in/kevin-gamez/">LinkedIn</a> ·{' '}
-            <a className="resume-pdf" href="/docs/Kevin-Gamez-CV.pdf">
-              Download PDF
-            </a>
+            Bogotá, Colombia, <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a> ,{' '}
+            <a href="https://github.com/kevingamez">GitHub</a>,{' '}
+            <a href="https://www.linkedin.com/in/kevin-gamez/">LinkedIn</a>
           </p>
           <p className="resume-summary">
-            Founding Engineer at a MaC Venture Capital-backed startup (2024–2026). End-to-end owner
-            of product and platform. Relentless execution, exacting attention to detail, concise
-            communication.
+            Founding engineer, most recently at a MaC Venture Capital-backed startup (2025–2026).
+            End-to-end owner of product and platform. Relentless execution, exacting attention to
+            detail, concise communication. Open to what&apos;s next.
           </p>
+          <a
+            className="btn btn-primary resume-download"
+            href="/docs/Kevin-Gamez-CV.pdf"
+            download="Kevin-Gamez-Resume.pdf"
+          >
+            Download resume ↓
+          </a>
         </header>
 
         <h2>Experience</h2>

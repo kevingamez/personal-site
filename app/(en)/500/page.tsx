@@ -41,12 +41,12 @@ export default function ErrorPage() {
           </div>
           <div className="ln">
             <span className="nm">3</span>
-            <span className="mute">x-build: static · vercel</span>
+            <span className="mute">x-build: static, vercel</span>
           </div>
         </div>
       </div>
 
-      <script src="/head-init.js" defer></script>
+      {/* head-init.js already runs from SiteChrome in the (en) root layout. */}
       <script src="/error-page.js" defer></script>
     </div>
   )
