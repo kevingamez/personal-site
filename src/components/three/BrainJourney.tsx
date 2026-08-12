@@ -1,11 +1,12 @@
 'use client'
 
-// The full-page dust journey, the reference site's effect on the site's
-// own paper theme: ONE fixed canvas whose swarm is alive from the hero
-// on - the brain opens fully formed and interactive beside the headline
-// with ambient grains drifting around it, melts into traveling dust as
-// you scroll, half-condenses at Experience, and docks into the contact
-// slot. Keyframes live in journey-timeline.ts.
+// The full-page dust journey on the site's own paper theme: ONE fixed
+// canvas whose swarm is alive from the hero on. It opens as the brain
+// beside the headline, melts into traveling dust as you scroll, half
+// condenses at Experience, and finally resolves into the CUBE docked in
+// the contact section - the page opens on the mind and closes on the
+// object. Keyframes live in journey-timeline.ts, the per-grain pass in
+// journey-particles.ts.
 
 import { useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -20,7 +21,7 @@ import {
   type Points,
 } from 'three'
 import { makeParticleMaterial } from './particle-material'
-import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
+import { AUTO_WAVE_S, NODES, TOUCH_WAVE_SPEED } from './net-geometry'
 
 // Small screens build a lighter figure with the same silhouette so the
 // identity survives everywhere without burning a phone CPU; the shader
@@ -35,12 +36,14 @@ const figureCount = (): number => {
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
+import { updateParticles } from './journey-particles'
 import { PulseLayer } from './journey-pulses'
 
 const CAM_Z = 10
 const FOV = 40
 const R = 1.5 // local half-extent used to fit poses
-const REST = 1.5 + Math.PI // legible profile, flipped 180deg horizontally
+const REST_BRAIN = 1.5 + Math.PI // legible profile, flipped 180deg
+const REST_CUBE = REST_BRAIN - 0.72 // three-quarter view of the cube
 
 function Scene() {
   const reduced =
@@ -49,7 +52,7 @@ function Scene() {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const size = useThree((s) => s.size)
-  const { brain, dustCol } = useMemo(() => buildField(figureCount()), [])
+  const { brain, dustCol, cube } = useMemo(() => buildField(figureCount()), [])
   const { count, base, phase, edges, origins, sizes, baseColors, scatter, stagger } = brain
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
@@ -57,6 +60,7 @@ function Scene() {
   )
   const positions = useMemo(() => scatter.slice(), [scatter])
   const nodeColors = useMemo(() => dustCol.slice(), [dustCol])
+  const grainSizes = useMemo(() => sizes.slice(), [sizes])
   const lineGeo = useMemo(() => {
     const g = new BufferGeometry()
     g.setAttribute('position', new BufferAttribute(new Float32Array(edges.length * 6), 3))
@@ -72,7 +76,7 @@ function Scene() {
     () => makeParticleMaterial({ opacity: 0.9, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
     [gl]
   )
-  const st = useRef({ a: 0, fB: 0, waves: 0, rot: REST, spin: 0, lastScroll: 0 })
+  const st = useRef({ a: 0, fB: 0, fC: 0, waves: 0, rot: REST_BRAIN, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
   const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
   const touch = useRef({ ox: 0, oy: 0, oz: 0, start: -99 })
@@ -97,6 +101,7 @@ function Scene() {
     const s = st.current
     s.a = MathUtils.lerp(s.a, pose.a, k)
     s.fB = MathUtils.lerp(s.fB, pose.fB, k)
+    s.fC = MathUtils.lerp(s.fC, pose.fC, k)
     s.waves = MathUtils.lerp(s.waves, pose.waves, k)
     material.uniforms.uOpacity.value = s.a * 0.95
     if (s.a < 0.01 && pose.a < 0.01) {
@@ -127,11 +132,16 @@ function Scene() {
     s.lastScroll = window.scrollY
     s.spin += drag.current.vy + scrollVel * 0.0004
     s.spin *= 0.985
-    s.rot += reduced ? 0 : delta * 0.2 * (1 - s.fB)
-    const wrapped = REST + Math.round((s.rot - REST) / (Math.PI * 2)) * Math.PI * 2
-    s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * s.fB)
+    const formed = Math.max(s.fB, s.fC)
+    s.rot += reduced ? 0 : delta * 0.2 * (1 - formed)
+    const rest = s.fC > s.fB ? REST_CUBE : REST_BRAIN
+    const wrapped = rest + Math.round((s.rot - rest) / (Math.PI * 2)) * Math.PI * 2
+    s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * formed)
+    // The cube keeps turning slowly once docked - it is an object to look
+    // around, not a portrait to hold still.
+    s.rot += reduced ? 0 : delta * 0.16 * s.fC
     g.rotation.y = s.rot + (reduced ? 0 : Math.sin(t * 0.12) * 0.12 * s.fB) + s.spin
-    const tiltX = 0.08 + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * s.fB
+    const tiltX = 0.08 + 0.28 * s.fC + MathUtils.clamp(-cursor.current.ny * 0.2, -0.3, 0.3) * s.fB
     g.rotation.x = MathUtils.lerp(g.rotation.x + drag.current.vx, tiltX, 0.02)
     drag.current.vx *= 0.93
     drag.current.vy *= 0.93
@@ -159,6 +169,7 @@ function Scene() {
         pulses.spawnAt(ni, 30)
       }
     }
+    const tc = touch.current
     const touchFront = (t - touch.current.start) * TOUCH_WAVE_SPEED
     const cycle = Math.floor(t / AUTO_WAVE_S)
     if (autoWave.current.cycle !== cycle) {
@@ -169,66 +180,36 @@ function Scene() {
 
     const pos = geo.attributes.position.array as Float32Array
     const col = geo.attributes.color.array as Float32Array
+    const gsz = geo.attributes.aSize.array as Float32Array
     // Neural pulses ride the synapses while the brain is formed.
     pulses.update(delta, reduced ? 0 : s.fB * s.a, pos)
-    const aw = autoWave.current
-    const tc = touch.current
-    const doWaves = s.waves > 0.02
-    for (let i = 0; i < count; i++) {
-      const j = i * 3
-      // Formation staggers per particle so shapes stream, not snap; the
-      // last few percent stay ambient grains drifting around the scene.
-      const amb = stagger[i] > 0.94
-      const fb = amb ? 0 : MathUtils.clamp((s.fB - stagger[i] * 0.35) / 0.65, 0, 1)
-      const fd = 1 - fb
-      const wob = 0.03 + 0.3 * fd
-      let tx = scatter[j] * 0.75 * fd + base[j] * fb + Math.sin(t * 0.5 + phase[i]) * wob
-      let ty =
-        scatter[j + 1] * 0.75 * fd + base[j + 1] * fb + Math.cos(t * 0.4 + phase[i] * 1.3) * wob
-      let tz =
-        scatter[j + 2] * 0.75 * fd + base[j + 2] * fb + Math.sin(t * 0.6 + phase[i] * 0.7) * wob
-      const rx = tx - local.x
-      const ry = ty - local.y
-      const rz = tz - local.z
-      const rd2 = rx * rx + ry * ry + rz * rz
-      if (rd2 < 0.85) {
-        const rd = Math.sqrt(rd2) || 0.001
-        const f = ((0.95 - rd) / 0.95) * (0.28 + 0.38 * fb)
-        tx += (rx / rd) * f
-        ty += (ry / rd) * f
-        tz += (rz / rd) * f
-      }
-      pos[j] += (tx - pos[j]) * 0.1
-      pos[j + 1] += (ty - pos[j + 1]) * 0.1
-      pos[j + 2] += (tz - pos[j + 2]) * 0.1
-      let heat = 0
-      if (doWaves && fb > 0.3) {
-        const da = Math.sqrt(
-          (base[j] - aw.ox) ** 2 + (base[j + 1] - aw.oy) ** 2 + (base[j + 2] - aw.oz) ** 2
-        )
-        heat = MathUtils.clamp(1 - Math.abs(da - autoFront) / WAVE_BAND, 0, 1) * 0.8
-        if (touchFront < 5) {
-          const dt = Math.sqrt(
-            (base[j] - tc.ox) ** 2 + (base[j + 1] - tc.oy) ** 2 + (base[j + 2] - tc.oz) ** 2
-          )
-          heat = Math.max(heat, MathUtils.clamp(1 - Math.abs(dt - touchFront) / WAVE_BAND, 0, 1))
-        }
-        heat *= s.waves * fb
-      }
-      // Pulse arrivals flash their neuron regardless of the slow waves.
-      if (pulses.flash[i] > 0.02) heat = Math.max(heat, pulses.flash[i] * 0.65 * fb)
-      scratch
-        .setRGB(
-          dustCol[j] * fd + baseColors[j] * fb,
-          dustCol[j + 1] * fd + baseColors[j + 1] * fb,
-          dustCol[j + 2] * fd + baseColors[j + 2] * fb
-        )
-        .lerp(INK, Math.min(1, heat * 1.4))
-        .lerp(VIOLET, heat * 0.85)
-      col[j] = scratch.r
-      col[j + 1] = scratch.g
-      col[j + 2] = scratch.b
-    }
+    updateParticles({
+      count,
+      t,
+      fB: s.fB,
+      fC: s.fC,
+      waves: s.waves,
+      local,
+      scratch,
+      base,
+      scatter,
+      stagger,
+      phase,
+      cubePos: cube.pos,
+      dustCol,
+      brainCol: baseColors,
+      cubeCol: cube.col,
+      brainSize: sizes,
+      cubeSize: cube.size,
+      cubeKind: cube.kind,
+      pos,
+      col,
+      size: gsz,
+      flash: pulses.flash,
+      wave: { ...autoWave.current, front: autoFront },
+      touch: { ox: tc.ox, oy: tc.oy, oz: tc.oz, front: touchFront },
+    })
+    geo.attributes.aSize.needsUpdate = true
     geo.attributes.position.needsUpdate = true
     geo.attributes.color.needsUpdate = true
 
@@ -263,7 +244,7 @@ function Scene() {
   })
 
   return (
-    <group ref={group} rotation={[0.08, REST, 0]}>
+    <group ref={group} rotation={[0.08, REST_BRAIN, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
       <points geometry={pulses.geometry}>
         <primitive object={pulseMat} attach="material" />
@@ -272,7 +253,7 @@ function Scene() {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[positions, 3]} />
           <bufferAttribute attach="attributes-color" args={[nodeColors, 3]} />
-          <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
+          <bufferAttribute attach="attributes-aSize" args={[grainSizes, 1]} />
         </bufferGeometry>
         <primitive object={material} attach="material" />
       </points>

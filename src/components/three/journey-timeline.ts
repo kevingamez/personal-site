@@ -13,6 +13,7 @@ export interface Pose {
   s: number // figure height as a fraction of viewport height
   a: number // alpha
   fB: number // 1 = fully formed brain
+  fC: number // 1 = fully formed cube
   waves: number // neural wave intensity
 }
 
@@ -21,13 +22,13 @@ interface KF extends Pose {
 }
 
 const KFS: KF[] = [
-  { sel: '#about', x: 0.6, y: 0.6, s: 0.5, a: 0.45, fB: 0, waves: 0 },
-  { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, waves: 0 },
-  { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, waves: 0.25 },
-  { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, waves: 0 },
-  { sel: '#github', x: 0.5, y: 0.66, s: 0.5, a: 0.4, fB: 0, waves: 0 },
-  { sel: '#writing', x: 0.85, y: 0.6, s: 0.5, a: 0.35, fB: 0, waves: 0 },
-  { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, waves: 0.3 },
+  { sel: '#about', x: 0.6, y: 0.6, s: 0.5, a: 0.45, fB: 0, fC: 0, waves: 0 },
+  { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, fC: 0, waves: 0.25 },
+  { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, fC: 0, waves: 0 },
+  { sel: '#github', x: 0.5, y: 0.66, s: 0.5, a: 0.4, fB: 0, fC: 0, waves: 0 },
+  { sel: '#writing', x: 0.85, y: 0.6, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, fC: 0, waves: 0.3 },
 ]
 
 const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
@@ -36,6 +37,7 @@ const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
   s: MathUtils.lerp(a.s, b.s, t),
   a: MathUtils.lerp(a.a, b.a, t),
   fB: MathUtils.lerp(a.fB, b.fB, t),
+  fC: MathUtils.lerp(a.fC, b.fC, t),
   waves: MathUtils.lerp(a.waves, b.waves, t),
 })
 
@@ -60,6 +62,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
         s: w / (vh * 0.97),
         a: 1,
         fB: 1,
+        fC: 0,
         waves: 1,
       })
     } else {
@@ -72,7 +75,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
       // Keep a real margin at the right edge - the figure should sit in
       // the composition, not bleed off it.
       const heroX = Math.min((left + avail * 0.48) / vw, 1 - (heroW / 2 + vw * 0.045) / vw)
-      stops.push({ x: heroX, y: 0.52, s: heroW / (vh * 0.97), a: 1, fB: 1, waves: 1 })
+      stops.push({ x: heroX, y: 0.52, s: heroW / (vh * 0.97), a: 1, fB: 1, fC: 0, waves: 1 })
     }
   }
   for (const k of KFS) {
@@ -90,17 +93,19 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
       a: narrow ? k.a * 0.45 : k.a,
     })
   }
-  // Final stop: the brain docks into the live contact slot.
+  // Final stop: the swarm resolves into the CUBE in the contact slot -
+  // the page opens on the brain and closes on the object.
   const dock = document.querySelector('.cube-stage')?.getBoundingClientRect()
   if (dock && dock.height > 0) {
     ys.push(scrollY + dock.top + dock.height / 2 - vh * 0.55)
     stops.push({
       x: (dock.left + dock.width / 2) / vw,
       y: (dock.top + dock.height / 2) / vh,
-      s: (dock.height / vh) * 1.05,
+      s: (dock.height / vh) * 0.86,
       a: 1,
-      fB: 1,
-      waves: 1,
+      fB: 0,
+      fC: 1,
+      waves: 0,
     })
   }
   if (stops.length === 0) return null
@@ -122,6 +127,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     if (past > 0) {
       pose.a = MathUtils.lerp(pose.a, 0, past)
       pose.fB = MathUtils.lerp(pose.fB, 0, past)
+      pose.fC = MathUtils.lerp(pose.fC, 0, past)
       pose.waves = MathUtils.lerp(pose.waves, 0, past)
     }
   }
