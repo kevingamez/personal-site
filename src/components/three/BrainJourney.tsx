@@ -1,14 +1,13 @@
 'use client'
 
-// The full-page dust journey, the reference site's effect: ONE fixed
-// canvas whose particle swarm is alive from the hero on. Scrolling walks
-// it through section keyframes - ambient dust beside the hero, the brain
-// forming next to About, melting to dust, half-condensing at Experience,
-// then re-forming and docking into the contact slot, where touch fires
-// neural waves and drag spins it. Past the dock it melts out. See
-// journey-timeline.ts for the keyframes.
+// The full-page dust journey, the reference site's effect on the site's
+// own paper theme: ONE fixed canvas whose swarm is alive from the hero
+// on - the brain opens fully formed and interactive beside the headline
+// with ambient grains drifting around it, melts into traveling dust as
+// you scroll, half-condenses at Experience, and docks into the contact
+// slot. Keyframes live in journey-timeline.ts.
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import {
   BufferAttribute,
@@ -24,10 +23,12 @@ import { makeParticleMaterial } from './particle-material'
 import { AUTO_WAVE_S, INK, NODES, TOUCH_WAVE_SPEED, VIOLET, WAVE_BAND } from './net-geometry'
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
+import { useJourneyPointer } from './journey-pointer'
 
 const CAM_Z = 10
 const FOV = 40
 const R = 1.5 // local half-extent used to fit poses
+const REST = 1.5 + Math.PI // legible profile, flipped 180deg horizontally
 
 function Scene() {
   const reduced =
@@ -54,7 +55,6 @@ function Scene() {
     () => new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0 }),
     []
   )
-  const REST = 1.5 + Math.PI // legible profile, flipped 180deg horizontally
   const st = useRef({ a: 0, fB: 0, waves: 0, rot: REST, spin: 0, lastScroll: 0 })
   const drag = useRef({ on: false, vx: 0, vy: 0, px: 0, py: 0 })
   const cursor = useRef({ x: 9e9, y: 9e9, nx: 0, ny: 0 })
@@ -64,54 +64,7 @@ function Scene() {
   const scratch = useMemo(() => new Color(), [])
   const worldH = 2 * CAM_Z * Math.tan(((FOV / 2) * Math.PI) / 180)
 
-  useEffect(() => {
-    const toWorld = (sx: number, sy: number): [number, number] => {
-      const aspect = window.innerWidth / window.innerHeight
-      return [
-        (sx / window.innerWidth - 0.5) * worldH * aspect,
-        (0.5 - sy / window.innerHeight) * worldH,
-      ]
-    }
-    const overFigure = (sx: number, sy: number): boolean => {
-      const g = group.current
-      if (!g) return false
-      const [wx, wy] = toWorld(sx, sy)
-      const r = g.scale.x * R * 1.8
-      return Math.abs(wx - g.position.x) < r && Math.abs(wy - g.position.y) < r
-    }
-    const down = (e: PointerEvent) => {
-      if (e.pointerType === 'touch' || !overFigure(e.clientX, e.clientY)) return
-      drag.current.on = true
-      drag.current.px = e.clientX
-      drag.current.py = e.clientY
-      document.documentElement.style.cursor = 'grabbing'
-    }
-    const move = (e: PointerEvent) => {
-      const [wx, wy] = toWorld(e.clientX, e.clientY)
-      cursor.current.x = wx
-      cursor.current.y = wy
-      cursor.current.nx = (e.clientX / window.innerWidth) * 2 - 1
-      cursor.current.ny = -(e.clientY / window.innerHeight) * 2 + 1
-      if (!drag.current.on) return
-      drag.current.vy = (e.clientX - drag.current.px) * 0.005
-      drag.current.vx = (e.clientY - drag.current.py) * 0.005
-      drag.current.px = e.clientX
-      drag.current.py = e.clientY
-    }
-    const up = () => {
-      if (!drag.current.on) return
-      drag.current.on = false
-      document.documentElement.style.cursor = ''
-    }
-    window.addEventListener('pointerdown', down)
-    window.addEventListener('pointermove', move, { passive: true })
-    window.addEventListener('pointerup', up)
-    return () => {
-      window.removeEventListener('pointerdown', down)
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-    }
-  }, [worldH])
+  useJourneyPointer(worldH, R, group, drag, cursor)
 
   useFrame((state, delta) => {
     const g = group.current
@@ -148,14 +101,12 @@ function Scene() {
     material.uniforms.uPx.value = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
     lineMat.opacity = s.a * s.fB * 0.1
 
-    // Rotation: a slow tumble while it is dust or cube, settling into the
-    // brain's legible profile as it forms; drag and scroll kicks decay.
+    // Rotation: slow tumble as dust, settling by the shortest path into
+    // the legible profile as the brain forms; drag and scroll kicks decay.
     const scrollVel = window.scrollY - s.lastScroll
     s.lastScroll = window.scrollY
     s.spin += drag.current.vy + scrollVel * 0.0004
     s.spin *= 0.985
-    // Tumble while dust; settle by the shortest path into the brain's
-    // legible profile pose as it forms.
     s.rot += reduced ? 0 : delta * 0.2 * (1 - s.fB)
     const wrapped = REST + Math.round((s.rot - REST) / (Math.PI * 2)) * Math.PI * 2
     s.rot = MathUtils.lerp(s.rot, wrapped, 0.03 * s.fB)
@@ -190,8 +141,10 @@ function Scene() {
     const doWaves = s.waves > 0.02
     for (let i = 0; i < NODES; i++) {
       const j = i * 3
-      // Per-particle formation staggers so shapes stream, not snap.
-      const fb = MathUtils.clamp((s.fB - stagger[i] * 0.35) / 0.65, 0, 1)
+      // Formation staggers per particle so shapes stream, not snap; the
+      // last few percent stay ambient grains drifting around the scene.
+      const amb = stagger[i] > 0.94
+      const fb = amb ? 0 : MathUtils.clamp((s.fB - stagger[i] * 0.35) / 0.65, 0, 1)
       const fd = 1 - fb
       const wob = 0.03 + 0.3 * fd
       let tx = scatter[j] * 0.75 * fd + base[j] * fb + Math.sin(t * 0.5 + phase[i]) * wob
@@ -248,13 +201,20 @@ function Scene() {
       const lcol = lineGeo.attributes.color.array as Float32Array
       edges.forEach(([a2, b2], i2) => {
         const ea = i2 * 6
+        // Collapse stretched segments (an endpoint still out in the dust)
+        // so no long streaks cross the scene while shapes form.
+        const ddx = pos[a2 * 3] - pos[b2 * 3]
+        const ddy = pos[a2 * 3 + 1] - pos[b2 * 3 + 1]
+        const ddz = pos[a2 * 3 + 2] - pos[b2 * 3 + 2]
+        const cut = ddx * ddx + ddy * ddy + ddz * ddz > 0.36
         for (const [off, n] of [
           [0, a2],
           [3, b2],
         ] as const) {
-          lpos[ea + off] = pos[n * 3]
-          lpos[ea + off + 1] = pos[n * 3 + 1]
-          lpos[ea + off + 2] = pos[n * 3 + 2]
+          const m = cut ? a2 : n
+          lpos[ea + off] = pos[m * 3]
+          lpos[ea + off + 1] = pos[m * 3 + 1]
+          lpos[ea + off + 2] = pos[m * 3 + 2]
           lcol[ea + off] = col[n * 3]
           lcol[ea + off + 1] = col[n * 3 + 1]
           lcol[ea + off + 2] = col[n * 3 + 2]
@@ -266,7 +226,7 @@ function Scene() {
   })
 
   return (
-    <group ref={group} rotation={[0.08, 1.5 + Math.PI, 0]}>
+    <group ref={group} rotation={[0.08, REST, 0]}>
       <lineSegments geometry={lineGeo} material={lineMat} />
       <points ref={points}>
         <bufferGeometry>
