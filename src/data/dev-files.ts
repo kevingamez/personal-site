@@ -1,63 +1,36 @@
-// Read real project files at build time so the dev-mode "explorer" reflects
-// the codebase. Order of LOCAL_FILE_PATHS matters - preserved in tree rendering.
+// The file tree dev mode's explorer renders.
+//
+// This used to inline the contents of seventeen hand-listed paths, which meant
+// the explorer showed a curated snapshot and silently missed every file added
+// afterwards. It now emits the whole tracked tree, but as PATHS with empty
+// bodies: 241 files are 754 KB of source, and inlining that put /dev near a
+// megabyte of HTML. Bodies arrive from /api/repo when a file is opened.
+//
+// README.md keeps its body inline because index.ts opens it on load, so the
+// first thing a visitor sees paints without a round trip.
+
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { langOf, listSourcePaths, projectRoot } from './repo-source'
 
-export const projectRoot = process.cwd()
-
-const readSafe = (rel: string): string => {
-  try {
-    return readFileSync(join(projectRoot, rel), 'utf-8')
-  } catch {
-    return ''
-  }
-}
-
-const langOf = (name: string): string => {
-  const lower = name.toLowerCase()
-  if (
-    lower.endsWith('.ts') ||
-    lower.endsWith('.tsx') ||
-    lower.endsWith('.js') ||
-    lower.endsWith('.mjs') ||
-    lower.endsWith('.cjs')
-  )
-    return 'ts'
-  if (lower.endsWith('.rs')) return 'rs'
-  if (lower.endsWith('.md')) return 'md'
-  if (lower.endsWith('.json')) return 'json'
-  if (lower.endsWith('.toml')) return 'toml'
-  if (lower.endsWith('.css')) return 'css'
-  if (lower.endsWith('.html')) return 'html'
-  return 'plain'
-}
-
-const LOCAL_FILE_PATHS = [
-  'app/(en)/page.tsx',
-  'app/(es)/es/page.tsx',
-  'app/(dev)/dev/page.tsx',
-  'app/(en)/not-found.tsx',
-  'app/sitemap.ts',
-  'next.config.ts',
-  '.editorconfig',
-  '.gitignore',
-  '.prettierignore',
-  '.prettierrc.json',
-  'CHANGELOG.md',
-  'CLAUDE.md',
-  'CONTRIBUTING.md',
-  'package.json',
-  'README.md',
-  'tsconfig.json',
-]
+export { projectRoot }
 
 export type LocalFiles = Record<string, { lang: string; body: string }>
 
+const EAGER = ['README.md']
+
 export function loadLocalFiles(): LocalFiles {
   const out: LocalFiles = {}
-  for (const p of LOCAL_FILE_PATHS) {
-    const body = readSafe(p)
-    if (body) out[p] = { lang: langOf(p), body }
+  for (const p of listSourcePaths()) {
+    let body = ''
+    if (EAGER.includes(p)) {
+      try {
+        body = readFileSync(join(projectRoot, p), 'utf-8')
+      } catch {
+        body = ''
+      }
+    }
+    out[p] = { lang: langOf(p), body }
   }
   return out
 }

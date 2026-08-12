@@ -30,6 +30,12 @@ function readDevData(): DevData {
 const __DATA = readDevData()
 export const PROJECT_NAME = __DATA.user || 'kevingamez'
 
+// The repository folder inside the user's tree. Editor tab keys are relative
+// to PROJECT_NAME, so a local file reads `personal-site/proxy.ts` while another
+// repo's README reads `<repo>/README.md`; this is what lets the lazy loader
+// tell the two apart.
+export const LOCAL_PROJECT = __DATA.localProjectName || 'personal-site'
+
 function buildFS(): DirNode {
   const root = _d()
   const userDir = _d()
@@ -48,7 +54,7 @@ function buildFS(): DirNode {
     }
   }
 
-  const localName = __DATA.localProjectName || 'personal-site'
+  const localName = LOCAL_PROJECT
   const localFiles = __DATA.localFiles || {}
   let localDir = userDir.children[localName]
   if (!localDir || localDir.type !== 'dir') {
@@ -93,7 +99,6 @@ export type DevState = {
 // Start with the github-repo subfolders collapsed (visual noise - each only
 // holds a README anyway) but keep `personal-site/` and its `src/` open so the
 // user lands seeing actual files, not just folder rows. Vscode-style.
-const LOCAL_PROJECT = 'personal-site'
 function initialFolded(): Set<string> {
   const folded = new Set<string>()
   const userDir = FS.children[PROJECT_NAME]
