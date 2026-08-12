@@ -1,3 +1,0 @@
-/* Barrel for the GitHub activity styles - import order preserves the cascade. */
-@import url('./github-contrib.css');
-@import url('./github-repos.css');

@@ -1,130 +1,11 @@
-/* ─── GitHub stats banner ─── */
+/* ─── Language mix strip ───
+   Was a padded panel carrying three stat tiles above it; the tiles moved into
+   the section's single stat row, so what is left is the bar itself. */
 .gh-banner {
   position: relative;
-  margin-bottom: 28px;
-  padding: 32px 32px 28px;
-  background: var(--panel);
-  color: var(--ink);
-  border-radius: var(--r-lg);
-  box-shadow: 0 0 0 1px var(--line);
-  overflow: hidden;
-}
-
-.gh-banner-cap {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  color: var(--coral);
-  margin-bottom: 24px;
-}
-
-.gh-stats-row {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 26px;
-}
-
-@media (width <= 700px) {
-  .gh-stats-row {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-
-.gh-stat {
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
-.gh-stat:nth-child(2) {
-  transition-delay: 0.1s;
-}
-
-.gh-stat:nth-child(3) {
-  transition-delay: 0.2s;
-}
-
-.gh-banner-on .gh-stat {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.gh-stat-num {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 58px;
-  line-height: 0.95;
-  letter-spacing: 0;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-@media (width <= 700px) {
-  .gh-stat-num {
-    font-size: 46px;
-  }
-}
-
-@media (width >= 1180px) and (height <= 950px) {
-  .gh-banner {
-    margin-bottom: 16px;
-    padding: 20px 24px 18px;
-  }
-
-  .gh-banner-cap {
-    margin-bottom: 14px;
-  }
-
-  .gh-stats-row {
-    gap: 20px;
-    margin-bottom: 16px;
-  }
-
-  .gh-stat {
-    padding-left: 14px;
-  }
-
-  .gh-stat-num {
-    font-size: 44px;
-  }
-
-  .gh-stat-lbl {
-    margin-top: 7px;
-  }
-
-  .gh-stat-sub {
-    font-size: 12px;
-  }
-
-  .gh-langbar-legend {
-    gap: 8px 16px;
-    margin-top: 12px;
-    font-size: 10px;
-  }
-}
-
-.gh-stat-lbl {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  color: var(--coral);
-  margin-top: 10px;
-}
-
-.gh-stat-sub {
-  font-size: 13px;
-  color: rgb(var(--ink-rgb) / 55%);
-  margin-top: 4px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
 }
 
 .gh-langbar {
@@ -151,7 +32,7 @@
 .gh-langbar-track {
   display: flex;
   width: 100%;
-  height: 14px;
+  height: 10px;
   border-radius: 999px;
   overflow: hidden;
   background: rgb(var(--ink-rgb) / 7%);
@@ -174,7 +55,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px 22px;
-  margin-top: 16px;
+  margin-top: 14px;
   font-family: var(--font-mono);
   font-size: 11px;
   color: rgb(var(--ink-rgb) / 78%);
@@ -193,13 +74,20 @@
   border-radius: 2px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .gh-stat {
-    opacity: 1;
-    transform: none;
-    transition: none;
+@media (width >= 1180px) and (height <= 950px) {
+  .gh-banner {
+    margin-top: 18px;
+    padding-top: 14px;
   }
 
+  .gh-langbar-legend {
+    gap: 8px 16px;
+    margin-top: 12px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .gh-langbar-seg {
     transition: none;
   }
