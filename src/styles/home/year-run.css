@@ -253,3 +253,45 @@
     font-size: 30px;
   }
 }
+
+/* Laptop heights: the section is meant to read in one screen, so the blocks
+   around the figure give up their slack before the figure does. The ceiling is
+   1050px rather than the 950px the rest of the page uses: between the two, the
+   roomy version overflows the viewport while the compact one still fits. */
+@media (width >= 1180px) and (height <= 1050px) {
+  #github {
+    padding-top: 48px;
+    padding-bottom: 32px;
+  }
+
+  .yr-stats {
+    margin-bottom: 18px;
+  }
+
+  .yr-stat b {
+    font-size: 34px;
+  }
+
+  .yr-frame {
+    margin-top: 8px;
+    padding-top: 16px;
+  }
+}
+
+/* Short laptops (13" with browser chrome): the last 30px come out of the
+   gutters, never out of the figure. */
+@media (width >= 1180px) and (height <= 860px) {
+  #github {
+    padding-top: 40px;
+    padding-bottom: 24px;
+  }
+
+  .yr-stats {
+    margin-bottom: 14px;
+  }
+
+  #github .gh-banner {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+}

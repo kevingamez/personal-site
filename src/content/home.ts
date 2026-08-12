@@ -140,10 +140,9 @@ export interface HomeStrings {
     // `bodyHtml` follows the *Html invariant above: static, trusted markup only.
     items: { label: string; statement: string; bodyHtml: string }[]
   }
+  // Chart-only labels. The heading, blurb, and eyebrow live on `github`: the
+  // curve and the repo list share one section.
   yearRun: {
-    secNum: string
-    titleHtml: string
-    blurb: string
     statContributions: string
     statStreak: string
     statProjects: string
@@ -160,32 +159,9 @@ export interface HomeStrings {
     secNum: string
     titleHtml: string
     blurb: string
-    snapshot: string
     publicRepos: string
-    publicReposSub: string
-    languagesShipped: string
-    languagesShippedSub: string // fallback caption when fewer than 2 languages
-    langLeads: string // connector, e.g. "leads" / "va primero"
-    langSecond: string // connector, e.g. "is second" / "segundo"
-    yearsOnGithub: string
-    yearsOnGithubSub: string
     languageMix: string
     acrossPublicRepos: string
-    contributionsTitle: string
-    last12Months: string
-    less: string
-    more: string
-    months: readonly string[]
-    dows: readonly string[]
-    statCommits: string
-    statCurrent: string
-    statLongest: string
-    repoSiteDesc: string
-    repoSpaceDesc: string
-    repoChatDesc: string
-    repoBudgetDesc: string
-    repoCloudDesc: string
-    repoFallbackDesc: string // shown when a repo has no curated or API description
   }
   strava: {
     secNum: string

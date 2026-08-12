@@ -23,7 +23,7 @@ export const PAD_R = 74
 export const CH_TOP = 52
 export const CH_H = 158
 export const LANE_TOP = CH_TOP + CH_H + 40
-export const LANE_H = 26
+export const LANE_H = 23
 export const LANE_BAR = 15
 export const H_AXIS = 30
 
