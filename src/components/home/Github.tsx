@@ -83,7 +83,12 @@ export function Github({ t, stats }: Props) {
                   key={i}
                   className="gh-langbar-seg"
                   data-pct={l.pct}
-                  style={{ background: l.color }}
+                  /* Width is server-rendered so the bar is correct with no JS
+                     at all. The reveal is a scaleX the script drives from
+                     zero; previously the width itself started at 0 in CSS and
+                     was filled in by the script, which left the bar invisible
+                     for anyone without it. */
+                  style={{ background: l.color, width: l.pct + '%' }}
                 />
               ))}
             </div>

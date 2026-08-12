@@ -38,16 +38,17 @@ export function initGhStats(): void {
         format: (n) => formatNumber(n, fmt),
       })
     })
+    // The segments are already laid out at their real widths by the server, so
+    // the reveal only has to scale them. Collapsing here rather than in CSS is
+    // what keeps the bar correct when this script never runs; and scaleX is
+    // composited, where the old width tween relaid out the whole track on
+    // every frame for a second and a half.
     banner.querySelectorAll<HTMLElement>('.gh-langbar-seg').forEach((el, i) => {
-      const pct = el.dataset.pct || '0'
-      const baseDelay = 600 + i * 90
-      if (REDUCE_MOTION) {
-        el.style.width = pct + '%'
-        return
-      }
-      el.style.transitionDelay = baseDelay + 'ms'
+      if (REDUCE_MOTION) return
+      el.style.transform = 'scaleX(0)'
+      el.style.transitionDelay = 600 + i * 90 + 'ms'
       requestAnimationFrame(() => {
-        el.style.width = pct + '%'
+        el.style.transform = 'scaleX(1)'
       })
     })
   }

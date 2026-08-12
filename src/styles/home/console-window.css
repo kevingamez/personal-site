@@ -31,7 +31,7 @@
     0 30px 80px -20px rgb(31 29 26 / 45%),
     0 12px 28px -10px rgb(31 29 26 / 30%),
     inset 0 1px 0 rgb(255 255 255 / 8%);
-  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.55;
   color: rgb(232 232 236 / 95%);
