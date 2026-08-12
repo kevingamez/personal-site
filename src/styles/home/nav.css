@@ -28,23 +28,7 @@
   color: var(--ink);
   display: flex;
   align-items: center;
-  gap: 10px;
   white-space: nowrap;
-}
-
-.brand .dot {
-  width: 7px;
-  height: 7px;
-  background: var(--violet-500);
-  border-radius: 50%;
-  display: inline-block;
-  transition: transform 0.2s var(--ease-out);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .brand:hover .dot {
-    transform: scale(1.2);
-  }
 }
 
 .nav-links {
@@ -68,32 +52,13 @@
   gap: 14px;
 }
 
-.lang {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  padding: 6px 8px;
-  border-radius: 6px;
-  transition: color 0.2s;
-}
-
-.lang:hover {
-  color: var(--ink);
-}
-
-.lang b {
-  color: var(--ink);
-  font-weight: 600;
-}
-
 .dev-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 7px 14px;
   border: 1px solid var(--line-2);
-  border-radius: var(--pill);
+  border-radius: var(--r-xs);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.02em;

@@ -2,7 +2,6 @@
 // Bundled by Astro and loaded with `<script>import '@/scripts/home/index.ts'`.
 
 import { bootstrapClient } from '../lib/init'
-import { track } from '../lib/analytics'
 import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initDevTransition } from './dev-transition'
@@ -11,6 +10,7 @@ import { initIntro } from './intro'
 bootstrapClient()
 initIntro()
 initBogotaClock()
+void import('./weather').then((m) => m.initWeather())
 initConway()
 initDevTransition()
 
@@ -60,6 +60,17 @@ function whenVisible(selector: string, fn: () => void, rootMargin = '600px 0px')
   io.observe(el)
   return run
 }
+
+whenVisible(
+  '#work',
+  () => {
+    loadLazy(async () => {
+      const m = await import('./ad-studio')
+      m.initAdStudio()
+    })
+  },
+  '600px 0px'
+)
 
 whenVisible(
   '#github',
@@ -133,12 +144,3 @@ runWhenIdle(() => {
     reveal.initReveal()
   })
 }, 1800)
-
-const langLink = document.querySelector<HTMLAnchorElement>('a.lang')
-if (langLink) {
-  langLink.addEventListener('click', () => {
-    const from = document.documentElement.lang || 'en'
-    const to = from === 'en' ? 'es' : 'en'
-    track<{ name: 'lang_switch'; props: { from: string; to: string } }>('lang_switch', { from, to })
-  })
-}

@@ -8,7 +8,6 @@ const log = logger('analytics')
 
 export type AnalyticsEvent =
   | { name: 'page_view'; props: { path: string; title?: string; lang?: string } }
-  | { name: 'lang_switch'; props: { from: string; to: string } }
   | { name: 'palette_open'; props?: undefined }
   | { name: 'palette_select'; props: { path: string } }
   | { name: 'file_open'; props: { path: string; via: 'palette' | 'tree' | 'init' | 'terminal' } }
