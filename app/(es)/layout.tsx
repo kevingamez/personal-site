@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Viewport } from 'next'
 import { SiteChrome } from '@/components/site/SiteChrome'
+import { siteFontClass } from '@/lib/fonts'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // head-init.js stamps `intro-pending` on <html> before React hydrates -
     // an expected, deliberate mismatch.
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" className={siteFontClass} suppressHydrationWarning>
       <body>
         <SiteChrome />
         {children}

@@ -16,7 +16,7 @@
 }
 
 .privacy-article .kicker {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -25,7 +25,7 @@
 }
 
 .privacy-article h1 {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(40px, 6vw, 64px);
   line-height: 1;
@@ -42,7 +42,7 @@
 }
 
 .privacy-article h2 {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
   font-weight: 400;
   font-size: 28px;
   line-height: 1.1;
@@ -51,7 +51,7 @@
 }
 
 .privacy-article h3 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -78,7 +78,7 @@
 }
 
 .privacy-article code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 13px;
   background: var(--cream-2);
   padding: 1px 6px;
@@ -87,6 +87,6 @@
 
 .privacy-article .back {
   margin-top: 48px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 13px;
 }

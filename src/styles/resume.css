@@ -16,7 +16,7 @@
 }
 
 .resume-article .kicker {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -25,7 +25,7 @@
 }
 
 .resume-article h1 {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(40px, 6vw, 64px);
   line-height: 1;
@@ -57,7 +57,7 @@
 }
 
 .resume-article h2 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -80,7 +80,7 @@
 }
 
 .resume-entry-head h3 {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
@@ -93,7 +93,7 @@
 }
 
 .resume-dates {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
@@ -131,7 +131,7 @@
 .resume-back {
   display: inline-block;
   margin-top: 48px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
   font-size: 12px;
   color: var(--muted);
 }
