@@ -5,8 +5,14 @@
 overrides:
   yaml: ^2.8.4
 
-# pnpm blocks postinstall scripts by default; esbuild (via tsx) needs its binary.
-# Vercel does not honour this (its install runs with --ignore-scripts, see
-# vercel.json); it is what makes local installs build the binary.
-onlyBuiltDependencies:
-  - esbuild
+# pnpm blocks dependency build scripts by default and, since 10.16, FAILS the
+# install rather than warning when it skips one. esbuild (via tsx) needs its
+# postinstall to fetch its native binary.
+#
+# The key is `allowBuilds`, not the `onlyBuiltDependencies` list that pnpm 10
+# used: 11.x silently ignores the old name, which is why CI and Vercel both
+# died with ERR_PNPM_IGNORED_BUILDS while local installs looked fine (their
+# store already had the binary built). `pnpm approve-builds --all` writes this
+# shape.
+allowBuilds:
+  esbuild: true

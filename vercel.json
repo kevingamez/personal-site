@@ -3,7 +3,7 @@
 
   "framework": "nextjs",
   "buildCommand": "next build",
-  "installCommand": "pnpm install --frozen-lockfile --ignore-scripts",
+  "installCommand": "pnpm install --frozen-lockfile",
   "outputDirectory": ".next",
   "headers": [
     {
