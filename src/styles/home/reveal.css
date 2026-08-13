@@ -2,13 +2,24 @@
 
 /* `reveal-on` is set on <html> by reveal.ts only when motion is allowed, so
    the hidden state never applies without JS or under reduced motion. */
+
+/* `will-change` is scoped to the pre-reveal state on purpose. reveal.ts adds
+   `.reveal` to every section head, card, row and repo (30-50 elements on the
+   home page) and never takes it off, so an unscoped hint kept a promoted
+   compositor layer alive for each of them for the whole session, long after
+   its 720ms transition ended. Dropping the hint once `.in` lands releases the
+   layers; browsers auto-promote for the duration of a running
+   transform/opacity transition anyway. */
+.reveal-on .reveal:not(.in) {
+  will-change: opacity, transform;
+}
+
 .reveal-on .reveal {
   opacity: 0;
   transform: translateY(16px);
   transition:
     opacity var(--dur-reveal) var(--ease-out-soft),
     transform var(--dur-reveal) var(--ease-out-soft);
-  will-change: opacity, transform;
 }
 
 .reveal-on .reveal.in {

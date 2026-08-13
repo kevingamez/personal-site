@@ -68,13 +68,21 @@ export function initConway(): void {
     ;[grid, next] = [next, grid]
     for (let i = 0; i < trail.length; i++) trail[i] *= 0.88
     gen++
+    dirty = true
     const genEl = document.getElementById('gol-gen')
     const aliveEl = document.getElementById('gol-alive')
     if (genEl) genEl.textContent = String(gen)
     if (aliveEl) aliveEl.textContent = String(alive)
   }
 
+  // Set whenever `grid` or `trail` changed, which is the only thing draw()
+  // reads. The loop repaints on a dirty frame instead of every frame: the
+  // simulation advances once per 130ms, so ~87% of the repaints were redrawing
+  // pixels that had not moved, walking the 64x64 grid twice for nothing.
+  let dirty = true
+
   function draw(): void {
+    dirty = false
     if (!ctx || !c) return
     const W = c.width
     const H = c.height
@@ -123,7 +131,7 @@ export function initConway(): void {
         acc = 0
       }
     }
-    draw()
+    if (dirty) draw()
     rafId = requestAnimationFrame(loop)
   }
 
@@ -151,7 +159,7 @@ export function initConway(): void {
         grid.fill(0)
         trail.fill(0)
         gen = 0
-        if (rafId === null) draw()
+        draw()
         return
       }
       curStamp = stamp
@@ -173,7 +181,7 @@ export function initConway(): void {
       grid.fill(0)
       trail.fill(0)
       gen = 0
-      if (rafId === null) draw()
+      draw()
       return
     }
     const pat = STAMPS[curStamp]
@@ -183,7 +191,7 @@ export function initConway(): void {
       const yy = (y + dy + ROWS) % ROWS
       grid[(((yy % ROWS) + ROWS) % ROWS) * COLS + (((xx % COLS) + COLS) % COLS)] = 1
     }
-    if (rafId === null) draw()
+    draw()
   })
 
   const pauseBtn = document.getElementById('gol-pause')
@@ -199,7 +207,7 @@ export function initConway(): void {
   if (resetBtn)
     resetBtn.addEventListener('click', () => {
       seed()
-      if (rafId === null) draw() // re-seed must repaint when the loop is paused
+      draw() // a re-seed must land now, paused or not
     })
 
   // The simulation should run only when motion is allowed AND the canvas is
@@ -223,7 +231,7 @@ export function initConway(): void {
   // otherwise go permanently blank.
   window.addEventListener('resize', () => {
     resize()
-    if (rafId === null) draw()
+    draw()
   })
   seed()
   sync()
