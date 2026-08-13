@@ -74,7 +74,7 @@
   border-radius: 2px;
 }
 
-@media (width >= 1180px) and (height <= 950px) {
+@media (width >= 900px) and (height <= 950px) {
   .gh-banner {
     margin-top: 18px;
     padding-top: 14px;

@@ -233,7 +233,17 @@ main:focus {
 }
 
 /* Large displays: a 1200px island floats in space on 27"+ screens; give every
-   section a wider canvas so the composition owns the viewport. */
+   section a wider canvas so the composition owns the viewport.
+
+   The ladder starts at laptop width on purpose. A 14"/16" MacBook is 1512pt,
+   so a 1200px cap there leaves ~200px of dead space per side, a quarter of the
+   screen, and the composition reads as a narrow column rather than a page. */
+@media (width >= 1400px) {
+  .wrap {
+    max-width: 1320px;
+  }
+}
+
 @media (width >= 1680px) {
   .wrap {
     max-width: 1400px;

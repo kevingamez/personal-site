@@ -47,14 +47,28 @@
   transition: opacity 0.4s ease;
 }
 
-/* Short-but-wide laptops: keep the display type from swallowing the column. */
-@media (width >= 1180px) and (height <= 950px) {
+/* Short-but-wide laptops. The headline no longer needs a special case here:
+   its clamp carries a 13svh term, so a short window shrinks it on its own.
+   What this breakpoint still owns is the spread: the copy column normally
+   pins the stats to the top and the CTA to the bottom, which on a tall
+   display frames the composition and on an 860px laptop just opens two voids
+   of ~120px and ~130px around the headline. Here the column groups instead. */
+@media (width >= 900px) and (height <= 950px) {
+  .hero-copy {
+    justify-content: center;
+  }
+
   h1.hero-title {
-    font-size: clamp(56px, 9vw, 120px);
+    margin-top: 0;
   }
 
   .hero-lede {
     max-width: 40ch;
+    margin-bottom: 32px;
+  }
+
+  .hero-cta {
+    padding-top: 12px;
   }
 }
 

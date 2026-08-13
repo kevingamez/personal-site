@@ -50,7 +50,12 @@
    min-height is what stretches the rail line the whole way down. */
 @media (width >= 901px) {
   .hero-grid {
-    min-height: max(560px, calc(100svh - 232px));
+    /* Capped. The column distributes stats-top / headline-centre / CTA-bottom,
+       so whatever height this reserves becomes empty space between them: on a
+       1440px-tall screen the gap between the lede and the buttons reached
+       288px. Past ~760px the composition stops gaining anything from being
+       taller. */
+    min-height: min(max(560px, calc(100svh - 232px)), 700px);
   }
 
   .hero-copy {
@@ -87,7 +92,14 @@
 h1.hero-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(64px, 13.5vw, 240px);
+
+  /* Sized against BOTH axes. A width-only clamp ignores how tall the window
+     is, so the same headline was 120px on a 1512x860 laptop and 233px on a
+     1728x1080 one: a 94% jump between two ordinary window sizes, and a fifth
+     of the screen given to one word. Taking the smaller of a width and a
+     height term keeps it at 10-12% of the viewport height everywhere, which
+     is what makes the scale read as deliberate instead of accidental. */
+  font-size: clamp(56px, min(11vw, 13svh), 160px);
   line-height: 0.94;
   letter-spacing: var(--ls-display);
   margin: 0 0 26px;
