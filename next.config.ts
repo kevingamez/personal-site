@@ -83,6 +83,17 @@ const nextConfig: NextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
         ],
       },
+      // Personal photographs: they carry Kevin's face, his family and his
+      // friends, and they exist to be seen in context on this page, not as
+      // standalone results in Google Images. `noindex` on the file keeps the
+      // pages that show them fully indexable; it only removes the images
+      // themselves. Scoped to /posts because that is the whole photo set (the
+      // deck's .webp and the writing feed's .jpg are the same nine pictures),
+      // and it deliberately excludes the OG card and the logos.
+      {
+        source: '/posts/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
     ]
   },
 }
