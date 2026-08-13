@@ -16,9 +16,6 @@ export function Contact({ t }: Props) {
             <a className="btn btn-primary btn-email" href="mailto:kevingamez.kg@gmail.com">
               {t.btnEmail}
             </a>
-            <a className="btn btn-ghost" href="/dev/">
-              {t.btnDev}
-            </a>
           </div>
         </div>
         <CubeStage />

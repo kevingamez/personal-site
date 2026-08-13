@@ -24,9 +24,6 @@ export default function ErrorPage() {
           <button className="btn btn-ghost" type="button" id="refresh-btn">
             ↻ Refresh
           </button>
-          <a className="btn btn-ghost" href="/dev/">
-            Open dev mode
-          </a>
         </div>
 
         <div className="console" role="presentation">

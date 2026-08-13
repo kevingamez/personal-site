@@ -114,7 +114,6 @@ export const enSections: Pick<
     titleHtml: "Let's find out if we <i>should work together</i>.",
     body: 'A 30-minute call, no deck. Bring the messy version of the problem. Or just say hi.',
     btnEmail: 'kevingamez.kg@gmail.com →',
-    btnDev: 'Open dev mode',
   },
   footer: {
     pBlurb: "Founding engineer with a master's in deep learning. Site built in Bogotá.",

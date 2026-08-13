@@ -21,10 +21,6 @@ export function Nav({ meta, t }: Props) {
           <a href="/resume/">{t.resume}</a>
         </div>
         <div className="nav-right">
-          <a className="dev-toggle" href="/dev/">
-            <span className="led"></span>
-            {t.devMode}
-          </a>
           <a className="say-hi" href="#contact">
             {t.sayHi}
           </a>

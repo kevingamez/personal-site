@@ -21,9 +21,6 @@ export default function NotFound() {
           <a className="btn btn-primary" href="/">
             ← Back home
           </a>
-          <a className="btn btn-ghost" href="/dev/">
-            Open dev mode
-          </a>
         </div>
 
         <div className="console" role="presentation">

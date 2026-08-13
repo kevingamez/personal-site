@@ -33,7 +33,6 @@ export const es: HomeStrings = {
     work: 'Proyectos',
     github: 'GitHub',
     resume: 'CV',
-    devMode: 'Modo dev',
     sayHi: 'Escríbeme ↗',
   },
   hero: {
