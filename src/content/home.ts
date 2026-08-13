@@ -35,7 +35,6 @@ export interface HomeStrings {
   }
   nav: {
     about: string
-    stack: string
     experience: string
     work: string
     github: string
@@ -83,33 +82,25 @@ export interface HomeStrings {
     qfObsessed: string
     qfObsessedV: string
   }
-  stack: {
-    secNum: string
-    titleHtml: string
-    blurb: string
-    cols: { name: string; items: string[] }[]
-  }
   experience: {
     secNum: string
     titleHtml: string
     blurb: string
-    e1Year: string
-    e1Meta: string
-    e1Desc: string
-    e2Year: string
-    e2Meta: string
-    e2Desc: string
-    e3Year: string
-    e3RoleHtml: string
-    e3Meta: string
-    e3Desc: string
-    e4Year: string
-    e4RoleHtml: string
-    e4Meta: string
-    e4Desc: string
+    openHint: string // affordance line, revealed only once the rows are clickable
+    roles: {
+      dates: string
+      place: string
+      roleHtml: string
+      logo: string // path under /public/logos, decorative (the row names the place)
+      summary: string // the one line the row shows while it is closed
+      desc: string
+      ledger: { label: string; value: string }[]
+      stackLabel: string
+      stack: string[]
+    }[]
     achievementsTitle: string
     achievementsBlurb: string
-    achievements: { year: string; titleHtml: string; meta: string; desc: string }[]
+    achievements: { year: string; logo: string; titleHtml: string; meta: string; desc: string }[]
   }
   work: {
     secNum: string
@@ -160,7 +151,6 @@ export interface HomeStrings {
     blurb: string
     publicRepos: string
     languageMix: string
-    acrossPublicRepos: string
   }
   strava: {
     secNum: string
@@ -260,5 +250,6 @@ export interface HomeStrings {
     elsewhereDev: string
     elsewherePrivacy: string
     estab: string
+    credits: string // colophon link to /humans.txt, where the logo licenses live
   }
 }

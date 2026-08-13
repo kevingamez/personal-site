@@ -23,10 +23,9 @@ export const enSections: Pick<
     secNum: 'GitHub',
     titleHtml: 'The year, and what was running.',
     blurb:
-      'The line is what I pushed, week by week. The bars underneath are the products that were alive at the time, so the peaks have a reason.',
+      'Founding engineer means several products at once. The line is what I pushed, week by week. The bars are what it went into.',
     publicRepos: 'Repos',
     languageMix: 'language mix',
-    acrossPublicRepos: 'across all repos I work on',
   },
   strava: {
     secNum: 'Strava',
@@ -126,5 +125,6 @@ export const enSections: Pick<
     elsewhereDev: 'Dev mode →',
     elsewherePrivacy: 'Privacy',
     estab: 'Est. 2026, Bogotá',
+    credits: 'Credits and licenses',
   },
 }

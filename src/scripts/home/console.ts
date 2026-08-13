@@ -14,6 +14,7 @@ import {
 import { CAT_FILES } from './console-data'
 import { COMMANDS } from './console-commands'
 import { cancelChat } from './console-chat'
+import { initConsoleDemo } from './console-demo'
 
 function getRefs(): Refs | null {
   const stream = document.getElementById('console-stream')
@@ -249,4 +250,13 @@ export function initConsole(): void {
       cancelChat()
     }
   })
+
+  const section = document.getElementById('console')
+  if (section) {
+    initConsoleDemo({
+      input: refs.input,
+      section,
+      run: (command) => void dispatch(refs, history, command),
+    })
+  }
 }

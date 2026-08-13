@@ -39,8 +39,8 @@ export const HELP_LINES = [
 export const ABOUT_LINES = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
-  '<b>now</b>, founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
-  '       OpenAI pipelines on Next.js + NestJS + Postgres.',
+  '<b>last</b>, founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
+  '       OpenAI pipelines on Next.js + NestJS + Postgres. open to what is next.',
   '<b>before</b>, founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
   '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
   '',
@@ -49,7 +49,7 @@ export const ABOUT_LINES = [
 ]
 
 export const EXPERIENCE_LINES = [
-  '<span class="muted">Jun 2025, now</span>      Founding engineer <span class="at">@ Enttor</span>',
+  '<span class="muted">Jun 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
   '                       AI outbound, browser automation, OpenAI pipelines',
   '',
   '<span class="muted">Feb 2024, Mar 2025</span> Founding engineer <span class="at">@ Samsam</span>',
@@ -80,7 +80,9 @@ export const REPOS_LINES = [
 ]
 
 export const NOW_LINES = [
-  'building  , <b>AI outbound</b> at enttor - browser automation + OpenAI pipelines',
+  'status    <b>between roles</b>, open to founding-engineer and senior full-stack work',
+  'last      <b>AI outbound + ad creation</b> at enttor, browser automation and OpenAI pipelines',
+  'tinkering <b>browser agents</b> and LLM pipelines, plus this site',
 ]
 
 export const CONTACT_LINES = [

@@ -14,7 +14,6 @@ export function Nav({ meta, t }: Props) {
         </a>
         <div className="nav-links">
           <a href="#about">{t.about}</a>
-          <a href="#stack">{t.stack}</a>
           <a href="#experience">{t.experience}</a>
           <a href="#work">{t.work}</a>
           <a href="#github">{t.github}</a>

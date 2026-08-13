@@ -116,11 +116,11 @@
   }
 }
 
-/* Output stream */
+/* Output stream - fixed height on purpose: the window must never grow as
+   output accumulates, or every command reflows the page below it. */
 .cs-stream {
   padding: 18px 18px 8px;
-  min-height: 150px;
-  max-height: 430px;
+  height: clamp(300px, 40svh, 430px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -215,17 +215,6 @@
   border-bottom: 1px dashed currentcolor;
 }
 
-.cs-tool {
-  color: rgb(232 232 236 / 70%);
-  font-size: 12px;
-  padding: 2px 0;
-}
-
-.cs-tool-tag {
-  color: var(--coral-on-dark);
-  margin-right: 8px;
-}
-
 /* Streaming caret */
 .cm-streaming::after {
   content: '▍';
@@ -248,8 +237,7 @@
 
   .cs-stream {
     padding: 14px 12px 6px;
-    min-height: 140px;
-    max-height: 380px;
+    height: clamp(260px, 44svh, 380px);
   }
 }
 
@@ -263,7 +251,6 @@
   }
 
   .cs-stream {
-    min-height: 140px;
-    max-height: 360px;
+    height: clamp(240px, 34svh, 360px);
   }
 }

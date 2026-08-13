@@ -73,6 +73,7 @@ export function Footer({ t }: Props) {
         </div>
         <div className="colophon">
           <span>{t.estab}</span>
+          <a href="/humans.txt">{t.credits}</a>
         </div>
       </div>
     </footer>

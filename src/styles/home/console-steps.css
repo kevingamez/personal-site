@@ -1,0 +1,46 @@
+/* Agent steps: one line per thing the model does before it answers. Running is
+   a filled, pulsing dot; done is a hollow ring, so a finished turn reads as a
+   short checklist of what the assistant actually did. Written by
+   src/scripts/home/console-steps.ts. */
+.cs-step {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 12px;
+  color: rgb(232 232 236 / 55%);
+}
+
+.cs-step-mark {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--coral-on-dark);
+}
+
+.cs-step.is-done .cs-step-mark {
+  background: none;
+  box-shadow: inset 0 0 0 1px rgb(232 232 236 / 40%);
+}
+
+/* The argument the model chose: the search query, the topic it asked for. */
+.cs-step-detail {
+  min-width: 0;
+  overflow: hidden;
+  color: rgb(232 232 236 / 40%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cs-step-detail::before,
+.cs-step-detail::after {
+  content: '"';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cs-step.is-run .cs-step-mark {
+    animation: ct-pulse 1.1s ease-in-out infinite;
+  }
+}
