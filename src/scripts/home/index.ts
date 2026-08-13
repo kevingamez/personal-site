@@ -75,17 +75,20 @@ whenVisible(
   '600px 0px'
 )
 
-whenVisible(
-  '#github',
-  () => {
-    loadLazy(async () => {
-      const [ghStats, yearRun] = await Promise.all([import('./gh-stats'), import('./year-run')])
-      ghStats.initGhStats()
-      yearRun.initYearRun()
-    })
-  },
-  '700px 0px'
-)
+// Section commented out in HomePage.tsx. whenVisible() runs its callback
+// immediately when the anchor is missing, so leaving this wired would download
+// the chart chunk on every load for markup that is not there.
+// whenVisible(
+//   '#github',
+//   () => {
+//     loadLazy(async () => {
+//       const [ghStats, yearRun] = await Promise.all([import('./gh-stats'), import('./year-run')])
+//       ghStats.initGhStats()
+//       yearRun.initYearRun()
+//     })
+//   },
+//   '700px 0px'
+// )
 
 whenVisible(
   '[data-strava-lazy-anchor]',
@@ -111,16 +114,17 @@ whenVisible(
   '400px 0px'
 )
 
-whenVisible(
-  '#writing',
-  () => {
-    loadLazy(async () => {
-      const writing = await import('./writing')
-      writing.initWriting()
-    })
-  },
-  '700px 0px'
-)
+// Section commented out in HomePage.tsx, same reason as the GitHub block.
+// whenVisible(
+//   '#writing',
+//   () => {
+//     loadLazy(async () => {
+//       const writing = await import('./writing')
+//       writing.initWriting()
+//     })
+//   },
+//   '700px 0px'
+// )
 
 const loadConsole = whenVisible(
   '#console',

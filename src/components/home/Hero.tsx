@@ -31,7 +31,9 @@ export function Hero({ t }: Props) {
             <a className="btn btn-primary" href="#contact">
               {t.btnGetInTouch}
             </a>
-            <a className="arrow-link" href="#about">
+            {/* Points at the first section that is actually rendered; About is
+                commented out in HomePage.tsx. */}
+            <a className="arrow-link" href="#experience">
               {t.scrollDown} ↓
             </a>
           </div>

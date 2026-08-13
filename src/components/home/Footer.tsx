@@ -17,18 +17,14 @@ export function Footer({ t }: Props) {
           <div>
             <h3>{t.h4Sections}</h3>
             <ul>
-              <li>
-                <a href="#about">{t.sectionsAbout}</a>
-              </li>
+              {/* <li> <a href="#about">{t.sectionsAbout}</a> </li> */}
               <li>
                 <a href="#experience">{t.sectionsExperience}</a>
               </li>
               <li>
                 <a href="#work">{t.sectionsWork}</a>
               </li>
-              <li>
-                <a href="#github">{t.sectionsGithub}</a>
-              </li>
+              {/* <li> <a href="#github">{t.sectionsGithub}</a> </li> */}
             </ul>
           </div>
           <div>
