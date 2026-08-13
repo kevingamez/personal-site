@@ -63,7 +63,27 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    return [{ source: '/(.*)', headers: SECURITY_HEADERS }]
+    return [
+      { source: '/(.*)', headers: SECURITY_HEADERS },
+      // Everything Next emits under /_next/static already gets immutable
+      // caching from its content hash, but /public does not: it ships with
+      // `max-age=0, must-revalidate`, so every logo, favicon and photo costs a
+      // conditional request on every repeat visit. These filenames are stable
+      // and their content only changes with a deploy, so a day of freshness
+      // with a week of stale-while-revalidate keeps repeat loads off the
+      // network without pinning a wrong asset for long.
+      //
+      // Deliberately NOT immutable, and deliberately scoped to media: text
+      // files that are meant to be re-read (robots.txt, security.txt,
+      // humans.txt) and head-init.js, which gates the intro before paint,
+      // must stay revalidated so a deploy takes effect immediately.
+      {
+        source: '/:path*.:ext(png|jpg|jpeg|webp|avif|gif|svg|ico|woff|woff2)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+        ],
+      },
+    ]
   },
 }
 
