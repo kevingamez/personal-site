@@ -1,0 +1,58 @@
+/* Hover readout for the "year" figure: the dark card that follows the crosshair
+   along the contribution curve. Split out of year-run.css so both files stay
+   under the 300-line cap. */
+
+.yr-tip {
+  position: absolute;
+  z-index: 4;
+  min-width: 150px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -118%);
+  transition: opacity 0.12s ease;
+}
+
+.yr-tip.on {
+  opacity: 1;
+}
+
+.yr-tip b {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.yr-tip-wk {
+  margin-top: 1px;
+  font-size: 11px;
+  color: rgb(244 244 242 / 55%);
+}
+
+.yr-tip ul {
+  margin: 7px 0 0;
+  padding: 6px 0 0;
+  border-top: 1px solid rgb(244 244 242 / 18%);
+  list-style: none;
+}
+
+.yr-tip li {
+  font-size: 11px;
+  color: rgb(244 244 242 / 86%);
+}
+
+.yr-tip-none {
+  color: rgb(244 244 242 / 45%);
+}
+
+/* Under 1000px the frame scrolls sideways (see year-run.css), and a scroll
+   container clips overflow-y as well - a tip pinned above the curve would lose
+   its top. Hang it under the point there. */
+@media (width <= 1000px) {
+  .yr-tip {
+    transform: translate(-50%, 14%);
+  }
+}

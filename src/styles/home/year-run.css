@@ -37,12 +37,18 @@
   color: var(--muted);
 }
 
+/* Two columns only where there is room. The base .sec-head stacks at 760px,
+   but this rule is more specific and was overriding that at every width, so
+   phones got two cramped columns instead of the stacked one. */
+@media (width >= 761px) {
+  .yr .sec-head {
+    grid-template-columns: 1.55fr 1fr;
+  }
+}
+
 /* The figure needs a clean ground: the site's ambient particle field renders
    behind everything and reads as noise inside a chart. A paper panel isolates
    the plot without introducing a new surface colour. */
-.yr .sec-head {
-  grid-template-columns: 1.55fr 1fr;
-}
 
 .yr-frame {
   position: relative;
@@ -198,52 +204,6 @@
   cursor: crosshair;
 }
 
-.yr-tip {
-  position: absolute;
-  z-index: 4;
-  min-width: 150px;
-  padding: 9px 12px;
-  border-radius: 7px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 12px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -118%);
-  transition: opacity 0.12s ease;
-}
-
-.yr-tip.on {
-  opacity: 1;
-}
-
-.yr-tip b {
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-}
-
-.yr-tip-wk {
-  margin-top: 1px;
-  font-size: 11px;
-  color: rgb(244 244 242 / 55%);
-}
-
-.yr-tip ul {
-  margin: 7px 0 0;
-  padding: 6px 0 0;
-  border-top: 1px solid rgb(244 244 242 / 18%);
-  list-style: none;
-}
-
-.yr-tip li {
-  font-size: 11px;
-  color: rgb(244 244 242 / 86%);
-}
-
-.yr-tip-none {
-  color: rgb(244 244 242 / 45%);
-}
-
 @media (width <= 720px) {
   .yr-stats {
     gap: 32px;
@@ -251,6 +211,22 @@
 
   .yr-stat b {
     font-size: 30px;
+  }
+}
+
+/* The figure is ONE fixed 1180-unit drawing scaled by `width: 100%`, so every
+   label shrinks with the viewport: on a 375px phone the lane names land at
+   ~3.5px and the year reads as a smudge. Give the drawing a legible floor and
+   let the frame scroll sideways instead of shrinking the type - the same thing
+   GitHub does with its own contribution graph. */
+@media (width <= 1000px) {
+  .yr-frame {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  #yr-chart {
+    min-width: 1000px;
   }
 }
 
