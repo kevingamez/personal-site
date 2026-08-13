@@ -44,12 +44,20 @@ function initProgress(rail: HTMLElement): void {
   if (!fill) return
 
   let queued = false
+  // The rail is off screen for most of the page, where `p` clamps to the same
+  // 0 or 1 every frame. Writing the identical width anyway dirtied style on
+  // every scroll frame, which is what turns a later rect read in the same
+  // frame into a forced synchronous layout.
+  let lastWidth = ''
   const paint = () => {
     queued = false
     const r = rail.getBoundingClientRect()
     const mark = window.innerHeight * 0.62
     const p = Math.min(1, Math.max(0, (mark - r.top) / Math.max(r.height, 1)))
-    fill.style.width = `${(p * 100).toFixed(2)}%`
+    const width = `${(p * 100).toFixed(2)}%`
+    if (width === lastWidth) return
+    lastWidth = width
+    fill.style.width = width
   }
   const onScroll = () => {
     if (queued) return
