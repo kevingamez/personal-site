@@ -5,17 +5,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Development Commands
 
 ```bash
-npm run dev           # Next dev server at localhost:3000
-npm run build         # Production build (next build)
-npm run preview       # Serve the production build at 127.0.0.1:4321
-npm run check         # Type-check (tsc --noEmit)
-npm run lint          # ESLint (typescript-eslint + jsx-a11y)
-npm run format        # Apply Prettier
-npm run format:check  # Verify formatting (CI)
-npm test              # Playwright smoke tests (builds, then serves on :4321)
+pnpm dev           # Next dev server at localhost:3000
+pnpm build         # Production build (next build)
+pnpm preview       # Serve the production build at 127.0.0.1:4321
+pnpm check         # Type-check (tsc --noEmit)
+pnpm lint          # ESLint (typescript-eslint + jsx-a11y)
+pnpm format        # Apply Prettier
+pnpm format:check  # Verify formatting (CI)
+pnpm test              # Playwright smoke tests (builds, then serves on :4321)
 ```
 
-Always run `npm run check`, `npm run lint`, `npm run lint:css`, `npm run check:size`, `npm run format:check`, and `npm test` before pushing. CI gates on all six (`.github/workflows/ci.yml`).
+Always run `pnpm check`, `pnpm lint`, `pnpm lint:css`, `pnpm check:size`, `pnpm format:check`, and `pnpm test` before pushing. CI gates on all six (`.github/workflows/ci.yml`).
 
 ## Architecture Overview
 
@@ -64,7 +64,7 @@ CSP and friends live in **`vercel.json`** (edge) and **`next.config.ts`** `heade
 ### Style
 
 - Prettier: 2-space indent, single quotes (TS/TSX), no semicolons.
-- Don't fight the formatter, run `npm run format` instead of hand-formatting.
+- Don't fight the formatter, run `pnpm format` instead of hand-formatting.
 
 ### Animations & accessibility
 

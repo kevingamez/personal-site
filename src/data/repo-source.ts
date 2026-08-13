@@ -44,7 +44,7 @@ const TEXT_EXT =
   /\.(ts|tsx|js|jsx|mjs|cjs|css|json|md|txt|yml|yaml|toml|html|glsl|rs|sh|editorconfig|gitignore|prettierignore)$/i
 
 const isTextPath = (rel: string): boolean => {
-  if (rel === 'package-lock.json') return false
+  if (rel === 'pnpm-lock.yaml') return false
   // Dotfiles fall out of this correctly: the pattern anchors on a literal dot,
   // so `.gitignore` and `.editorconfig` match on their own names.
   return TEXT_EXT.test(rel.split('/').pop() || '')

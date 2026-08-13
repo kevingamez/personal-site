@@ -5,7 +5,7 @@
 const ALLOWED_ORIGINS = new Set([
   'https://kevingamez.co',
   'https://www.kevingamez.co',
-  // `next dev` serves :3000, `npm run preview` serves :4321
+  // `next dev` serves :3000, `pnpm preview` serves :4321
   'http://localhost:3000',
   'http://127.0.0.1:3000',
   'http://localhost:4321',

@@ -1,6 +1,6 @@
 // Generate WebP siblings for the raw JPEG photos so the home page can serve a
 // modern format via <picture> with the JPEG kept as a universal fallback.
-// Run after adding or replacing any /public/posts photo:  npm run images:webp
+// Run after adding or replacing any /public/posts photo:  pnpm images:webp
 import { readdirSync, statSync } from 'node:fs'
 import { join, extname } from 'node:path'
 import sharp from 'sharp'

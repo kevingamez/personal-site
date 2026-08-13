@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run preview",
+      "startServerCommand": "pnpm preview",
       "startServerReadyPattern": "Ready",
       "url": ["http://127.0.0.1:4321/", "http://127.0.0.1:4321/es/", "http://127.0.0.1:4321/dev/"],
       "numberOfRuns": 1
