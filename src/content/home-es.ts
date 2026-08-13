@@ -228,42 +228,13 @@ export const es: HomeStrings = {
     allRepos: 'Todos los repositorios',
   },
   deck: {
+    momentsLabel: 'Momentos',
+    momentsFull: 'Pantalla completa',
+    momentsClose: 'Click o Esc para soltarla',
     secNum: 'Las cartas',
     titleHtml: 'Lo que un CV no cuenta.',
-    blurb: 'Cinco cartas. Todo lo que dicen es verdad.',
+    blurb: 'Nueve fotos. Todo lo que cuentan es verdad.',
     hint: 'Elige una carta',
-    items: [
-      {
-        label: 'Cómo trabajo',
-        statement: 'Habla simple.',
-        bodyHtml:
-          'De un post que escribí en LinkedIn: puedes ser un gran ingeniero y aun así ser pobre. No porque no sepas programar. Porque no sabes hablar simple. El post completo está en <a href="#writing">Escritos</a>.',
-      },
-      {
-        label: 'Ahora mismo',
-        statement: 'Buscando lo que sigue.',
-        bodyHtml:
-          'Estuve como founding engineer en Enttor hasta julio de 2026. Abierto a roles de founding engineer y full-stack senior. La vía más rápida es el <a href="#contact">correo</a>.',
-      },
-      {
-        label: 'En paralelo',
-        statement: 'Este sitio es uno.',
-        bodyHtml:
-          'Open source, construido con Next.js y TypeScript. Esconde un <a href="/dev/">modo dev</a> estilo VS Code y corre una <a href="#console">consola de Claude</a> de verdad.',
-      },
-      {
-        label: 'Pregúntame por',
-        statement: 'Automatización, pipelines, satélites.',
-        bodyHtml:
-          'Automatización de navegador, pipelines de LLM que califican prospectos, o los modelos de deep learning que entrené sobre imágenes satelitales en la maestría.',
-      },
-      {
-        label: 'Fuera del teclado',
-        statement: 'Correr y montar bici por Bogotá.',
-        bodyHtml:
-          'La <a href="#strava">sección de Strava</a> más abajo es en vivo: distancia, horas y mi salida más larga de cada tipo, directo de la API.',
-      },
-    ],
   },
   ...esSections,
 }

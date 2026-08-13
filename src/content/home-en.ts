@@ -225,42 +225,13 @@ export const en: HomeStrings = {
     allRepos: 'All repositories',
   },
   deck: {
+    momentsLabel: 'Moments',
+    momentsFull: 'Fullscreen',
+    momentsClose: 'Click or Esc to let it go',
     secNum: 'The deck',
     titleHtml: 'The parts a CV leaves out.',
-    blurb: 'Five cards. Everything on them is true.',
+    blurb: 'Nine photographs. Everything on them is true.',
     hint: 'Pick a card',
-    items: [
-      {
-        label: 'How I work',
-        statement: 'Speak simply.',
-        bodyHtml:
-          'From a post I wrote on LinkedIn: you can be a great engineer and still be poor. Not because you can\'t code. Because you can\'t speak simply. The full post is in <a href="#writing">Writing</a>.',
-      },
-      {
-        label: 'Currently',
-        statement: "Looking for what's next.",
-        bodyHtml:
-          'Most recently founding engineer at Enttor, until July 2026. Open to founding-engineer and senior full-stack roles. The fastest way to reach me is <a href="#contact">email</a>.',
-      },
-      {
-        label: 'Side quests',
-        statement: 'This site is one.',
-        bodyHtml:
-          'Open source, built with Next.js and TypeScript. It hides a VS Code-style <a href="/dev/">dev mode</a> and runs a working <a href="#console">Claude console</a>.',
-      },
-      {
-        label: 'Ask me about',
-        statement: 'Automation, pipelines, satellites.',
-        bodyHtml:
-          "Browser automation, the OpenAI pipelines that qualify prospects, or the deep-learning models I trained on satellite imagery during the master's.",
-      },
-      {
-        label: 'Off the clock',
-        statement: 'Running and riding around Bogotá.',
-        bodyHtml:
-          'The <a href="#strava">Strava section</a> below is live: distance, hours, and my longest ride and run, pulled from the API.',
-      },
-    ],
   },
   ...enSections,
 }

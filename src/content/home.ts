@@ -124,11 +124,13 @@ export interface HomeStrings {
   }
   deck: {
     secNum: string
+    momentsLabel: string
+    momentsFull: string
+    momentsClose: string
     titleHtml: string
     blurb: string
     hint: string
     // `bodyHtml` follows the *Html invariant above: static, trusted markup only.
-    items: { label: string; statement: string; bodyHtml: string }[]
   }
   // Chart-only labels. The heading, blurb, and eyebrow live on `github`: the
   // curve and the repo list share one section.

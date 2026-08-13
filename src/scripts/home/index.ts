@@ -98,15 +98,17 @@ whenVisible(
   '900px 0px'
 )
 
+// A second WebGL context on a page that already runs one, so it waits until the
+// box is actually near the viewport.
 whenVisible(
-  '#deck',
+  '[data-moments-lazy]',
   () => {
     loadLazy(async () => {
-      const cards = await import('./cards')
-      cards.initDeck()
+      const moments = await import('./moments')
+      moments.initMoments()
     })
   },
-  '600px 0px'
+  '400px 0px'
 )
 
 whenVisible(

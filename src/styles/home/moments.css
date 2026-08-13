@@ -1,0 +1,217 @@
+/* ─── Moments: a framed window onto the card swarm ───
+   The scene is a dark room. On a paper page that only works if it is clearly a
+   WINDOW: bordered, radiused, captioned, sitting in the layout like a plate in
+   a book rather than bleeding to the edges. */
+
+.moments {
+  margin-top: clamp(28px, 4svh, 48px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #090808;
+}
+
+.moments-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 16px;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+
+.moments-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.moments-full {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-xs);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.moments-full:hover {
+  border-color: var(--ink);
+}
+
+.moments-stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background:
+    radial-gradient(34% 32% at 50% 43%, rgb(255 231 190 / 8.5%) 0%, transparent 66%),
+    radial-gradient(62% 56% at 50% 47%, rgb(86 66 58 / 10%) 0%, transparent 74%), #090808;
+}
+
+.moments-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.moments.is-over .moments-stage canvas {
+  cursor: pointer;
+}
+
+/* the vignette that keeps the eye in the middle of the room */
+.moments-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(94% 84% at 50% 50%, rgb(9 8 8 / 0%) 40%, rgb(3 3 4 / 90%) 100%);
+}
+
+.moments-hint {
+  position: absolute;
+  inset: auto 0 22px;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: rgb(244 241 234 / 62%);
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  text-shadow:
+    0 1px 10px rgb(0 0 0 / 95%),
+    0 0 26px rgb(0 0 0 / 85%);
+}
+
+.moments.is-held .moments-hint {
+  opacity: 0;
+}
+
+/* the readout for the card being held */
+.moments-panel {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 6%;
+  width: min(38%, 380px);
+  transform: translateY(-46%) translateX(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out-soft);
+  text-shadow: 0 2px 24px rgb(0 0 0 / 95%);
+}
+
+.moments-panel.on {
+  opacity: 1;
+  transform: translateY(-46%) translateX(0);
+}
+
+.mp-meta {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(244 241 234 / 45%);
+}
+
+.mp-title {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(21px, 2vw, 29px);
+  line-height: 1.14;
+  color: #f4f1ea;
+}
+
+.mp-desc {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgb(244 241 234 / 68%);
+  max-width: 36ch;
+}
+
+.mp-close {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: rgb(244 241 234 / 26%);
+}
+
+/* fullscreen: the frame is gone, so the stage takes the whole screen */
+.moments.is-full {
+  border: 0;
+  border-radius: 0;
+}
+
+.moments.is-full .moments-bar {
+  position: absolute;
+  z-index: 4;
+  inset: 0 0 auto;
+  background: transparent;
+  border-bottom: 0;
+}
+
+.moments.is-full .moments-label {
+  color: rgb(244 241 234 / 40%);
+}
+
+.moments.is-full .moments-full {
+  color: rgb(244 241 234 / 75%);
+  border-color: rgb(244 241 234 / 25%);
+}
+
+.moments.is-full .moments-stage {
+  aspect-ratio: auto;
+  height: 100vh;
+}
+
+/* Narrow: the box gets taller so the swarm has room, and the readout moves
+   under the cards instead of beside them. */
+@media (width <= 820px) {
+  .moments-stage {
+    aspect-ratio: 3 / 4;
+  }
+
+  .moments-panel {
+    top: auto;
+    right: 5%;
+    bottom: 6%;
+    left: 5%;
+    width: auto;
+    text-align: center;
+    transform: translateY(12px);
+  }
+
+  .mp-title {
+    font-size: 20px;
+  }
+
+  .mp-desc {
+    font-size: 13px;
+    line-height: 1.62;
+  }
+
+  .moments-panel.on {
+    transform: translateY(0);
+  }
+
+  .mp-desc {
+    margin-inline: auto;
+  }
+}
