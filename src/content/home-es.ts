@@ -66,9 +66,9 @@ export const es: HomeStrings = {
     titleHtml: 'Sobre mí.',
     blurb: 'Founding engineer full-stack, con maestría en deep learning.',
     p1Html:
-      'Soy ingeniero de software, de Bogotá. En <b>Enttor</b> construí el sistema de outbound con IA desde cero. La\n              automatización de navegador encontraba prospectos en Instagram y LinkedIn y los pipelines de OpenAI los\n              calificaban. Todo corría sobre dashboards en Next.js, APIs en NestJS y colas de Inngest.',
+      'Me gustan las partes de un producto que nadie muestra en un demo: la cola que reintenta, la sesión\n              que sigue abierta, el pipeline que admite que se equivocó y vuelve a correr. Casi todo lo que he\n              lanzado es alguna máquina haciendo trabajo tedioso a las tres de la mañana.',
     p2Html:
-      'Antes de Enttor fui founding engineer en <b>Samsam</b>, un marketplace de e-commerce con una app de React\n              Native para compradores, un panel en Next.js para comerciantes, todo sobre Prisma y Postgres. Antes de eso\n              trabajé en analítica: pipelines SQL y dashboards en Power BI para HR, riesgo y operaciones. Y en deep\n              learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental.',
+      'Antes de las startups pasé un tiempo en analítica, escribiendo pipelines SQL y dashboards en Power BI\n              para HR, riesgo y operaciones, y luego en deep learning sobre imágenes satelitales, detectando\n              cultivos y riesgo ambiental. Las dos me enseñaron a desconfiar de un número que no puedo rastrear.',
     p3Html:
       'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management.',
     qfBased: 'Ubicación',
@@ -196,17 +196,17 @@ export const es: HomeStrings = {
     projects: [
       {
         name: 'Agente de Slack',
-        desc: 'El mismo producto con una segunda puerta: un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de anuncios de Meta y TikTok, así que lanza campañas, diagnostica fatiga de creativos y mueve presupuesto, no solo responde preguntas. Lanzar un anuncio toma tres pasos en vez de los treinta clics que pide Ads Manager, y los creativos se importan en lote desde una carpeta de Drive.',
+        desc: 'Un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de Meta y TikTok, así que lanzar un anuncio toma tres pasos en vez de los treinta que pide Ads Manager.',
         meta: 'Claude tool use, APIs de Meta y TikTok, Postgres',
       },
       {
         name: 'Plataforma Enttor',
-        desc: 'Dos años del producto de GTM: sacaba prospectos de la interacción en Instagram y LinkedIn, escribía DMs personalizados con IA, respondía solo por webhooks de Meta y lo dejaba todo en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres.',
+        desc: 'Dos años del producto de GTM: sacaba prospectos de Instagram y LinkedIn, escribía DMs personalizados y dejaba cada respuesta en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres.',
         meta: 'Next.js, Supabase, Inngest',
       },
       {
         name: 'MakeMotionGraphics',
-        desc: 'De texto a motion graphics en loop. Claude escribe una escena HTML autocontenida, la captura en Chrome headless para ver su propio resultado, la corrige y solo entonces la cierra. Un pipeline paralelo de frames graba todo a MP4.',
+        desc: 'De texto a motion graphics en loop. Claude escribe una escena HTML, la captura en Chrome headless para ver su propio resultado, corrige lo que falla y solo entonces graba a MP4.',
         meta: 'Loop agéntico, Puppeteer, ffmpeg',
       },
       {
@@ -216,7 +216,7 @@ export const es: HomeStrings = {
       },
       {
         name: 'Infraestructura de Automatización',
-        desc: 'El backend self-hosted detrás del outreach: servicios Node en un Mac Mini en Bogotá que mantienen sesiones reales en cuatro plataformas, leen interacción y mandan mensajes a ritmo humano. Contribuí; dos compañeros lo lideraron.',
+        desc: 'El backend detrás del outreach: servicios Node en un Mac Mini que mantienen sesiones reales en cuatro plataformas y mandan mensajes a ritmo humano. Dos compañeros lo lideraron, yo contribuí.',
         meta: 'Playwright, BullMQ, Redis',
       },
       {

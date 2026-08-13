@@ -66,9 +66,9 @@ export const en: HomeStrings = {
     titleHtml: 'About me.',
     blurb: "Full-stack founding engineer with a master's in deep learning.",
     p1Html:
-      "I'm a software engineer from Bogotá. At <b>Enttor</b> I built the AI outbound system: the browser\n              automation that found prospects on Instagram and LinkedIn, the OpenAI pipelines that qualified them, the\n              Next.js dashboards, and the NestJS APIs and Inngest queues behind them.",
+      'I like the parts of a product nobody demos: the queue that retries, the session that stays\n              logged in, the pipeline that admits it got it wrong and runs again. Most of what I have\n              shipped is some machine doing tedious work at three in the morning.',
     p2Html:
-      'Before Enttor I was founding engineer at <b>Samsam</b>, an e-commerce marketplace with a React Native app for\n              shoppers, a Next.js dashboard for merchants, all on Prisma and Postgres. Earlier work spanned analytics\n              (SQL pipelines and Power BI dashboards for HR, risk, and operations) and deep learning on satellite\n              imagery to spot croplands and flag environmental risk.',
+      'Before the startups I spent a while in analytics, writing SQL pipelines and Power BI dashboards\n              for HR, risk and operations, and then in deep learning on satellite imagery, spotting croplands\n              and flagging environmental risk. Both taught me to distrust a number I cannot trace.',
     p3Html:
       'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and a minor in management.',
     qfBased: 'Based',
@@ -193,17 +193,17 @@ export const en: HomeStrings = {
     projects: [
       {
         name: 'Slack Agent',
-        desc: 'The same product with a second front door: a Slack bot media buyers talk to like a coworker. 165 tools across the Meta and TikTok ad APIs, so it launches campaigns, diagnoses creative fatigue and moves budget instead of just answering questions. Launching an ad takes three steps instead of the thirty clicks Ads Manager asks for, and creatives import in bulk straight from a Drive folder.',
+        desc: 'A Slack bot media buyers talk to like a coworker. 165 tools across the Meta and TikTok ad APIs, so launching an ad takes three steps instead of the thirty Ads Manager asks for.',
         meta: 'Claude tool use, Meta and TikTok APIs, Postgres',
       },
       {
         name: 'Enttor Platform',
-        desc: 'Two years of the GTM product: it sourced prospects from Instagram and LinkedIn engagement, wrote personalized DMs with AI, auto-replied through Meta webhooks and tracked it all in one inbox. 132 API routes over four Postgres schemas.',
+        desc: 'Two years of the GTM product: it sourced prospects from Instagram and LinkedIn, wrote personalized DMs and tracked every reply in one inbox. 132 API routes over four Postgres schemas.',
         meta: 'Next.js, Supabase, Inngest',
       },
       {
         name: 'MakeMotionGraphics',
-        desc: 'Text to looping motion graphics. Claude writes a self-contained HTML scene, screenshots it in headless Chrome to see its own output, patches it, and only then finalizes. A parallel frame pipeline records the result to MP4.',
+        desc: 'Text to looping motion graphics. Claude writes an HTML scene, screenshots it in headless Chrome to see its own output, patches what is wrong, and only then records to MP4.',
         meta: 'Agentic loop, Puppeteer, ffmpeg',
       },
       {
@@ -213,7 +213,7 @@ export const en: HomeStrings = {
       },
       {
         name: 'Browser Automation Infrastructure',
-        desc: 'The self-hosted backend behind the outreach: Node services on a Mac Mini in Bogotá that hold real logged-in sessions on four platforms, scrape engagement and send messages at human rates. I contributed; two teammates led it.',
+        desc: 'The backend behind the outreach: Node services on a Mac Mini that hold real logged-in sessions on four platforms and send messages at human rates. Two teammates led it, I contributed.',
         meta: 'Playwright, BullMQ, Redis',
       },
       {
