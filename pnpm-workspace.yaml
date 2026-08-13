@@ -6,5 +6,8 @@ overrides:
   yaml: ^2.8.4
 
 # pnpm blocks postinstall scripts by default; esbuild (via tsx) needs its binary.
+# Mirrored in package.json#pnpm because Vercel's builder runs a pnpm that still
+# reads that key and ignores this file: without the mirror the install fails
+# with ERR_PNPM_IGNORED_BUILDS.
 onlyBuiltDependencies:
   - esbuild
