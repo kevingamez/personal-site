@@ -110,8 +110,17 @@ body {
 html {
   scroll-behavior: auto;
 
-  /* Keep in-page anchor jumps clear of the sticky nav (and keyboard focus too). */
-  scroll-padding-top: 72px;
+  /* Keep in-page anchor jumps clear of the sticky nav (and keyboard focus too).
+     This is the ONLY anchor offset on the page; sections must not add their own
+     scroll-margin-top, because the two would stack. The value tracks the nav,
+     which is 57px on one row and 78px once the links wrap at 899px. */
+  scroll-padding-top: 68px;
+}
+
+@media (width <= 899px) {
+  html {
+    scroll-padding-top: 90px;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

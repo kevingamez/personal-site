@@ -1,8 +1,12 @@
 /* ─── Section frame (Vela) ─── */
+
+/* No scroll-margin-top here: html already carries scroll-padding-top for the
+   sticky nav, and the two ADD UP. With both at 72px an anchor jump parked the
+   section 144px down the viewport under a 57px nav, which read as landing
+   short of the target with a band of empty paper on top. */
 section {
   padding: clamp(80px, 11svh, 128px) 0 clamp(64px, 8svh, 96px);
   position: relative;
-  scroll-margin-top: 72px;
 }
 
 .sec-head {
