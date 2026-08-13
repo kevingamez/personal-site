@@ -21,18 +21,7 @@ import {
   type Points,
 } from 'three'
 import { makeParticleMaterial } from './particle-material'
-import { AUTO_WAVE_S, NODES, TOUCH_WAVE_SPEED } from './net-geometry'
-
-// Small screens build a lighter figure with the same silhouette so the
-// identity survives everywhere without burning a phone CPU; the shader
-// compensates with slightly larger grains so the mass still reads solid.
-const figureCount = (): number => {
-  if (typeof window === 'undefined') return NODES
-  const w = window.innerWidth
-  if (w < 700) return 5600
-  if (w < 1100) return 8600
-  return NODES
-}
+import { AUTO_WAVE_S, TOUCH_WAVE_SPEED } from './net-geometry'
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
@@ -42,7 +31,20 @@ import { PulseLayer } from './journey-pulses'
 
 const CAM_Z = 10
 const FOV = 40
-const R = 1.5 // local half-extent used to fit poses
+const R = 1.5 // local half-extent of the brain, used to fit poses
+// The cube does not fit the brain's box. Its half-side is 1.3, but at the
+// three-quarter angle it keeps turning through, a corner swings out to ~1.86 -
+// so fitting it with R rendered it ~25% oversized, spilling out of its dock
+// (and off the sides on phones). Fit each figure with its own radius.
+const R_CUBE = 1.87
+// Reference viewport height for grain sizing. gl_PointSize is driven by
+// g.scale.x, a WORLD-space scale, and the world is exactly one viewport tall -
+// so the same on-screen figure yields a smaller scale the taller the window
+// gets, and the grains shrink as the figure grows. On a 1440px-tall display
+// the docked cube laid down ~40% of the ink it does on a 900px laptop and read
+// as a ghost. Normalizing by this height fixes tall screens and leaves the
+// 900px laptop case exactly as it was.
+const REF_VH = 900
 const REST_BRAIN = 1.5 + Math.PI // legible profile, flipped 180deg
 const REST_CUBE = REST_BRAIN - 0.72 // three-quarter view of the cube
 
@@ -53,7 +55,7 @@ function Scene() {
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
   const size = useThree((s) => s.size)
-  const { brain, dustCol, cube } = useMemo(() => buildField(figureCount()), [])
+  const { brain, dustCol, cube } = useMemo(() => buildField(), [])
   const { count, base, phase, edges, origins, sizes, baseColors, scatter, stagger } = brain
   const material = useMemo(
     () => makeParticleMaterial({ opacity: 0.95, pixelRatio: Math.min(gl.getPixelRatio(), 1.75) }),
@@ -122,8 +124,9 @@ function Scene() {
       (0.5 - pose.y) * worldH + cursor.current.ny * par * 0.6,
       k
     )
-    g.scale.setScalar(MathUtils.lerp(g.scale.x, (pose.s * worldH) / (2 * R), k))
-    const px = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, g.scale.x)
+    const fitR = MathUtils.lerp(R, R_CUBE, s.fC)
+    g.scale.setScalar(MathUtils.lerp(g.scale.x, (pose.s * worldH) / (2 * fitR), k))
+    const px = Math.min(gl.getPixelRatio(), 1.75) * Math.max(0.55, (g.scale.x * vh) / REF_VH)
     material.uniforms.uPx.value = px
     pulseMat.uniforms.uPx.value = px
     pulseMat.uniforms.uOpacity.value = s.a * s.fB * 0.9

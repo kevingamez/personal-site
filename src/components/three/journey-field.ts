@@ -7,7 +7,18 @@ import { Color } from 'three'
 import { buildVolume, NODES } from './net-geometry'
 import { buildCubeFigure } from './cube-figure'
 
-export function buildField(count?: number) {
+// Small screens build a lighter figure with the same silhouette so the
+// identity survives everywhere without burning a phone CPU; the shader
+// compensates with slightly larger grains so the mass still reads solid.
+const figureCount = (): number => {
+  if (typeof window === 'undefined') return NODES
+  const w = window.innerWidth
+  if (w < 700) return 5600
+  if (w < 1100) return 8600
+  return NODES
+}
+
+export function buildField(count: number = figureCount()) {
   const brain = buildVolume(count)
 
   const dustCol = new Float32Array(brain.count * 3)
