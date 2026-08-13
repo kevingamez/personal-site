@@ -14,6 +14,7 @@ import {
   STACK_LINES,
 } from './console-data'
 import { runChat } from './console-chat'
+import { enterDevMode } from './dev-transition'
 
 function stripHead(raw: string, head: string): string {
   return raw
@@ -55,6 +56,11 @@ export const COMMANDS: Record<string, CommandFn> = {
   },
   source: (_a, r) => {
     printLines(r.stream, SOURCE_LINES)
+  },
+  // The only way into dev mode - nothing on the page links to it anymore.
+  dev: (_a, r) => {
+    printOut(r.stream, 'booting <span class="ac">/dev/</span>, the ide interface...')
+    enterDevMode()
   },
   date: (_a, r) => {
     printOut(r.stream, escape(new Date().toString()))

@@ -40,7 +40,6 @@ export interface HomeStrings {
     work: string
     github: string
     resume: string
-    devMode: string
     sayHi: string
   }
   hero: {
@@ -249,7 +248,6 @@ export interface HomeStrings {
     titleHtml: string
     body: string
     btnEmail: string
-    btnDev: string
   }
   footer: {
     pBlurb: string

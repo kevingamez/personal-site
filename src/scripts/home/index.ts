@@ -4,7 +4,6 @@
 import { bootstrapClient } from '../lib/init'
 import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
-import { initDevTransition } from './dev-transition'
 import { initIntro } from './intro'
 
 bootstrapClient()
@@ -12,7 +11,6 @@ initIntro()
 initBogotaClock()
 void import('./weather').then((m) => m.initWeather())
 initConway()
-initDevTransition()
 
 function runWhenIdle(fn: () => void, timeout = 2000): void {
   if ('requestIdleCallback' in window) {

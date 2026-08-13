@@ -33,7 +33,6 @@ export const en: HomeStrings = {
     work: 'Work',
     github: 'GitHub',
     resume: 'Résumé',
-    devMode: 'Dev mode',
     sayHi: 'Email me ↗',
   },
   hero: {

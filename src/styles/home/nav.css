@@ -52,35 +52,6 @@
   gap: 14px;
 }
 
-.dev-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px;
-  border: 1px solid var(--line-2);
-  border-radius: var(--r-xs);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  background: transparent;
-  transition:
-    background-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out);
-}
-
-.dev-toggle:hover {
-  border-color: var(--ink);
-}
-
-.dev-toggle .led {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--emerald-500);
-}
-
 /* Header action: underlined uppercase arrow link, per the Vela header. */
 .say-hi {
   display: inline-flex;
@@ -140,11 +111,5 @@
   .nav-links {
     -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
     mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
-  }
-}
-
-@media (width <= 430px) {
-  .dev-toggle {
-    padding: 7px 10px;
   }
 }
