@@ -9,6 +9,20 @@
   border-radius: var(--r-md);
   overflow: hidden;
   background: #090808;
+
+  /* Capped by WIDTH, not height, and centred. The stage keeps its 16/10, so
+     its height follows whatever width this allows: on a wide laptop the plate
+     used to grow to 765px inside an 860px viewport, a near-fullscreen black
+     panel and the only dark full-bleed block on a paper page. Constraining the
+     height directly does not work here, because aspect-ratio then narrows the
+     stage while the frame stays full width and its own black backing shows
+     through beside it. */
+  max-width: min(100%, calc(60svh * 1.6));
+
+  /* Left, not centred: every other block on the page hangs off the same left
+     line, including this section's own heading, and a centred plate was the
+     only element ignoring it. */
+  margin-inline: 0 auto;
 }
 
 .moments-bar {

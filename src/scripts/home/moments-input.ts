@@ -106,6 +106,16 @@ export function wireInput(h: InputHooks): void {
 
   addEventListener('resize', h.fit)
 
+  // three writes the canvas size as inline width/height, which beats any CSS
+  // sizing, so the scene only matches its box while the two agree. A window
+  // resize is not the only thing that breaks that: the stage is capped against
+  // the viewport, and the box changes size on its own whenever that cap starts
+  // or stops binding. Without this the renderer kept a stale size and drew the
+  // room into part of the frame, leaving the rest flat black.
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(() => h.fit()).observe(el.parentElement ?? el)
+  }
+
   document.addEventListener('fullscreenchange', () => {
     root.classList.toggle('is-full', document.fullscreenElement === root)
     requestAnimationFrame(h.fit)
