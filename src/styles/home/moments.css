@@ -9,20 +9,6 @@
   border-radius: var(--r-md);
   overflow: hidden;
   background: #090808;
-
-  /* Capped by WIDTH, not height, and centred. The stage keeps its 16/10, so
-     its height follows whatever width this allows: on a wide laptop the plate
-     used to grow to 765px inside an 860px viewport, a near-fullscreen black
-     panel and the only dark full-bleed block on a paper page. Constraining the
-     height directly does not work here, because aspect-ratio then narrows the
-     stage while the frame stays full width and its own black backing shows
-     through beside it. */
-  max-width: min(100%, calc(60svh * 1.6));
-
-  /* Left, not centred: every other block on the page hangs off the same left
-     line, including this section's own heading, and a centred plate was the
-     only element ignoring it. */
-  margin-inline: 0 auto;
 }
 
 .moments-bar {
@@ -193,6 +179,18 @@
 .moments.is-full .moments-stage {
   aspect-ratio: auto;
   height: 100vh;
+}
+
+/* Wide and short: the plate spans the column like every other block, so its
+   height is a function of that width. At 16/10 on a 1512x860 laptop that came
+   to 765px inside an 860px viewport, a near-fullscreen black panel. A wider
+   ratio buys the height back without narrowing the plate, which is what
+   capping its width did, and it leaves no empty gutter beside it. The scene is
+   a room, so a wider crop simply shows more of it. */
+@media (width >= 900px) and (height <= 1100px) {
+  .moments-stage {
+    aspect-ratio: 21 / 9;
+  }
 }
 
 /* Narrow: the box gets taller so the swarm has room, and the readout moves
