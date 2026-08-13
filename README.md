@@ -117,11 +117,11 @@ public/          images, head-init.js, robots.txt, llms.txt, docs/
 
 ## Getting Started
 
-Requires **Node >= 22.12.0**.
+Requires **Node >= 22.12.0** and **pnpm** (`corepack enable pnpm` picks up the version pinned in `packageManager`).
 
 ```bash
-npm install
-npm run dev        # http://localhost:3000
+pnpm install
+pnpm dev        # http://localhost:3000
 ```
 
 Copy `.env.example` to `.env.local` for the API routes. The chat console needs `ANTHROPIC_API_KEY` **and** KV credentials, otherwise it answers 503 by design.
@@ -129,24 +129,24 @@ Copy `.env.example` to `.env.local` for the API routes. The chat console needs `
 ### Commands
 
 ```bash
-npm run dev           # dev server at :3000
-npm run build         # production build
-npm run preview       # serve the build at 127.0.0.1:4321
-npm run check         # tsc --noEmit
-npm run lint          # eslint
-npm run lint:css      # stylelint
-npm run check:size    # 300-line file cap
-npm run format        # prettier --write
-npm run format:check  # prettier --check (CI)
-npm test              # playwright smoke tests
-npm run images:webp   # regenerate webp variants of public images
+pnpm dev           # dev server at :3000
+pnpm build         # production build
+pnpm preview       # serve the build at 127.0.0.1:4321
+pnpm check         # tsc --noEmit
+pnpm lint          # eslint
+pnpm lint:css      # stylelint
+pnpm check:size    # 300-line file cap
+pnpm format        # prettier --write
+pnpm format:check  # prettier --check (CI)
+pnpm test              # playwright smoke tests
+pnpm images:webp   # regenerate webp variants of public images
 ```
 
 ## Conventions
 
 Full list in `CLAUDE.md`. Highlights:
 
-- **300-line hard cap** per file, enforced by `npm run check:size`.
+- **300-line hard cap** per file, enforced by `pnpm check:size`.
 - Global CSS in Next is bundle-wide: namespace page stylesheets under a wrapper class, never write bare `body`/`h1` rules outside `base.css`.
 - Every animation respects `prefers-reduced-motion`; every `<img>` has `alt`.
 - `*Html` content fields are trusted static markup rendered with `dangerouslySetInnerHTML`, never source them from user input.

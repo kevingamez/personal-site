@@ -16,17 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
-      - run: npm run lint:css
-      - run: npm run check:size
-      - run: npm run check
-      - run: npm run build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm lint:css
+      - run: pnpm check:size
+      - run: pnpm check
+      - run: pnpm build
 
   smoke:
     name: playwright smoke
@@ -34,14 +35,15 @@ jobs:
     needs: check
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      # npm test builds via the Playwright webServer command.
-      - run: npm test
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # pnpm test builds via the Playwright webServer command.
+      - run: pnpm test
         env:
           CI: 'true'
       - if: failure()
@@ -57,12 +59,13 @@ jobs:
     needs: check
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - uses: treosh/lighthouse-ci-action@v12
         with:
           configPath: ./.lighthouserc.json

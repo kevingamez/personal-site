@@ -1,0 +1,10 @@
+# pnpm settings live here as of pnpm 10.16+ (the "pnpm" key in package.json is ignored).
+# https://pnpm.io/settings
+
+# Pin the transitive `yaml` (pulled in by lighthouse/stylelint tooling).
+overrides:
+  yaml: ^2.8.4
+
+# pnpm blocks postinstall scripts by default; esbuild (via tsx) needs its binary.
+onlyBuiltDependencies:
+  - esbuild
