@@ -37,7 +37,11 @@ export interface HomeStrings {
     about: string
     experience: string
     work: string
+    deck: string
     github: string
+    strava: string
+    writing: string
+    console: string
     resume: string
     sayHi: string
   }
