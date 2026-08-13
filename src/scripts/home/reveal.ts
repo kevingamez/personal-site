@@ -7,14 +7,7 @@
 // optional #strava section are skipped (it can be display:none until its data
 // loads, which would prevent the observer from ever firing).
 
-const STAGGER_GROUPS = new Set([
-  '.tl-item',
-  '.achievement',
-  '.work-card',
-  '.repo',
-  '.post-card',
-  '.stack-col',
-])
+const STAGGER_GROUPS = new Set(['.tl-row', '.achievement', '.work-card', '.repo', '.post-card'])
 
 // Hero (above the fold) animates via CSS on load instead, to avoid any
 // first-paint flash; here we only reveal content that scrolls into view.
@@ -22,8 +15,7 @@ const SELECTORS = [
   '.sec-head',
   '.work-feature',
   '.work-card',
-  '.stack-col',
-  '.tl-item',
+  '.tl-row',
   '.achievement',
   '.repo',
   '.post-card',

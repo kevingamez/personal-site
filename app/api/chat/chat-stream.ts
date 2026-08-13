@@ -3,6 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 
 import { KEVIN_CONTEXT } from './chat-prompt'
+import { SITE_TOOL, runSiteTool } from './chat-site'
 import { STRAVA_TOOL, runStravaTool } from './chat-strava'
 
 export function createChatStream(
@@ -43,11 +44,20 @@ export function createChatStream(
           max_uses: 2,
         } as unknown as Anthropic.Tool,
         STRAVA_TOOL,
+        SITE_TOOL,
       ]
       const MAX_TURNS = 5
 
+      // A tool block arrives as a start event with an EMPTY input, then the
+      // arguments stream in as input_json_delta fragments. Emitting on start
+      // therefore shipped `{}` to the console, which is why a web search always
+      // rendered as "..." instead of the query. Buffer per block index and emit
+      // once the block closes and the JSON is whole.
+      const pending = new Map<number, { name: string; json: string }>()
+
       try {
         for (let turn = 0; turn < MAX_TURNS; turn++) {
+          pending.clear()
           const modelStream = client.messages.stream(
             {
               model: 'claude-sonnet-4-5',
@@ -64,16 +74,32 @@ export function createChatStream(
           for await (const event of modelStream) {
             if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
               send({ type: 'text_delta', text: event.delta.text })
-            } else if (
-              event.type === 'content_block_start' &&
-              (event.content_block.type === 'tool_use' ||
-                event.content_block.type === 'server_tool_use')
-            ) {
-              send({
-                type: 'tool_use',
-                name: event.content_block.name,
-                input: event.content_block.input,
-              })
+            } else if (event.type === 'content_block_delta' && pending.has(event.index)) {
+              if (event.delta.type === 'input_json_delta') {
+                const slot = pending.get(event.index)
+                if (slot) slot.json += event.delta.partial_json
+              }
+            } else if (event.type === 'content_block_start') {
+              const block = event.content_block
+              if (block.type === 'tool_use' || block.type === 'server_tool_use') {
+                pending.set(event.index, { name: block.name, json: '' })
+              } else if (block.type === 'web_search_tool_result') {
+                // Hosted tool: Anthropic runs it inline, so its result block
+                // arriving is the only signal the console gets that it finished.
+                send({ type: 'tool_done', name: 'web_search' })
+              }
+            } else if (event.type === 'content_block_stop') {
+              const slot = pending.get(event.index)
+              if (slot) {
+                pending.delete(event.index)
+                let input: unknown = {}
+                try {
+                  input = slot.json ? JSON.parse(slot.json) : {}
+                } catch {
+                  /* partial JSON on an aborted block - send the call anyway */
+                }
+                send({ type: 'tool_use', name: slot.name, input })
+              }
             }
           }
 
@@ -97,10 +123,15 @@ export function createChatStream(
           if (final.stop_reason === 'tool_use' && calls.length) {
             const results: Anthropic.ToolResultBlockParam[] = []
             for (const call of calls) {
-              const output =
-                call.name === 'get_strava_stats'
-                  ? await runStravaTool()
-                  : `Unknown tool: ${call.name}`
+              let output: string
+              if (call.name === 'get_strava_stats') {
+                output = await runStravaTool()
+              } else if (call.name === 'get_site_data') {
+                output = runSiteTool(call.input)
+              } else {
+                output = `Unknown tool: ${call.name}`
+              }
+              send({ type: 'tool_done', name: call.name })
               results.push({ type: 'tool_result', tool_use_id: call.id, content: output })
             }
             convo.push({

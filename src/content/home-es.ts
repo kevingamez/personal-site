@@ -28,7 +28,6 @@ export const es: HomeStrings = {
   },
   nav: {
     about: 'Sobre mí',
-    stack: 'Stack',
     experience: 'Experiencia',
     work: 'Proyectos',
     github: 'GitHub',
@@ -81,67 +80,103 @@ export const es: HomeStrings = {
     qfObsessed: 'Cacharreando con',
     qfObsessedV: 'Automatización de navegador y pipelines de LLM',
   },
-  stack: {
-    secNum: 'Stack',
-    titleHtml: 'Las herramientas con las que construyo.',
-    blurb: 'Con esto construí el outbound de Enttor y este sitio.',
-    cols: [
-      { name: 'Lenguajes', items: ['TypeScript', 'Python', 'SQL', 'Swift'] },
-      { name: 'Frameworks', items: ['Next.js', 'React Native', 'NestJS', 'Astro'] },
-      { name: 'Infraestructura', items: ['Postgres', 'Supabase', 'Vercel', 'Inngest'] },
-      {
-        name: 'IA & ML',
-        items: [
-          'Pipelines de OpenAI',
-          'Automatización de navegador',
-          'Deep learning',
-          'Imágenes satelitales',
-        ],
-      },
-    ],
-  },
   experience: {
     secNum: 'Experiencia',
     titleHtml: 'Dos startups y una maestría.',
     blurb:
       'Ingeniero fundador en Samsam y luego en Enttor. Hice la maestría en deep learning mientras trabajaba en el primer empleo.',
-    e1Year: 'Jun 2025, Jul 2026',
-    e1Meta: 'New York, remoto, outbound con IA',
-    e1Desc:
-      'Construí el motor de outbound de punta a punta: automatización de navegador que buscaba prospectos en Instagram y LinkedIn, pipelines de OpenAI que los filtraban y redactaban los mensajes, y las campañas que los enviaban a escala. Dashboards en Next.js, APIs en NestJS y colas en Inngest sobre Vercel y Supabase, desde cero.',
-    e2Year: 'Feb 2024, Mar 2025',
-    e2Meta: 'Bogotá, plataforma de e-commerce',
-    e2Desc:
-      'Lancé los dos lados del marketplace: una app en React Native para compradores y un panel en Next.js para\n                comerciantes, sobre Prisma y Postgres.',
-    e3Year: 'Ene 2024, May 2025',
-    e3RoleHtml:
-      'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
-    e3Meta: 'Especialización en deep learning, TA de posgrado',
-    e3Desc:
-      'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En\n                paralelo, teaching assistant de posgrado.',
-    e4Year: 'Ene 2019, Dic 2023',
-    e4RoleHtml:
-      'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
-    e4Meta: 'Minor en Management',
-    e4Desc:
-      'Cinco años en los fundamentos: sistemas, algoritmos y ML aplicado. Además, proyectos propios en Python,\n                TypeScript, Java y Swift.',
+    openHint: 'Haz click en una fila para abrirla',
+    roles: [
+      {
+        dates: 'Jun 2025, Jul 2026',
+        place: 'New York, remoto',
+        roleHtml: 'Founding engineer <span class="at">@ Enttor</span>',
+        logo: '/logos/enttor.png',
+        summary:
+          'Construí el motor de outbound con IA de punta a punta: automatización, pipelines y dashboards.',
+        desc: 'La automatización de navegador buscaba prospectos en Instagram y LinkedIn, los pipelines de OpenAI los filtraban y redactaban los mensajes, y las campañas los enviaban a escala. Dashboards en Next.js, APIs en NestJS y colas en Inngest sobre Vercel y Supabase, desde cero.',
+        ledger: [
+          { label: 'Rutas de API', value: '132' },
+          { label: 'Esquemas de Postgres', value: '4' },
+          { label: 'Tools del agente, Meta y TikTok', value: '165' },
+          { label: 'Plataformas automatizadas', value: '4' },
+        ],
+        stackLabel: 'Construido con',
+        stack: ['TypeScript', 'Next.js', 'NestJS', 'Inngest', 'Supabase', 'Playwright'],
+      },
+      {
+        dates: 'Feb 2024, Mar 2025',
+        place: 'Bogotá',
+        roleHtml: 'Founding engineer <span class="at">@ Samsam</span>',
+        logo: '/logos/samsam.png',
+        summary:
+          'Lancé los dos lados de un marketplace: app para compradores y panel para comerciantes.',
+        desc: 'Una app en React Native para compradores y un panel en Next.js para comerciantes, sobre Prisma y Postgres. Lancé los dos lados.',
+        ledger: [
+          { label: 'Lados del marketplace', value: '2' },
+          { label: 'De cero a lanzamiento', value: '14 meses' },
+          { label: 'Apps', value: 'iOS, Android, web' },
+          { label: 'Capa de datos', value: 'Prisma, Postgres' },
+        ],
+        stackLabel: 'Construido con',
+        stack: ['React Native', 'Next.js', 'Prisma', 'Postgres'],
+      },
+      {
+        dates: 'Ene 2024, May 2025',
+        place: 'Bogotá',
+        roleHtml:
+          'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
+        logo: '/logos/uniandes.svg',
+        summary:
+          'Especialización en deep learning, hecha mientras trabajaba. TA de posgrado en paralelo.',
+        desc: 'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En paralelo, teaching assistant de posgrado.',
+        ledger: [
+          { label: 'Foco', value: 'Imágenes satelitales' },
+          { label: 'Rol', value: 'TA de posgrado' },
+          { label: 'Especialización', value: 'Deep learning' },
+          { label: 'Traslape con el trabajo', value: 'Tiempo completo' },
+        ],
+        stackLabel: 'Trabajé en',
+        stack: ['Python', 'SQL', 'Deep learning'],
+      },
+      {
+        dates: 'Ene 2019, Dic 2023',
+        place: 'Bogotá',
+        roleHtml:
+          'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
+        logo: '/logos/uniandes.svg',
+        summary: 'Cinco años en los fundamentos, más un minor en Management.',
+        desc: 'Sistemas, algoritmos y ML aplicado, más un minor en Management. Por el camino, proyectos propios en Python, TypeScript, Java y Swift.',
+        ledger: [
+          { label: 'Minor', value: 'Management' },
+          { label: 'Fundamentos', value: '5 años' },
+          { label: 'Énfasis', value: 'Sistemas, algoritmos' },
+          { label: 'Proyectos propios', value: '4 lenguajes' },
+        ],
+        stackLabel: 'Trabajé en',
+        stack: ['Python', 'TypeScript', 'Java', 'Swift'],
+      },
+    ],
     achievementsTitle: 'Honores y certificaciones',
     achievementsBlurb: 'Una distinción nacional y dos certificaciones de AWS.',
     achievements: [
       {
         year: '2018',
+        logo: '/logos/mineducacion.svg',
         titleHtml: 'Distinción <i>Andrés Bello</i>',
         meta: 'Ministerio de Educación, Colombia, categoría nacional',
         desc: 'Otorgada por el Ministerio de Educación por estar entre los mejores puntajes del examen Saber 11 del país.',
       },
       {
         year: '2022',
+        logo: '/logos/aws.svg',
         titleHtml: 'AWS Academy <i>Cloud Developing</i>',
         meta: 'Certificación, Amazon Web Services',
         desc: 'Construir, desplegar y escalar apps en AWS: IAM, Lambda, DynamoDB y S3.',
       },
       {
         year: '2021',
+        logo: '/logos/aws.svg',
         titleHtml: 'AWS Academy <i>Cloud Foundations</i>',
         meta: 'Certificación, Amazon Web Services',
         desc: 'Fundamentos de AWS: servicios, seguridad, arquitectura y facturación.',

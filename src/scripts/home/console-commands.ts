@@ -30,7 +30,7 @@ export const COMMANDS: Record<string, CommandFn> = {
   whoami: (_a, r) => {
     printOut(
       r.stream,
-      'kevin, founding engineer @ <span class="ac">enttor</span>, <span class="muted">bogotá / utc-5</span>'
+      'kevin, founding engineer, most recently @ <span class="ac">enttor</span>, <span class="muted">bogotá / utc-5</span>'
     )
   },
   about: (_a, r) => {

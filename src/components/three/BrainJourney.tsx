@@ -20,7 +20,7 @@ import {
   type Group,
   type Points,
 } from 'three'
-import { makeParticleMaterial } from './particle-material'
+import { GRAIN, makeParticleMaterial } from './particle-material'
 import { AUTO_WAVE_S, TOUCH_WAVE_SPEED } from './net-geometry'
 import { buildField } from './journey-field'
 import { resolvePose } from './journey-timeline'
@@ -130,7 +130,9 @@ function Scene() {
     material.uniforms.uPx.value = px
     pulseMat.uniforms.uPx.value = px
     pulseMat.uniforms.uOpacity.value = s.a * s.fB * 0.9
-    lineMat.opacity = s.a * s.fB * 0.13
+    // Tied to GRAIN: the grains used to cover this mesh, so shrinking them
+    // alone exposed the edges and the figure flipped to a wireframe.
+    lineMat.opacity = s.a * s.fB * 0.13 * GRAIN * GRAIN
 
     // Rotation: slow tumble as dust, settling by the shortest path into
     // the legible profile as the brain forms; drag and scroll kicks decay.

@@ -3,6 +3,7 @@
 // had: stalled streams, runaway history growth, and untrusted markup.
 
 import { type ChatMessage, type Refs, el, escape, printOut } from './console-dom'
+import { createSteps } from './console-steps'
 
 // Cap the conversation the client keeps and sends. Mirrors MAX_HISTORY in
 // api/chat.ts so we never send more than the server accepts, and the array
@@ -72,6 +73,10 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
 
   const out = printOut(refs.stream, '', 'out')
   out.classList.add('cm-streaming')
+  // Show the work: a thinking line goes up immediately, then one line per tool
+  // call, so the wait reads as an agent working instead of a frozen prompt.
+  const steps = createSteps(refs.stream, out)
+  steps.thinking()
 
   // Optimistically record the question; we remove this exact turn again if the
   // exchange fails, so a failed attempt never poisons later context.
@@ -126,27 +131,19 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
             type?: string
             text?: string
             name?: string
-            input?: { query?: string }
+            input?: unknown
             message?: string
           }
           if (evt.type === 'text_delta' && typeof evt.text === 'string') {
+            // First token: the model is answering, so the thinking line goes.
+            steps.answered()
             assistant += evt.text
             out.innerHTML = mdLite(assistant)
             refs.stream.scrollTop = refs.stream.scrollHeight
           } else if (evt.type === 'tool_use' && evt.name) {
-            const detail = evt.input?.query
-              ? String(evt.input.query)
-              : evt.name === 'get_strava_stats'
-                ? 'reading training stats'
-                : '...'
-            const tool = el('div', 'cs-line cs-tool')
-            tool.innerHTML =
-              '<span class="cs-tool-tag">[' +
-              escape(String(evt.name)) +
-              ']</span> ' +
-              escape(detail)
-            out.parentElement?.insertBefore(tool, out)
-            refs.stream.scrollTop = refs.stream.scrollHeight
+            steps.toolUse(String(evt.name), evt.input)
+          } else if (evt.type === 'tool_done' && evt.name) {
+            steps.toolDone(String(evt.name))
           } else if (evt.type === 'error' && typeof evt.message === 'string') {
             // Server-side failure mid-stream. Render as plain text (never run an
             // error string through markdown) and don't keep the turn as context.
@@ -170,6 +167,7 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
     }
   } finally {
     if (watchdog) clearTimeout(watchdog)
+    steps.settle()
     out.classList.remove('cm-streaming')
     if (ok) {
       // Announce the complete reply once, as plain text, to the live status node

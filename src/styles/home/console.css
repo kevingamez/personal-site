@@ -1,3 +1,4 @@
 /* Barrel for the console section styles - import order preserves the original cascade. */
 @import url('./console-window.css');
+@import url('./console-steps.css');
 @import url('./console-input.css');

@@ -21,13 +21,23 @@ interface KF extends Pose {
   sel: string // '' anchors to the top of the page
 }
 
+// The reading stops are pushed RIGHT rather than dimmed. The grains are ink on
+// paper, so a cloud sitting under body copy eats the contrast --muted is
+// calibrated for (base.css promises AA against flat paper, which stops being
+// true once dust is behind the text). The first fix for that was a much lower
+// alpha, but pose is interpolated from the hero stop onward, so a dark About
+// value also drains the fully formed brain the moment the page scrolls at all.
+// Parking the swarm at the right edge keeps its dense core off the prose - and
+// mostly off-screen - so it can hold its weight without costing legibility.
+// White cards already occlude it, and the two stops where the figure IS the
+// point (it half-condenses into the brain at Experience, again at the console)
+// were never the problem.
 const KFS: KF[] = [
-  { sel: '#about', x: 0.6, y: 0.6, s: 0.5, a: 0.45, fB: 0, fC: 0, waves: 0 },
-  { sel: '#stack', x: 0.5, y: 0.62, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#about', x: 0.92, y: 0.6, s: 0.5, a: 0.4, fB: 0, fC: 0, waves: 0 },
   { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, fC: 0, waves: 0.25 },
-  { sel: '#work', x: 0.84, y: 0.58, s: 0.46, a: 0.4, fB: 0, fC: 0, waves: 0 },
-  { sel: '#github', x: 0.5, y: 0.66, s: 0.5, a: 0.4, fB: 0, fC: 0, waves: 0 },
-  { sel: '#writing', x: 0.85, y: 0.6, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#work', x: 0.92, y: 0.58, s: 0.46, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#github', x: 0.92, y: 0.66, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#writing', x: 0.92, y: 0.6, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
   { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, fC: 0, waves: 0.3 },
 ]
 

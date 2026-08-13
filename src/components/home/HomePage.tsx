@@ -11,7 +11,6 @@ import { Nav } from './Nav'
 import { IntroCurtain } from './IntroCurtain'
 import { Hero } from './Hero'
 import { About } from './About'
-import { Stack } from './Stack'
 import { Experience } from './Experience'
 import { Work } from './Work'
 import { Deck } from './Deck'
@@ -38,7 +37,6 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
       <main id="main" tabIndex={-1}>
         <Hero t={t.hero} />
         <About t={t.about} tGol={t.hero} />
-        <Stack t={t.stack} />
         <Experience t={t.experience} />
         <Work t={t.work} />
         <Deck t={t.deck} />

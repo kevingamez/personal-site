@@ -47,11 +47,19 @@ export function makeParticleMaterial(opts: {
 // Per-particle size mix: mostly fine dust, a sprinkle of larger glints -
 // the same size rhythm as the reference figure. `rand` is the caller's
 // deterministic generator so the mix is stable across mounts.
+//
+// GRAIN trims every particle by the same factor, which is the one knob that
+// changes how coarse the swarm reads without touching its density, colour or
+// choreography. Note that on-screen size is ALSO proportional to viewport
+// height (see the `px` term in BrainJourney.tsx, normalized against a 900px
+// reference), so the figure is coarser on a tall display than on a laptop.
+export const GRAIN = 0.7
+
 export function buildSizes(count: number, rand: () => number, scale = 1): Float32Array {
   const sizes = new Float32Array(count)
   for (let i = 0; i < count; i++) {
     const big = rand() < 0.12
-    sizes[i] = (big ? 0.075 + rand() * 0.075 : 0.028 + rand() * 0.03) * scale
+    sizes[i] = (big ? 0.075 + rand() * 0.075 : 0.028 + rand() * 0.03) * scale * GRAIN
   }
   return sizes
 }

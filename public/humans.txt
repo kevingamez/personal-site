@@ -10,6 +10,15 @@
   PKief / vscode-material-icon-theme - file tree icons in dev mode
   Conway, John Horton - for the game on the hero
 
+/* LOGO CREDITS */
+  Ministerio de Educacion Nacional de Colombia logo
+    (c) Gobierno de Colombia, via Wikimedia Commons, CC BY 4.0
+    https://commons.wikimedia.org/wiki/File:Logo_Ministerio_de_Educaci%C3%B3n_Nacional_Colombia.svg
+    https://creativecommons.org/licenses/by/4.0/
+  Amazon Web Services logo - trademark of Amazon.com, Inc.
+  Universidad de los Andes, Enttor and Samsam logos - trademarks of their owners
+  All shown to identify real credentials and employers. No endorsement implied.
+
 /* READING */
   Browser console: window.kevin()
   Home terminal: try `about`, `stack`, `repos`, `contact`
