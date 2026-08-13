@@ -50,7 +50,15 @@ export function Experience({ t }: Props) {
                 <div className="tl-panel-in">
                   <span className="tl-mark">
                     {/* Decorative: the row heading already names the place. */}
-                    <img className="tl-logo" src={r.logo} alt="" width={44} height={44} />
+                    <img
+                      className="tl-logo"
+                      src={r.logo}
+                      alt=""
+                      width={44}
+                      height={44}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </span>
                   <div>
                     <p className="tl-desc">{r.desc}</p>
@@ -89,7 +97,15 @@ export function Experience({ t }: Props) {
                 <div className="ach-top">
                   <span className="ach-mark">
                     {/* Decorative: the card title and meta already name the issuer. */}
-                    <img className="ach-logo" src={a.logo} alt="" width={44} height={44} />
+                    <img
+                      className="ach-logo"
+                      src={a.logo}
+                      alt=""
+                      width={44}
+                      height={44}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </span>
                   <span className="ach-year">{a.year}</span>
                 </div>
