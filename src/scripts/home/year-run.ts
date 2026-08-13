@@ -211,8 +211,9 @@ export function initYearRun(): void {
       (active.length
         ? `<ul>${active.map((a) => `<li>${a.label}</li>`).join('')}</ul>`
         : `<ul><li class="yr-tip-none">${L.nothing}</li></ul>`)
+    // Left tracks the drawing: under 1000px the frame scrolls and is narrower.
     const fr = frame.getBoundingClientRect()
-    tip.style.left = `${(px / W) * fr.width}px`
+    tip.style.left = `${(px / W) * r.width}px`
     tip.style.top = `${(py / H) * fr.height + 24}px`
     tip.classList.add('on')
   })
