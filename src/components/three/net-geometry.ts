@@ -6,10 +6,9 @@
 
 import { Color } from 'three'
 import { buildSizes } from './particle-material'
+import { buildEdges } from './net-edges'
 
 export const NODES = 13000
-const LINKS_PER_NODE = 2
-const LINK_MAX_DIST = 0.3
 export const AUTO_WAVE_S = 3.4
 export const TOUCH_WAVE_SPEED = 2.6 // world units per second
 export const WAVE_BAND = 0.5
@@ -162,42 +161,7 @@ export function buildVolume(count: number = NODES) {
   }
   for (let i = 0; i < count; i++) place(i)
 
-  // Synapses via a coarse spatial hash: nearest few neighbors within reach.
-  const cell = LINK_MAX_DIST
-  const hash = new Map<string, number[]>()
-  const keyOf = (x: number, y: number, z: number) =>
-    `${Math.floor(x / cell)},${Math.floor(y / cell)},${Math.floor(z / cell)}`
-  for (let i = 0; i < count; i++) {
-    const k = keyOf(base[i * 3], base[i * 3 + 1], base[i * 3 + 2])
-    const arr = hash.get(k)
-    if (arr) arr.push(i)
-    else hash.set(k, [i])
-  }
-  const edges: [number, number][] = []
-  for (let i = 0; i < count; i++) {
-    const x = base[i * 3]
-    const y = base[i * 3 + 1]
-    const z = base[i * 3 + 2]
-    const near: { j: number; d: number }[] = []
-    for (let cx = -1; cx <= 1; cx++)
-      for (let cy = -1; cy <= 1; cy++)
-        for (let cz = -1; cz <= 1; cz++) {
-          const bucket = hash.get(keyOf(x + cx * cell, y + cy * cell, z + cz * cell))
-          if (!bucket) continue
-          for (const j of bucket) {
-            if (j <= i) continue
-            // Keep the central fissure crisp: no links across hemispheres.
-            if (x * base[j * 3] < 0 && Math.abs(x) > 0.04 && Math.abs(base[j * 3]) > 0.04) continue
-            const dx = base[j * 3] - x
-            const dy = base[j * 3 + 1] - y
-            const dz = base[j * 3 + 2] - z
-            const d = Math.sqrt(dx * dx + dy * dy + dz * dz)
-            if (d < LINK_MAX_DIST) near.push({ j, d })
-          }
-        }
-    near.sort((a, b) => a.d - b.d)
-    for (let n = 0; n < Math.min(LINKS_PER_NODE, near.length); n++) edges.push([i, near[n].j])
-  }
+  const edges = buildEdges(base, count)
   const origins: number[] = []
   for (let o = 0; o < 5; o++) origins.push(Math.floor(rand() * count))
   // Base colors: the reference brain's pointillist full-color mix, mapped

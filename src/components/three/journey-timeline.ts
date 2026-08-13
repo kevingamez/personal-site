@@ -41,6 +41,25 @@ const KFS: KF[] = [
   { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, fC: 0, waves: 0.3 },
 ]
 
+// resolvePose runs inside useFrame, so its element lookups ran ~540 times a
+// second. Three of them are class selectors ('.media-frame', '.hero-copy',
+// '.cube-stage') with no id fast path, and .cube-stage sits near the end of the
+// document, so each frame walked most of the tree three times over.
+//
+// Only the lookups are cached, never the rects: those still get read every
+// frame, so a section that changes height (an accordion opening, the Strava
+// section appearing once its data lands) keeps moving the figure exactly as
+// before. A miss or a detached node is re-queried, because sections mount at
+// different times and "not found" is not permanent.
+const nodes = new Map<string, Element | null>()
+function findEl(sel: string): Element | null {
+  const cached = nodes.get(sel)
+  if (cached && cached.isConnected) return cached
+  const el = document.querySelector(sel)
+  nodes.set(sel, el)
+  return el
+}
+
 const lerpKF = (a: KF | Pose, b: KF | Pose, t: number): Pose => ({
   x: MathUtils.lerp(a.x, b.x, t),
   y: MathUtils.lerp(a.y, b.y, t),
@@ -59,7 +78,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
   // portrait-ish screens keep the travel closer to the center.
   const narrow = vw < 900 || vw / vh < 1.05
   const fit = MathUtils.clamp(vw / vh / 1.68, 0.55, 1)
-  const slot = document.querySelector('.media-frame')?.getBoundingClientRect()
+  const slot = findEl('.media-frame')?.getBoundingClientRect()
   if (slot && slot.height > 0) {
     ys.push(scrollY + slot.top + slot.height / 2 - vh * 0.5)
     if (narrow) {
@@ -78,7 +97,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     } else {
       // Wide screens: dominant like the reference, living in the free
       // zone to the right of the live hero copy edge, never cropped.
-      const copy = document.querySelector('.hero-copy')?.getBoundingClientRect()
+      const copy = findEl('.hero-copy')?.getBoundingClientRect()
       const left = copy ? copy.right + 10 : vw * 0.55
       const avail = Math.max(220, vw - left)
       const heroW = Math.min(0.68 * vh * 0.97, avail * 0.88)
@@ -89,7 +108,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
     }
   }
   for (const k of KFS) {
-    const el = document.querySelector(k.sel)
+    const el = findEl(k.sel)
     if (!el) continue
     const r = el.getBoundingClientRect()
     if (r.height === 0) continue
@@ -105,7 +124,7 @@ export function resolvePose(scrollY: number, vw: number, vh: number): Pose | nul
   }
   // Final stop: the swarm resolves into the CUBE in the contact slot -
   // the page opens on the brain and closes on the object.
-  const dock = document.querySelector('.cube-stage')?.getBoundingClientRect()
+  const dock = findEl('.cube-stage')?.getBoundingClientRect()
   if (dock && dock.height > 0) {
     ys.push(scrollY + dock.top + dock.height / 2 - vh * 0.55)
     stops.push({

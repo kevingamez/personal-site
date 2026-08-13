@@ -23,6 +23,7 @@ import {
 import { GRAIN, makeParticleMaterial } from './particle-material'
 import { AUTO_WAVE_S, TOUCH_WAVE_SPEED } from './net-geometry'
 import { buildField } from './journey-field'
+import { updateSynapses } from './journey-synapses'
 import { resolvePose } from './journey-timeline'
 import { useJourneyPointer } from './journey-pointer'
 import { updateParticles } from './journey-particles'
@@ -111,8 +112,15 @@ function Scene() {
     material.uniforms.uOpacity.value = s.a * 0.95
     if (s.a < 0.01 && pose.a < 0.01) {
       lineMat.opacity = 0
+      // Returning from useFrame skips this work but NOT the render: R3F draws
+      // the group regardless, so a fully faded swarm was still rasterizing
+      // 13000 blended sprites and 25773 blended segments into zero visible
+      // pixels (the footer, past the dock). Hiding the group drops the draw
+      // calls entirely; the branch below restores it as soon as alpha returns.
+      g.visible = false
       return
     }
+    g.visible = true
     const par = s.fB * 0.18
     g.position.x = MathUtils.lerp(
       g.position.x,
@@ -239,27 +247,7 @@ function Scene() {
     if (lineMat.opacity > 0.02) {
       const lpos = lineGeo.attributes.position.array as Float32Array
       const lcol = lineGeo.attributes.color.array as Float32Array
-      edges.forEach(([a2, b2], i2) => {
-        const ea = i2 * 6
-        // Collapse stretched segments (an endpoint still out in the dust)
-        // so no long streaks cross the scene while shapes form.
-        const ddx = pos[a2 * 3] - pos[b2 * 3]
-        const ddy = pos[a2 * 3 + 1] - pos[b2 * 3 + 1]
-        const ddz = pos[a2 * 3 + 2] - pos[b2 * 3 + 2]
-        const cut = ddx * ddx + ddy * ddy + ddz * ddz > 0.36
-        for (const [off, n] of [
-          [0, a2],
-          [3, b2],
-        ] as const) {
-          const m = cut ? a2 : n
-          lpos[ea + off] = pos[m * 3]
-          lpos[ea + off + 1] = pos[m * 3 + 1]
-          lpos[ea + off + 2] = pos[m * 3 + 2]
-          lcol[ea + off] = col[n * 3]
-          lcol[ea + off + 1] = col[n * 3 + 1]
-          lcol[ea + off + 2] = col[n * 3 + 2]
-        }
-      })
+      updateSynapses(edges, pos, col, lpos, lcol)
       lineGeo.attributes.position.needsUpdate = true
       lineGeo.attributes.color.needsUpdate = true
     }
