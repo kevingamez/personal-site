@@ -202,16 +202,13 @@
     font-size: 20px;
   }
 
-  .mp-desc {
-    font-size: 13px;
-    line-height: 1.62;
-  }
-
   .moments-panel.on {
     transform: translateY(0);
   }
 
   .mp-desc {
     margin-inline: auto;
+    font-size: 13px;
+    line-height: 1.62;
   }
 }
