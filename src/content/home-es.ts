@@ -39,16 +39,15 @@ export const es: HomeStrings = {
     sayHi: 'Escríbeme ↗',
   },
   hero: {
-    metaRole: 'Founding engineer, abierto a lo que sigue',
     metaPlace: 'Bogotá, Colombia',
     weatherLabels:
       '{"clear": "despejado", "partly cloudy": "parcialmente nublado", "cloudy": "nublado", "fog": "niebla", "drizzle": "llovizna", "rain": "lluvia", "showers": "aguaceros", "snow": "nieve", "storm": "tormenta"}',
     titleHtml: 'Hola',
     lede: 'Soy founding engineer en Bogotá, abierto a lo que sigue. Estuve en <b>Enttor</b>, donde construí la\n            plataforma de creativos con IA y los agentes de navegador detrás de su outbound. Antes lancé un marketplace\n            de e-commerce en <b>Samsam</b>. Maestría en deep learning en la Universidad de los Andes.',
-    stat1Num: '02',
-    stat1Label: 'Startups como founding engineer',
-    stat2Num: '07',
-    stat2Label: 'Años en GitHub',
+    stat1Num: '3',
+    stat1Label: 'Productos llevados de un repo vacío a clientes que pagan',
+    stat2Num: '5×',
+    stat2Label: 'Más rápida la generación tras pasarla a GPU',
     scrollDown: 'Sigue bajando',
     btnGetInTouch: 'Hablemos',
     pauseTitle: 'pausar / reproducir',
@@ -74,7 +73,7 @@ export const es: HomeStrings = {
     p2Html:
       'Antes de las startups pasé un tiempo en analítica, escribiendo pipelines SQL y dashboards en Power BI\n              para HR, riesgo y operaciones, y luego en deep learning sobre imágenes satelitales, detectando\n              cultivos y riesgo ambiental. Las dos me enseñaron a desconfiar de un número que no puedo rastrear.',
     p3Html:
-      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y un minor en Management.',
+      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y opciones en Matemáticas y Administración.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
@@ -107,6 +106,11 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Construido con',
         stack: ['TypeScript', 'Next.js', 'NestJS', 'Inngest', 'Supabase', 'Playwright'],
+        backer: {
+          label: 'Respaldada por',
+          name: 'MaC Venture Capital',
+          href: 'https://macventurecapital.com/',
+        },
       },
       {
         dates: 'Feb 2024, Mar 2025',
@@ -124,6 +128,7 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Construido con',
         stack: ['React Native', 'Next.js', 'Prisma', 'Postgres'],
+        backer: { label: 'Respaldada por', name: 'Neo', href: 'https://neo.com/' },
       },
       {
         dates: 'Ene 2024, May 2025',
@@ -144,17 +149,34 @@ export const es: HomeStrings = {
         stack: ['Python', 'SQL', 'Deep learning'],
       },
       {
+        dates: 'Dic 2022, Dic 2023',
+        place: 'Bogotá',
+        roleHtml:
+          'Opciones en Matemáticas y Administración <span class="at">@ Universidad de los Andes</span>',
+        logo: '/logos/uniandes.svg',
+        summary: 'Dos opciones cursadas dentro del pregrado, una formal y una de negocio.',
+        desc: 'Matemáticas por el lado formal, Administración por el lado de negocio. Las dos se cursaron en paralelo a la carrera y se cerraron antes del grado.',
+        ledger: [
+          { label: 'Opciones', value: 'Dos' },
+          { label: 'Cursadas', value: 'En paralelo al B.Sc.' },
+          { label: 'Primera', value: 'Dic 2022' },
+          { label: 'Segunda', value: 'Dic 2023' },
+        ],
+        stackLabel: 'Áreas',
+        stack: ['Matemáticas', 'Administración'],
+      },
+      {
         dates: 'Ene 2019, Dic 2023',
         place: 'Bogotá',
         roleHtml:
           'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
         logo: '/logos/uniandes.svg',
-        summary: 'Cinco años en los fundamentos, más un minor en Management.',
-        desc: 'Sistemas, algoritmos y ML aplicado, más un minor en Management. Por el camino, proyectos propios en Python, TypeScript, Java y Swift.',
+        summary: 'Cinco años en los fundamentos: sistemas, algoritmos y ML aplicado.',
+        desc: 'Sistemas, algoritmos y ML aplicado. Por el camino, proyectos propios en Python, TypeScript, Java y Swift.',
         ledger: [
-          { label: 'Minor', value: 'Management' },
           { label: 'Fundamentos', value: '5 años' },
           { label: 'Énfasis', value: 'Sistemas, algoritmos' },
+          { label: 'También', value: 'Web y móvil' },
           { label: 'Proyectos propios', value: '4 lenguajes' },
         ],
         stackLabel: 'Trabajé en',
@@ -195,33 +217,33 @@ export const es: HomeStrings = {
     p1ImageAlt:
       'Estación de trabajo de Kevin Gámez con el sitio de Enttor abierto en un portátil y código en un monitor',
     p1Desc:
-      'El último producto de Enttor. Le das el sitio de una marca y extrae logos, colores y tipografías, escribe conceptos de anuncio con Claude, renderiza las imágenes finales y revisa su propio trabajo con una pasada de visión. También desarma un anuncio existente en capas editables: OCR y segmentación recuperan el texto, las fuentes y las cajas reales, así un media buyer edita sobre un canvas en vez de rehacerlo. El pipeline de visión corre en GPU.',
-    p1Meta: 'Next.js, NestJS, OpenAI, Inngest, Supabase',
+      'El último producto de Enttor. Le das el sitio de una marca y extrae logos, colores y tipografías, escribe conceptos de anuncio con Claude, renderiza las imágenes y revisa su propio trabajo con una pasada de visión. La mitad difícil va al revés: OCR y segmentación desarman un anuncio terminado en capas editables, y emparejan cada línea de texto contra 311 familias tipográficas, así un media buyer edita sobre un canvas en vez de rehacerlo. Los dos workers de visión corren en GPU.',
+    p1Meta: 'Next.js, Python, PyTorch, Modal, Supabase',
     projects: [
       {
         name: 'Agente de Slack',
-        desc: 'Un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de Meta y TikTok, así que lanzar un anuncio toma tres pasos en vez de los treinta que pide Ads Manager.',
-        meta: 'Claude tool use, APIs de Meta y TikTok, Postgres',
+        desc: 'Un bot de Slack con el que los media buyers hablan como con un colega. 165 herramientas sobre las APIs de Meta y TikTok. La precisión se cae mucho antes de que 165 herramientas quepan en el contexto, así que un router recorta cada mensaje a una lista corta antes de que Claude las vea.',
+        meta: 'Claude tool use, APIs de Meta y TikTok, pgvector',
       },
       {
         name: 'Plataforma Enttor',
-        desc: 'Dos años del producto de GTM: sacaba prospectos de Instagram y LinkedIn, escribía DMs personalizados y dejaba cada respuesta en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres.',
-        meta: 'Next.js, Supabase, Inngest',
+        desc: 'Dos años del producto de GTM: sacaba prospectos de Instagram y LinkedIn, escribía DMs personalizados y dejaba cada respuesta en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres, con row level security aislando a cada empresa del resto.',
+        meta: 'Next.js, Supabase, Postgres RLS',
       },
       {
         name: 'MakeMotionGraphics',
-        desc: 'De texto a motion graphics en loop. Claude escribe una escena HTML, la captura en Chrome headless para ver su propio resultado, corrige lo que falla y solo entonces graba a MP4.',
+        desc: 'De texto a motion graphics en loop. Claude escribe una escena HTML autocontenida, la captura en Chrome headless en tres instantes para leer su propio resultado y corrige lo que falla. Solo una escena que pasa el control de composición se graba a MP4.',
         meta: 'Loop agéntico, Puppeteer, ffmpeg',
       },
       {
         name: 'LinkedIn Editor',
-        desc: 'Un editor conversacional para posts de LinkedIn. Pegas un borrador y discutes con Claude sobre el hook hasta que funciona, apoyado en recuperación sobre un corpus de posts que sí rindieron.',
+        desc: 'Un editor conversacional para posts de LinkedIn. Pegas un borrador y discutes con Claude sobre el hook hasta que funciona, apoyado en búsqueda por coseno sobre un corpus de posts que sí rindieron. Tres variaciones llegan en paralelo, una por ángulo de hook.',
         meta: 'RAG con pgvector, Next.js',
       },
       {
         name: 'Infraestructura de Automatización',
-        desc: 'El backend detrás del outreach: servicios Node en un Mac Mini que mantienen sesiones reales en cuatro plataformas y mandan mensajes a ritmo humano. Dos compañeros lo lideraron, yo contribuí.',
-        meta: 'Playwright, BullMQ, Redis',
+        desc: 'El backend detrás del outreach: servicios Node en un Mac Mini que mantienen sesiones de navegador autenticadas en cuatro plataformas, con colas de Redis marcando un ritmo de minutos y no de milisegundos. Dos compañeros lo lideraron, yo aporté el pipeline de Instagram y el manejo de sesiones.',
+        meta: 'Playwright, Redis, Postgres',
       },
       {
         name: 'Samsam',

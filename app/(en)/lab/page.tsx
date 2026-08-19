@@ -8,7 +8,8 @@ import { LabScene } from '@/components/three/LabScene'
 
 export const metadata: Metadata = {
   title: 'Lab, Kevin Gámez',
-  description: 'Unlisted experiments.',
+  description:
+    'Unlisted React Three Fiber proving ground. Not linked from the site and not indexed.',
   robots: { index: false, follow: false },
 }
 

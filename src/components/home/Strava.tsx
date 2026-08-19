@@ -27,7 +27,7 @@ export function Strava({ t }: Props) {
         </div>
 
         {/* Hero band: yearly totals */}
-        <div className="sv-hero">
+        <div className="sv-hero glass-strong">
           <div className="sv-hero-grid">
             <div className="sv-hero-lead">
               <div className="sv-hero-km">
@@ -65,7 +65,7 @@ export function Strava({ t }: Props) {
           id="sv-feat-tpl"
           dangerouslySetInnerHTML={{
             __html:
-              '<article class="sv-feat">' +
+              '<article class="sv-feat glass">' +
               '<div class="sv-feat-route" data-route aria-hidden="true"></div>' +
               '<div class="sv-feat-body">' +
               `<div class="sv-feat-label">${t.featuredLabel}, <span data-sport></span></div>` +
@@ -81,28 +81,28 @@ export function Strava({ t }: Props) {
 
         {/* Metric tiles */}
         <div className="sv-insights">
-          <div className="sv-tile">
+          <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightClimbLabel}</div>
             <div className="sv-tile-val" id="sv-climb-val">
               0
             </div>
             <div className="sv-tile-sub" id="sv-climb-sub"></div>
           </div>
-          <div className="sv-tile">
+          <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightFastLabel}</div>
             <div className="sv-tile-val" id="sv-fast-val">
               0
             </div>
             <div className="sv-tile-sub" id="sv-fast-sub"></div>
           </div>
-          <div className="sv-tile">
+          <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightBiggestLabel}</div>
             <div className="sv-tile-val" id="sv-biggest-val">
               0
             </div>
             <div className="sv-tile-sub" id="sv-biggest-sub"></div>
           </div>
-          <div className="sv-tile">
+          <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightClimbedLabel}</div>
             <div className="sv-tile-val" id="sv-climbed-val">
               0

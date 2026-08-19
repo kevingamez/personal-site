@@ -1,11 +1,15 @@
 /* Console part 1: section frame, terminal window chrome, and output stream (split from console.css) */
 
-/* ─── Console section - Warp-style dark glass on cream ─── */
+/* ─── Console section - Warp-style dark glass on paper ───
+   No `isolation: isolate` here. It made the section a backdrop root, which
+   would have left the terminal's backdrop-filter with nothing to sample: the
+   ambient light field is fixed behind the whole document, outside any section.
+   Nothing in here needs the isolation - .console-wrap's z-index only has to
+   beat its own siblings, and the section paints no background of its own. */
 .console-section {
   position: relative;
   padding: clamp(76px, 9svh, 92px) 0 clamp(72px, 8svh, 88px);
   border-bottom: 1px solid var(--line);
-  isolation: isolate;
   overflow: hidden;
 }
 
@@ -18,19 +22,26 @@
   margin-bottom: 30px;
 }
 
-/* The terminal - dark translucent glass floating on cream */
+/* The terminal - the same material as every card, cast in the dark. It stays
+   dark on the light page like a code block, but it is glass: the fill is
+   translucent enough that the ambient field warms and cools it as you scroll,
+   and the rim catches light on the top edge the way the cards do. 84% keeps
+   the 232-lightness type at roughly 9:1 on the lightest patch of the field. */
 .console-shell {
   position: relative;
 
-  /* The terminal window stays dark on the light page, like a code block. */
-  background: #141310;
-  border: 1px solid rgb(24 23 26 / 20%);
+  /* Same hue as the deck and the footer (--ink-surface), just carried at 86%
+     so the ambient field moves through it. color-mix keeps the two in step:
+     change the token and the terminal follows. */
+  background: color-mix(in srgb, var(--ink-surface) 86%, transparent);
+  backdrop-filter: saturate(140%) blur(30px);
+  -webkit-backdrop-filter: saturate(140%) blur(30px);
   border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow:
-    0 30px 80px -20px rgb(31 29 26 / 45%),
-    0 12px 28px -10px rgb(31 29 26 / 30%),
-    inset 0 1px 0 rgb(255 255 255 / 8%);
+    var(--ink-rim),
+    var(--ink-lift),
+    0 12px 28px -10px rgb(31 29 26 / 26%);
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.55;

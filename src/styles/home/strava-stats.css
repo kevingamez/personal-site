@@ -13,11 +13,9 @@
 .sv-hero {
   position: relative;
   margin-bottom: 16px;
-  padding: 24px 30px 20px;
-  background: var(--panel);
+  padding: 26px 30px 22px;
   color: var(--ink);
-  border-radius: 14px;
-  box-shadow: 0 0 0 1px var(--line);
+  border-radius: var(--r-lg);
   overflow: hidden;
 }
 
@@ -34,29 +32,31 @@
   flex-wrap: wrap;
 }
 
+/* The headline figure. It used to be JetBrains Mono, which is the one thing
+   that gave the whole section away as a dashboard rather than a page: SF with
+   tabular figures aligns the digits just as well and belongs to the type
+   system the rest of the site is set in. */
 .sv-hero-km {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 58px;
+  font-weight: var(--w-semibold);
+  font-size: var(--t-hero-2);
   line-height: 0.9;
-  letter-spacing: 0;
+  letter-spacing: var(--ls-heading);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
 .sv-hero-km i {
   font-style: normal;
-  font-size: 0.32em;
-  letter-spacing: 0;
-  color: var(--coral);
+  font-size: 0.34em;
+  font-weight: var(--w-medium);
+  color: var(--muted);
   margin-left: 8px;
 }
 
 .sv-hero-kml {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--coral);
+  font-size: var(--t-footnote);
+  font-weight: var(--w-medium);
+  color: var(--muted);
   margin-top: 12px;
 }
 
@@ -72,18 +72,17 @@
 }
 
 .sv-mini span {
-  font-family: var(--font-mono);
-  font-size: 22px;
+  font-size: var(--t-title-3);
+  font-weight: var(--w-semibold);
   line-height: 1;
+  letter-spacing: var(--ls-heading);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
 .sv-mini em {
   font-style: normal;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
+  font-size: var(--t-footnote);
 
   /* Was the old dark-band cream at 55%, invisible on the white panel. */
   color: var(--muted);
@@ -110,10 +109,8 @@
 }
 
 .sv-tile {
-  background: var(--cream-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 13px 16px 12px;
+  border-radius: var(--r-md);
+  padding: 14px 16px 13px;
   opacity: 0;
   transform: translateY(10px);
   transition:
@@ -140,18 +137,18 @@
 
 .sv-tile-lbl {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--t-footnote);
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--w-medium);
   letter-spacing: 0;
   color: var(--muted);
 }
 
 .sv-tile-val {
   font-family: var(--font-sans);
-  font-size: 27px;
+  font-size: var(--t-title-2);
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--w-semibold);
   line-height: 1.05;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -160,23 +157,23 @@
 
 @media (width <= 700px) {
   .sv-hero-km {
-    font-size: 42px;
+    font-size: var(--t-title-1);
   }
 
   .sv-mini span {
-    font-size: 18px;
+    font-size: var(--t-body);
   }
 
   .sv-tile-val {
-    font-size: 24px;
+    font-size: var(--t-title-2);
   }
 }
 
 .sv-tile-sub {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--t-footnote);
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--w-medium);
   color: var(--muted);
   margin-top: 5px;
   white-space: nowrap;
@@ -203,7 +200,7 @@
   }
 
   .sv-hero-km {
-    font-size: 48px;
+    font-size: var(--t-hero-2);
   }
 
   .sv-hero-side {
@@ -219,6 +216,6 @@
   }
 
   .sv-tile-val {
-    font-size: 24px;
+    font-size: var(--t-title-2);
   }
 }

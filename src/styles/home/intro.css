@@ -27,8 +27,8 @@ html.intro-pending .intro.intro-out {
 
 .intro-word {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(44px, 9vw, 112px);
+  font-weight: var(--w-semibold);
+  font-size: var(--t-display);
   line-height: 0.94;
   letter-spacing: var(--ls-display);
   color: var(--ink);
@@ -50,9 +50,7 @@ html.intro-pending .intro.intro-out {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  font-size: var(--t-footnote);
   color: var(--muted);
 }
 

@@ -167,7 +167,7 @@
   align-items: center;
   padding: 6px 8px;
   border-top: 1px solid var(--hair);
-  font-size: 10px;
+  font-size: var(--t-caption);
   color: var(--dim2);
 }
 
@@ -216,7 +216,7 @@
   top: -13px;
   left: -1px;
   white-space: nowrap;
-  font-size: 7px;
+  font-size: var(--t-caption);
   background: #f2f2f7;
   color: #111112;
   padding: 1px 4px;

@@ -1,0 +1,176 @@
+/* ─── Sticky mobile action bar ───
+   A glass capsule pinned to the bottom of a phone screen, carrying the one ask
+   the page is built around. Desktop already has "Email me" parked in the nav,
+   so this exists only below the 899px breakpoint the nav itself switches at.
+
+   It is display:none above that width rather than merely translated away: an
+   off-screen but rendered element still runs its backdrop-filter, and this one
+   sits over a page that already pays for two WebGL contexts. */
+.mcta {
+  display: none;
+}
+
+@media (width <= 899px) {
+  .mcta {
+    display: block;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 60;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+
+  /* Only the capsule takes the pointer, matching .nav-in: the paper either side
+     of it belongs to the section scrolling underneath. */
+  .mcta-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 8px 8px 14px;
+    border-radius: var(--r-md);
+    pointer-events: auto;
+  }
+
+  /* Same density as the nav, and for the same reason: this bar crosses the
+     black Ad Studio panel, the deck's dark room and the terminal, and at the
+     default 58% fill the label stops holding AA over them. */
+  .mcta-in::before {
+    background-color: var(--glass-fill-nav);
+  }
+
+  .mcta-label {
+    font-size: var(--t-caption);
+    font-weight: var(--w-medium);
+    line-height: 1.3;
+    color: var(--ink-2);
+    min-width: 0;
+  }
+
+  .mcta-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .mcta-email {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: var(--r-xs);
+    font-size: var(--t-footnote);
+    font-weight: var(--w-semibold);
+    white-space: nowrap;
+    color: var(--white);
+    background: var(--ink-900);
+  }
+
+  .mcta-share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Anchor for the [data-toast] confirmation bubble below. */
+    position: relative;
+
+    /* 44px is the floor for a thumb target; the icon inside is 17px. */
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xs);
+    color: var(--ink);
+    background: rgb(253 253 252 / 62%);
+  }
+
+  .mcta-share:active,
+  .mcta-share.is-shared {
+    border-color: var(--ink);
+  }
+
+  /* Confirmation for the icon-only button: it has no label to swap, so the
+     copied/failed message surfaces as a small tag above the capsule. */
+  .mcta-share[data-toast]::after {
+    content: attr(data-toast);
+    position: absolute;
+    right: 16px;
+    bottom: calc(100% + 8px);
+    padding: 6px 10px;
+    border-radius: var(--r-xs);
+    font-size: var(--t-caption);
+    font-weight: var(--w-medium);
+    white-space: nowrap;
+    color: var(--white);
+    background: var(--ink-900);
+  }
+
+  /* Keeps the page's last line of text clear of the bar. */
+  .footer {
+    padding-bottom: 96px;
+  }
+
+  /* Handoff, not duplication: the nav carries "Email me" until the bar takes
+     over, and exactly one of them is on screen at a time. Two copies of the
+     same ask on a 390px viewport reads as a layout mistake, and dropping the
+     nav's copy gives the section links the width they were already scrolling
+     for. */
+  .mcta-on .say-hi {
+    display: none;
+  }
+}
+
+/* ─── Arrival ───
+   The bar is stamped on by src/scripts/home/share.ts once the hero has
+   scrolled past, and stamped off again when #contact comes into view - the
+   page's own closing CTA makes a floating copy of it redundant.
+
+   The default is off-screen, so a visitor with JS disabled never gets a bar
+   pinned over the page with nothing driving it. */
+@media (width <= 899px) {
+  .mcta {
+    visibility: hidden;
+    transform: translateY(calc(100% + 8px));
+  }
+
+  .mcta-on .mcta {
+    visibility: visible;
+    transform: none;
+  }
+}
+
+@media (width <= 899px) and (prefers-reduced-motion: no-preference) {
+  .mcta {
+    transition:
+      transform var(--dur-slow) var(--ease-out-soft),
+      visibility var(--dur-slow) step-end;
+  }
+
+  .mcta-on .mcta {
+    transition:
+      transform var(--dur-slow) var(--ease-out-soft),
+      visibility 0s;
+  }
+}
+
+/* ─── The share control in #contact ───
+   Desktop's home for the same action. Ghost, not filled: the email pill next to
+   it is the primary ask and two solid buttons would read as a choice between
+   equals. */
+.btn-share {
+  font-size: var(--t-footnote);
+  background: none;
+  color: var(--ink);
+}
+
+.btn-share .share-ico {
+  flex-shrink: 0;
+}
+
+.btn-share.is-shared {
+  border-color: var(--ink);
+}
+
+/* The intro curtain owns the first screen; nothing floats over it. */
+.intro-pending .mcta {
+  display: none;
+}

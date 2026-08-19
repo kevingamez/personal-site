@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import '@/styles/error-404.css'
 
 export const metadata: Metadata = {
-  title: '404 - Kevin Gámez',
+  title: '404, página no encontrada - Kevin Gámez',
   description: 'La página no existe en el sitio de Kevin Gámez.',
   robots: 'noindex,nofollow',
 }

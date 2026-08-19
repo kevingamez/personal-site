@@ -10,7 +10,7 @@ export interface Moment {
 
 export const MOMENTS: Moment[] = [
   {
-    src: '/posts/masters-1.webp',
+    src: '/posts/masters-graduation-diploma.webp',
     place: 'Uniandes · May 2026',
     en: {
       title: 'The day I graduated',
@@ -22,7 +22,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/marathon.webp',
+    src: '/posts/bogota-half-marathon-medal.webp',
     place: 'Bogotá · 2026',
     en: {
       title: 'The Bogotá half marathon',
@@ -34,7 +34,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/masters-2.webp',
+    src: '/posts/masters-graduation-classmates.webp',
     place: 'Uniandes · May 2026',
     en: {
       title: 'The one with my family',
@@ -46,7 +46,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/mac-mini.webp',
+    src: '/posts/mac-mini-office-server.webp',
     place: 'Bogotá · 2026',
     en: {
       title: 'The server in the living room',
@@ -58,7 +58,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/masters-3.webp',
+    src: '/posts/masters-graduation-family.webp',
     place: 'Uniandes · 2026',
     en: {
       title: 'The thesis, finally',
@@ -70,7 +70,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/great-engineer-poor.webp',
+    src: '/posts/cursor-ide-late-night-coding.webp',
     place: 'LinkedIn · 2026',
     en: {
       title: 'Learning to speak plainly',
@@ -82,7 +82,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/lessons-turbo.webp',
+    src: '/posts/home-desk-command-center.webp',
     place: 'Bogotá · 2026',
     en: {
       title: 'What the turbo taught me',
@@ -94,7 +94,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/vibe-coded.webp',
+    src: '/posts/burp-suite-supabase-capture.webp',
     place: 'Enttor · 2026',
     en: {
       title: 'The app that got hacked',
@@ -106,7 +106,7 @@ export const MOMENTS: Moment[] = [
     },
   },
   {
-    src: '/posts/masters-4.webp',
+    src: '/posts/masters-graduation-friends.webp',
     place: 'Uniandes · May 2026',
     en: {
       title: 'The ones who were there',

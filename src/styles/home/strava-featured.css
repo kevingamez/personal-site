@@ -11,9 +11,7 @@
 .sv-feat {
   display: flex;
   flex-direction: column;
-  background: var(--cream-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-lg);
   overflow: hidden;
 }
 
@@ -36,7 +34,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: var(--panel);
+
+  /* Transparent, so the card's glass runs behind the route. An opaque fill
+     here put a flat panel over the top 16/10 of a translucent card and drew a
+     seam across it where the two materials met. */
+  background: transparent;
 
   /* Wipes in left-to-right when the section scrolls into view (#strava.on). */
   clip-path: inset(0 100% 0 0);
@@ -59,10 +61,11 @@
   display: none;
 }
 
-/* Drawn-route fallback: the line renders in ink on the faint sunken fill. */
+/* Drawn-route fallback: the line renders in ink over a faintly sunken pane of
+   the card's own glass, not an opaque tile. */
 .sv-feat-drawn {
   color: var(--ink);
-  background: var(--ink-050);
+  background: rgb(11 11 12 / 3%);
 }
 
 .sv-feat-body {
@@ -71,9 +74,9 @@
 
 .sv-feat-label {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--t-caption);
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--w-medium);
   letter-spacing: 0;
   color: var(--muted);
   margin-bottom: 5px;
@@ -82,9 +85,9 @@
 .sv-feat-name {
   display: block;
   font-family: var(--font-sans);
-  font-size: 23px;
+  font-size: var(--t-title-3);
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--w-semibold);
   line-height: 1.1;
   color: var(--ink);
   text-decoration: none;
@@ -108,9 +111,9 @@
 
 .sv-feat-stats span {
   font-family: var(--font-sans);
-  font-size: 20px;
+  font-size: var(--t-title-3);
   font-style: normal;
-  font-weight: 600;
+  font-weight: var(--w-semibold);
   line-height: 1;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -119,8 +122,8 @@
 .sv-feat-stats em {
   font-style: normal;
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: var(--t-caption);
+  font-weight: var(--w-medium);
   letter-spacing: 0;
   color: var(--muted);
   margin-top: 5px;
@@ -128,11 +131,11 @@
 
 @media (width <= 700px) {
   .sv-feat-name {
-    font-size: 20px;
+    font-size: var(--t-title-3);
   }
 
   .sv-feat-stats span {
-    font-size: 18px;
+    font-size: var(--t-body);
   }
 }
 
@@ -158,7 +161,7 @@
   }
 
   .sv-feat-name {
-    font-size: 20px;
+    font-size: var(--t-title-3);
   }
 
   .sv-feat-stats {

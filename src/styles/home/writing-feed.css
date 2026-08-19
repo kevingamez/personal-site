@@ -41,7 +41,7 @@
   background: var(--cream);
   border: 1px solid var(--line-2);
   color: var(--ink);
-  font-size: 22px;
+  font-size: var(--t-title-3);
   line-height: 1;
   cursor: pointer;
   z-index: 5;
@@ -125,8 +125,7 @@
   display: block;
   text-align: center;
   margin: 36px auto 0;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: var(--t-footnote);
   color: var(--ink);
   border-bottom: 1px solid var(--line-2);
   padding-bottom: 2px;

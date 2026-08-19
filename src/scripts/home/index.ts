@@ -6,6 +6,7 @@ import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initExperience } from './experience'
 import { initIntro } from './intro'
+import { initShare } from './share'
 
 bootstrapClient()
 initIntro()
@@ -16,6 +17,11 @@ initConway()
 // Eager, not lazy: the rows must collapse before they can scroll into view,
 // otherwise an anchor jump to #experience lands on four open panels.
 initExperience()
+
+// Eager too, and for the same class of reason: the sticky bar decides whether
+// to show from the current scroll position, so it has to be listening before
+// the visitor has scrolled anywhere. It is a handful of listeners, no chunk.
+initShare()
 
 function runWhenIdle(fn: () => void, timeout = 2000): void {
   if ('requestIdleCallback' in window) {

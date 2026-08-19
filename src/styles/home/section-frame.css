@@ -25,21 +25,21 @@ section {
   }
 }
 
-/* Section eyebrow: dot-prefixed micro label, uppercase and letterspaced. */
+/* Section eyebrow. Sentence case at semibold, not tracked uppercase: the
+   label is a signpost, and shouting it in 0.14em caps gave a four-word aside
+   the same visual weight as the headline under it. */
 .sec-num {
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
   color: var(--muted);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .sec-title {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(34px, 4.2vw, 44px);
+  font-weight: var(--w-semibold);
+  font-size: var(--t-title-1);
   line-height: 1.08;
   letter-spacing: var(--ls-heading);
   margin: 0;
@@ -48,7 +48,7 @@ section {
 }
 
 .sec-blurb {
-  font-size: 15px;
+  font-size: var(--t-subhead);
   color: var(--muted);
   max-width: 40ch;
   line-height: 1.6;
@@ -58,25 +58,21 @@ section {
   text-wrap: pretty;
 }
 
-/* Shared control vocabulary: the underlined uppercase arrow link. */
+/* Shared control vocabulary: a plain text action. The underline is gone with
+   the uppercase - a hairline under every secondary link was the page's most
+   repeated piece of decoration, and colour plus weight already say "link". */
 .arrow-link {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-size: var(--t-subhead);
+  font-weight: var(--w-medium);
   color: var(--ink);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 3px;
-  transition:
-    border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .arrow-link:hover {
-  border-color: var(--ink);
+  color: var(--muted);
 }
 
 @media (width >= 900px) and (height <= 950px) {
@@ -90,15 +86,10 @@ section {
   }
 
   .sec-num {
-    margin-bottom: 14px;
-  }
-
-  .sec-title {
-    font-size: 36px;
+    margin-bottom: 12px;
   }
 
   .sec-blurb {
-    font-size: 14px;
     line-height: 1.5;
     padding-bottom: 4px;
   }

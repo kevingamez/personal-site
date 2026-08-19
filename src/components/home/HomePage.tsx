@@ -8,6 +8,7 @@ import type { HomeStrings } from '@/content/home'
 import type { HomeStats } from '@/data/home-github'
 import { JsonLd } from '@/components/site/JsonLd'
 import { Nav } from './Nav'
+import { GlassField } from './GlassField'
 import { IntroCurtain } from './IntroCurtain'
 import { Hero } from './Hero'
 // import { About } from './About'
@@ -19,6 +20,7 @@ import { Strava } from './Strava'
 // import { Writing } from './Writing'
 import { Console } from './Console'
 import { Contact } from './Contact'
+import { MobileCta } from './MobileCta'
 import { Footer } from './Footer'
 import { HomeScripts } from './HomeScripts'
 
@@ -41,6 +43,7 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
         {t.meta.skip}
       </a>
 
+      <GlassField />
       <IntroCurtain name="Kevin Gámez" />
       <Nav meta={t.meta} t={t.nav} />
       <main id="main" tabIndex={-1}>
@@ -57,6 +60,10 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
         <Contact t={t.contact} />
       </main>
       <Footer t={t.footer} buildId={buildId} />
+
+      {/* Outside <main>: it is a persistent chrome affordance, not page content,
+          and it must not sit inside the region the skip link targets. */}
+      <MobileCta t={t.contact} />
 
       <HomeScripts />
     </>

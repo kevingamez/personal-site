@@ -10,7 +10,7 @@
   border-radius: 7px;
   background: var(--ink);
   color: var(--paper);
-  font-size: 12px;
+  font-size: var(--t-caption);
   pointer-events: none;
   opacity: 0;
   transform: translate(-50%, -118%);
@@ -22,13 +22,13 @@
 }
 
 .yr-tip b {
-  font-size: 14px;
+  font-size: var(--t-footnote);
   font-variant-numeric: tabular-nums;
 }
 
 .yr-tip-wk {
   margin-top: 1px;
-  font-size: 11px;
+  font-size: var(--t-caption);
   color: rgb(244 244 242 / 55%);
 }
 
@@ -40,7 +40,7 @@
 }
 
 .yr-tip li {
-  font-size: 11px;
+  font-size: var(--t-caption);
   color: rgb(244 244 242 / 86%);
 }
 

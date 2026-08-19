@@ -8,6 +8,11 @@ import type { NextConfig } from 'next'
 // so script-src needs 'unsafe-inline' here (Astro did not). Nonces would
 // require per-request dynamic rendering, which this static site avoids.
 //
+// GA4 (gtag.js) is served from googletagmanager.com and beacons to
+// google-analytics.com, hence those hosts in script-src / img-src / connect-src.
+// It only ever loads when NEXT_PUBLIC_GA_ID is set; the hosts are harmless
+// otherwise. Keep this list identical to the one in vercel.json.
+//
 // 'unsafe-eval' is added in development ONLY: React's dev build uses eval() to
 // rebuild cross-environment callstacks, and without it the dev server throws
 // "eval() is not supported in this environment". React never calls eval() in
@@ -16,12 +21,12 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://va.vercel-scripts.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://va.vercel-scripts.com https://www.googletagmanager.com`,
   "script-src-attr 'none'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://api.mapbox.com https://cdn.jsdelivr.net",
-  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+  "img-src 'self' data: blob: https://api.mapbox.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com",
+  "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "frame-ancestors 'none'",
@@ -93,6 +98,16 @@ const nextConfig: NextConfig = {
       {
         source: '/posts/:path*',
         headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+      // Pagination prefix. No route serves /page/ today; this is the standing
+      // guard so that if one is ever added, the numbered listing pages cannot
+      // enter the index as thin duplicates of the section they paginate.
+      // Crawling is deliberately left open in robots.txt - a Disallow there
+      // would stop the crawler fetching the URL, and it would never read this
+      // header.
+      {
+        source: '/page/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }],
       },
     ]
   },

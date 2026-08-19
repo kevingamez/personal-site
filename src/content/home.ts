@@ -46,7 +46,6 @@ export interface HomeStrings {
     sayHi: string
   }
   hero: {
-    metaRole: string // rotated label on the vertical rail
     metaPlace: string // location label (live clock appended in the component)
     weatherLabels: string // JSON map of condition key -> localized label
     titleHtml: string // contains <br/> and <i>
@@ -101,6 +100,8 @@ export interface HomeStrings {
       ledger: { label: string; value: string }[]
       stackLabel: string
       stack: string[]
+      // Optional investor credit, rendered as an outbound link under the stack.
+      backer?: { label: string; name: string; href: string }
     }[]
     achievementsTitle: string
     achievementsBlurb: string
@@ -244,6 +245,16 @@ export interface HomeStrings {
     titleHtml: string
     body: string
     btnEmail: string
+    btnShare: string
+    // Sticky mobile action bar + the share control. `shareCopied` and
+    // `shareFailed` are the clipboard-fallback toasts for browsers with no
+    // navigator.share (desktop Firefox, most Linux browsers).
+    ctaLabel: string
+    ctaEmail: string
+    shareAria: string
+    shareCopied: string
+    shareFailed: string
+    shareText: string
   }
   footer: {
     pBlurb: string

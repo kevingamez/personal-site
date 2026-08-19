@@ -1,44 +1,22 @@
 /* ─── Hero part 1: grid, rail, copy column, stats, display type, CTAs ─── */
 .hero {
-  min-height: calc(100svh - 56px);
+  /* 72px is the nav's flow height: a 52px capsule inside 10px of padding. */
+  min-height: calc(100svh - 72px);
   display: flex;
   align-items: center;
   padding: 48px 0 72px;
 }
 
+/* The rotated rail that used to hold this grid's first 28px column is gone.
+   Vertical writing-mode is an editorial trope, not a system one: it made the
+   reader tilt their head to collect two pieces of metadata that the caption
+   under the portrait was already carrying. */
 .hero-grid {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(32px, 4vw, 56px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(40px, 5vw, 72px);
   align-items: stretch;
   width: 100%;
-}
-
-/* Vertical rail: rotated role, hairline, year. */
-.hero-rail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 0;
-}
-
-.rail-text,
-.rail-year {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.rail-line {
-  flex: 1;
-  width: 1px;
-  background: var(--line);
 }
 
 .hero-copy {
@@ -71,11 +49,16 @@
   margin-bottom: clamp(32px, 5svh, 56px);
 }
 
-/* Numbers are the argument: oversized numeral, small grey caption. */
+/* Numbers are the argument: oversized numeral, small grey caption. Which means
+   the numeral has to be able to carry the size. These used to read "02
+   startups" and "07 years on GitHub": one was a small number blown up to 56px,
+   where the scale invites "only two?", and the other measured how long an
+   account has existed, which anyone who signed up in 2019 also has. Both are
+   now outcomes taken from the résumé, where they were already published. */
 .stat-num {
   font-family: var(--font-display);
-  font-size: clamp(32px, 2.8vw, 52px);
-  font-weight: 400;
+  font-size: var(--t-hero-2);
+  font-weight: var(--w-semibold);
   line-height: 1;
   letter-spacing: var(--ls-heading);
   color: var(--ink);
@@ -83,7 +66,7 @@
 }
 
 .stat-cap {
-  font-size: 13px;
+  font-size: var(--t-footnote);
   color: var(--muted);
   margin-top: 8px;
   max-width: 18ch;
@@ -91,7 +74,7 @@
 
 h1.hero-title {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--w-semibold);
 
   /* Sized against BOTH axes. A width-only clamp ignores how tall the window
      is, so the same headline was 120px on a 1512x860 laptop and 233px on a
@@ -99,15 +82,15 @@ h1.hero-title {
      of the screen given to one word. Taking the smaller of a width and a
      height term keeps it at 10-12% of the viewport height everywhere, which
      is what makes the scale read as deliberate instead of accidental. */
-  font-size: clamp(56px, min(11vw, 13svh), 160px);
+  font-size: var(--t-display);
   line-height: 0.94;
   letter-spacing: var(--ls-display);
-  margin: 0 0 26px;
+  margin: 0 0 24px;
   text-wrap: balance;
 }
 
 .hero-lede {
-  font-size: 17px;
+  font-size: var(--t-body);
   line-height: 1.55;
   color: var(--ink-2);
   max-width: 44ch;
@@ -115,7 +98,7 @@ h1.hero-title {
 }
 
 .hero-lede b {
-  font-weight: 500;
+  font-weight: var(--w-semibold);
   color: var(--ink);
 }
 
@@ -142,21 +125,18 @@ h1.hero-title {
   }
 }
 
-/* Buttons: uppercase letterspaced labels, ink fill, no bounce. The corner is
-   --r-xs so the control sits inside the same radius system as the cards
-   instead of being the only capsule on the page (see base.css). Hierarchy
-   comes from fill against hairline, which is the section rules' own language,
-   so shape never has to carry it. */
+/* Buttons: sentence-case semibold labels at reading size, ink fill, no bounce.
+   The old 11px uppercase tracked to 0.14em was the most engineered typography
+   on the page wrapped around its plainest instruction. A button says what it
+   does, at a size you can read, and the fill does the rest. */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 24px;
+  padding: 13px 22px;
   border-radius: var(--r-xs);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-size: var(--t-subhead);
+  font-weight: var(--w-semibold);
   transition:
     background-color var(--dur-fast) var(--ease-out),
     color var(--dur-fast) var(--ease-out),

@@ -63,6 +63,16 @@ export default function Page() {
           country at country level. No persistent identifier.
         </p>
 
+        <h3>Google Analytics 4</h3>
+        <p>
+          Runs only when a measurement ID is configured, and runs in cookieless mode:{' '}
+          <code>client_storage: &apos;none&apos;</code> stops it writing the usual <code>_ga</code>{' '}
+          identifiers, and <code>anonymize_ip</code> truncates your address before it is stored. It
+          receives the same event names as the list above, plus your page path, referrer,
+          approximate country and device type. Because there is no persistent ID, a return visit is
+          counted as a new one.
+        </p>
+
         <h3>Anthropic (Claude, /api/chat)</h3>
         <p>
           When you use the live console, your message and the conversation history of that session
@@ -75,8 +85,8 @@ export default function Page() {
         <ul>
           <li>
             <strong>Block analytics.</strong> Most browser tracker-blockers (uBlock Origin, Brave
-            Shields, Privacy Badger, Safari ITP) already block Vercel Analytics by default. The site
-            still works fully.
+            Shields, Privacy Badger, Safari ITP) already block Vercel Analytics and Google Analytics
+            by default. The site still works fully.
           </li>
           <li>
             <strong>Don't use the console.</strong> If you don't type anything in{' '}
@@ -92,8 +102,8 @@ export default function Page() {
 
         <h2>Cookies</h2>
         <p>
-          None. This site sets no cookies - analytics are cookieless, and there are no advertising
-          or remarketing pixels.
+          None. This site sets no cookies - both analytics vendors run cookieless, and there are no
+          advertising or remarketing pixels.
         </p>
 
         <h2>Contact</h2>

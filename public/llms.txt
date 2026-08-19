@@ -40,6 +40,21 @@ Stack: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, Verce
 - **AI / ML:** OpenAI, Anthropic SDK, browser automation, PyTorch, OpenCV, YOLO
 - **Data:** SQL modeling, Power BI, ETL pipelines
 
+## Pages
+
+Every indexable URL on this site, mirroring /sitemap.xml. All canonical URLs are
+lowercase, hyphenated and carry no numbers, query strings or trailing IDs.
+
+- [/](https://kevingamez.co/): home, English. Experience, work, the photo deck, Strava, and a live Claude console that answers questions about Kevin.
+- [/es/](https://kevingamez.co/es/): the same home page in Spanish.
+- [/resume/](https://kevingamez.co/resume/): résumé, English. Roles, dates, education, skills.
+- [/es/resume/](https://kevingamez.co/es/resume/): hoja de vida, Spanish.
+- [/privacy/](https://kevingamez.co/privacy/): what the site collects and how to opt out.
+
+Not indexed, and deliberately so: /dev/ (a terminal-styled view of the same
+content, noindex), /lab/ (unlisted rendering experiments) and /api/ (route
+handlers, no prose).
+
 ## Contact
 
 - Email: kevingamez.kg@gmail.com

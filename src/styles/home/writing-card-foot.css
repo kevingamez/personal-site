@@ -12,13 +12,13 @@
   padding: 10px 14px;
   border-top: 1px solid var(--line);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--t-caption);
 }
 
 .pc-meta-right {
   white-space: nowrap;
   text-align: right;
-  font-size: 11.5px;
+  font-size: var(--t-caption);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -31,11 +31,11 @@
 @media (width <= 520px) {
   .post-card .pc-foot {
     padding: 9px 12px;
-    font-size: 11px;
+    font-size: var(--t-caption);
   }
 
   .pc-meta-right {
-    font-size: 11px;
+    font-size: var(--t-caption);
   }
 
   /* Drop the verbose labels on mobile - keep just the numbers like LinkedIn does. */
@@ -45,14 +45,14 @@
 
   .pc-meta-item::after {
     content: ' 💬';
-    font-size: 10px;
+    font-size: var(--t-caption);
     margin-left: 2px;
     opacity: 0.55;
   }
 
   .pc-meta-item + .pc-meta-sep + .pc-meta-item::after {
     content: ' ↻';
-    font-size: 11px;
+    font-size: var(--t-caption);
   }
 }
 
@@ -99,10 +99,10 @@
 }
 
 .pc-reax-num {
-  font-weight: 500;
+  font-weight: var(--w-medium);
   color: var(--muted);
   margin-left: 4px;
-  font-size: 12px;
+  font-size: var(--t-caption);
 }
 
 .pc-reactions:hover .pc-reax-num {

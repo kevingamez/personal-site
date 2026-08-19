@@ -75,3 +75,48 @@ test('500 page returns 500 and renders without console errors', async ({ page })
   await expect(page).toHaveTitle(/500|Kevin G[áa]mez/)
   expect(errors, 'console / page errors on /500').toEqual([])
 })
+
+// The share control ships on both locales, in the contact section, on every
+// viewport. The sticky bar's icon-only twin is asserted separately below.
+for (const path of ['/', '/es/']) {
+  test(`${path} ships a share control`, async ({ page }) => {
+    await page.goto(path)
+    const share = page.locator('#contact [data-share]')
+    await expect(share).toHaveCount(1)
+    await expect(share).toHaveAttribute('data-share-copied', /.+/)
+  })
+}
+
+// Clipboard fallback: Chromium exposes navigator.share only on mobile, so the
+// desktop path here is always the copy branch.
+test('share button copies the page URL when there is no share sheet', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+  await page.goto('/')
+  await page.locator('#contact [data-share]').click()
+  const copied = await page.evaluate(() => navigator.clipboard.readText())
+  expect(copied).toContain('/')
+  // The button reports back rather than copying silently.
+  await expect(page.locator('#contact [data-share]')).toHaveClass(/is-shared/)
+})
+
+test('the sticky CTA stays off the hero and arrives once it is scrolled past', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+
+  const bar = page.locator('#mobile-cta')
+  await expect(bar).toHaveCount(1)
+  // Nothing floats over the first screen.
+  await expect(bar).toBeHidden()
+
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2))
+  await expect(bar).toBeVisible()
+  await expect(bar.locator('[data-share]')).toHaveCount(1)
+  await expect(bar.locator('a[href^="mailto:"]')).toHaveCount(1)
+})
+
+test('the sticky CTA is desktop-suppressed, where the nav already carries it', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2))
+  await expect(page.locator('#mobile-cta')).toBeHidden()
+})

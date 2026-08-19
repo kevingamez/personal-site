@@ -2,6 +2,16 @@
 # Invariant: crawlers get the public surface; humans get context in /humans.txt.
 # Keep Disallow inside this group - a rule placed after the last User-agent
 # block below would only apply to that last agent (RFC 9309 grouping).
+#
+# Deliberately NOT disallowed here: /page/ and /lab/. Both must stay OUT of the
+# index, and Disallow is the wrong tool for that - it blocks the fetch, so the
+# crawler never reads the noindex and the URL can still be listed from inbound
+# links alone. They are de-indexed where a crawler will actually see it:
+#   /page/  -> X-Robots-Tag: noindex (next.config.ts + vercel.json)
+#   /lab/   -> robots: { index: false } in the route's metadata
+# /page/ is the pagination prefix. No route serves it today; the header is in
+# place so that if pagination is ever added it cannot enter the index as thin
+# duplicate listings.
 User-agent: *
 Allow: /
 Disallow: /api/
