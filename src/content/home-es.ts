@@ -147,11 +147,6 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Trabajé en',
         stack: ['Python', 'SQL', 'Deep learning'],
-        link: {
-          label: 'Tesis',
-          name: 'Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales',
-          href: 'https://repositorio.uniandes.edu.co/entities/publication/2cd71d69-7078-4901-87e7-9bc9f2cb62e5',
-        },
       },
       {
         dates: 'Dic 2022, Dic 2023',
@@ -186,6 +181,11 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Trabajé en',
         stack: ['Python', 'TypeScript', 'Java', 'Swift'],
+        link: {
+          label: 'Tesis',
+          name: 'Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales',
+          href: 'https://repositorio.uniandes.edu.co/entities/publication/2cd71d69-7078-4901-87e7-9bc9f2cb62e5',
+        },
       },
     ],
     achievementsTitle: 'Honores y certificaciones',
