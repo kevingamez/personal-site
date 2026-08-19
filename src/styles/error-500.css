@@ -44,7 +44,7 @@
 }
 
 .err500 .tag {
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', sfmono-regular, menlo, monospace;
   font-size: 11.5px;
   color: var(--ink);
   letter-spacing: 0.14em;
@@ -140,7 +140,7 @@
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', sfmono-regular, menlo, monospace;
   font-size: 11.5px;
   color: var(--ink-2);
   text-align: left;

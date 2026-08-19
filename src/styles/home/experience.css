@@ -16,9 +16,7 @@
 
 /* The affordance only makes sense once the rows actually collapse. */
 .tl-hint {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.03em;
+  font-size: var(--t-footnote);
   color: var(--muted);
   margin-top: 12px;
   display: none;
@@ -32,41 +30,53 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Negative margin against equal padding: the row reaches 16px past the gutter
+   on both sides so the hover pane has somewhere to be, while the grid columns
+   stay exactly where they were. */
 .tl-head {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr) 40px;
   gap: 24px;
   align-items: baseline;
-  width: 100%;
-  padding: 26px 0;
+  width: calc(100% + 32px);
+  margin-inline: -16px;
+  padding: 26px 16px;
   background: none;
   border: 0;
+  border-radius: var(--r-md);
   text-align: left;
   color: inherit;
-  transition: background-color var(--dur-fast) var(--ease-out);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
 }
 
 .exp-on .tl-head {
   cursor: pointer;
 }
 
-/* Closed rows fill white and bleed past the gutter, per the Vela list rule. */
+/* Closed rows: a pane of glass forms under the cursor. No backdrop-filter
+   here on purpose - a hover that starts blurring 26px of page on every
+   pointer move costs more than the effect is worth, and the fill plus rim
+   already read as the same material as the cards. */
 @media (width >= 900px) {
   .exp-on .tl-row:not([data-exp-open]) .tl-head:hover {
-    background: var(--white);
+    background: rgb(253 253 252 / 64%);
     box-shadow:
-      16px 0 0 var(--white),
-      -16px 0 0 var(--white);
+      inset 0 1px 0 rgb(255 255 255 / 85%),
+      inset 0 0 0 1px rgb(255 255 255 / 45%),
+      0 2px 10px rgb(11 11 12 / 5%);
   }
 }
 
+/* Dates were mono so the columns would line up. Tabular figures do the same
+   job inside the type system instead of beside it. */
 .tl-when {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  font-size: var(--t-footnote);
+  font-variant-numeric: tabular-nums;
   color: var(--ink-2);
   line-height: 1.6;
-  padding-top: 3px;
+  padding-top: 5px;
 }
 
 .tl-place {
@@ -77,28 +87,31 @@
 .tl-role {
   display: block;
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 26px;
-  letter-spacing: -0.025em;
+  font-weight: var(--w-semibold);
+  font-size: var(--t-title-2);
+  letter-spacing: var(--ls-heading);
   line-height: 1.18;
   color: var(--ink);
   margin-bottom: 6px;
 }
 
+/* The company is the quieter half of the line: it steps down in weight as well
+   as in colour, which is how the pair reads as one heading. */
 .tl-role .at {
+  font-weight: var(--w-regular);
   color: var(--muted);
 }
 
 .tl-summary {
   display: block;
-  font-size: 14px;
+  font-size: var(--t-footnote);
   color: var(--muted);
   line-height: 1.5;
 }
 
 .tl-plus {
   justify-self: end;
-  font-size: 20px;
+  font-size: var(--t-title-3);
   line-height: 1;
   color: var(--ink);
 }
@@ -134,13 +147,16 @@
   padding-bottom: 30px;
 }
 
-/* Logo well: the mark sits inside a hairline box, never bleeding to its edge. */
+/* Logo well: the mark sits inside a pane of glass, never bleeding to its edge. */
 .tl-mark {
   width: 64px;
   height: 64px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--white);
+  border-radius: var(--r-sm);
+  background: rgb(253 253 252 / 62%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 85%),
+    inset 0 0 0 1px rgb(255 255 255 / 45%),
+    0 1px 2px rgb(11 11 12 / 5%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,7 +170,7 @@
 }
 
 .tl-desc {
-  font-size: 15px;
+  font-size: var(--t-subhead);
   line-height: 1.6;
   color: var(--ink-2);
   max-width: 66ch;
@@ -188,33 +204,50 @@
 }
 
 .tl-fact dt {
-  font-size: 13.5px;
+  font-size: var(--t-footnote);
   color: var(--muted);
 }
 
 .tl-fact dd {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.02em;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
+
+  /* Values sit against the right edge; a wrapped one stays flush there too. */
+  text-align: right;
 }
 
 .tl-stack-k {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .tl-stack-v {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  letter-spacing: 0.02em;
+  font-size: var(--t-footnote);
   color: var(--ink);
-  line-height: 1.8;
+  line-height: 1.7;
+}
+
+.tl-backer {
+  margin-top: 18px;
+}
+
+.tl-backer-v {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: var(--t-footnote);
+  color: var(--ink);
+  line-height: 1.7;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.tl-backer-v:hover {
+  color: var(--muted);
 }
 
 @media (width <= 900px) {
@@ -242,14 +275,14 @@
 
 @media (width >= 1180px) and (height <= 950px) {
   .tl-head {
-    padding: 20px 0;
+    padding: 20px 16px;
   }
 
   .tl-role {
-    font-size: 22px;
+    font-size: var(--t-title-3);
   }
 
   .tl-desc {
-    font-size: 14px;
+    font-size: var(--t-footnote);
   }
 }

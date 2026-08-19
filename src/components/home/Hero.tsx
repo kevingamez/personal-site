@@ -9,11 +9,9 @@ export function Hero({ t }: Props) {
   return (
     <header className="hero">
       <div className="wrap hero-grid">
-        <div className="hero-rail" aria-hidden="true">
-          <span className="rail-text">{t.metaRole}</span>
-          <span className="rail-line"></span>
-          <span className="rail-year">2026</span>
-        </div>
+        {/* The rotated metadata rail that used to sit here is gone: it made the
+            reader tilt their head for a role and a year the caption under the
+            portrait already carries. */}
         <div className="hero-copy">
           <div className="hero-stats">
             <div className="stat">

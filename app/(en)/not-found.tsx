@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import '@/styles/error-404.css'
 
 export const metadata: Metadata = {
-  title: '404 - Kevin Gámez',
+  title: '404, page not found - Kevin Gámez',
   description: "The page could not be found on Kevin Gámez's site.",
   robots: 'noindex,nofollow',
 }

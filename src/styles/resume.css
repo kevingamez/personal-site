@@ -7,7 +7,7 @@
 .resume-article {
   max-width: 720px;
   color: var(--ink-2);
-  font-size: 15px;
+  font-size: var(--t-subhead);
   line-height: 1.65;
 }
 
@@ -16,26 +16,24 @@
 }
 
 .resume-article .kicker {
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--coral-strong);
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  color: var(--muted);
   margin: 0 0 12px;
 }
 
 .resume-article h1 {
-  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  font-weight: 400;
-  font-size: clamp(40px, 6vw, 64px);
-  line-height: 1;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-weight: var(--w-semibold);
+  font-size: var(--t-hero-2);
+  line-height: 1.04;
+  letter-spacing: var(--ls-heading);
   color: var(--ink);
   margin: 0 0 14px;
 }
 
 .resume-contact {
-  font-size: 14px;
+  font-size: var(--t-subhead);
   color: var(--muted);
   margin: 0;
 }
@@ -57,11 +55,9 @@
 }
 
 .resume-article h2 {
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--coral-strong);
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  color: var(--muted);
   margin: 44px 0 4px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--line);
@@ -80,27 +76,27 @@
 }
 
 .resume-entry-head h3 {
-  font-family: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: var(--t-body);
+  font-weight: var(--w-semibold);
   color: var(--ink);
   margin: 0;
 }
 
 .resume-entry-head h3 .at {
-  font-weight: 400;
+  font-weight: var(--w-regular);
   color: var(--ink-2);
 }
 
 .resume-dates {
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
-  font-size: 12px;
+  font-size: var(--t-footnote);
+  font-variant-numeric: tabular-nums;
   color: var(--muted);
   white-space: nowrap;
 }
 
 .resume-meta {
-  font-size: 13px;
+  font-size: var(--t-footnote);
   color: var(--muted);
   margin: 2px 0 8px;
 }
@@ -119,7 +115,7 @@
 }
 
 .resume-skills dt {
-  font-weight: 600;
+  font-weight: var(--w-semibold);
   color: var(--ink);
   margin-top: 10px;
 }
@@ -131,8 +127,8 @@
 .resume-back {
   display: inline-block;
   margin-top: 48px;
-  font-family: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
-  font-size: 12px;
+  font-size: var(--t-subhead);
+  font-weight: var(--w-medium);
   color: var(--muted);
 }
 

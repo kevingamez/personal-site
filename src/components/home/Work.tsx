@@ -26,7 +26,7 @@ export function Work({ t }: Props) {
               made the featured card the only one in the section with a
               different treatment - and kept its technologies out of the
               content files, so they never translated. */}
-          <div className="wf-copy">
+          <div className="wf-copy glass-strong">
             <div>
               <h3 className="wf-title" dangerouslySetInnerHTML={{ __html: t.p1NameHtml }} />
               <p className="wf-desc">{t.p1Desc}</p>
@@ -57,11 +57,11 @@ export function Work({ t }: Props) {
               </>
             )
             return p.href ? (
-              <a className="work-card" href={p.href} key={p.name}>
+              <a className="work-card glass glass-lift" href={p.href} key={p.name}>
                 {body}
               </a>
             ) : (
-              <div className="work-card" key={p.name}>
+              <div className="work-card glass glass-lift" key={p.name}>
                 {body}
               </div>
             )

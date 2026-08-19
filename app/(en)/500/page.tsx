@@ -3,7 +3,9 @@ import type { Metadata } from 'next'
 import '@/styles/error-500.css'
 
 export const metadata: Metadata = {
-  title: '500 - Kevin Gámez',
+  title: 'Server error - Kevin Gámez',
+  description:
+    'Something broke while rendering this page on kevingamez.co. Refresh, or head back to the home page.',
   robots: 'noindex,nofollow',
 }
 

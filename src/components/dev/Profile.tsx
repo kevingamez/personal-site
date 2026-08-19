@@ -8,7 +8,13 @@ export function Profile() {
       <header className="pf-head">
         <div className="pf-avatar-wrap" aria-hidden="true">
           {/* 102x128 crop, not the 164 KB full portrait: this renders at 58px. */}
-          <img className="pf-avatar" src="/kevin-avatar.jpg" alt="" width={102} height={128} />
+          <img
+            className="pf-avatar"
+            src="/kevin-gamez-avatar.jpg"
+            alt=""
+            width={102}
+            height={128}
+          />
         </div>
         <div className="pf-id">
           <div className="pf-name">

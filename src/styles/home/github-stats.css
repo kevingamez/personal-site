@@ -19,14 +19,13 @@
   align-items: baseline;
   margin-bottom: 12px;
   font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.01em;
+  font-size: var(--t-caption);
   color: rgb(var(--ink-rgb) / 55%);
 }
 
 .gh-langbar-head b {
   color: var(--ink);
-  font-weight: 600;
+  font-weight: var(--w-semibold);
 }
 
 .gh-langbar-track {
@@ -56,8 +55,7 @@
   flex-wrap: wrap;
   gap: 10px 22px;
   margin-top: 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--t-caption);
   color: rgb(var(--ink-rgb) / 78%);
 }
 
@@ -83,7 +81,7 @@
   .gh-langbar-legend {
     gap: 8px 16px;
     margin-top: 12px;
-    font-size: 10px;
+    font-size: var(--t-caption);
   }
 }
 

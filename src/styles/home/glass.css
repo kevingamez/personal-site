@@ -1,0 +1,227 @@
+/* ─── Liquid glass: the material ───
+   Every glass surface is four layers, in paint order: the blurred and
+   saturated backdrop, a translucent fill with a sheen falling off the top
+   edge, the content, and a 1px specular rim. Only the rim is drawn over the
+   content, and it never reaches past the padding, so nothing washes out.
+
+   Surfaces are a membrane over the ambient light field, not a paint colour:
+   the fill is deliberately weak because the saturation boost, not the tint,
+   is what makes the blurred backdrop read as a material with depth. */
+:root {
+  --glass-fill: rgb(253 253 252 / 58%);
+  --glass-fill-strong: rgb(253 253 252 / 76%);
+  --glass-fill-thin: rgb(253 253 252 / 34%);
+
+  /* The nav is the one surface that crosses everything: the black Ad Studio
+     panel, the deck's dark room, the terminal, the ink footer. At 58% those
+     backdrops pull it to mid grey and the labels stop holding AA. 88% is the
+     density where the worst case, pure black behind, still leaves an ink label
+     at 8:1 - enough of the backdrop bleeds through to keep it glass, and the
+     blur and saturation do the rest. */
+  --glass-fill-nav: rgb(253 253 252 / 88%);
+  --glass-backdrop: saturate(180%) blur(24px);
+  --glass-backdrop-thin: saturate(160%) blur(14px);
+
+  /* Rim gradient: bright where light enters (top left), dark where the sheet
+     meets the page, bright again on the edge the light exits. */
+  --glass-rim: linear-gradient(
+    150deg,
+    rgb(255 255 255 / 95%),
+    rgb(255 255 255 / 18%) 26%,
+    rgb(11 11 12 / 7%) 56%,
+    rgb(255 255 255 / 70%)
+  );
+  --glass-sheen: linear-gradient(180deg, rgb(255 255 255 / 55%), rgb(255 255 255 / 0%) 46%);
+  --glass-lift:
+    0 1px 2px rgb(11 11 12 / 4%), 0 8px 22px rgb(11 11 12 / 6%), inset 0 -1px 1px rgb(11 11 12 / 3%);
+  --glass-lift-hi:
+    0 2px 5px rgb(11 11 12 / 5%), 0 20px 48px rgb(11 11 12 / 11%),
+    inset 0 -1px 1px rgb(11 11 12 / 3%);
+
+  /* ─── The dark objects ───
+     The page holds four: the product mock's frame, the deck's window, the
+     terminal and the footer. They were #090808, #111112, #141310 and #0b0b0c,
+     each with its own edge (a hairline, a 20%-black border, nothing, nothing),
+     so four things playing the same role looked like four accidents. One hue,
+     one rim, one shadow.
+
+     Opacity is the only thing that varies, and it varies for a reason: the
+     terminal floats over the ambient field and is translucent so the field
+     moves through it, while the deck and the footer contain their own scene or
+     sit at the page edge, where translucency would only wash them out. */
+  --ink-surface: #0e0e10;
+  --ink-rim: inset 0 1px 0 rgb(255 255 255 / 11%), inset 0 0 0 1px rgb(255 255 255 / 7%);
+  --ink-lift: 0 20px 50px -18px rgb(11 11 12 / 35%);
+}
+
+/* ─── Ambient light field ───
+   Glass is only visible when there is something behind it to bend: on a flat
+   paper ground a translucent card is just a slightly lighter rectangle. This
+   fixed layer is the light the whole page refracts - broad, low-chroma washes
+   of warm sun and cool sky bounce, never brand colour, chosen so the
+   saturate() in the backdrop filter has something to amplify.
+
+   z-index -2 puts it under .cube-journey (-1) and over the paper, which the
+   canvas always paints first, below every negative layer. */
+.glass-field {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+/* Two layers so they can drift at different rates: light that moves as one
+   sheet reads as the page sliding, not as the room changing. */
+.glass-field::before,
+.glass-field::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+}
+
+.glass-field::before {
+  background:
+    radial-gradient(34% 38% at 16% 10%, rgb(255 205 148 / 30%), transparent 70%),
+    radial-gradient(30% 34% at 88% 24%, rgb(166 197 255 / 28%), transparent 70%);
+}
+
+.glass-field::after {
+  background:
+    radial-gradient(38% 42% at 78% 72%, rgb(255 194 172 / 24%), transparent 72%),
+    radial-gradient(34% 38% at 10% 86%, rgb(172 214 199 / 24%), transparent 70%);
+}
+
+/* Minutes per cycle, not seconds: the field should never be caught moving,
+   only be somewhere else when you come back up the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .glass-field::before {
+    animation: glass-drift-a 54s var(--ease-out-soft) infinite alternate;
+  }
+
+  .glass-field::after {
+    animation: glass-drift-b 71s var(--ease-out-soft) infinite alternate;
+  }
+}
+
+@keyframes glass-drift-a {
+  to {
+    transform: translate3d(4%, 3%, 0) scale(1.09);
+  }
+}
+
+@keyframes glass-drift-b {
+  to {
+    transform: translate3d(-5%, -3%, 0) scale(1.07);
+  }
+}
+
+/* ─── The sheet ───
+   .glass is the membrane, .glass-strong the same material with a denser fill
+   for surfaces carrying long-form text, .glass-thin a lighter one for chrome
+   that sits over scrolling content. All three take their radius from the
+   element they land on, so the rim always follows the corner. */
+.glass,
+.glass-strong,
+.glass-thin {
+  position: relative;
+  background-color: transparent;
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--glass-lift);
+}
+
+.glass-thin {
+  backdrop-filter: var(--glass-backdrop-thin);
+  -webkit-backdrop-filter: var(--glass-backdrop-thin);
+  box-shadow: none;
+}
+
+/* Fill + sheen. z-index -1 keeps it under the content but over the blurred
+   backdrop: backdrop-filter already opens a stacking context, so the negative
+   layer cannot escape the card. */
+.glass::before,
+.glass-strong::before,
+.glass-thin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--glass-fill);
+  background-image: var(--glass-sheen);
+  pointer-events: none;
+}
+
+.glass-strong::before {
+  background-color: var(--glass-fill-strong);
+}
+
+.glass-thin::before {
+  background-color: var(--glass-fill-thin);
+}
+
+/* Specular rim. A 1px ring cut from a directional gradient: bright where the
+   light enters at the top left, dark where the sheet meets the page, bright
+   again on the edge it exits. A flat border cannot do this, and it is the
+   difference between a translucent box and a piece of glass. */
+.glass::after,
+.glass-strong::after,
+.glass-thin::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-rim);
+
+  /* Two identical masks, one clipped to the content box, subtracted from each
+     other: what survives is the 1px padding ring. The -webkit- pair must come
+     FIRST - Chrome aliases -webkit-mask onto the mask shorthand, so writing it
+     second resets mask-composite back to `add`, the layers union instead of
+     cancelling, and the gradient floods the whole surface. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Lift. Glass rises toward the pointer and the shadow spreads underneath it;
+   the fill firms up at the same time so the raised card reads as nearer the
+   viewer rather than merely brighter. */
+.glass-lift {
+  transition:
+    box-shadow var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+.glass-lift:hover {
+  box-shadow: var(--glass-lift-hi);
+}
+
+.glass-lift:hover::before {
+  background-color: var(--glass-fill-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .glass-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* No backdrop-filter means no material: fall back to the opaque card the
+   layout was built on rather than a washed-out translucent one. */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass::before,
+  .glass-strong::before,
+  .glass-thin::before {
+    background-color: var(--white);
+  }
+}

@@ -3,6 +3,7 @@
 
 import { logger } from './logger'
 import { pageView, track } from './analytics'
+import { initGa, loadGaScript } from './ga'
 
 const log = logger('boot')
 
@@ -32,9 +33,15 @@ export function bootstrapClient(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
 
+  // Synchronous and cheap: installs the gtag queue so the page_view fired at the
+  // end of this function is buffered rather than dropped. The tag itself is
+  // fetched from the idle callback below. No-ops without NEXT_PUBLIC_GA_ID.
+  initGa()
+
   runWhenIdle(() => {
     // Privacy-first first-party analytics. Cookieless by default.
     void loadVercelTelemetry().catch((e) => log.warn('vercel analytics inject failed', e))
+    loadGaScript()
   })
 
   window.addEventListener('error', (e) => {

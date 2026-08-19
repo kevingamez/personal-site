@@ -8,8 +8,11 @@ function Entry({ e }: { e: ResumeEntry }) {
   return (
     <div className="resume-entry">
       <div className="resume-entry-head">
+        {/* No whitespace before the span: JSX would render it as a literal
+            space and the line came out as "Founding Engineer , Enttor". */}
         <h3>
-          {e.role} <span className="at">, {e.at}</span>
+          {e.role}
+          <span className="at">, {e.at}</span>
         </h3>
         <span className="resume-dates">{e.dates}</span>
       </div>

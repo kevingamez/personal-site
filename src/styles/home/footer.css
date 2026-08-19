@@ -1,11 +1,15 @@
 /* ─── Footer (Vela: the dark slab) ─── */
 .footer {
   position: relative;
-  background: var(--ink-900);
+  background: var(--ink-surface);
   color: rgb(255 255 255 / 72%);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   padding: 56px 0 0;
   overflow: hidden;
+
+  /* Same rim as the deck and the terminal. It only reads along the top edge
+     and the two corners, which is all of this slab the page ever sees. */
+  box-shadow: var(--ink-rim);
 }
 
 .foot-grid {
@@ -22,17 +26,16 @@
 }
 
 .foot-grid h3 {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: rgb(255 255 255 / 45%);
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  color: rgb(255 255 255 / 50%);
   margin: 0 0 14px;
 }
 
 .foot-grid .col-name {
   font-family: var(--font-display);
-  font-size: 32px;
+  font-size: var(--t-title-2);
+  font-weight: var(--w-semibold);
   letter-spacing: var(--ls-heading);
   line-height: 1.1;
   color: var(--white);
@@ -40,7 +43,7 @@
 }
 
 .foot-grid p {
-  font-size: 14px;
+  font-size: var(--t-footnote);
   color: rgb(255 255 255 / 62%);
   max-width: 36ch;
   margin: 0;
@@ -54,7 +57,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--t-footnote);
 }
 
 .foot-grid ul a {
@@ -71,10 +74,8 @@
   justify-content: space-between;
   padding-top: 24px;
   border-top: 1px solid rgb(255 255 255 / 14%);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: rgb(255 255 255 / 45%);
-  letter-spacing: 0.06em;
+  font-size: var(--t-footnote);
+  color: rgb(255 255 255 / 50%);
   flex-wrap: wrap;
   gap: 14px;
 }
@@ -91,7 +92,7 @@
   }
 
   .foot-grid .col-name {
-    font-size: 28px;
+    font-size: var(--t-title-2);
   }
 
   .colophon {

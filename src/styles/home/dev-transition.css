@@ -5,9 +5,7 @@
   z-index: 99999;
   background: radial-gradient(ellipse at center, #0e1525 0%, #050810 100%);
   color: var(--coral, #d96944);
-  font-family: var(--font-mono);
-  font-size: 13.5px;
-  letter-spacing: 0.02em;
+  font-size: var(--t-footnote);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -7,6 +7,16 @@ import type { HomeStrings } from '@/content/home'
 const OG_IMAGE = 'https://kevingamez.co/og-dev-preview.png'
 const OG_IMAGE_ALT = 'Kevin Gámez, founding engineer at Enttor'
 
+// Google Search Console ownership token. Emitted as
+// <meta name="google-site-verification"> on every page built through here.
+// Unset in local dev, which is fine - Next drops the tag entirely.
+//
+// A DNS TXT record verifies the whole kevingamez.co domain (including the
+// Vercel preview subdomains) and survives a redeploy of this file; this meta
+// tag only verifies the https://kevingamez.co/ URL-prefix property. Either
+// works, and having both is harmless.
+const GSC_TOKEN = process.env.GOOGLE_SITE_VERIFICATION
+
 export function buildMetadata(meta: HomeStrings['meta']): Metadata {
   const languages: Record<string, string> = {}
   for (const alt of meta.hreflang) languages[alt.lang] = alt.href
@@ -30,6 +40,7 @@ export function buildMetadata(meta: HomeStrings['meta']): Metadata {
       canonical: meta.canonical,
       languages,
     },
+    ...(GSC_TOKEN ? { verification: { google: GSC_TOKEN } } : {}),
     openGraph: {
       ...(isProfile
         ? {

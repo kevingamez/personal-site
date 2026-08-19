@@ -20,7 +20,6 @@
   --ink-300: #a3a3a9;
   --ink-150: #dedee0;
   --ink-050: #f0f0ee;
-  --violet-600: #5b3fe0;
   --violet-500: #7c5cff;
   --violet-400: #9b82ff;
   --violet-200: #d3c8ff;
@@ -41,60 +40,80 @@
   --coral-strong: var(--ink-900);
   --coral-soft: rgb(11 11 12 / 6%);
   --coral-on-dark: var(--violet-400);
-  --slate: var(--violet-500);
-  --gold: var(--amber-500);
   --green: var(--emerald-500);
   --ink-rgb: 11 11 12;
-  --coral-rgb: 11 11 12;
 
-  /* Type - Inter (Display cut via the variable opsz axis) carries display and
-     body; JetBrains Mono is meta. Both are self-hosted by next/font
-     (src/lib/fonts.ts), which supplies the family names through these
-     variables. Always reach for these tokens rather than naming a family
-     inline: next/font also generates a metric-matched fallback face
-     ("JetBrains Mono Fallback") and only the token carries it, so a
-     hand-written stack falls back to generic monospace during load and the
-     text reflows when the real face arrives.
-     --font-serif-italic used to sit here too, aliased to Inter for selectors
-     that were never renamed after the serif was dropped. Nothing referenced
-     it, so it was a token that described a typeface the site does not have. */
-  --font-sans: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-display: var(--font-inter), 'Helvetica Neue', helvetica, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, sfmono-regular, menlo, monospace;
-  --ls-display: -0.035em;
+  /* Type - San Francisco first, Inter behind it.
+     SF cannot be shipped as a webfont: Apple licenses it for app and mock-up
+     use on Apple platforms, not for self-hosting, so `-apple-system` is the
+     only lawful way to get it and it is also the best one. On macOS and iOS it
+     resolves to the real SF Pro AND to the system's own optical sizing, which
+     swaps the Text cut for the Display cut as the size grows, exactly what the
+     Inter opsz axis was approximating. Everywhere else Inter carries it, still
+     self-hosted by next/font (src/lib/fonts.ts) and metric-close enough that
+     the layout does not move between platforms.
+     Always reach for these tokens rather than naming a family inline: next/font
+     generates metric-matched fallback faces and only the token carries them. */
+  --font-sans: -apple-system, blinkmacsystemfont, var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-sans);
+
+  /* No webfont behind this one. SF Mono covers Apple, Consolas and DejaVu Sans
+     Mono cover the rest, and none of them cost a download - JetBrains Mono was
+     a whole preloaded family styling a handful of terminal lines. */
+  --font-mono: ui-monospace, 'SF Mono', sfmono-regular, menlo, monospace;
+
+  /* Type scale - nine steps, modelled on SF's text styles.
+     This replaced 34 ad-hoc px values (7, 10, 10.5, 11, 11.5, 12, 12.5, 13,
+     13.5, 14, 14.5, 15, 16, 17...). A scale that fine is not tuning, it is the
+     absence of a decision: 13px and 13.5px next to each other read as a
+     mistake, never as a distinction. Sizes are the only rung of the ladder;
+     weight does the rest. */
+  --t-display: clamp(56px, min(11vw, 13svh), 160px);
+  --t-hero-2: clamp(36px, 5vw, 56px);
+  --t-title-1: clamp(30px, 3.6vw, 40px);
+  --t-title-2: 26px;
+  --t-title-3: 20px;
+  --t-body: 17px;
+  --t-subhead: 15px;
+  --t-footnote: 13px;
+  --t-caption: 11px;
+
+  /* Tracking - display sizes tighten, text sizes sit at zero. SF is already
+     optically tracked by the system at every size, so the old 0.14em label
+     tracking and the 14 other one-off values were fighting it. */
+  --ls-display: -0.032em;
   --ls-heading: -0.02em;
-  --ls-label: 0.14em;
+
+  /* Weight is the hierarchy. Where a label used to shout in tracked uppercase
+     it now steps up one rung here and stays in sentence case. */
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
 
   /* Motion - fades and translations only, no bounce. */
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-emph: cubic-bezier(0.65, 0.05, 0.36, 1);
   --dur-fast: 0.16s;
   --dur-reveal: 0.72s;
   --dur-slow: 0.42s;
-  --dur-bar: 1.5s;
 
-  /* Elevation - hairline first, shadow only on lift. */
-  --shadow-md: 0 4px 14px rgb(11 11 12 / 7%);
-  --shadow-lg: 0 12px 34px rgb(11 11 12 / 9%);
-  --glass-nav: rgb(244 244 242 / 78%);
+  /* Elevation and radius. --shadow-md/--shadow-lg used to live here; the glass
+     material owns elevation now (--glass-lift in glass.css) and nothing read
+     them any more. The rest of the glass tokens are there too, next to the
+     rules that assemble them.
 
-  /* Radius scales with the element, which is what makes it read as a system
-     rather than a preference: 4px controls, 8px small surfaces, 12px cards,
-     16px bands. A 4px corner on a 40px button subtends roughly the same angle
-     as a 12px corner on a 300px card, so they look like the same decision.
-     Controls used to be pills, and that was the one fully round shape on a
-     page otherwise built from hairlines and rectangles: it read as borrowed
-     from another kit, and it wrapped 11px uppercase type tracked to 0.14em,
-     the most engineered typography here, in the softest possible container.
-     --pill survives for things that are genuinely capsules, a meter track or
-     a status dot, where the round end is the meaning and not a style. */
+     Radius scales with the element: 4px controls, 8px small surfaces, 12px
+     cards, 16px bands. A 4px corner on a 40px button subtends roughly the same
+     angle as a 12px corner on a 300px card, so they look like the same
+     decision. The capsules the glass pass introduced are gone; glass reads as
+     glass from the rim and the blur, not from how round it is, and a page of
+     pills was rounder than this site wants to be. --pill went with them: with
+     no capsule left on the page it described a shape nothing has. */
   --r-xs: 4px;
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
-  --pill: 999px;
 }
 
 * {
@@ -112,14 +131,17 @@ html {
 
   /* Keep in-page anchor jumps clear of the sticky nav (and keyboard focus too).
      This is the ONLY anchor offset on the page; sections must not add their own
-     scroll-margin-top, because the two would stack. The value tracks the nav,
-     which is 57px on one row and 78px once the links wrap at 899px. */
-  scroll-padding-top: 68px;
+     scroll-margin-top, because the two would stack. The value tracks the nav:
+     the floating capsule is 52px tall inside 10px of padding on each side, so
+     72px on one row, and roughly 100px once the links wrap at 899px. The extra
+     few pixels are deliberate - the bar is translucent now, so a heading that
+     stops exactly at its edge is still read through it. */
+  scroll-padding-top: 84px;
 }
 
 @media (width <= 899px) {
   html {
-    scroll-padding-top: 90px;
+    scroll-padding-top: 112px;
   }
 }
 
@@ -133,9 +155,8 @@ body {
   background: var(--paper);
   color: var(--ink-2);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: var(--t-body);
   line-height: 1.55;
-  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
 }
@@ -169,10 +190,13 @@ button {
   cursor: pointer;
 }
 
+/* No border-radius here. It used to round the ring on square inline links, but
+   it is a real property change, so a focused capsule button snapped from a
+   999px corner to 2px. Outlines already follow the element's own radius in
+   every browser the site targets, which is the behaviour we wanted anyway. */
 :focus-visible {
   outline: 2px solid var(--violet-500);
   outline-offset: 2px;
-  border-radius: 2px;
 }
 
 /* Keep the ring visible on the dark terminal window. */
@@ -211,7 +235,7 @@ main:focus {
   background: var(--ink);
   color: var(--white);
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--t-footnote);
 }
 
 /* Visually hidden but available to assistive tech (live-region announcements). */

@@ -74,6 +74,19 @@ export function Experience({ t }: Props) {
                       <div className="tl-stack">
                         <div className="tl-stack-k">{r.stackLabel}</div>
                         <div className="tl-stack-v">{r.stack.join(', ')}</div>
+                        {r.backer ? (
+                          <div className="tl-backer">
+                            <div className="tl-stack-k">{r.backer.label}</div>
+                            <a
+                              className="tl-backer-v"
+                              href={r.backer.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {r.backer.name} ↗
+                            </a>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -93,7 +106,7 @@ export function Experience({ t }: Props) {
           </div>
           <ul className="achievements-list">
             {t.achievements.map((a, i) => (
-              <li className="achievement" key={i}>
+              <li className="achievement glass glass-lift" key={i}>
                 <div className="ach-top">
                   <span className="ach-mark">
                     {/* Decorative: the card title and meta already name the issuer. */}

@@ -1,8 +1,13 @@
-// Typed wrapper over the analytics sink (Vercel Analytics). Adding a new
-// event? Add it to AnalyticsEvent and describe its props in the union - the
-// call site is then typechecked.
+// Typed wrapper over the analytics sinks. Adding a new event? Add it to
+// AnalyticsEvent and describe its props in the union - the call site is then
+// typechecked, and it reaches every sink without another call.
+//
+// Two sinks, on purpose: Vercel Analytics (first-party, cookieless, always on)
+// and GA4 (only when NEXT_PUBLIC_GA_ID is set). Both receive the same event
+// name and the same props, so the two dashboards stay comparable.
 
 import { logger } from './logger'
+import { gaSend } from './ga'
 
 const log = logger('analytics')
 
@@ -20,6 +25,10 @@ export type AnalyticsEvent =
   | { name: 'client_error'; props: { message: string; source?: string; lineno?: number } }
   | { name: 'section_view'; props: { section: string; visible_ms: number } }
   | { name: 'cta_click'; props: { id: string; href?: string } }
+  | {
+      name: 'share_click'
+      props: { method: 'native' | 'clipboard' | 'dismissed' | 'failed' }
+    }
   | { name: 'console_query'; props: { length: number; preset?: boolean } }
 
 declare global {
@@ -37,6 +46,8 @@ function send(event: string, props?: Record<string, unknown>): void {
   } catch (e) {
     log.warn('vercel/va threw', e)
   }
+  // No-ops unless a GA4 measurement id is configured.
+  gaSend(event, props)
 }
 
 export function track<E extends AnalyticsEvent>(

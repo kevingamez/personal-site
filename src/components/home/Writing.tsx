@@ -53,7 +53,7 @@ export function Writing({ t }: Props) {
                 <header className="pc-head">
                   <img
                     className="pc-avatar"
-                    src="/kevin-avatar.jpg"
+                    src="/kevin-gamez-avatar.jpg"
                     alt=""
                     width="48"
                     height="48"

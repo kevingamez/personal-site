@@ -13,7 +13,7 @@
 }
 
 .about-prose {
-  font-size: 17px;
+  font-size: var(--t-body);
   line-height: 1.65;
   color: var(--ink-2);
 }
@@ -24,7 +24,7 @@
 }
 
 .about-prose p:first-child {
-  font-size: 21px;
+  font-size: var(--t-title-3);
   color: var(--ink);
   font-family: var(--font-display);
   letter-spacing: var(--ls-heading);
@@ -32,7 +32,7 @@
 }
 
 .about-prose b {
-  font-weight: 500;
+  font-weight: var(--w-medium);
   color: var(--ink);
 }
 
@@ -56,17 +56,15 @@
 }
 
 .qf .k {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--t-caption);
   color: var(--muted);
-  letter-spacing: 0.04em;
   margin-bottom: 4px;
 }
 
 .qf .v {
-  font-size: 14.5px;
+  font-size: var(--t-subhead);
   color: var(--ink);
-  font-weight: 500;
+  font-weight: var(--w-medium);
 }
 
 @media (width <= 480px) {
@@ -82,7 +80,7 @@
   }
 
   .about-prose {
-    font-size: 16px;
+    font-size: var(--t-subhead);
     line-height: 1.52;
   }
 
@@ -91,7 +89,7 @@
   }
 
   .about-prose p:first-child {
-    font-size: 19px;
+    font-size: var(--t-title-3);
     line-height: 1.32;
   }
 

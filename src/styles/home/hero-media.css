@@ -1,7 +1,7 @@
 /* Hero part 2 (split by cascade position): portrait media, caption,
    and the responsive blocks. */
 
-/* Portrait: ratio-locked grayscale media frame with a mono caption. */
+/* Portrait: ratio-locked grayscale media frame with its caption. */
 .hero-media {
   align-self: center;
   width: 100%;
@@ -9,7 +9,6 @@
 
 @media (width >= 1680px) {
   .hero-lede {
-    font-size: 18px;
     max-width: 48ch;
   }
 }
@@ -30,11 +29,12 @@
   align-items: center;
 
   /* no separators: the gap does the separating */
-  gap: 4px 14px;
+  gap: 4px 16px;
   margin: 12px 0 0;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
+  font-size: var(--t-footnote);
+
+  /* The clock ticks in place, so the digits must not reflow the caption. */
+  font-variant-numeric: tabular-nums;
   color: var(--muted);
 }
 
@@ -81,10 +81,6 @@
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 44px;
-  }
-
-  .hero-rail {
-    display: none;
   }
 
   .hero-media {

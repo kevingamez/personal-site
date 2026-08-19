@@ -45,10 +45,22 @@ The startup doesn't exist anymore. Most of the people I worked with there are st
 
 Thank you to my family and friends, and to everyone who's still around.`,
     images: [
-      { src: '/posts/masters-1.jpg', alt: 'Kevin holding his master’s diploma' },
-      { src: '/posts/masters-2.jpg', alt: 'Group photo with classmates and friends' },
-      { src: '/posts/masters-3.jpg', alt: 'With family' },
-      { src: '/posts/masters-4.jpg', alt: 'With friends' },
+      {
+        src: '/posts/masters-graduation-diploma.jpg',
+        alt: 'Kevin Gámez holding his M.Sc. diploma at Universidad de los Andes',
+      },
+      {
+        src: '/posts/masters-graduation-classmates.jpg',
+        alt: 'Kevin Gámez and his Uniandes classmates on graduation day',
+      },
+      {
+        src: '/posts/masters-graduation-family.jpg',
+        alt: 'Kevin Gámez and his family at the Uniandes graduation ceremony',
+      },
+      {
+        src: '/posts/masters-graduation-friends.jpg',
+        alt: 'Kevin Gámez celebrating graduation with friends',
+      },
     ],
     reactions: 72,
     comments: 4,
@@ -87,7 +99,10 @@ A single feature? Sure, vibe code it. A whole system? Different game. The devs w
 
 Screenshot from an old insecure project we killed.`,
     images: [
-      { src: '/posts/vibe-coded.jpg', alt: 'Burp Suite capture of an unsafe Supabase request' },
+      {
+        src: '/posts/burp-suite-supabase-capture.jpg',
+        alt: 'Burp Suite capture showing an unauthenticated Supabase request',
+      },
     ],
     reactions: 149,
     comments: 19,
@@ -110,7 +125,10 @@ The best engineers I've worked with don't just write code. They ask questions. T
 
 Engineering skill builds systems, communication skill builds income.`,
     images: [
-      { src: '/posts/great-engineer-poor.jpg', alt: 'Cursor IDE on a laptop, late-night coding' },
+      {
+        src: '/posts/cursor-ide-late-night-coding.jpg',
+        alt: 'Cursor IDE open on a laptop during a late-night coding session',
+      },
     ],
     reactions: 270,
     comments: 12,
@@ -132,8 +150,8 @@ Sometimes, the right technical decision isn't just about code. It's about reacti
 Tech isn't just about solving problems. It's about knowing when to change your approach and making quick decisions to maintain progress.`,
     images: [
       {
-        src: '/posts/mac-mini.jpg',
-        alt: 'Mac mini set up at the WeWork desk as an in-house server',
+        src: '/posts/mac-mini-office-server.jpg',
+        alt: 'Mac mini running as an in-house server on the WeWork desk at Enttor',
       },
     ],
     reactions: 49,
@@ -151,7 +169,10 @@ Along the way, there are setbacks. Sometimes they're small stumbles; sometimes t
 
 Somewhere beyond the pain, the doubt, and the long kilometers, there's the finish line. Crossing it changes you. It's not just about achieving your goal, but about who you had to become to get there. Whether you're lacing up for 42 kilometers or building your first MVP, remember it's not a sprint. It's a steady, disciplined, and deeply rewarding journey.`,
     images: [
-      { src: '/posts/marathon.jpg', alt: 'Kevin with the 42K Challenges 2024 finisher medal' },
+      {
+        src: '/posts/bogota-half-marathon-medal.jpg',
+        alt: 'Kevin Gámez wearing the 42K Challenges 2024 finisher medal in Bogotá',
+      },
     ],
     reactions: 59,
     comments: 10,
@@ -181,8 +202,8 @@ My personal thoughts
 Jumping into startup life has been one of my best decisions. I'm surrounded by brilliant people, growing technically and personally, learning to be concise and productive. And from this setup my little command center where caffeine meets code, I'm always hunting for the next challenge and the next big impact.`,
     images: [
       {
-        src: '/posts/lessons-turbo.jpg',
-        alt: 'Home command center, laptop + monitor running Enttor',
+        src: '/posts/home-desk-command-center.jpg',
+        alt: 'Home desk command center, laptop and monitor running the Enttor dashboard',
       },
     ],
     reactions: 54,

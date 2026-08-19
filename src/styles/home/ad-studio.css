@@ -47,7 +47,7 @@
   place-items: center;
   padding: 0 18px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: var(--t-footnote);
 }
 
 .as-auth .as-login {
@@ -58,7 +58,7 @@
 .as-auth .as-signup {
   background: var(--fg);
   color: var(--bg);
-  font-weight: 500;
+  font-weight: var(--w-medium);
 }
 
 .as-zoom {
@@ -70,7 +70,7 @@
   border: 1px solid var(--hair);
   border-radius: 9px;
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--t-footnote);
 }
 
 .as.is-tight .as-zoom {
@@ -85,7 +85,7 @@
 
 .as-zoom b {
   padding: 5px 11px;
-  font-weight: 400;
+  font-weight: var(--w-regular);
   border-left: 1px solid var(--hair);
   border-right: 1px solid var(--hair);
 }

@@ -113,6 +113,13 @@ export const esSections: Pick<
     titleHtml: '¿Trabajamos juntos? <i>Hablemos</i>.',
     body: 'Una llamada de 30 minutos, sin slides. Tráelo como esté, aunque esté desordenado. O solo saluda.',
     btnEmail: 'kevingamez.kg@gmail.com →',
+    btnShare: 'Compartir esta página',
+    ctaLabel: 'Abierto a roles de founding engineer',
+    ctaEmail: 'Escríbeme',
+    shareAria: 'Compartir esta página',
+    shareCopied: 'Enlace copiado',
+    shareFailed: 'No se pudo copiar',
+    shareText: 'Kevin Gámez, founding engineer en Bogotá.',
   },
   footer: {
     pBlurb: 'Founding engineer con maestría en deep learning. Sitio hecho en Bogotá.',
