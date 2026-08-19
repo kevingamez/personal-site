@@ -232,11 +232,11 @@
   line-height: 1.7;
 }
 
-.tl-backer {
+.tl-link {
   margin-top: 18px;
 }
 
-.tl-backer-v {
+.tl-link-v {
   display: inline-flex;
   align-items: baseline;
   gap: 5px;
@@ -246,7 +246,7 @@
   transition: color var(--dur-fast) var(--ease-out);
 }
 
-.tl-backer-v:hover {
+.tl-link-v:hover {
   color: var(--muted);
 }
 

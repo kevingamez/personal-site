@@ -74,16 +74,16 @@ export function Experience({ t }: Props) {
                       <div className="tl-stack">
                         <div className="tl-stack-k">{r.stackLabel}</div>
                         <div className="tl-stack-v">{r.stack.join(', ')}</div>
-                        {r.backer ? (
-                          <div className="tl-backer">
-                            <div className="tl-stack-k">{r.backer.label}</div>
+                        {r.link ? (
+                          <div className="tl-link">
+                            <div className="tl-stack-k">{r.link.label}</div>
                             <a
-                              className="tl-backer-v"
-                              href={r.backer.href}
+                              className="tl-link-v"
+                              href={r.link.href}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {r.backer.name} ↗
+                              {r.link.name} ↗
                             </a>
                           </div>
                         ) : null}

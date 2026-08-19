@@ -100,8 +100,9 @@ export interface HomeStrings {
       ledger: { label: string; value: string }[]
       stackLabel: string
       stack: string[]
-      // Optional investor credit, rendered as an outbound link under the stack.
-      backer?: { label: string; name: string; href: string }
+      // Optional labelled outbound link under the stack: the investor that
+      // backed a company, the thesis a degree produced.
+      link?: { label: string; name: string; href: string }
     }[]
     achievementsTitle: string
     achievementsBlurb: string

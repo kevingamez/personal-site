@@ -106,7 +106,7 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Construido con',
         stack: ['TypeScript', 'Next.js', 'NestJS', 'Inngest', 'Supabase', 'Playwright'],
-        backer: {
+        link: {
           label: 'Respaldada por',
           name: 'MaC Venture Capital',
           href: 'https://macventurecapital.com/',
@@ -128,7 +128,7 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Construido con',
         stack: ['React Native', 'Next.js', 'Prisma', 'Postgres'],
-        backer: { label: 'Respaldada por', name: 'Neo', href: 'https://neo.com/' },
+        link: { label: 'Respaldada por', name: 'Neo', href: 'https://neo.com/' },
       },
       {
         dates: 'Ene 2024, May 2025',
@@ -147,6 +147,11 @@ export const es: HomeStrings = {
         ],
         stackLabel: 'Trabajé en',
         stack: ['Python', 'SQL', 'Deep learning'],
+        link: {
+          label: 'Tesis',
+          name: 'Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales',
+          href: 'https://repositorio.uniandes.edu.co/entities/publication/2cd71d69-7078-4901-87e7-9bc9f2cb62e5',
+        },
       },
       {
         dates: 'Dic 2022, Dic 2023',
