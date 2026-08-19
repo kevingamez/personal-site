@@ -8,6 +8,8 @@
 // Cached for 15 minutes and shared: the answer is identical for every visitor,
 // unlike /api/geo. Open-Meteo needs no key and no attribution header.
 
+import { limitRoute } from '@/lib/api-rate-limit'
+
 export const runtime = 'nodejs'
 export const revalidate = 900
 
@@ -34,7 +36,10 @@ function condition(code: number): string {
   return 'storm'
 }
 
-export async function GET(): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
+  const limited = await limitRoute(req, 'weather', { limit: 30, window: '10 m' })
+  if (limited) return limited
+
   try {
     const res = await fetch(URL_, { next: { revalidate } })
     if (!res.ok) throw new Error(`open-meteo ${res.status}`)

@@ -11,11 +11,18 @@
 // Platform note: App Router Web-handler form (a single exported GET; other
 // methods get the framework's automatic 405 with an `Allow: GET` header).
 
+import { limitRoute } from '@/lib/api-rate-limit'
+
 export const runtime = 'nodejs'
 // Reads per-request headers; never prerender or share a cached response.
 export const dynamic = 'force-dynamic'
 
-export function GET(req: Request): Response {
+export async function GET(req: Request): Promise<Response> {
+  // The only route that cannot be cached (the answer is per-visitor), so every
+  // call is a cold invocation. Limited for that reason, not for upstream cost.
+  const limited = await limitRoute(req, 'geo', { limit: 60, window: '10 m' })
+  if (limited) return limited
+
   const raw = req.headers.get('x-vercel-ip-country')
   const country = raw && /^[A-Za-z]{2}$/.test(raw) ? raw.toUpperCase() : null
 

@@ -18,6 +18,7 @@ import { cacheGet, cacheSet } from './strava-cache'
 import { emptyPayload, shape } from './strava-shape'
 import type { Payload } from './strava-shape'
 import { fetchActivities, refreshAccessToken } from './strava-token'
+import { limitRoute } from '@/lib/api-rate-limit'
 
 export const runtime = 'nodejs'
 // The original serverless function ran on every request; never prerender.
@@ -36,7 +37,12 @@ function send(body: Payload, maxAge: number): Response {
   })
 }
 
-export async function GET(): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
+  // Strava allows 200 requests per 15 minutes and 2,000 per day. A cache miss
+  // spends one, so an unlimited route can burn the whole app's quota.
+  const limited = await limitRoute(req, 'strava', { limit: 30, window: '10 m' })
+  if (limited) return limited
+
   if (
     !process.env.STRAVA_CLIENT_ID ||
     !process.env.STRAVA_CLIENT_SECRET ||

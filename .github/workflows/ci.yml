@@ -29,6 +29,22 @@ jobs:
       - run: pnpm check
       - run: pnpm build
 
+  audit:
+    name: dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Blocks only on high/critical. Moderate findings in the dependency tree
+      # are reported by Dependabot and handled on its weekly PR cadence, so
+      # gating on them would fail CI for things nobody can act on today.
+      - run: pnpm audit --audit-level high
+
   smoke:
     name: playwright smoke
     runs-on: ubuntu-latest

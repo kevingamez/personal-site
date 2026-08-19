@@ -15,7 +15,8 @@
     "test": "playwright test",
     "test:install": "playwright install --with-deps chromium",
     "lint:css": "stylelint \"src/**/*.css\" \"app/**/*.css\"",
-    "check:size": "node scripts/check-size.mjs"
+    "check:size": "node scripts/check-size.mjs",
+    "audit": "pnpm audit --audit-level high"
   },
   "engines": {
     "node": ">=22.12.0"
