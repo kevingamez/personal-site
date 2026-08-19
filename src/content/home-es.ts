@@ -85,7 +85,7 @@ export const es: HomeStrings = {
   },
   experience: {
     secNum: 'Experiencia',
-    titleHtml: 'Dos startups y una maestría.',
+    titleHtml: 'Los trabajos, y los estudios alrededor.',
     blurb:
       'Ingeniero fundador en Samsam y luego en Enttor. Hice la maestría en deep learning mientras trabajaba en el primer empleo.',
     openHint: 'Haz click en una fila para abrirla',
