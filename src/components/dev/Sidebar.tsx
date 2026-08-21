@@ -88,14 +88,14 @@ export async function Sidebar() {
             href="https://www.linkedin.com/company/enttor/"
             target="_blank"
             rel="noopener noreferrer"
-            title="Enttor - ai outbound platform"
+            title="Enttor - paid ads platform and agents"
           >
             <span className="fl-num">01</span>
             <div className="fl-body">
               <div className="fl-title">
-                ai outbound, <span className="fl-where">enttor</span>
+                paid ads + agents, <span className="fl-where">enttor</span>
               </div>
-              <div className="fl-meta">browser automation, openai pipelines, ig/linkedin</div>
+              <div className="fl-meta">meta + tiktok, slack agent, ad generation</div>
             </div>
             <span className="fl-status fl-live">live</span>
           </a>

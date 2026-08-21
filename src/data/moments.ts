@@ -14,11 +14,11 @@ export const MOMENTS: Moment[] = [
     place: 'Uniandes · May 2026',
     en: {
       title: 'The day I graduated',
-      desc: 'M.Sc. in information engineering, deep-learning track. I started my first full-time job the same week.',
+      desc: 'M.Sc. in information engineering. I started my first full-time job the same week.',
     },
     es: {
       title: 'El día que me gradué',
-      desc: 'Maestría en ingeniería de información, con énfasis en aprendizaje profundo. Empecé a trabajar la misma semana.',
+      desc: 'Maestría en ingeniería de información. Empecé a trabajar la misma semana.',
     },
   },
   {

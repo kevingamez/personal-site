@@ -234,11 +234,11 @@ export function buildCommands(addLine: AddLine, errFn: Err, clearFn: Clear): Com
     },
     about: () => {
       addLine('kevin gámez, founding engineer, bogotá')
-      addLine('b.sc. systems & computing + m.sc. info eng (deep learning) @ uniandes')
+      addLine('b.sc. systems & computing + m.sc. info eng @ uniandes')
     },
     work: () => {
       addLine(
-        '<span class="ac">enttor</span>          → ai outbound, browser automation, openai pipelines'
+        '<span class="ac">enttor</span>          → paid ads platform, slack agent, ad generation'
       )
       addLine(
         '<span class="ac">samsam</span>          → e-commerce, ts/react native/next/prisma/postgres'

@@ -12,11 +12,11 @@ function Entry({ e }: { e: ResumeEntry }) {
             space and the line came out as "Founding Engineer , Enttor". */}
         <h3>
           {e.role}
-          <span className="at">, {e.at}</span>
+          {e.at && <span className="at">, {e.at}</span>}
         </h3>
         <span className="resume-dates">{e.dates}</span>
       </div>
-      <p className="resume-meta">{e.meta}</p>
+      {e.meta && <p className="resume-meta">{e.meta}</p>}
       {e.bullets.length > 0 && (
         <ul>
           {e.bullets.map((b) => (
@@ -78,19 +78,26 @@ function jsonLd(t: ResumeStrings, description: string): string {
           description: e.bullets.join(' '),
           memberOf: { '@type': 'Organization', name: e.at },
         })),
+        // Mirrors the Skills block below, so a crawler and a reader see the
+        // same list. Keep the two in sync when the résumé changes.
         knowsAbout: [
           'LLM agents',
-          'Prompt engineering',
-          'Browser automation',
-          'OCR',
-          'Image segmentation',
+          'Retrieval-augmented generation',
+          'PyTorch',
           'TypeScript',
-          'Next.js',
-          'NestJS',
-          'React Native',
+          'JavaScript',
           'Python',
+          'SQL',
+          'Java',
+          'Next.js',
+          'React Native',
+          'NestJS',
+          'tRPC',
+          'Prisma',
           'PostgreSQL',
+          'Redis',
           'AWS',
+          'Docker',
         ],
       },
     ],
@@ -137,6 +144,11 @@ export function ResumeArticle({ t, description, homeHref }: Props) {
 
         <h2>{t.headings.education}</h2>
         {t.education.map((e) => (
+          <Entry key={e.role} e={e} />
+        ))}
+
+        <h2>{t.headings.projects}</h2>
+        {t.projects.map((e) => (
           <Entry key={e.role} e={e} />
         ))}
 

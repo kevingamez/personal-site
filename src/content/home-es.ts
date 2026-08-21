@@ -1,5 +1,6 @@
 import type { HomeStrings } from './home'
 import { esSections } from './home-es-sections'
+import { esRoles } from './home-es-roles'
 
 export const es: HomeStrings = {
   meta: {
@@ -43,11 +44,11 @@ export const es: HomeStrings = {
     weatherLabels:
       '{"clear": "despejado", "partly cloudy": "parcialmente nublado", "cloudy": "nublado", "fog": "niebla", "drizzle": "llovizna", "rain": "lluvia", "showers": "aguaceros", "snow": "nieve", "storm": "tormenta"}',
     titleHtml: 'Hola',
-    lede: 'Soy founding engineer en Bogotá, abierto a lo que sigue. Estuve en <b>Enttor</b>, donde construí la\n            plataforma de creativos con IA y los agentes de navegador detrás de su outbound. Antes lancé un marketplace\n            de e-commerce en <b>Samsam</b>. Maestría en deep learning en la Universidad de los Andes.',
-    stat1Num: '3',
-    stat1Label: 'Productos llevados de un repo vacío a clientes que pagan',
-    stat2Num: '5×',
-    stat2Label: 'Más rápida la generación tras pasarla a GPU',
+    lede: 'Soy founding engineer en Bogotá, abierto a lo que sigue. Estuve en <b>Enttor</b>, donde tuve la ingeniería\n            a cargo y lancé tres productos: una plataforma de paid ads sobre Meta y TikTok, el agente de Slack que la\n            maneja y un estudio con IA que genera los anuncios. Antes, un marketplace de e-commerce en\n            <b>Samsam</b>. Maestría en Ingeniería de Información en la Universidad de los Andes.',
+    creds: [
+      { k: 'Respaldada por', v: 'MaC Venture Capital' },
+      { k: 'A cargo de', v: 'Toda la ingeniería, equipo de seis' },
+    ],
     scrollDown: 'Sigue bajando',
     btnGetInTouch: 'Hablemos',
     pauseTitle: 'pausar / reproducir',
@@ -67,13 +68,13 @@ export const es: HomeStrings = {
   about: {
     secNum: 'Sobre mí',
     titleHtml: 'Sobre mí.',
-    blurb: 'Founding engineer full-stack, con maestría en deep learning.',
+    blurb: 'Founding engineer full-stack, con maestría en Ingeniería de Información.',
     p1Html:
       'Me gustan las partes de un producto que nadie muestra en un demo: la cola que reintenta, la sesión\n              que sigue abierta, el pipeline que admite que se equivocó y vuelve a correr. Casi todo lo que he\n              lanzado es alguna máquina haciendo trabajo tedioso a las tres de la mañana.',
     p2Html:
       'Antes de las startups pasé un tiempo en analítica, escribiendo pipelines SQL y dashboards en Power BI\n              para HR, riesgo y operaciones, y luego en deep learning sobre imágenes satelitales, detectando\n              cultivos y riesgo ambiental. Las dos me enseñaron a desconfiar de un número que no puedo rastrear.',
     p3Html:
-      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con especialización en deep learning y opciones en Matemáticas y Administración.',
+      'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con opciones en Matemáticas y Administración.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
@@ -87,107 +88,9 @@ export const es: HomeStrings = {
     secNum: 'Experiencia',
     titleHtml: 'Los trabajos, y los estudios alrededor.',
     blurb:
-      'Ingeniero fundador en Samsam y luego en Enttor. Hice la maestría en deep learning mientras trabajaba en el primer empleo.',
+      'Product engineer en Samsam y luego founding engineer en Enttor. Hice la maestría mientras trabajaba en el primer empleo.',
     openHint: 'Haz click en una fila para abrirla',
-    roles: [
-      {
-        dates: 'Jun 2025, Jul 2026',
-        place: 'New York, remoto',
-        roleHtml: 'Founding engineer <span class="at">@ Enttor</span>',
-        logo: '/logos/enttor.png',
-        summary:
-          'Construí el motor de outbound con IA de punta a punta: automatización, pipelines y dashboards.',
-        desc: 'La automatización de navegador buscaba prospectos en Instagram y LinkedIn, los pipelines de OpenAI los filtraban y redactaban los mensajes, y las campañas los enviaban a escala. Dashboards en Next.js, APIs en NestJS y colas en Inngest sobre Vercel y Supabase, desde cero.',
-        ledger: [
-          { label: 'Rutas de API', value: '132' },
-          { label: 'Esquemas de Postgres', value: '4' },
-          { label: 'Tools del agente, Meta y TikTok', value: '165' },
-          { label: 'Plataformas automatizadas', value: '4' },
-        ],
-        stackLabel: 'Construido con',
-        stack: ['TypeScript', 'Next.js', 'NestJS', 'Inngest', 'Supabase', 'Playwright'],
-        link: {
-          label: 'Respaldada por',
-          name: 'MaC Venture Capital',
-          href: 'https://macventurecapital.com/',
-        },
-      },
-      {
-        dates: 'Feb 2024, Mar 2025',
-        place: 'Bogotá',
-        roleHtml: 'Founding engineer <span class="at">@ Samsam</span>',
-        logo: '/logos/samsam.png',
-        summary:
-          'Lancé los dos lados de un marketplace: app para compradores y panel para comerciantes.',
-        desc: 'Una app en React Native para compradores y un panel en Next.js para comerciantes, sobre Prisma y Postgres. Lancé los dos lados.',
-        ledger: [
-          { label: 'Lados del marketplace', value: '2' },
-          { label: 'De cero a lanzamiento', value: '14 meses' },
-          { label: 'Apps', value: 'iOS, Android, web' },
-          { label: 'Capa de datos', value: 'Prisma, Postgres' },
-        ],
-        stackLabel: 'Construido con',
-        stack: ['React Native', 'Next.js', 'Prisma', 'Postgres'],
-        link: { label: 'Respaldada por', name: 'Neo', href: 'https://neo.com/' },
-      },
-      {
-        dates: 'Ene 2024, May 2025',
-        place: 'Bogotá',
-        roleHtml:
-          'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary:
-          'Especialización en deep learning, hecha mientras trabajaba. TA de posgrado en paralelo.',
-        desc: 'Entrené modelos de deep learning sobre imágenes satelitales para detectar cultivos y riesgo ambiental. En paralelo, teaching assistant de posgrado.',
-        ledger: [
-          { label: 'Foco', value: 'Imágenes satelitales' },
-          { label: 'Rol', value: 'TA de posgrado' },
-          { label: 'Especialización', value: 'Deep learning' },
-          { label: 'Traslape con el trabajo', value: 'Tiempo completo' },
-        ],
-        stackLabel: 'Trabajé en',
-        stack: ['Python', 'SQL', 'Deep learning'],
-      },
-      {
-        dates: 'Dic 2022, Dic 2023',
-        place: 'Bogotá',
-        roleHtml:
-          'Opciones en Matemáticas y Administración <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary: 'Dos opciones cursadas dentro del pregrado, una formal y una de negocio.',
-        desc: 'Matemáticas por el lado formal, Administración por el lado de negocio. Las dos se cursaron en paralelo a la carrera y se cerraron antes del grado.',
-        ledger: [
-          { label: 'Opciones', value: 'Dos' },
-          { label: 'Cursadas', value: 'En paralelo al B.Sc.' },
-          { label: 'Primera', value: 'Dic 2022' },
-          { label: 'Segunda', value: 'Dic 2023' },
-        ],
-        stackLabel: 'Áreas',
-        stack: ['Matemáticas', 'Administración'],
-      },
-      {
-        dates: 'Ene 2019, Dic 2023',
-        place: 'Bogotá',
-        roleHtml:
-          'B.Sc. Ingeniería de Sistemas y Computación <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary: 'Cinco años en los fundamentos: sistemas, algoritmos y ML aplicado.',
-        desc: 'Sistemas, algoritmos y ML aplicado. Por el camino, proyectos propios en Python, TypeScript, Java y Swift.',
-        ledger: [
-          { label: 'Fundamentos', value: '5 años' },
-          { label: 'Énfasis', value: 'Sistemas, algoritmos' },
-          { label: 'También', value: 'Web y móvil' },
-          { label: 'Proyectos propios', value: '4 lenguajes' },
-        ],
-        stackLabel: 'Trabajé en',
-        stack: ['Python', 'TypeScript', 'Java', 'Swift'],
-        link: {
-          label: 'Tesis',
-          name: 'Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales',
-          href: 'https://repositorio.uniandes.edu.co/entities/publication/2cd71d69-7078-4901-87e7-9bc9f2cb62e5',
-        },
-      },
-    ],
+    roles: esRoles,
     achievementsTitle: 'Honores y certificaciones',
     achievementsBlurb: 'Una distinción nacional y dos certificaciones de AWS.',
     achievements: [
@@ -232,7 +135,7 @@ export const es: HomeStrings = {
       },
       {
         name: 'Plataforma Enttor',
-        desc: 'Dos años del producto de GTM: sacaba prospectos de Instagram y LinkedIn, escribía DMs personalizados y dejaba cada respuesta en un inbox único. 132 rutas de API sobre cuatro esquemas de Postgres, con row level security aislando a cada empresa del resto.',
+        desc: 'Dos años en un solo repo. Sacaba prospectos de Instagram y LinkedIn, escribía DMs personalizados y dejaba cada respuesta en un inbox único, y en 2026 se reenfocó en paid ads: insights de Meta y TikTok en un solo esquema de métricas, evaluados contra umbrales por cliente. Row level security aísla a cada empresa del resto, así que un handler que olvida su filtro no devuelve nada.',
         meta: 'Next.js, Supabase, Postgres RLS',
       },
       {
@@ -252,8 +155,8 @@ export const es: HomeStrings = {
       },
       {
         name: 'Samsam',
-        desc: 'Antes de Enttor. Un marketplace de compras: app en React Native para compradores y panel en Next.js para comerciantes, sobre Prisma y Postgres. Lancé ambos lados.',
-        meta: 'React Native, Prisma',
+        desc: 'Antes de Enttor. Un marketplace de compras: app en React Native y Expo para compradores y panel en Next.js para comerciantes, sobre servicios en NestJS con Prisma y Postgres. Lancé ambos lados.',
+        meta: 'React Native, Expo, NestJS, Prisma',
       },
     ],
     allRepos: 'Todos los repositorios',

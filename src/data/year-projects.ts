@@ -10,6 +10,12 @@
 // span drawn next to it. `startedBefore` marks a project that was already
 // running when the window opens, so the figure never claims it "begins" at the
 // left edge.
+//
+// One caveat when re-counting these. The Slack agent and the ad studio are the
+// same git lineage, not two repos: it shipped as the agent until the product
+// was renamed on 2026-06-10 and became the studio. Counting both repos whole
+// double-counts every commit before that date, so the two bars below split at
+// the rename instead.
 
 export type YearProject = {
   label: string
@@ -36,9 +42,10 @@ export const yearProjects: YearProject[] = [
     commits: 34,
     startedBefore: true,
   },
-  { label: 'AI Ad Studio', from: '2026-01-27', to: '2026-07-16', commits: 1564 },
+  { label: 'Slack Ads Agent', from: '2026-01-27', to: '2026-06-10', commits: 1408 },
   { label: 'LinkedIn MCP', from: '2026-01-27', to: '2026-02-22', commits: 36 },
   { label: 'MakeMotionGraphics', from: '2026-02-01', to: '2026-05-21', commits: 296 },
   { label: 'AdsUploads', from: '2026-04-12', to: '2026-05-21', commits: 94 },
   { label: 'LinkedIn Editor', from: '2026-04-12', to: '2026-05-21', commits: 157 },
+  { label: 'AI Ad Studio', from: '2026-06-11', to: '2026-07-16', commits: 156 },
 ]

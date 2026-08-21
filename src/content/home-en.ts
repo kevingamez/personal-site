@@ -1,5 +1,6 @@
 import type { HomeStrings } from './home'
 import { enSections } from './home-en-sections'
+import { enRoles } from './home-en-roles'
 
 export const en: HomeStrings = {
   meta: {
@@ -43,11 +44,11 @@ export const en: HomeStrings = {
     weatherLabels:
       '{"clear": "clear", "partly cloudy": "partly cloudy", "cloudy": "cloudy", "fog": "fog", "drizzle": "drizzle", "rain": "rain", "showers": "showers", "snow": "snow", "storm": "storm"}',
     titleHtml: 'Hello',
-    lede: "I'm a founding engineer in Bogotá, open to what's next. Most recently at <b>Enttor</b>, where I built\n            the AI ad-creation platform and the browser agents behind its outbound. Before that, an e-commerce\n            marketplace at <b>Samsam</b>. M.Sc. in deep learning from Universidad de los Andes.",
-    stat1Num: '3',
-    stat1Label: 'Products taken from empty repo to paying customers',
-    stat2Num: '5×',
-    stat2Label: 'Faster ad generation after the GPU rebuild',
+    lede: "I'm a founding engineer in Bogotá, open to what's next. Most recently at <b>Enttor</b>, where I owned\n            engineering and shipped three products: a paid ads platform over Meta and TikTok, the Slack agent that\n            runs it, and an AI studio that generates the ads. Before that, an e-commerce marketplace at\n            <b>Samsam</b>. M.Sc. in Information Engineering from Universidad de los Andes.",
+    creds: [
+      { k: 'Backed by', v: 'MaC Venture Capital' },
+      { k: 'Owned', v: 'All engineering, team of six' },
+    ],
     scrollDown: 'Scroll down',
     btnGetInTouch: 'Get in touch',
     pauseTitle: 'pause/play',
@@ -67,13 +68,13 @@ export const en: HomeStrings = {
   about: {
     secNum: 'About',
     titleHtml: 'About me.',
-    blurb: "Full-stack founding engineer with a master's in deep learning.",
+    blurb: "Full-stack founding engineer with a master's in information engineering.",
     p1Html:
       'I like the parts of a product nobody demos: the queue that retries, the session that stays\n              logged in, the pipeline that admits it got it wrong and runs again. Most of what I have\n              shipped is some machine doing tedious work at three in the morning.',
     p2Html:
       'Before the startups I spent a while in analytics, writing SQL pipelines and Power BI dashboards\n              for HR, risk and operations, and then in deep learning on satellite imagery, spotting croplands\n              and flagging environmental risk. Both taught me to distrust a number I cannot trace.',
     p3Html:
-      'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with a deep-learning specialization and minors in mathematics and management.',
+      'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with minors in mathematics and management.',
     qfBased: 'Based',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Role',
@@ -87,106 +88,9 @@ export const en: HomeStrings = {
     secNum: 'Experience',
     titleHtml: 'The jobs, and the school around them.',
     blurb:
-      "Founding engineer at Samsam, then at Enttor. I did the master's in deep learning while working the first job.",
+      "Product engineer at Samsam, then founding engineer at Enttor. I did the master's while working the first job.",
     openHint: 'Click a row to open it',
-    roles: [
-      {
-        dates: 'Jun 2025, Jul 2026',
-        place: 'New York, remote',
-        roleHtml: 'Founding engineer <span class="at">@ Enttor</span>',
-        logo: '/logos/enttor.png',
-        summary: 'Built the AI outbound engine end to end: automation, pipelines, dashboards.',
-        desc: 'Browser automation sourced prospects on Instagram and LinkedIn, OpenAI pipelines filtered them and drafted the messages, and the campaigns sent them at scale. Next.js dashboards, NestJS APIs and Inngest queues on Vercel and Supabase, from scratch.',
-        ledger: [
-          { label: 'API routes', value: '132' },
-          { label: 'Postgres schemas', value: '4' },
-          { label: 'Agent tools, Meta and TikTok', value: '165' },
-          { label: 'Platforms automated', value: '4' },
-        ],
-        stackLabel: 'Built with',
-        stack: ['TypeScript', 'Next.js', 'NestJS', 'Inngest', 'Supabase', 'Playwright'],
-        link: {
-          label: 'Backed by',
-          name: 'MaC Venture Capital',
-          href: 'https://macventurecapital.com/',
-        },
-      },
-      {
-        dates: 'Feb 2024, Mar 2025',
-        place: 'Bogotá',
-        roleHtml: 'Founding engineer <span class="at">@ Samsam</span>',
-        logo: '/logos/samsam.png',
-        summary:
-          'Shipped both sides of an e-commerce marketplace: shopper app and merchant dashboard.',
-        desc: 'A React Native app for shoppers and a Next.js dashboard for merchants, on Prisma and Postgres. I shipped both sides.',
-        ledger: [
-          { label: 'Marketplace sides shipped', value: '2' },
-          { label: 'Zero to launch', value: '14 mo' },
-          { label: 'Apps', value: 'iOS, Android, web' },
-          { label: 'Data layer', value: 'Prisma, Postgres' },
-        ],
-        stackLabel: 'Built with',
-        stack: ['React Native', 'Next.js', 'Prisma', 'Postgres'],
-        link: { label: 'Backed by', name: 'Neo', href: 'https://neo.com/' },
-      },
-      {
-        dates: 'Jan 2024, May 2025',
-        place: 'Bogotá',
-        roleHtml:
-          'M.Sc. Information Engineering <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary: 'Deep-learning specialization, taken while working the first job. Graduate TA.',
-        desc: 'Trained deep-learning models on satellite imagery to spot croplands and flag environmental risk. Graduate TA at the same time.',
-        ledger: [
-          { label: 'Focus', value: 'Satellite imagery' },
-          { label: 'Role', value: 'Graduate TA' },
-          { label: 'Specialization', value: 'Deep learning' },
-          { label: 'Overlap with work', value: 'Full-time' },
-        ],
-        stackLabel: 'Worked in',
-        stack: ['Python', 'SQL', 'Deep learning'],
-      },
-      {
-        dates: 'Dec 2022, Dec 2023',
-        place: 'Bogotá',
-        roleHtml:
-          'Minors in Mathematics and Management <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary: 'Two minors taken inside the degree, one formal, one business.',
-        desc: 'Mathematics for the formal side, management for the business side. Both ran alongside the undergraduate degree and closed before graduation.',
-        ledger: [
-          { label: 'Minors', value: 'Two' },
-          { label: 'Taken', value: 'Alongside the B.Sc.' },
-          { label: 'First', value: 'Dec 2022' },
-          { label: 'Second', value: 'Dec 2023' },
-        ],
-        stackLabel: 'Areas',
-        stack: ['Mathematics', 'Management'],
-      },
-      {
-        dates: 'Jan 2019, Dec 2023',
-        place: 'Bogotá',
-        roleHtml: 'B.Sc. Systems and Computing <span class="at">@ Universidad de los Andes</span>',
-        logo: '/logos/uniandes.svg',
-        summary: 'Five years on the foundations: systems, algorithms and applied ML.',
-        desc: 'Systems, algorithms and applied ML. Side projects in Python, TypeScript, Java and Swift along the way.',
-        ledger: [
-          { label: 'Foundations', value: '5 yrs' },
-          { label: 'Emphasis', value: 'Systems, algorithms' },
-          { label: 'Also', value: 'Web and mobile' },
-          { label: 'Side projects', value: '4 languages' },
-        ],
-        stackLabel: 'Worked in',
-        stack: ['Python', 'TypeScript', 'Java', 'Swift'],
-        // Publication titles are not translated, so both locales carry the
-        // Spanish original as it appears in the university repository.
-        link: {
-          label: 'Thesis',
-          name: 'Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales',
-          href: 'https://repositorio.uniandes.edu.co/entities/publication/2cd71d69-7078-4901-87e7-9bc9f2cb62e5',
-        },
-      },
-    ],
+    roles: enRoles,
     achievementsTitle: 'Honors &amp; certifications',
     achievementsBlurb: 'A national distinction and two AWS certifications.',
     achievements: [
@@ -231,7 +135,7 @@ export const en: HomeStrings = {
       },
       {
         name: 'Enttor Platform',
-        desc: 'Two years of the GTM product: it sourced prospects from Instagram and LinkedIn, wrote personalized DMs and tracked every reply in one inbox. 132 API routes over four Postgres schemas, with row level security isolating every company from the rest.',
+        desc: 'Two years in one repo. It sourced prospects from Instagram and LinkedIn, wrote personalized DMs and tracked every reply in one inbox, then in 2026 was refocused on paid ads: Meta and TikTok insights on one metric schema, scored against per-client thresholds. Row level security isolates every company from the rest, so a handler that forgets its filter returns nothing.',
         meta: 'Next.js, Supabase, Postgres RLS',
       },
       {
@@ -251,8 +155,8 @@ export const en: HomeStrings = {
       },
       {
         name: 'Samsam',
-        desc: 'Before Enttor. A shopping marketplace: a React Native app for shoppers and a Next.js dashboard for merchants, on Prisma and Postgres. I shipped both sides.',
-        meta: 'React Native, Prisma',
+        desc: 'Before Enttor. A shopping marketplace: a React Native and Expo app for shoppers and a Next.js dashboard for merchants, on NestJS services with Prisma and Postgres. I shipped both sides.',
+        meta: 'React Native, Expo, NestJS, Prisma',
       },
     ],
     allRepos: 'All repositories',

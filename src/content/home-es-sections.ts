@@ -122,7 +122,7 @@ export const esSections: Pick<
     shareText: 'Kevin Gámez, founding engineer en Bogotá.',
   },
   footer: {
-    pBlurb: 'Founding engineer con maestría en deep learning. Sitio hecho en Bogotá.',
+    pBlurb: 'Founding engineer con maestría en Ingeniería de Información. Sitio hecho en Bogotá.',
     h4Sections: 'Secciones',
     sectionsAbout: 'Sobre mí',
     sectionsExperience: 'Experiencia',

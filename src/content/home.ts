@@ -9,6 +9,28 @@
 // like DOMPurify before assigning. Plain-text fields (no `Html` suffix)
 // are safe for arbitrary content.
 
+// One row of the experience timeline: a job or a degree. Lives in its own type
+// because the rows are large enough to need their own file per locale
+// (home-{en,es}-roles.ts), which keeps the content files under the 300-line cap.
+export interface HomeRole {
+  dates: string
+  place: string
+  roleHtml: string
+  logo: string // path under /public/logos, decorative (the row names the place)
+  summary: string // the one line the row shows while it is closed
+  desc: string
+  ledger: { label: string; value: string }[]
+  stackLabel: string
+  stack: string[]
+  // Optional labelled outbound link under the stack, for a supporting
+  // document: the thesis a degree produced.
+  link?: { label: string; name: string; href: string }
+  // The investor that backed a company. Rendered large beside the company
+  // mark rather than under the stack, so it reads as part of the company
+  // and not as one more entry in the tech list.
+  backer?: { label: string; name: string; href: string }
+}
+
 export interface HomeStrings {
   meta: {
     htmlLang: 'en' | 'es'
@@ -50,10 +72,11 @@ export interface HomeStrings {
     weatherLabels: string // JSON map of condition key -> localized label
     titleHtml: string // contains <br/> and <i>
     lede: string // raw HTML allowed (b tags)
-    stat1Num: string
-    stat1Label: string
-    stat2Num: string
-    stat2Label: string
+    // Two credentials, not metrics. This slot held oversized numerals twice
+    // ("02 startups", then "3 products") and both times the number was too
+    // small to carry 56px type or too soft to defend. Third-party facts do the
+    // work a fake statistic was doing.
+    creds: { k: string; v: string }[]
     scrollDown: string
     btnGetInTouch: string
     pauseTitle: string
@@ -90,20 +113,7 @@ export interface HomeStrings {
     titleHtml: string
     blurb: string
     openHint: string // affordance line, revealed only once the rows are clickable
-    roles: {
-      dates: string
-      place: string
-      roleHtml: string
-      logo: string // path under /public/logos, decorative (the row names the place)
-      summary: string // the one line the row shows while it is closed
-      desc: string
-      ledger: { label: string; value: string }[]
-      stackLabel: string
-      stack: string[]
-      // Optional labelled outbound link under the stack: the investor that
-      // backed a company, the thesis a degree produced.
-      link?: { label: string; name: string; href: string }
-    }[]
+    roles: HomeRole[]
     achievementsTitle: string
     achievementsBlurb: string
     achievements: { year: string; logo: string; titleHtml: string; meta: string; desc: string }[]

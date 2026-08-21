@@ -122,7 +122,7 @@ export const enSections: Pick<
     shareText: 'Kevin Gámez, founding engineer in Bogotá.',
   },
   footer: {
-    pBlurb: "Founding engineer with a master's in deep learning. Site built in Bogotá.",
+    pBlurb: "Founding engineer with a master's in information engineering. Site built in Bogotá.",
     h4Sections: 'Sections',
     sectionsAbout: 'About',
     sectionsExperience: 'Experience',

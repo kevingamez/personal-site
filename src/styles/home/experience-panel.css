@@ -1,0 +1,153 @@
+/* ─── Experience panel: the open row's mark, prose and evidence band ───
+   Split out of experience.css, which had reached the 300-line cap. The
+   responsive rules for these selectors stay in experience.css, next to the
+   row rules they share a breakpoint with. */
+
+.tl-panel-in {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 24px;
+  padding-bottom: 30px;
+}
+
+/* Left column: the company mark, and under it whoever backed the company. */
+.tl-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  min-width: 0;
+}
+
+.tl-backer {
+  margin: 0;
+}
+
+.tl-backer-k {
+  display: block;
+  font-size: var(--t-caption);
+  font-weight: var(--w-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+/* Sized up deliberately: at footnote it read as one more item in the stack
+   list. It names the investor, so it carries the weight of a subheading. */
+.tl-backer-v {
+  display: inline-block;
+  font-size: var(--t-title-3);
+  font-weight: var(--w-semibold);
+  line-height: 1.2;
+  color: var(--ink);
+  text-wrap: balance;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.tl-backer-v:hover {
+  color: var(--muted);
+}
+
+/* Logo well: the mark sits inside a pane of glass, never bleeding to its edge. */
+.tl-mark {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-sm);
+  background: rgb(253 253 252 / 62%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 85%),
+    inset 0 0 0 1px rgb(255 255 255 / 45%),
+    0 1px 2px rgb(11 11 12 / 5%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tl-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+.tl-desc {
+  font-size: var(--t-subhead);
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 66ch;
+  margin: 0 0 22px;
+  text-wrap: pretty;
+}
+
+/* One band of evidence: the ledger, then the stack. */
+.tl-band {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.tl-ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 36px;
+  margin: 0;
+}
+
+.tl-fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tl-fact dt {
+  font-size: var(--t-footnote);
+  color: var(--muted);
+}
+
+.tl-fact dd {
+  margin: 0;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+
+  /* Values sit against the right edge; a wrapped one stays flush there too. */
+  text-align: right;
+}
+
+.tl-stack-k {
+  font-size: var(--t-footnote);
+  font-weight: var(--w-semibold);
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.tl-stack-v {
+  font-size: var(--t-footnote);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.tl-link {
+  margin-top: 18px;
+}
+
+.tl-link-v {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: var(--t-footnote);
+  color: var(--ink);
+  line-height: 1.7;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.tl-link-v:hover {
+  color: var(--muted);
+}

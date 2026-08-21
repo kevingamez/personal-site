@@ -14,14 +14,12 @@ export function Hero({ t }: Props) {
             portrait already carries. */}
         <div className="hero-copy">
           <div className="hero-stats">
-            <div className="stat">
-              <div className="stat-num">{t.stat1Num}</div>
-              <div className="stat-cap">{t.stat1Label}</div>
-            </div>
-            <div className="stat">
-              <div className="stat-num">{t.stat2Num}</div>
-              <div className="stat-cap">{t.stat2Label}</div>
-            </div>
+            {t.creds.map((c) => (
+              <div className="stat" key={c.k}>
+                <div className="stat-k">{c.k}</div>
+                <div className="stat-v">{c.v}</div>
+              </div>
+            ))}
           </div>
           <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
           <p className="hero-lede" dangerouslySetInnerHTML={{ __html: t.lede }} />

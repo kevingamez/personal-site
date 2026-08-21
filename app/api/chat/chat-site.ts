@@ -31,6 +31,11 @@ function resumeText(): string {
   for (const e of resumeEn.education) {
     lines.push(`- ${e.role}, ${e.at} (${e.dates}). ${e.bullets.join(' ')}`)
   }
+  lines.push('', 'PROJECTS')
+  for (const e of resumeEn.projects) {
+    lines.push(`- ${e.role} (${e.dates}):`)
+    for (const b of e.bullets) lines.push(`  - ${b}`)
+  }
   lines.push('', 'SKILLS')
   for (const s of resumeEn.skills) lines.push(`- ${s.term}: ${s.desc}`)
   return lines.join('\n')

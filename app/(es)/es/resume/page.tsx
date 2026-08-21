@@ -7,7 +7,7 @@ import '@/styles/home/index.css'
 import '@/styles/resume.css'
 
 const description =
-  'Hoja de vida de Kevin Gámez, founding engineer en Enttor, Bogotá. Ingeniería de producto AI-native: TypeScript, Next.js, NestJS, Postgres, pipelines con LLMs.'
+  'Hoja de vida de Kevin Gámez, founding engineer en Enttor. Ingeniería de producto AI-native: TypeScript, Next.js, NestJS, Postgres, agentes y pipelines con LLMs.'
 
 const meta = {
   ...es.meta,

@@ -39,34 +39,36 @@ export const HELP_LINES = [
 export const ABOUT_LINES = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
-  '<b>last</b>, founding engineer at <span class="ac">enttor</span> - AI outbound, browser automation,',
-  '       OpenAI pipelines on Next.js + NestJS + Postgres. open to what is next.',
-  '<b>before</b>, founding engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
-  '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes (deep-learning specialization).',
+  '<b>last</b>, founding engineer at <span class="ac">enttor</span> - paid ads platform, a slack agent,',
+  '       an AI creative studio, on Next.js + Supabase + Postgres. open to what is next.',
+  '<b>before</b>, product engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
+  '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes.',
   '',
   'Type <span class="ac">experience</span> for the full timeline, or',
   '<span class="ac">kevin "your question"</span> to chat with the AI.',
 ]
 
 export const EXPERIENCE_LINES = [
-  '<span class="muted">Jun 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
-  '                       AI outbound, browser automation, OpenAI pipelines',
+  '<span class="muted">Mar 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
+  '                       Paid ads platform, slack agent, AI creative studio',
   '',
-  '<span class="muted">Feb 2024, Mar 2025</span> Founding engineer <span class="at">@ Samsam</span>',
+  '<span class="muted">Feb 2024, Mar 2025</span> Product engineer <span class="at">@ Samsam</span>',
   '                       E-commerce marketplace, React Native, Next.js',
   '',
+  '<span class="muted">Oct 2022, Dec 2023</span> Software engineer <span class="at">@ Heinsohn</span>',
+  '                       Azure CI/CD, Python reporting service, Power BI',
+  '',
   '<span class="muted">Jan 2024, May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
-  '                       Deep-learning specialization, graduate TA',
   '',
   '<span class="muted">Jan 2019, Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
   '                       Andrés Bello National Distinction, AWS certs',
 ]
 
 export const STACK_LINES = [
-  '<b>frontend</b>   next.js, react, react native, astro, tailwind',
-  '<b>backend </b>   nestjs, postgres, prisma, supabase, inngest',
-  '<b>ai / ml </b>   openai, pytorch, opencv, browser automation',
-  '<b>infra   </b>   vercel, aws, cloud run, docker',
+  '<b>frontend</b>   next.js, react, react native, expo, tailwind',
+  '<b>backend </b>   nestjs, trpc, prisma, postgres, redis, supabase',
+  '<b>ai / ml </b>   claude, openai, pgvector rag, mcp, pytorch',
+  '<b>infra   </b>   vercel, aws, docker, modal, ci/cd',
 ]
 
 export const REPOS_LINES = [
@@ -81,8 +83,8 @@ export const REPOS_LINES = [
 
 export const NOW_LINES = [
   'status    <b>between roles</b>, open to founding-engineer and senior full-stack work',
-  'last      <b>AI outbound + ad creation</b> at enttor, browser automation and OpenAI pipelines',
-  'tinkering <b>browser agents</b> and LLM pipelines, plus this site',
+  'last      <b>paid ads platform, slack agent, ad studio</b> at enttor, meta and tiktok',
+  'tinkering <b>LLM agents</b> and browser automation, plus this site',
 ]
 
 export const CONTACT_LINES = [

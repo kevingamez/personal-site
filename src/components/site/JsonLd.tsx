@@ -18,7 +18,7 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
         image: 'https://kevingamez.co/og-dev-preview.png',
         jobTitle: 'Founding Engineer',
         description:
-          'Founding engineer in Bogotá, Colombia, open to new roles. Previously founding engineer at Enttor and at Samsam. M.Sc. Information Engineering (deep-learning specialization), Universidad de los Andes.',
+          'Founding engineer in Bogotá, Colombia, open to new roles. Previously founding engineer at Enttor and product engineer at Samsam. M.Sc. Information Engineering, Universidad de los Andes.',
         email: 'kevingamez.kg@gmail.com',
         seeks: {
           '@type': 'Demand',
@@ -30,7 +30,7 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
           {
             '@type': 'OrganizationRole',
             roleName: 'Founding Engineer',
-            startDate: '2025-06',
+            startDate: '2025-03',
             endDate: '2026-07',
             memberOf: {
               '@type': 'Organization',
@@ -47,11 +47,21 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
             endDate: '2025-03',
             memberOf: { '@type': 'Organization', name: 'Samsam' },
           },
+          {
+            '@type': 'OrganizationRole',
+            roleName: 'Software Engineer',
+            startDate: '2022-10',
+            endDate: '2023-12',
+            memberOf: {
+              '@type': 'Organization',
+              name: 'Heinsohn Human Global Solutions',
+            },
+          },
         ],
         knowsAbout: [
-          'AI outbound',
+          'LLM agents',
+          'Retrieval-augmented generation',
           'Browser automation',
-          'LLM pipelines',
           'TypeScript',
           'Next.js',
           'NestJS',
@@ -91,7 +101,7 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
           {
             '@type': 'EducationalOccupationalCredential',
             credentialCategory: 'degree',
-            name: 'M.Sc. Information Engineering (deep-learning specialization)',
+            name: 'M.Sc. Information Engineering',
             educationalLevel: 'Master degree',
             recognizedBy: { '@type': 'CollegeOrUniversity', name: 'Universidad de los Andes' },
           },

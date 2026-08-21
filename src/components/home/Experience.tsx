@@ -48,47 +48,72 @@ export function Experience({ t }: Props) {
 
               <div className="tl-panel" id={`exp-panel-${i}`} data-exp-panel>
                 <div className="tl-panel-in">
-                  <span className="tl-mark">
-                    {/* Decorative: the row heading already names the place. */}
-                    <img
-                      className="tl-logo"
-                      src={r.logo}
-                      alt=""
-                      width={44}
-                      height={44}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </span>
+                  <div className="tl-aside">
+                    <span className="tl-mark">
+                      {/* Decorative: the row heading already names the place. */}
+                      <img
+                        className="tl-logo"
+                        src={r.logo}
+                        alt=""
+                        width={44}
+                        height={44}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                    {r.backer ? (
+                      <p className="tl-backer">
+                        <span className="tl-backer-k">{r.backer.label}</span>
+                        <a
+                          className="tl-backer-v"
+                          href={r.backer.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {r.backer.name} ↗
+                        </a>
+                      </p>
+                    ) : null}
+                  </div>
                   <div>
-                    <p className="tl-desc">{r.desc}</p>
-                    <div className="tl-band">
-                      <dl className="tl-ledger">
-                        {r.ledger.map((f, j) => (
-                          <div className="tl-fact" key={j}>
-                            <dt>{f.label}</dt>
-                            <dd>{f.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                      <div className="tl-stack">
-                        <div className="tl-stack-k">{r.stackLabel}</div>
-                        <div className="tl-stack-v">{r.stack.join(', ')}</div>
-                        {r.link ? (
-                          <div className="tl-link">
-                            <div className="tl-stack-k">{r.link.label}</div>
-                            <a
-                              className="tl-link-v"
-                              href={r.link.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {r.link.name} ↗
-                            </a>
-                          </div>
-                        ) : null}
+                    {r.desc ? <p className="tl-desc">{r.desc}</p> : null}
+                    {/* A row with no verified evidence renders no band at all,
+                        rather than an empty grid asking to be filled. */}
+                    {r.ledger.length > 0 || r.stack.length > 0 ? (
+                      <div className="tl-band">
+                        <dl className="tl-ledger">
+                          {r.ledger.map((f, j) => (
+                            <div className="tl-fact" key={j}>
+                              <dt>{f.label}</dt>
+                              <dd>{f.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                        <div className="tl-stack">
+                          {r.stack.length > 0 ? (
+                            <>
+                              <div className="tl-stack-k">{r.stackLabel}</div>
+                              <div className="tl-stack-v">{r.stack.join(', ')}</div>
+                            </>
+                          ) : null}
+                          {/* Supporting document (the thesis). The investor is
+                            not here: it renders beside the company mark. */}
+                          {r.link ? (
+                            <div className="tl-link">
+                              <div className="tl-stack-k">{r.link.label}</div>
+                              <a
+                                className="tl-link-v"
+                                href={r.link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {r.link.name} ↗
+                              </a>
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
               </div>

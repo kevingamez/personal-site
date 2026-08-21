@@ -49,27 +49,29 @@
   margin-bottom: clamp(32px, 5svh, 56px);
 }
 
-/* Numbers are the argument: oversized numeral, small grey caption. Which means
-   the numeral has to be able to carry the size. These used to read "02
-   startups" and "07 years on GitHub": one was a small number blown up to 56px,
-   where the scale invites "only two?", and the other measured how long an
-   account has existed, which anyone who signed up in 2019 also has. Both are
-   now outcomes taken from the résumé, where they were already published. */
-.stat-num {
-  font-family: var(--font-display);
-  font-size: var(--t-hero-2);
+/* Credentials, not statistics. The oversized numeral this slot used to hold
+   kept failing: "02 startups" was a small number blown up to 56px, where the
+   scale invites "only two?", and the counts that replaced it were either
+   vanity (commits, API routes) or too narrow to lead with. A backer and a
+   university are facts a stranger cannot argue with, so they are set at
+   reading size and left to stand on their own. */
+.stat-k {
+  font-size: var(--t-caption);
   font-weight: var(--w-semibold);
-  line-height: 1;
-  letter-spacing: var(--ls-heading);
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
 }
 
-.stat-cap {
-  font-size: var(--t-footnote);
-  color: var(--muted);
-  margin-top: 8px;
-  max-width: 18ch;
+.stat-v {
+  font-family: var(--font-display);
+  font-size: var(--t-title-3);
+  font-weight: var(--w-semibold);
+  line-height: 1.25;
+  letter-spacing: var(--ls-heading);
+  color: var(--ink);
+  max-width: 16ch;
 }
 
 h1.hero-title {
