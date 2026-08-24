@@ -70,15 +70,15 @@ export const es: HomeStrings = {
     titleHtml: 'Sobre mí.',
     blurb: 'Founding engineer full-stack, con maestría en Ingeniería de Información.',
     p1Html:
-      'Me gustan las partes de un producto que nadie muestra en un demo: la cola que reintenta, la sesión\n              que sigue abierta, el pipeline que admite que se equivocó y vuelve a correr. Casi todo lo que he\n              lanzado es alguna máquina haciendo trabajo tedioso a las tres de la mañana.',
+      'Termino siempre en las partes que nadie muestra en un demo. Reintentos, manejo de sesiones, el\n              pipeline que se da cuenta de que se equivocó y vuelve a correr solo. Casi todo lo que he lanzado\n              es una máquina haciendo trabajo aburrido a las tres de la mañana.',
     p2Html:
-      'Antes de las startups pasé un tiempo en analítica, escribiendo pipelines SQL y dashboards en Power BI\n              para HR, riesgo y operaciones, y luego en deep learning sobre imágenes satelitales, detectando\n              cultivos y riesgo ambiental. Las dos me enseñaron a desconfiar de un número que no puedo rastrear.',
+      'Antes de las startups pasé un tiempo en analítica, escribiendo pipelines SQL y dashboards en Power BI\n              para HR, riesgo y operaciones, y luego en deep learning sobre imágenes satelitales, detectando\n              cultivos y riesgo ambiental.',
     p3Html:
       'B.Sc. en Ingeniería de Sistemas y Computación y M.Sc. en Ingeniería de Información, ambas en la\n              <b>Universidad de los Andes</b>, con opciones en Matemáticas y Administración.',
     qfBased: 'Ubicación',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Rol',
-    qfRoleV: 'Founding engineer, abierto a lo que sigue',
+    qfRoleV: 'Founding engineer, buscando lo que sigue',
     qfStack: 'Stack favorito',
     qfStackV: 'TypeScript, Next.js, Postgres',
     qfObsessed: 'Cacharreando con',
@@ -167,7 +167,7 @@ export const es: HomeStrings = {
     momentsClose: 'Click o Esc para soltarla',
     secNum: 'Las cartas',
     titleHtml: 'Lo que un CV no cuenta.',
-    blurb: 'Nueve fotos. Todo lo que cuentan es verdad.',
+    blurb: 'Nueve fotos de los últimos años.',
     hint: 'Elige una carta',
   },
   ...esSections,

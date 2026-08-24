@@ -5,19 +5,19 @@ import { enRoles } from './home-en-roles'
 export const en: HomeStrings = {
   meta: {
     htmlLang: 'en',
-    title: "Kevin Gámez - Founding Engineer, open to what's next",
+    title: 'Kevin Gámez - Founding Engineer in Bogotá',
     description:
-      "Kevin Gámez is a founding engineer in Bogotá, Colombia, open to what's next. Browser automation, LLM pipelines, TypeScript, Next.js, NestJS, Postgres.",
+      'Kevin Gámez is a founding engineer in Bogotá, Colombia, looking for the next thing. Browser automation, LLM pipelines, TypeScript, Next.js, NestJS, Postgres.',
     canonical: 'https://kevingamez.co/',
     ogUrl: 'https://kevingamez.co/',
-    ogTitle: "Kevin Gámez - Founding Engineer, open to what's next",
+    ogTitle: 'Kevin Gámez - Founding Engineer in Bogotá',
     ogDescription:
-      "Founding engineer in Bogotá, open to what's next. Browser automation, LLM pipelines, full-stack TypeScript.",
+      'Founding engineer in Bogotá, looking for the next thing. Browser automation, LLM pipelines, full-stack TypeScript.',
     ogLocale: 'en_US',
     ogLocaleAlternate: 'es_CO',
-    twitterTitle: "Kevin Gámez - Founding Engineer, open to what's next",
+    twitterTitle: 'Kevin Gámez - Founding Engineer in Bogotá',
     twitterDescription:
-      "Founding engineer in Bogotá, open to what's next. Browser automation, LLM pipelines, full-stack TypeScript.",
+      'Founding engineer in Bogotá, looking for the next thing. Browser automation, LLM pipelines, full-stack TypeScript.',
     includeJsonLd: true,
     brandHref: '/',
     skip: 'Skip to content',
@@ -70,15 +70,15 @@ export const en: HomeStrings = {
     titleHtml: 'About me.',
     blurb: "Full-stack founding engineer with a master's in information engineering.",
     p1Html:
-      'I like the parts of a product nobody demos: the queue that retries, the session that stays\n              logged in, the pipeline that admits it got it wrong and runs again. Most of what I have\n              shipped is some machine doing tedious work at three in the morning.',
+      'I end up on the parts nobody demos. Retries, session handling, the pipeline that notices it was\n              wrong and runs itself again. Most of what I have shipped is a machine doing boring work at\n              three in the morning.',
     p2Html:
-      'Before the startups I spent a while in analytics, writing SQL pipelines and Power BI dashboards\n              for HR, risk and operations, and then in deep learning on satellite imagery, spotting croplands\n              and flagging environmental risk. Both taught me to distrust a number I cannot trace.',
+      'Before the startups I spent a while in analytics, writing SQL pipelines and Power BI dashboards\n              for HR, risk and operations, and then on deep learning over satellite imagery, spotting\n              croplands and flagging environmental risk.',
     p3Html:
       'B.Sc. in Systems and Computing and M.Sc. in Information Engineering, both from <b>Universidad de los Andes</b\n              >, with minors in mathematics and management.',
     qfBased: 'Based',
     qfBasedV: 'Bogotá, Colombia',
     qfRole: 'Role',
-    qfRoleV: "Founding engineer, open to what's next",
+    qfRoleV: 'Founding engineer, looking for the next thing',
     qfStack: 'Stack of choice',
     qfStackV: 'TypeScript, Next.js, Postgres',
     qfObsessed: 'Tinkering with',
@@ -167,7 +167,7 @@ export const en: HomeStrings = {
     momentsClose: 'Click or Esc to let it go',
     secNum: 'The deck',
     titleHtml: 'The parts a CV leaves out.',
-    blurb: 'Nine photographs. Everything on them is true.',
+    blurb: 'Nine photographs from the last few years.',
     hint: 'Pick a card',
   },
   ...enSections,

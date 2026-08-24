@@ -5,7 +5,7 @@ export const resumeEs: ResumeStrings = {
   name: 'Kevin Gámez',
   contactLocation: 'Bogotá, Colombia',
   summary:
-    'Founding engineer, más recientemente en una startup respaldada por MaC Venture Capital (2025-2026). Responsable del producto y la plataforma de punta a punta. Ejecución constante, atención meticulosa al detalle, comunicación concisa. Abierto a lo que sigue.',
+    'Founding engineer, más recientemente en Enttor, respaldada por MaC Venture Capital (2025-2026). Tuve la ingeniería a cargo en un equipo de seis, entre la plataforma de anuncios, el agente de Slack que la maneja y el estudio con IA detrás de los anuncios. Buscando lo que sigue.',
   download: 'Descargar hoja de vida ↓',
   downloadFileName: 'Kevin-Gamez-Hoja-de-vida.pdf',
   headings: {

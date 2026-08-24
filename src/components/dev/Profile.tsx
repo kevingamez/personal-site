@@ -21,7 +21,7 @@ export function Profile() {
             Kevin <i>Gámez</i>
           </div>
           <div className="pf-role">
-            Founding engineer <span className="pf-at">, open to what&apos;s next</span>
+            Founding engineer <span className="pf-at">, looking for the next thing</span>
           </div>
         </div>
       </header>

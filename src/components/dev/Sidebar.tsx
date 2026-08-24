@@ -212,7 +212,7 @@ export async function Sidebar() {
           }}
         >
           <div>
-            <span className="ac">status</span>, open to what's next
+            <span className="ac">status</span>, looking for the next thing
           </div>
           <div>
             <span className="ac">stack</span>, next.js + nestjs + postgres

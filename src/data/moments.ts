@@ -11,7 +11,7 @@ export interface Moment {
 export const MOMENTS: Moment[] = [
   {
     src: '/posts/masters-graduation-diploma.webp',
-    place: 'Uniandes · May 2026',
+    place: 'Uniandes, May 2026',
     en: {
       title: 'The day I graduated',
       desc: 'M.Sc. in information engineering. I started my first full-time job the same week.',
@@ -23,7 +23,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/bogota-half-marathon-medal.webp',
-    place: 'Bogotá · 2026',
+    place: 'Bogotá, 2026',
     en: {
       title: 'The Bogotá half marathon',
       desc: '21 kilometres at 2,600 metres above sea level. Six months of training and I still walked the last three.',
@@ -35,7 +35,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/masters-graduation-classmates.webp',
-    place: 'Uniandes · May 2026',
+    place: 'Uniandes, May 2026',
     en: {
       title: 'The one with my family',
       desc: 'The people who put up with the strange years. This is the photo my mother has printed.',
@@ -47,7 +47,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/mac-mini-office-server.webp',
-    place: 'Bogotá · 2026',
+    place: 'Bogotá, 2026',
     en: {
       title: 'The server in the living room',
       desc: 'A Mac mini doing server duty at home. It runs the browser agents I would rather not pay a cloud for.',
@@ -59,7 +59,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/masters-graduation-family.webp',
-    place: 'Uniandes · 2026',
+    place: 'Uniandes, 2026',
     en: {
       title: 'The thesis, finally',
       desc: 'Models trained on satellite imagery to find deforestation before it spreads.',
@@ -71,7 +71,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/cursor-ide-late-night-coding.webp',
-    place: 'LinkedIn · 2026',
+    place: 'LinkedIn, 2026',
     en: {
       title: 'Learning to speak plainly',
       desc: 'You can be a great engineer and still be poor. Not because you cannot code, because you cannot explain.',
@@ -83,7 +83,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/home-desk-command-center.webp',
-    place: 'Bogotá · 2026',
+    place: 'Bogotá, 2026',
     en: {
       title: 'What the turbo taught me',
       desc: 'A project that fell over in production and taught me more than any course did.',
@@ -95,7 +95,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/burp-suite-supabase-capture.webp',
-    place: 'Enttor · 2026',
+    place: 'Enttor, 2026',
     en: {
       title: 'The app that got hacked',
       desc: 'If you vibe coded it, it has probably been hacked already and you do not know it yet.',
@@ -107,7 +107,7 @@ export const MOMENTS: Moment[] = [
   },
   {
     src: '/posts/masters-graduation-friends.webp',
-    place: 'Uniandes · May 2026',
+    place: 'Uniandes, May 2026',
     en: {
       title: 'The ones who were there',
       desc: 'The people I sat in the study room with until 3am for five years.',

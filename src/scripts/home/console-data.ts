@@ -40,7 +40,7 @@ export const ABOUT_LINES = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
   '<b>last</b>, founding engineer at <span class="ac">enttor</span> - paid ads platform, a slack agent,',
-  '       an AI creative studio, on Next.js + Supabase + Postgres. open to what is next.',
+  '       an AI creative studio, on Next.js + Supabase + Postgres. looking for the next thing.',
   '<b>before</b>, product engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
   '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes.',
   '',

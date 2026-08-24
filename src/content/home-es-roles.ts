@@ -9,7 +9,7 @@ export const esRoles: HomeRole[] = [
     roleHtml: 'Founding engineer <span class="at">@ Enttor</span>',
     logo: '/logos/enttor.png',
     summary:
-      'Tres productos de punta a punta: la plataforma de anuncios, el agente de Slack que la maneja y el estudio creativo.',
+      'Tres productos, de punta a punta. La plataforma de anuncios, el agente de Slack que la maneja y el estudio que generaba los anuncios.',
     desc: 'Empezó como el motor de outbound, con agentes de navegador buscando prospectos y redactando los DMs. Terminó en otro lugar: los datos de campañas de Meta y TikTok unificados en un solo esquema de métricas, un motor de reglas que responde escalar, pausar o archivar con una razón, y un agente de Slack que los media buyers manejan en lenguaje natural sobre 165 herramientas. El último producto generaba los anuncios y luego los desarmaba en capas editables sobre workers con GPU.',
     ledger: [
       { label: 'Productos lanzados', value: 'Tres' },
@@ -49,7 +49,7 @@ export const esRoles: HomeRole[] = [
     roleHtml: 'Software engineer <span class="at">@ Heinsohn</span>',
     logo: '/logos/heinsohn.png',
     summary:
-      'Software de recursos humanos y nómina: el pipeline de despliegue, los reportes, los tableros.',
+      'Software de recursos humanos y nómina. Tuve a cargo el pipeline de despliegue, el servicio de reportes y los tableros.',
     desc: 'Los despliegues eran manuales cuando llegué. Llevé el pipeline a Azure y construí el CI/CD que publicaba solo en el servidor de cada cliente. Fui responsable de un servicio de reportes en Python y Flask que ejecutaba consultas programadas sobre las bases de datos de los clientes, y construí los tableros en Power BI que usaban para seguir headcount, rotación y costo de nómina, reemplazando reportes que se armaban a mano.',
     ledger: [
       { label: 'Despliegues', value: 'Manual a automático' },
@@ -66,9 +66,8 @@ export const esRoles: HomeRole[] = [
     roleHtml: 'M.Sc. Ingeniería de Información <span class="at">@ Universidad de los Andes</span>',
     logo: '/logos/uniandes.svg',
     // Ver la nota en home-en.ts: describe el programa, no su desempeño.
-    summary:
-      'Convertir datos que una organización todavía no sabe leer en decisiones que sí puede tomar.',
-    desc: 'La maestría trata sobre toda la vida de la información, no sobre un modelo al final. Arranca con los datos que no caben en una tabla, semiestructurados, geolocalizados, de alta velocidad, multimedia, y pregunta cuánto valen para la organización que los tiene. El resto del tiempo se va en la mitad menos vistosa: mantener esos datos gobernados, seguros y lo bastante buenos como para que una decisión tomada encima se sostenga. La ciencia de datos aplicada y el machine learning van al lado de los sistemas de recomendación, la ingeniería del conocimiento y la privacidad.',
+    summary: 'Una maestría sobre toda la vida del dato, no solo el modelo del final.',
+    desc: 'Arranca con los datos que no caben en una tabla, semiestructurados, geolocalizados, de alta velocidad, multimedia, y pregunta cuánto valen para quien los tiene. La mayor parte del tiempo se va en gobierno, seguridad y calidad del dato, porque es sobre eso que se sostiene cualquier decisión que se tome encima. Los cursos fueron desde ciencia de datos aplicada y machine learning hasta sistemas de recomendación, ingeniería del conocimiento y privacidad.',
     ledger: [
       { label: 'Duración', value: 'Cuatro semestres' },
       { label: 'Cursada', value: 'Part-time, trabajando' },

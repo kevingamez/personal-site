@@ -5,7 +5,7 @@ export const resumeEn: ResumeStrings = {
   name: 'Kevin Gámez',
   contactLocation: 'Bogotá, Colombia',
   summary:
-    'Founding engineer, most recently at a MaC Venture Capital-backed startup (2025-2026). End-to-end owner of product and platform. Relentless execution, exacting attention to detail, concise communication. Open to what comes next.',
+    'Founding engineer, most recently at Enttor, backed by MaC Venture Capital (2025-2026). Owned engineering on a six-person team, across the ad platform, the Slack agent that runs it and the AI studio behind the creative. Looking for the next thing.',
   download: 'Download resume ↓',
   downloadFileName: 'Kevin-Gamez-Resume.pdf',
   headings: {

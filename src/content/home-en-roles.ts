@@ -9,7 +9,7 @@ export const enRoles: HomeRole[] = [
     roleHtml: 'Founding engineer <span class="at">@ Enttor</span>',
     logo: '/logos/enttor.png',
     summary:
-      'Three products end to end: the ads platform, the Slack agent that runs it, the creative studio.',
+      'Three products, end to end. The ads platform, the Slack agent that runs it, and the studio that generated the creative.',
     desc: 'It started as the outbound engine, browser agents sourcing prospects and drafting the DMs. It ended somewhere else: Meta and TikTok campaign data normalized onto one metric schema, a rules engine that returns scale, pause or archive with a reason, and a Slack agent media buyers drive in plain language across 165 tools. The last product generated the ads outright, then took them back apart into editable layers on GPU workers.',
     ledger: [
       { label: 'Products shipped', value: 'Three' },
@@ -47,7 +47,8 @@ export const enRoles: HomeRole[] = [
     place: 'Bogotá',
     roleHtml: 'Software engineer <span class="at">@ Heinsohn</span>',
     logo: '/logos/heinsohn.png',
-    summary: 'HR and payroll software: the deploy pipeline, the reporting, the dashboards.',
+    summary:
+      'HR and payroll software. I owned the deploy pipeline, the reporting service and the dashboards.',
     desc: 'Deploys were manual when I arrived. I moved the pipeline to Azure and built the CI/CD that released to every client server on its own. I owned a Python and Flask reporting service running scheduled queries across client databases, and built the Power BI dashboards clients used to track headcount, turnover and payroll cost, replacing reports that had been assembled by hand.',
     ledger: [
       { label: 'Deploys', value: 'Manual to automated' },
@@ -69,8 +70,8 @@ export const enRoles: HomeRole[] = [
     // page at sistemas.uniandes.edu.co/es/mine and the course catalogue at
     // uniandes.smartcatalogiq.com/2024/catalogo/cursos/mine. None of it is
     // a claim about how Kevin personally did in it.
-    summary: 'Turning data an organization cannot read yet into decisions it can act on.',
-    desc: 'The degree is about the whole life of information rather than one model at the end of it. It starts with the data that does not fit a table, semi-structured, geolocated, high-velocity, multimedia, and asks what it is worth to the organization holding it. Then it spends the rest of the time on the unglamorous half: keeping that data governed, secure and good enough that a decision made on top of it holds. Applied data science and machine learning sit beside recommender systems, knowledge engineering, and privacy.',
+    summary: 'A programme about the whole life of data, not just the model at the end.',
+    desc: 'It starts with data that does not fit a table, semi-structured, geolocated, high-velocity, multimedia, and asks what it is worth to whoever is holding it. Most of the time goes on governance, security and data quality, because that is what any decision made on top of it rests on. Coursework ran from applied data science and machine learning through recommender systems, knowledge engineering and privacy.',
     ledger: [
       { label: 'Length', value: 'Four semesters' },
       { label: 'Studied', value: 'Part-time, while working' },
