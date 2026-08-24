@@ -29,6 +29,7 @@ import { useJourneyPointer } from './journey-pointer'
 import { updateParticles } from './journey-particles'
 import { FACE_NORMALS } from './cube-figure'
 import { PulseLayer } from './journey-pulses'
+import { prefersReducedMotion, useDemandRender } from './journey-demand'
 
 const CAM_Z = 10
 const FOV = 40
@@ -50,8 +51,8 @@ const REST_BRAIN = 1.5 + Math.PI // legible profile, flipped 180deg
 const REST_CUBE = REST_BRAIN - 0.72 // three-quarter view of the cube
 
 function Scene() {
-  const reduced =
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const reduced = prefersReducedMotion()
+  useDemandRender(reduced)
   const group = useRef<Group>(null)
   const points = useRef<Points>(null)
   const gl = useThree((s) => s.gl)
@@ -272,13 +273,16 @@ function Scene() {
 }
 
 export default function BrainJourney() {
+  // Reduced motion drives the canvas on demand instead of every frame; the
+  // wake-up rules live in journey-demand.ts.
+  const reduced = prefersReducedMotion()
   return (
     <div className="cube-journey" aria-hidden="true">
       <Canvas
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, CAM_Z], fov: FOV }}
         gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
-        frameloop="always"
+        frameloop={reduced ? 'demand' : 'always'}
       >
         <Scene />
       </Canvas>

@@ -66,20 +66,34 @@ export function appendCmdLine(stream: HTMLElement, command: string): void {
   stream.scrollTop = stream.scrollHeight
 }
 
+function makeLine(html: string, kind: 'out' | 'err'): HTMLElement {
+  const line = el('div', 'cs-line cs-' + kind)
+  line.innerHTML = html
+  return line
+}
+
 export function printOut(
   stream: HTMLElement,
   html: string,
   kind: 'out' | 'err' = 'out'
 ): HTMLElement {
-  const line = el('div', 'cs-line cs-' + kind)
-  line.innerHTML = html
+  const line = makeLine(html, kind)
   stream.appendChild(line)
   stream.scrollTop = stream.scrollHeight
   return line
 }
 
+// One append and one scroll for the whole block. Looping printOut here read
+// scrollHeight straight after each appendChild, so every line forced its own
+// synchronous layout of a very long page: a 17-line command spent ~450ms in a
+// single task on a 4x-throttled machine, which was the biggest freeze on the
+// site after the intro curtain.
 export function printLines(stream: HTMLElement, lines: string[]): void {
-  for (const l of lines) printOut(stream, l)
+  if (!lines.length) return
+  const frag = document.createDocumentFragment()
+  for (const l of lines) frag.appendChild(makeLine(l, 'out'))
+  stream.appendChild(frag)
+  stream.scrollTop = stream.scrollHeight
 }
 
 export function tokenize(line: string): string[] {

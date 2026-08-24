@@ -28,7 +28,7 @@ const BrainJourney = dynamic(() => import('./BrainJourney'), { ssr: false })
 const IDLE_TIMEOUT_MS = 2000
 // Past the curtain's own safety timeout, so a curtain that somehow never
 // resolves can't strand the scene.
-const CURTAIN_CAP_MS = 3200
+const CURTAIN_CAP_MS = 2400
 
 export function CubeStage() {
   const [mounted, setMounted] = useState(false)

@@ -13,7 +13,12 @@ const INK = '#9d2129'
 // Laid lines plus tooth, used as bump and roughness. Without it the cards are
 // perfect planes and read as plastic rather than card stock.
 export function paperMap(): CanvasTexture {
-  const S = 512
+  // 256, not 512. This loop is per-pixel with four trig calls, so at 512 it
+  // cost 39ms of the deck's 77ms build on a 4x-throttled machine - the single
+  // most expensive thing in it. The frequencies below are doubled to match, so
+  // the laid lines land at the same spacing across the card and only the tooth
+  // samples coarser, which is invisible on a bump and roughness map.
+  const S = 256
   const c = document.createElement('canvas')
   c.width = c.height = S
   const x = c.getContext('2d')!
@@ -23,8 +28,8 @@ export function paperMap(): CanvasTexture {
     const py = (i / S) | 0
     let v = 132
     v += (Math.random() - 0.5) * 30
-    v += Math.sin(py * 0.62 + Math.sin(px * 0.09) * 3.1) * 6
-    v += Math.sin(px * 0.83 + Math.sin(py * 0.11) * 2.6) * 4
+    v += Math.sin(py * 1.24 + Math.sin(px * 0.18) * 3.1) * 6
+    v += Math.sin(px * 1.66 + Math.sin(py * 0.22) * 2.6) * 4
     const k = i * 4
     im.data[k] = im.data[k + 1] = im.data[k + 2] = v < 0 ? 0 : v > 255 ? 255 : v
     im.data[k + 3] = 255
@@ -169,6 +174,24 @@ export function backTexture(): CanvasTexture {
   return t
 }
 
+// Card draws wait their turn: one per animation frame, so nine photographs
+// arriving at once cannot stack nine canvas passes and nine texture uploads
+// into a single frame.
+const drawQueue: (() => void)[] = []
+let draining = false
+
+function queueDraw(job: () => void): void {
+  drawQueue.push(job)
+  if (draining) return
+  draining = true
+  const step = (): void => {
+    drawQueue.shift()?.()
+    if (drawQueue.length) requestAnimationFrame(step)
+    else draining = false
+  }
+  requestAnimationFrame(step)
+}
+
 // An archival print: image high in a wide mat, place and date letterpressed
 // into the foot. `scale` draws the same layout at print resolution for the card
 // the visitor is holding, which is the only one big enough to show the seams.
@@ -194,36 +217,42 @@ export function frontTexture(src: string, meta: string, tint: string, scale = 1)
   const bh = TH - padTop - padBot
 
   const img = new Image()
-  img.onload = () => {
-    const r = Math.max(bw / img.width, bh / img.height)
-    const dw = img.width * r
-    const dh = img.height * r
-    x.save()
-    x.beginPath()
-    x.rect(padX, padTop, bw, bh)
-    x.clip()
-    x.drawImage(img, padX + (bw - dw) / 2, padTop + (bh - dh) / 2, dw, dh)
-    x.restore()
-    // the impression a press leaves around a plate
-    x.strokeStyle = 'rgba(11,11,12,0.55)'
-    x.lineWidth = 1
-    x.strokeRect(padX + 0.5, padTop + 0.5, bw - 1, bh - 1)
-    x.strokeStyle = 'rgba(11,11,12,0.10)'
-    x.lineWidth = 3
-    x.strokeRect(padX - 3.5, padTop - 3.5, bw + 7, bh + 7)
+  // Nine of these resolve together, and each one draws a 512x716 canvas and
+  // then hands the GPU a fresh texture. Landing them in one task froze a scroll
+  // frame for 406ms, so they take a frame each. `decoding` keeps the JPEG
+  // decode itself off the main thread.
+  img.decoding = 'async'
+  img.onload = () =>
+    queueDraw(() => {
+      const r = Math.max(bw / img.width, bh / img.height)
+      const dw = img.width * r
+      const dh = img.height * r
+      x.save()
+      x.beginPath()
+      x.rect(padX, padTop, bw, bh)
+      x.clip()
+      x.drawImage(img, padX + (bw - dw) / 2, padTop + (bh - dh) / 2, dw, dh)
+      x.restore()
+      // the impression a press leaves around a plate
+      x.strokeStyle = 'rgba(11,11,12,0.55)'
+      x.lineWidth = 1
+      x.strokeRect(padX + 0.5, padTop + 0.5, bw - 1, bh - 1)
+      x.strokeStyle = 'rgba(11,11,12,0.10)'
+      x.lineWidth = 3
+      x.strokeRect(padX - 3.5, padTop - 3.5, bw + 7, bh + 7)
 
-    x.fillStyle = 'rgba(40,36,30,0.78)'
-    x.textAlign = 'center'
-    x.font = '500 15px ui-monospace, Menlo, monospace'
-    x.fillText(meta.toUpperCase(), TW / 2, TH - padBot + 40)
-    x.strokeStyle = 'rgba(40,36,30,0.22)'
-    x.lineWidth = 1
-    x.beginPath()
-    x.moveTo(TW / 2 - 46, TH - padBot + 56)
-    x.lineTo(TW / 2 + 46, TH - padBot + 56)
-    x.stroke()
-    tex.needsUpdate = true
-  }
+      x.fillStyle = 'rgba(40,36,30,0.78)'
+      x.textAlign = 'center'
+      x.font = '500 15px ui-monospace, Menlo, monospace'
+      x.fillText(meta.toUpperCase(), TW / 2, TH - padBot + 40)
+      x.strokeStyle = 'rgba(40,36,30,0.22)'
+      x.lineWidth = 1
+      x.beginPath()
+      x.moveTo(TW / 2 - 46, TH - padBot + 56)
+      x.lineTo(TW / 2 + 46, TH - padBot + 56)
+      x.stroke()
+      tex.needsUpdate = true
+    })
   img.src = src
   return tex
 }

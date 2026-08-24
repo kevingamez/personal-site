@@ -3,9 +3,15 @@
 // slides the curtain out, and lets any input skip it instantly. A safety
 // timeout guarantees the page is never trapped behind the overlay.
 
-const DURATION = 1400
+// 600, not 1400. At 1400 the curtain was the slowest thing on the site: it is
+// an opaque overlay over already-painted content, so the visitor waited 2.9s on
+// production (4x CPU) and 3.8s on slow 4G to see a page whose LCP was 652ms.
+// The wait is download-time PLUS this number, because the counter cannot start
+// until this module lands.
+const DURATION = 600
 const EXIT_MS = 480
-const SAFETY_MS = 2600
+// Only has to outlast DURATION plus a few dropped frames.
+const SAFETY_MS = 1400
 
 export function initIntro(): void {
   const root = document.documentElement

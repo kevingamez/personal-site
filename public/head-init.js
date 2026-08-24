@@ -21,7 +21,7 @@ try {
     window.sessionStorage.setItem('kg-intro', '1')
     window.setTimeout(function releaseIntroCurtain() {
       document.documentElement.classList.remove('intro-pending')
-    }, 3200)
+    }, 2000)
   }
 } catch (err) {
   // Storage or matchMedia unavailable: skip the intro entirely.
