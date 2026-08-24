@@ -6,6 +6,7 @@ import { Euler, MathUtils, Quaternion, Raycaster, Vector2, Vector3, WebGLRendere
 import { MOMENTS } from '@/data/moments'
 import { build } from './moments-scene'
 import { wireInput } from './moments-input'
+import { createVisibleLoop } from './moments-loop'
 
 export function initMoments(): void {
   const box = document.getElementById('moments')
@@ -137,13 +138,7 @@ export function initMoments(): void {
     root.classList.remove('is-held')
   }
 
-  let raf = 0
-  let running = false
-  let onscreen = false
-  let last = performance.now()
-  function tick(now: number): void {
-    const dt = Math.min((now - last) / 1000, 1 / 30)
-    last = now
+  function frame(dt: number): void {
     nav.dt = dt
     pickT += ((picked >= 0 ? 1 : 0) - pickT) * damp(0.07, dt)
 
@@ -217,39 +212,9 @@ export function initMoments(): void {
     root.classList.toggle('is-over', picked < 0 && hovered >= 0)
 
     renderer.render(scene, camera)
-    if (running) raf = requestAnimationFrame(tick)
   }
 
-  // The deck is one section of a very long page, and its frame is not cheap:
-  // 58 cards, exponential fog, three lights and a raycast, every tick. It used
-  // to keep drawing all of that while scrolled far off screen, and while the
-  // tab was in the background. Now the loop only runs when the section is
-  // near the viewport AND the tab is visible. dt is already clamped to 1/30,
-  // so coming back from a long pause cannot jump the animation.
-  const startLoop = (): void => {
-    if (running) return
-    running = true
-    last = performance.now()
-    raf = requestAnimationFrame(tick)
-  }
-  const stopLoop = (): void => {
-    running = false
-    if (raf) cancelAnimationFrame(raf)
-    raf = 0
-  }
-  const sync = (): void => {
-    if (onscreen && !document.hidden) startLoop()
-    else stopLoop()
-  }
-  const onScreen = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) onscreen = e.isIntersecting
-      sync()
-    },
-    { rootMargin: '200px 0px' }
-  )
-  onScreen.observe(root)
-  document.addEventListener('visibilitychange', sync)
+  const loop = createVisibleLoop(root, frame)
 
   const el = renderer.domElement
   const fit = (): void => {
@@ -283,8 +248,7 @@ export function initMoments(): void {
   })
 
   addEventListener('pagehide', () => {
-    stopLoop()
-    onScreen.disconnect()
+    loop.dispose()
     dispose()
     renderer.dispose()
   })

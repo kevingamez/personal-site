@@ -110,14 +110,11 @@ whenVisible(
 // A second WebGL context on a page that already runs one, so it waits until the
 // box is actually near the viewport.
 //
-// Building this scene costs 350-500ms on a 4x-throttled machine, and profiling
-// says almost none of it is ours: the time sits in V8's "(program)" bucket next
-// to getProgramInfoLog and texSubImage2D, i.e. the driver linking the card
-// shaders and uploading their textures. Blocking this chunk was the only thing
-// that made the freeze disappear; deferring it to requestIdleCallback did not,
-// because idle fires in the gaps BETWEEN scroll frames and the work lands on
-// the next one anyway. It can only be made cheaper (simpler card materials,
-// fewer or smaller textures), not rescheduled.
+// Careful measuring this section: headless Chrome has no GPU and falls back to
+// SwiftShader, a CPU software rasteriser, which makes this scene look ~30x more
+// expensive than it is. Benchmarks that showed a 300-500ms stall here were all
+// measuring software rendering. On a real GPU (headless: false) the same scroll
+// runs at 9.3ms per frame. If you are profiling this, launch headed.
 whenVisible(
   '[data-moments-lazy]',
   () => {

@@ -4,13 +4,19 @@
 
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 
-// Swarm resolution, not print resolution. Uploading eleven textures at the old
-// 512x716 was the single biggest cost in building this deck: ~410ms of frozen
-// frame on a 4x-throttled machine, and shrinking them was the only change that
-// moved it. A card in the swarm is never more than a couple of hundred pixels
-// tall, and the one the visitor is HOLDING does not use this size at all -
-// bigFor() redraws it through the `scale` argument below, which is why that
-// scale went to 4 when this halved. A held card is byte for byte what it was.
+// Swarm resolution, not print resolution. A card in the swarm is never more
+// than a couple of hundred pixels tall, and the one the visitor is HOLDING does
+// not use this size at all - bigFor() redraws it through the `scale` argument
+// below, which is why that scale went to 4 when this halved. A held card is
+// byte for byte what it was, and nothing on screen lost resolution it was using.
+//
+// This started as a fix for a ~410ms stall when the deck first drew. That stall
+// was an artefact: headless Chrome runs WebGL on SwiftShader, a CPU software
+// rasteriser, so every measurement of this scene was of software rendering. On
+// a real GPU the same scroll costs 9.3ms per frame. The smaller textures stay
+// because a quarter of the texels is less memory and less bandwidth for no
+// visible difference, which is worth having on a phone - not because they fixed
+// a freeze that real hardware never had.
 export const TW = 256
 export const TH = 358
 

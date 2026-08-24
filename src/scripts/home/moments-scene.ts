@@ -105,9 +105,8 @@ export function build(width: number, height: number): Built {
   // Standard, not Physical. Nothing here sets a physical-only property - no
   // clearcoat, transmission, sheen, iridescence or ior - so the two render the
   // same lit dielectric while Physical compiles all of those branches anyway.
-  // Measured neutral on the deck's build cost, which turned out to be texture
-  // upload rather than shader linking, but there is no reason to keep
-  // compiling branches this scene never uses.
+  // Measured neutral, and kept only as a simplification: there is no reason to
+  // compile branches this scene never uses.
   const backMat = new MeshStandardMaterial({
     map: back,
     bumpMap: paper,
