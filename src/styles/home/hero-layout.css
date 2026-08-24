@@ -52,9 +52,11 @@
 /* Credentials, not statistics. The oversized numeral this slot used to hold
    kept failing: "02 startups" was a small number blown up to 56px, where the
    scale invites "only two?", and the counts that replaced it were either
-   vanity (commits, API routes) or too narrow to lead with. A backer and a
-   university are facts a stranger cannot argue with, so they are set at
-   reading size and left to stand on their own. */
+   vanity (commits, API routes) or too narrow to lead with. What sits here now
+   is a last job and a university, facts a stranger cannot argue with, set at
+   reading size and left to stand on their own. Both pairs name their own
+   subject: this slot renders above the h1, so a label like "Backed by" with
+   no company attached reads as a claim about Kevin. */
 .stat-k {
   font-size: var(--t-caption);
   font-weight: var(--w-semibold);

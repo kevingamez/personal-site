@@ -44,10 +44,10 @@ export const es: HomeStrings = {
     weatherLabels:
       '{"clear": "despejado", "partly cloudy": "parcialmente nublado", "cloudy": "nublado", "fog": "niebla", "drizzle": "llovizna", "rain": "lluvia", "showers": "aguaceros", "snow": "nieve", "storm": "tormenta"}',
     titleHtml: 'Hola',
-    lede: 'Soy founding engineer en Bogotá, abierto a lo que sigue. Estuve en <b>Enttor</b>, donde tuve la ingeniería\n            a cargo y lancé tres productos: una plataforma de paid ads sobre Meta y TikTok, el agente de Slack que la\n            maneja y un estudio con IA que genera los anuncios. Antes, un marketplace de e-commerce en\n            <b>Samsam</b>. Maestría en Ingeniería de Información en la Universidad de los Andes.',
+    lede: 'Soy founding engineer en Bogotá y estoy buscando lo que sigue. Tuve la ingeniería a cargo en\n            <b>Enttor</b>, donde armé la plataforma de paid ads sobre Meta y TikTok y el agente de Slack que la\n            maneja. Antes trabajé en un marketplace de e-commerce en <b>Samsam</b>. Tengo una maestría de la\n            Universidad de los Andes.',
     creds: [
-      { k: 'Respaldada por', v: 'MaC Venture Capital' },
-      { k: 'A cargo de', v: 'Toda la ingeniería, equipo de seis' },
+      { k: 'Hasta hace poco', v: 'Founding engineer en Enttor' },
+      { k: 'Estudié en', v: 'Universidad de los Andes' },
     ],
     scrollDown: 'Sigue bajando',
     btnGetInTouch: 'Hablemos',
