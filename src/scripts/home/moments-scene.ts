@@ -9,7 +9,7 @@ import {
   HemisphereLight,
   Mesh,
   MeshBasicMaterial,
-  MeshPhysicalMaterial,
+  MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
   Shape,
@@ -84,7 +84,7 @@ export interface Built {
   cards: Card[]
   meshes: Mesh[]
   heldMats: MeshBasicMaterial[]
-  frontMats: MeshPhysicalMaterial[]
+  frontMats: MeshStandardMaterial[]
   bigFor: (i: number) => void
   dispose: () => void
 }
@@ -102,7 +102,13 @@ export function build(width: number, height: number): Built {
   const back = backTexture()
   const frontTex = MOMENTS.map((m, i) => frontTexture(m.src, m.place, TINTS[i % TINTS.length]))
 
-  const backMat = new MeshPhysicalMaterial({
+  // Standard, not Physical. Nothing here sets a physical-only property - no
+  // clearcoat, transmission, sheen, iridescence or ior - so the two render the
+  // same lit dielectric while Physical compiles all of those branches anyway.
+  // Measured neutral on the deck's build cost, which turned out to be texture
+  // upload rather than shader linking, but there is no reason to keep
+  // compiling branches this scene never uses.
+  const backMat = new MeshStandardMaterial({
     map: back,
     bumpMap: paper,
     bumpScale: 0.5,
@@ -111,7 +117,7 @@ export function build(width: number, height: number): Built {
     metalness: 0,
     envMapIntensity: 0.2,
   })
-  const edgeMat = new MeshPhysicalMaterial({
+  const edgeMat = new MeshStandardMaterial({
     color: 0xded4bd,
     bumpMap: paper,
     bumpScale: 0.7,
@@ -120,7 +126,7 @@ export function build(width: number, height: number): Built {
   })
   const frontMats = frontTex.map(
     (map) =>
-      new MeshPhysicalMaterial({
+      new MeshStandardMaterial({
         map,
         bumpMap: paper,
         bumpScale: 0.22,
@@ -138,7 +144,7 @@ export function build(width: number, height: number): Built {
     if (bigDone.has(i)) return
     bigDone.add(i)
     const m = MOMENTS[i]
-    heldMats[i].map = frontTexture(m.src, m.place, TINTS[i % TINTS.length], 2)
+    heldMats[i].map = frontTexture(m.src, m.place, TINTS[i % TINTS.length], 4)
     heldMats[i].needsUpdate = true
   }
 

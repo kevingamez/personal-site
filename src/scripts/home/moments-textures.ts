@@ -4,8 +4,15 @@
 
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
 
-export const TW = 512
-export const TH = 716
+// Swarm resolution, not print resolution. Uploading eleven textures at the old
+// 512x716 was the single biggest cost in building this deck: ~410ms of frozen
+// frame on a 4x-throttled machine, and shrinking them was the only change that
+// moved it. A card in the swarm is never more than a couple of hundred pixels
+// tall, and the one the visitor is HOLDING does not use this size at all -
+// bigFor() redraws it through the `scale` argument below, which is why that
+// scale went to 4 when this halved. A held card is byte for byte what it was.
+export const TW = 256
+export const TH = 358
 
 const STOCK = '#f6f2e7'
 const INK = '#9d2129'
@@ -62,8 +69,8 @@ function roundRect(
 // is the stock showing through the ink, not white drawn on top. Two-way
 // symmetric so it reads the same whichever end is up.
 export function backTexture(): CanvasTexture {
-  const W = 768
-  const H = 1072
+  const W = 512
+  const H = 715
   const c = document.createElement('canvas')
   c.width = W
   c.height = H
