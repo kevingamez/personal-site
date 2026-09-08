@@ -72,6 +72,7 @@
 }
 
 /* Header action: the one solid control in the bar. */
+
 /* Language switch shares the same treatment as the primary action for visual
    consistency and because violet must stay reserved for focus and selection only.
    So the button uses the same muted ink-on-ink treatment as the other control
