@@ -7,7 +7,7 @@ interface Props {
 
 export function Nav({ meta, t }: Props) {
   const isEnglish = meta.htmlLang === 'en'
-  const languageSwitchHref = isEnglish ? '/es/' : '/'
+  const languageSwitchHref = isEnglish ? '/?lang=es' : '/?lang=en'
   const languageSwitchLabel = isEnglish ? t.switchToSpanish : t.switchToEnglish
   const languageSwitchAria = isEnglish ? t.switchToSpanishAria : t.switchToEnglishAria
   const languageSwitchLang = isEnglish ? 'es' : 'en'
