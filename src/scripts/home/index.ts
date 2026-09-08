@@ -115,16 +115,17 @@ whenVisible(
 // expensive than it is. Benchmarks that showed a 300-500ms stall here were all
 // measuring software rendering. On a real GPU (headless: false) the same scroll
 // runs at 9.3ms per frame. If you are profiling this, launch headed.
-whenVisible(
-  '[data-moments-lazy]',
-  () => {
-    loadLazy(async () => {
-      const moments = await import('./moments')
-      moments.initMoments()
-    })
-  },
-  '400px 0px'
-)
+// Section commented out in HomePage.tsx, same reason as the GitHub block.
+// whenVisible(
+//   '[data-moments-lazy]',
+//   () => {
+//     loadLazy(async () => {
+//       const moments = await import('./moments')
+//       moments.initMoments()
+//     })
+//   },
+//   '400px 0px'
+// )
 
 // Section commented out in HomePage.tsx, same reason as the GitHub block.
 // whenVisible(

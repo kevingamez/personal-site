@@ -72,7 +72,12 @@
 }
 
 /* Header action: the one solid control in the bar. */
-.say-hi {
+/* Language switch shares the same treatment as the primary action for visual
+   consistency and because violet must stay reserved for focus and selection only.
+   So the button uses the same muted ink-on-ink treatment as the other control
+   in the bar. */
+.say-hi,
+.lang-switch {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -86,7 +91,8 @@
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 
-.say-hi:hover {
+.say-hi:hover,
+.lang-switch:hover {
   background: #26262b;
 }
 
@@ -126,7 +132,8 @@
     gap: 10px;
   }
 
-  .say-hi {
+  .say-hi,
+  .lang-switch {
     padding: 8px 14px;
   }
 }

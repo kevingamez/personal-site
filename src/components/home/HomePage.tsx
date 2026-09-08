@@ -14,7 +14,7 @@ import { Hero } from './Hero'
 // import { About } from './About'
 import { Experience } from './Experience'
 import { Work } from './Work'
-import { Deck } from './Deck'
+// import { Deck } from './Deck'
 // import { Github } from './Github'
 import { Strava } from './Strava'
 // import { Writing } from './Writing'
@@ -26,7 +26,7 @@ import { HomeScripts } from './HomeScripts'
 
 const buildId = 'a7f3c91'
 
-// About, GitHub and Writing are commented out rather than deleted: the copy,
+// About, Deck, GitHub and Writing are commented out rather than deleted: the copy,
 // the components and the build-time GitHub fetch all stay in place, so putting
 // a section back is a matter of uncommenting its import, its element here, and
 // its links in Nav.tsx and Footer.tsx.
@@ -51,12 +51,12 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
         {/* <About t={t.about} tGol={t.hero} /> */}
         <Experience t={t.experience} />
         <Work t={t.work} />
-        <Deck t={t.deck} />
+        {/* <Deck t={t.deck} /> */}
         {/* <Github t={t.github} tYear={t.yearRun} stats={stats} /> */}
+        <Console t={t.console} />
+        {/* <Writing t={t.writing} /> */}
         <div className="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
         <Strava t={t.strava} />
-        {/* <Writing t={t.writing} /> */}
-        <Console t={t.console} />
         <Contact t={t.contact} />
       </main>
       <Footer t={t.footer} buildId={buildId} />

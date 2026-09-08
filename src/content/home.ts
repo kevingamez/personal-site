@@ -66,6 +66,10 @@ export interface HomeStrings {
     console: string
     resume: string
     sayHi: string
+    switchToSpanish: string
+    switchToEnglish: string
+    switchToSpanishAria: string
+    switchToEnglishAria: string
   }
   hero: {
     metaPlace: string // location label (live clock appended in the component)

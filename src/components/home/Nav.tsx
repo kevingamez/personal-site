@@ -6,6 +6,12 @@ interface Props {
 }
 
 export function Nav({ meta, t }: Props) {
+  const isEnglish = meta.htmlLang === 'en'
+  const languageSwitchHref = isEnglish ? '/es/' : '/'
+  const languageSwitchLabel = isEnglish ? t.switchToSpanish : t.switchToEnglish
+  const languageSwitchAria = isEnglish ? t.switchToSpanishAria : t.switchToEnglishAria
+  const languageSwitchLang = isEnglish ? 'es' : 'en'
+
   return (
     <nav className="nav">
       {/* The bar is a glass capsule floating inside the gutter rather than a
@@ -16,24 +22,29 @@ export function Nav({ meta, t }: Props) {
           <a className="brand" href={meta.brandHref}>
             Kevin Gámez
           </a>
-          {/* Every section on the page, in the order the page presents them.
-            Four of the nine used to be missing here (the deck, Strava, the
-            writing feed, the console), which left them reachable only by
-            scrolling far enough to find them. */}
+          {/* Section links follow the order the page presents them. */}
           <div className="nav-links">
             {/* <a href="#about">{t.about}</a> */}
             <a href="#experience">{t.experience}</a>
             <a href="#work">{t.work}</a>
-            <a href="#deck">{t.deck}</a>
+            {/* <a href="#deck">{t.deck}</a> */}
             {/* <a href="#github">{t.github}</a> */}
-            <a href="#strava">{t.strava}</a>
-            {/* <a href="#writing">{t.writing}</a> */}
             <a href="#console">{t.console}</a>
+            {/* <a href="#writing">{t.writing}</a> */}
+            <a href="#strava">{t.strava}</a>
             <a href="/resume/">{t.resume}</a>
           </div>
           <div className="nav-right">
             <a className="say-hi" href="#contact">
               {t.sayHi}
+            </a>
+            <a
+              className="lang-switch"
+              href={languageSwitchHref}
+              hrefLang={languageSwitchLang}
+              aria-label={languageSwitchAria}
+            >
+              {languageSwitchLabel}
             </a>
           </div>
         </div>

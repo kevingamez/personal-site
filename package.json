@@ -16,7 +16,8 @@
     "test:install": "playwright install --with-deps chromium",
     "lint:css": "stylelint \"src/**/*.css\" \"app/**/*.css\"",
     "check:size": "node scripts/check-size.mjs",
-    "audit": "pnpm audit --audit-level high"
+    "audit": "pnpm audit --audit-level high",
+    "extract:us-programs": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/extract-program-funding.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -63,9 +64,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.9.0",
     "prettier": "^3.8.3",
-    "stylelint": "^17.14.1",
+    "stylelint": "^17.15.0",
     "stylelint-config-standard": "^40.0.0",
-    "tsx": "^4.20.6",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.66.0"
   }

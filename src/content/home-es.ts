@@ -38,6 +38,10 @@ export const es: HomeStrings = {
     console: 'Pregúntame',
     resume: 'CV',
     sayHi: 'Escríbeme ↗',
+    switchToSpanish: 'Ver en Español',
+    switchToEnglish: 'Ver en Inglés',
+    switchToSpanishAria: 'Ver este sitio en español',
+    switchToEnglishAria: 'Ver este sitio en inglés',
   },
   hero: {
     metaPlace: 'Bogotá, Colombia',
