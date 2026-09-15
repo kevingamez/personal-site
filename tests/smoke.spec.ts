@@ -19,6 +19,8 @@ function isThirdPartyResourceError(text: string): boolean {
   return (
     text.includes('Failed to load resource') ||
     text.includes('vercel-scripts.com') ||
+    text.includes('/_vercel/insights/script.js') ||
+    text.includes('/_vercel/speed-insights/script.js') ||
     text.includes('/api/chat') ||
     text.includes('/api/strava')
   )

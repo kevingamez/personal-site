@@ -20,15 +20,6 @@ function runWhenIdle(fn: () => void, timeout = 2500): void {
   }, 1200)
 }
 
-async function loadVercelTelemetry(): Promise<void> {
-  const [{ inject }, { injectSpeedInsights }] = await Promise.all([
-    import('@vercel/analytics'),
-    import('@vercel/speed-insights'),
-  ])
-  inject()
-  injectSpeedInsights()
-}
-
 export function bootstrapClient(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
@@ -39,8 +30,6 @@ export function bootstrapClient(): void {
   initGa()
 
   runWhenIdle(() => {
-    // Privacy-first first-party analytics. Cookieless by default.
-    void loadVercelTelemetry().catch((e) => log.warn('vercel analytics inject failed', e))
     loadGaScript()
   })
 

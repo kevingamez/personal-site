@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Viewport } from 'next'
 import { SiteChrome } from '@/components/site/SiteChrome'
 import { siteFontClass } from '@/lib/fonts'
@@ -18,6 +20,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <SiteChrome />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
