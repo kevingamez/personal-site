@@ -16,6 +16,10 @@ test('latest activity block renders from the payload', async ({ page }) => {
   await expect(latest).toBeVisible()
   await expect(latest.locator('[data-name]')).toHaveAttribute('href', /strava\.com\/activities\//)
   await expect(latest.locator('time')).toHaveText(/.+/)
+  // Every longest-effort card carries its date.
+  const dates = page.locator('#sv-longest .sv-feat-date')
+  await expect(dates.first()).toHaveText(/\d{4}/)
+  expect(await dates.count()).toBe(await page.locator('#sv-longest .sv-feat').count())
 })
 
 test('a payload without latest hides the block, not the section', async ({ page }) => {
