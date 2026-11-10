@@ -4,7 +4,7 @@
 .sv-latest {
   display: grid;
   grid-template-areas: 'route meta stats';
-  grid-template-columns: 176px minmax(0, 1fr) auto;
+  grid-template-columns: 264px minmax(0, 1fr) auto;
   align-items: center;
   gap: 0 28px;
   margin-bottom: 16px;
@@ -85,7 +85,7 @@
     grid-template-areas:
       'route meta'
       'stats stats';
-    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-columns: 208px minmax(0, 1fr);
     gap: 0 18px;
     padding: 12px 16px 16px 12px;
   }
@@ -104,18 +104,29 @@
   }
 }
 
-/* Phones: a smaller route beside the name, stats in a two by two grid. */
+/* Phones: the map runs full width on top, like the cards below it, then the
+   name and a two by two grid of stats. */
 @media (width <= 560px) {
   .sv-latest,
   .sv-latest.sv-feat--noroute {
-    grid-template-columns: 104px minmax(0, 1fr);
-    gap: 0 14px;
-    padding: 10px 14px 14px 10px;
+    grid-template-areas: 'route' 'meta' 'stats';
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 10px 10px 14px;
   }
 
   .sv-latest.sv-feat--noroute {
-    grid-template-columns: minmax(0, 1fr);
-    padding-left: 14px;
+    grid-template-areas: 'meta' 'stats';
+    padding: 14px;
+  }
+
+  .sv-latest-route {
+    margin-bottom: 12px;
+  }
+
+  .sv-latest-meta,
+  .sv-latest-stats {
+    padding-inline: 4px;
   }
 
   .sv-latest-name {

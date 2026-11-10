@@ -60,7 +60,12 @@ function drawnRoute(routeEl: Element, a: Activity, card: Element, failedImg?: HT
 
 // Route panel for a card: Mapbox static map when there is a token and a raw
 // polyline, otherwise the drawn line (which hides the panel if there is no shape).
-export function mountRoute(routeEl: Element | null, a: Activity, card: Element): void {
+export function mountRoute(
+  routeEl: Element | null,
+  a: Activity,
+  card: Element,
+  compact = false
+): void {
   if (routeEl && MAPBOX_TOKEN && a.polyline) {
     const img = document.createElement('img')
     img.className = 'sv-feat-map'
@@ -68,7 +73,7 @@ export function mountRoute(routeEl: Element | null, a: Activity, card: Element):
     img.loading = 'lazy'
     img.decoding = 'async'
     img.addEventListener('error', () => drawnRoute(routeEl, a, card, img))
-    img.src = mapboxUrl(a.polyline)
+    img.src = mapboxUrl(a.polyline, compact)
     routeEl.appendChild(img)
   } else if (routeEl) {
     drawnRoute(routeEl, a, card)
