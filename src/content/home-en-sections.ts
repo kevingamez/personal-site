@@ -39,6 +39,7 @@ export const enSections: Pick<
     statActivities: 'activities',
     weeklyTitle: 'Weekly distance',
     weeklyPeakLabel: 'peak',
+    latestLabel: 'Latest activity',
     featuredLabel: 'Longest',
     featDist: 'distance',
     featElev: 'elevation',

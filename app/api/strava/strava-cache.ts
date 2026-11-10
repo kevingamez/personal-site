@@ -5,7 +5,7 @@ import { Redis } from '@upstash/redis'
 
 import type { Payload } from './strava-shape'
 
-const CACHE_KEY = 'kg-strava:v4'
+const CACHE_KEY = 'kg-strava:v5'
 const REDIS_TIMEOUT_MS = 2000
 
 const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL

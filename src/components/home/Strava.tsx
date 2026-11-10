@@ -55,6 +55,49 @@ export function Strava({ t }: Props) {
           </div>
         </div>
 
+        {/* Most recent activity, between the all-time band and the records:
+            filled and unhidden by strava-latest.ts, so it stays out of the
+            page when there is no activity. The date is relative, so it is
+            computed on the client and the server ships the slot empty. */}
+        <article className="sv-latest glass" id="sv-latest" aria-labelledby="sv-latest-lbl" hidden>
+          <div className="sv-latest-route" data-route aria-hidden="true"></div>
+          <div className="sv-latest-meta">
+            <div className="sv-latest-label" id="sv-latest-lbl">
+              {t.latestLabel}
+            </div>
+            <a
+              className="sv-latest-name"
+              data-name
+              href={t.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              -
+            </a>
+            <div className="sv-latest-sub">
+              <span data-sport></span>, <time></time>
+            </div>
+          </div>
+          <div className="sv-feat-stats sv-latest-stats">
+            <div>
+              <span data-dist>0</span>
+              <em>{t.featDist}</em>
+            </div>
+            <div>
+              <span data-elev>0</span>
+              <em>{t.featElev}</em>
+            </div>
+            <div>
+              <span data-time>0</span>
+              <em>{t.featTime}</em>
+            </div>
+            <div>
+              <span data-speed>0</span>
+              <em data-speedlabel>{t.featSpeed}</em>
+            </div>
+          </div>
+        </article>
+
         {/* Longest effort per sport (cards built by the client from the template) */}
         <div className="sv-longest" id="sv-longest"></div>
         {/* React cannot reconcile children of <template> (the browser parses

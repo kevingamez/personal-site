@@ -75,6 +75,15 @@ section {
   color: var(--muted);
 }
 
+/* On touch, grow the hit area to 44px without moving the text: the padding
+   is paid back by an equal negative margin, so the layout is unchanged. */
+@media (pointer: coarse) {
+  .arrow-link {
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+}
+
 @media (width >= 900px) and (height <= 950px) {
   section {
     padding-top: 64px;

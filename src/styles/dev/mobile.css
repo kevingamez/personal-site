@@ -1,3 +1,13 @@
+/* chrome.css hides the activity bar once the grid collapses to one column,
+   but activity-bar.css is imported after it and sets display:flex again, so
+   on phones the icon strip rendered as a tall empty column above the
+   explorer. Restated here, the last file in the cascade. */
+@media (width <= 880px) {
+  .activity-bar {
+    display: none;
+  }
+}
+
 /* Small screens: the IDE chrome is desktop-shaped. Hide the decorative bits
    so the top bar and status bar stop colliding, and let the tab strip scroll.
    The editor and cards below already stack correctly. */

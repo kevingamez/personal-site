@@ -2,14 +2,16 @@
 //
 // Serves a sanitized snapshot of the full Strava history for the home
 // "movement" section: all-time totals, the longest effort per sport (each with
-// a route polyline for an optional Mapbox map), and a few insight metrics.
+// a route polyline for an optional Mapbox map), the most recent activity, and
+// a few insight metrics.
 //
 // Platform notes baked in: App Router Web-handler form (a single exported GET;
 // other methods get the framework's automatic 405); response shaping lives in
 // ./strava-shape, Strava I/O in ./strava-token, KV caching in ./strava-cache.
 //
 // Privacy: only the featured longest efforts carry a raw polyline (for the map
-// the user opted into). Hard timeouts on every awaited call so it can't hang.
+// the user opted into). The latest activity ships its normalized route shape
+// only, never coordinates. Hard timeouts on every awaited call so it can't hang.
 //
 // Required env: STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN.
 // Optional env (shared with /api/chat): UPSTASH/KV REST url + token for caching.

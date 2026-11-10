@@ -22,6 +22,8 @@ import {
   spdVal,
 } from './strava-units'
 
+const NOROUTE = 'sv-feat--noroute'
+
 // No Mapbox token (or the static map failed to load): draw the route line
 // itself as an inline SVG - an ink stroke on the card, in place of the map.
 // The server always sends `route`, so the panel shows a real shape even when
@@ -29,7 +31,7 @@ import {
 function drawnRoute(routeEl: Element, a: Activity, card: Element, failedImg?: HTMLElement): void {
   const r = a.route
   if (!r || !Array.isArray(r.points) || r.points.length < 2 || !r.w || !r.h) {
-    card.classList.add('sv-feat--noroute')
+    card.classList.add(NOROUTE)
     return
   }
   failedImg?.remove()
@@ -56,6 +58,51 @@ function drawnRoute(routeEl: Element, a: Activity, card: Element, failedImg?: HT
   routeEl.appendChild(svg)
 }
 
+// Route panel for a card: Mapbox static map when there is a token and a raw
+// polyline, otherwise the drawn line (which hides the panel if there is no shape).
+export function mountRoute(routeEl: Element | null, a: Activity, card: Element): void {
+  if (routeEl && MAPBOX_TOKEN && a.polyline) {
+    const img = document.createElement('img')
+    img.className = 'sv-feat-map'
+    img.alt = `Route map, ${a.name}`
+    img.loading = 'lazy'
+    img.decoding = 'async'
+    img.addEventListener('error', () => drawnRoute(routeEl, a, card, img))
+    img.src = mapboxUrl(a.polyline)
+    routeEl.appendChild(img)
+  } else if (routeEl) {
+    drawnRoute(routeEl, a, card)
+  } else {
+    card.classList.add(NOROUTE)
+  }
+}
+
+// Distance, elevation, moving time and pace/speed into the [data-*] slots
+// under `root` (a card fragment or the latest-activity block).
+export function fillStats(root: ParentNode, a: Activity): void {
+  countUpEl(
+    root.querySelector('[data-dist]'),
+    distVal(a.distanceM),
+    (n) => `${n.toFixed(1)} ${DUNIT}`
+  )
+  countUpEl(
+    root.querySelector('[data-elev]'),
+    elevVal(a.elevationM),
+    (n) => `${Math.round(n).toLocaleString()} ${EUNIT}`
+  )
+  countUpEl(root.querySelector('[data-time]'), a.movingTime, (n) => dur(n))
+  // Runs/hikes report pace; rides report speed.
+  const speedEl = root.querySelector('[data-speed]')
+  const speedLabelEl = root.querySelector('[data-speedlabel]')
+  if (FOOT_SPORTS.has(a.sportType)) {
+    if (speedLabelEl) speedLabelEl.textContent = PACE_LABEL
+    if (speedEl) speedEl.textContent = pace(a.distanceM, a.movingTime)
+  } else {
+    if (speedLabelEl) speedLabelEl.textContent = SPEED_LABEL
+    countUpEl(speedEl, spdVal(a.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
+  }
+}
+
 export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts: Activity[]): void {
   host.replaceChildren()
   for (const a of acts) {
@@ -70,42 +117,8 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
       nameEl.textContent = a.name
       nameEl.href = a.url
     }
-    const routeEl = frag.querySelector('[data-route]')
-    if (routeEl && MAPBOX_TOKEN && a.polyline) {
-      const img = document.createElement('img')
-      img.className = 'sv-feat-map'
-      img.alt = `Route map, ${a.name}`
-      img.loading = 'lazy'
-      img.decoding = 'async'
-      img.addEventListener('error', () => drawnRoute(routeEl, a, card, img))
-      img.src = mapboxUrl(a.polyline)
-      routeEl.appendChild(img)
-    } else if (routeEl) {
-      drawnRoute(routeEl, a, card)
-    } else {
-      card.classList.add('sv-feat--noroute')
-    }
-    countUpEl(
-      frag.querySelector('[data-dist]'),
-      distVal(a.distanceM),
-      (n) => `${n.toFixed(1)} ${DUNIT}`
-    )
-    countUpEl(
-      frag.querySelector('[data-elev]'),
-      elevVal(a.elevationM),
-      (n) => `${Math.round(n).toLocaleString()} ${EUNIT}`
-    )
-    countUpEl(frag.querySelector('[data-time]'), a.movingTime, (n) => dur(n))
-    // Runs/hikes report pace; rides report speed.
-    const speedEl = frag.querySelector('[data-speed]')
-    const speedLabelEl = frag.querySelector('[data-speedlabel]')
-    if (FOOT_SPORTS.has(a.sportType)) {
-      if (speedLabelEl) speedLabelEl.textContent = PACE_LABEL
-      if (speedEl) speedEl.textContent = pace(a.distanceM, a.movingTime)
-    } else {
-      if (speedLabelEl) speedLabelEl.textContent = SPEED_LABEL
-      countUpEl(speedEl, spdVal(a.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
-    }
+    mountRoute(frag.querySelector('[data-route]'), a, card)
+    fillStats(frag, a)
     host.appendChild(frag)
   }
 }

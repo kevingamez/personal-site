@@ -1,3 +1,4 @@
 /* Barrel for the Strava section styles - import order preserves the original cascade. */
 @import url('./strava-stats.css');
 @import url('./strava-featured.css');
+@import url('./strava-latest.css');

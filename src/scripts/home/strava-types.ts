@@ -49,5 +49,7 @@ export interface Payload {
   error?: boolean
   totals: Totals | null
   longestBySport: Activity[]
+  // Absent from snapshots cached before kg-strava:v5; treat like null.
+  latest?: Activity | null
   insights: Insights
 }

@@ -12,8 +12,8 @@ import { redis } from './chat-ratelimit'
 // about movement/training), so ordinary chats stay cheap. We read the cache
 // directly - never the Strava API - so there's no OAuth round-trip or cold-fetch
 // latency; a cold cache or unconfigured Strava degrades gracefully. Keep
-// STRAVA_CACHE_KEY in sync with api/strava.ts (currently 'kg-strava:v4').
-const STRAVA_CACHE_KEY = 'kg-strava:v4'
+// STRAVA_CACHE_KEY in sync with api/strava.ts (currently 'kg-strava:v5').
+const STRAVA_CACHE_KEY = 'kg-strava:v5'
 const STRAVA_READ_TIMEOUT_MS = 1500
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -34,6 +34,13 @@ interface StravaSnapshot {
     elevationM: number
     startDate: string
   }[]
+  latest?: {
+    name: string
+    sportType: string
+    distanceM: number
+    movingTime: number
+    startDate: string
+  } | null
   insights?: {
     biggestWeekStart: string | null
     biggestWeekDistanceM: number
@@ -77,6 +84,12 @@ async function stravaSnapshotText(): Promise<string | null> {
       )
     }
   }
+  const last = snap.latest
+  if (last) {
+    lines.push(
+      `- Most recent activity: ${last.sportType} "${last.name}" on ${last.startDate.slice(0, 10)}, ${fmtKm(last.distanceM)} km in ${fmtHm(last.movingTime)}.`
+    )
+  }
   const ins = snap.insights
   if (ins) {
     const bits: string[] = []
@@ -103,7 +116,7 @@ async function stravaSnapshotText(): Promise<string | null> {
 export const STRAVA_TOOL: Anthropic.Tool = {
   name: 'get_strava_stats',
   description:
-    "Get Kevin's real training data from Strava: all-time totals (distance, moving time, elevation, activity count, active days), the longest effort per sport, and insights (biggest week, biggest single climb, fastest average pace, busiest weekday). Call this for ANY question about Kevin's running, cycling, hiking, swimming, or training/fitness. Returns a cached snapshot refreshed about every 10 minutes; takes no arguments.",
+    "Get Kevin's real training data from Strava: all-time totals (distance, moving time, elevation, activity count, active days), the longest effort per sport, the most recent activity, and insights (biggest week, biggest single climb, fastest average pace, busiest weekday). Call this for ANY question about Kevin's running, cycling, hiking, swimming, or training/fitness. Returns a cached snapshot refreshed about every 10 minutes; takes no arguments.",
   input_schema: { type: 'object', properties: {} },
 }
 

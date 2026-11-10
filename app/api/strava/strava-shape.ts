@@ -55,6 +55,10 @@ export interface Payload {
     activeDays: number
   } | null
   longestBySport: Activity[]
+  // Most recent activity by start_date. Ships the pre-projected route shape
+  // only (no raw polyline): a fresh track is the one that could place the
+  // owner right now, and the compact thumbnail draws the line itself.
+  latest: Activity | null
   insights: {
     biggestWeekStart: string | null
     biggestWeekDistanceM: number
@@ -166,8 +170,10 @@ export function shape(raw: RawActivity[]): Payload {
   const bySport = new Map<string, RawActivity>()
   let biggestClimb: RawActivity | null = null
   let fastest: RawActivity | null = null
+  let latest: RawActivity | null = null
 
   for (const a of raw) {
+    if (!latest || Date.parse(a.start_date) > Date.parse(latest.start_date)) latest = a
     const dist = a.distance || 0
     distanceM += dist
     movingTime += a.moving_time || 0
@@ -215,6 +221,7 @@ export function shape(raw: RawActivity[]): Payload {
     generatedAt: new Date().toISOString(),
     totals: { distanceM, movingTime, elevationM, count: raw.length, activeDays: activeDays.size },
     longestBySport,
+    latest: latest ? { ...toActivity(latest), polyline: null } : null,
     insights: {
       biggestWeekStart,
       biggestWeekDistanceM,
@@ -236,6 +243,7 @@ export function emptyPayload(extra: Partial<Payload>): Payload {
     generatedAt: new Date().toISOString(),
     totals: null,
     longestBySport: [],
+    latest: null,
     insights: {
       biggestWeekStart: null,
       biggestWeekDistanceM: 0,

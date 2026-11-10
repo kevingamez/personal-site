@@ -39,6 +39,7 @@ export const esSections: Pick<
     statActivities: 'actividades',
     weeklyTitle: 'Distancia semanal',
     weeklyPeakLabel: 'pico',
+    latestLabel: 'Última actividad',
     featuredLabel: 'Más larga',
     featDist: 'distancia',
     featElev: 'elevación',

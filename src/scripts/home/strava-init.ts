@@ -1,6 +1,7 @@
 // Init/orchestration: fetch the snapshot, resolve units, render, and play count-ups on scroll-in.
 
 import type { Payload } from './strava-types'
+import { renderLatest } from './strava-latest'
 import { fillInsights, renderLongest } from './strava-render'
 import {
   DUNIT,
@@ -69,6 +70,8 @@ export async function initStrava(): Promise<void> {
   countUp('sv-hours', t.movingTime / 3600, (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1)))
   countUp('sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang))
   countUp('sv-acts', t.count, (n) => String(Math.round(n)))
+
+  renderLatest(data.latest, lang)
 
   const host = document.getElementById('sv-longest')
   const tpl = document.getElementById('sv-feat-tpl') as HTMLTemplateElement | null

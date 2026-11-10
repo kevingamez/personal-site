@@ -52,6 +52,8 @@ for (const path of ['/', '/es/']) {
     await page.goto(path)
     await expect(page.locator('#strava')).toHaveCount(1)
     await expect(page.locator('#strava .sec-title')).toHaveText(/.+/)
+    // Latest-activity block ships in the markup; the client unhides it.
+    await expect(page.locator('#strava #sv-latest')).toHaveCount(1)
   })
 }
 
