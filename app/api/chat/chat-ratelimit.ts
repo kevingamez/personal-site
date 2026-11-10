@@ -10,9 +10,8 @@ const GLOBAL_DAILY_LIMIT = 1000
 
 // ───────── Rate limit ─────────
 //
-// Per-IP daily cap. Persistent via Upstash / Vercel KV when configured, with an
-// in-memory fallback (correct only per warm instance) when KV is absent or
-// momentarily unreachable. The IP comes from Vercel-set headers only, so it
+// Per-IP daily cap. Persistent via Upstash / Vercel KV when configured. The
+// in-memory fallback (correct only per warm instance) is for local development. The IP comes from Vercel-set headers only, so it
 // can't be spoofed or rotated by the client (see clientIp in the handler).
 
 const kvUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
@@ -69,18 +68,30 @@ if (process.env.ANTHROPIC_API_KEY && redis === null) {
   )
 }
 
-export async function checkGlobalLimit(): Promise<boolean> {
-  if (!globalLimiter) return true
+// Both checks FAIL CLOSED when the store errors in a deployment: an in-memory
+// count is per instance, so falling back to it (or waving the request through)
+// would leave model spend unbounded for as long as the outage lasts. The
+// handler turns `unavailable` into a 503.
+export interface LimitResult {
+  allowed: boolean
+  remaining: number
+  unavailable?: boolean
+}
+const UNAVAILABLE: LimitResult = { allowed: false, remaining: 0, unavailable: true }
+
+export async function checkGlobalLimit(): Promise<LimitResult> {
+  if (!globalLimiter) return { allowed: true, remaining: GLOBAL_DAILY_LIMIT }
   try {
-    return (await globalLimiter.limit('all')).success
+    const r = await globalLimiter.limit('all')
+    return { allowed: r.success, remaining: r.remaining }
   } catch {
-    return true // KV hiccup: don't hard-fail; the per-IP limit still applies.
+    return IS_LOCAL_DEV ? { allowed: true, remaining: GLOBAL_DAILY_LIMIT } : UNAVAILABLE
   }
 }
 
 const buckets = new Map<string, { count: number; reset: number }>()
 
-function memoryLimit(ip: string): { allowed: boolean; remaining: number } {
+function memoryLimit(ip: string): LimitResult {
   const now = Date.now()
   const day = 24 * 60 * 60 * 1000
   let b = buckets.get(ip)
@@ -93,14 +104,13 @@ function memoryLimit(ip: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: DAILY_LIMIT - b.count }
 }
 
-export async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+export async function checkRateLimit(ip: string): Promise<LimitResult> {
   if (persistentLimiter) {
     try {
       const r = await persistentLimiter.limit(ip)
       return { allowed: r.success, remaining: r.remaining }
     } catch {
-      // Redis hiccup: degrade to the in-memory limiter instead of 500-ing.
-      return memoryLimit(ip)
+      return IS_LOCAL_DEV ? memoryLimit(ip) : UNAVAILABLE
     }
   }
   return memoryLimit(ip)
