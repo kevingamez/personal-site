@@ -97,6 +97,20 @@
   color: var(--coral);
 }
 
+.sv-feat-date {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  font-weight: var(--w-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.sv-feat-date:empty {
+  display: none;
+}
+
 .sv-feat-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
