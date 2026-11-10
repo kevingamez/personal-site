@@ -96,7 +96,13 @@ whenVisible(
 //   '700px 0px'
 // )
 
-whenVisible(
+// The section ships hidden and only appears once /api/strava has answered, so
+// waiting for the visitor to scroll near it meant they arrived to a gap and
+// watched the stats pop in a beat later. It now loads as soon as the page is
+// idle (a 3 KB chunk and one CDN-cached JSON response; the maps are lazy
+// images and the count-ups still wait for the section to be on screen), with
+// the scroll trigger kept for a visitor who gets there first.
+const startStrava = whenVisible(
   '[data-strava-lazy-anchor]',
   () => {
     loadLazy(async () => {
@@ -106,6 +112,7 @@ whenVisible(
   },
   '900px 0px'
 )
+runWhenIdle(startStrava, 1500)
 
 // A second WebGL context on a page that already runs one, so it waits until the
 // box is actually near the viewport.
