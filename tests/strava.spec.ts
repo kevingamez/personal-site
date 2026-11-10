@@ -26,7 +26,8 @@ test('a payload without latest hides the block, not the section', async ({ page 
 
 test('a malformed latest hides the block, not the section', async ({ page }) => {
   const sample = devSample()
-  const broken = { ...sample.latest, route: { points: [1, 2, 3], w: 10, h: 10 } }
+  // No polyline, so the block takes the drawn-route path, which the bad points break.
+  const broken = { ...sample.latest, polyline: null, route: { points: [1, 2, 3], w: 10, h: 10 } }
   await openWith(page, { ...sample, latest: broken })
   await expect(page.locator('#sv-latest')).toBeHidden()
   await expect(page.locator('#sv-longest > *').first()).toBeVisible()

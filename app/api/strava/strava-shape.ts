@@ -59,9 +59,9 @@ export interface Payload {
     activeDays: number
   } | null
   longestBySport: Activity[]
-  // Most recent activity by start_date. Ships the pre-projected route shape
-  // only (no raw polyline): a fresh track is the one that could place the
-  // owner right now, and the compact thumbnail draws the line itself.
+  // Most recent public activity by start_date. Carries the raw polyline like
+  // the longest-effort cards, so the block shows the same static map; the
+  // route shape is the fallback when the map cannot load.
   latest: Activity | null
   insights: {
     biggestWeekStart: string | null
@@ -242,7 +242,6 @@ export function shape(raw: RawActivity[]): Payload {
       ? {
           ...toActivity(latest),
           route: extractRoute(latest.map?.summary_polyline, LATEST_ROUTE_PTS),
-          polyline: null,
         }
       : null,
     insights: {

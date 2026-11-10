@@ -71,7 +71,7 @@ export function renderLatest(a: unknown, lang: string): void {
     const abs = el.querySelector('[data-abs]')
     if (abs) abs.textContent = ` (${full})`
   }
-  mountRoute(el.querySelector('[data-route]'), a, el)
+  mountRoute(el.querySelector('[data-route]'), a, el, true)
   fillStats(el, a)
   el.hidden = false
 }

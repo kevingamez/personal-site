@@ -153,12 +153,10 @@ function shape(raw) {
     generatedAt: new Date().toISOString(),
     totals: { distanceM, movingTime, elevationM, count: raw.length, activeDays: activeDays.size },
     longestBySport,
-    // Shape only, no raw polyline (mirrors strava-shape.ts).
     latest: latest
       ? {
           ...toAct(latest),
           route: extractRoute(latest.map?.summary_polyline, LATEST_ROUTE_PTS),
-          polyline: null,
         }
       : null,
     insights: {
