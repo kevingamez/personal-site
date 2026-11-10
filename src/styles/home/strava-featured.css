@@ -97,6 +97,19 @@
   color: var(--coral);
 }
 
+/* The whole card is the link: the name's hit area stretches over the card
+   (both are inside a positioned .glass), so a click anywhere, map included,
+   opens the activity on Strava. One real anchor, so keyboard and screen
+   reader users still meet a single link named after the activity. */
+.sv-feat-name::after,
+.sv-latest-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
 .sv-feat-date {
   display: block;
   margin-top: 5px;
