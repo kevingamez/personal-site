@@ -71,7 +71,12 @@ export async function initStrava(): Promise<void> {
   countUp('sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang))
   countUp('sv-acts', t.count, (n) => String(Math.round(n)))
 
-  renderLatest(data.latest, lang)
+  // Optional block: a malformed `latest` must not blank the whole section.
+  try {
+    renderLatest(data.latest, lang)
+  } catch {
+    document.getElementById('sv-latest')?.setAttribute('hidden', '')
+  }
 
   const host = document.getElementById('sv-longest')
   const tpl = document.getElementById('sv-feat-tpl') as HTMLTemplateElement | null

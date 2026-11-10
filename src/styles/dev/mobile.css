@@ -1,10 +1,14 @@
-/* chrome.css hides the activity bar once the grid collapses to one column,
-   but activity-bar.css is imported after it and sets display:flex again, so
-   on phones the icon strip rendered as a tall empty column above the
-   explorer. Restated here, the last file in the cascade. */
+/* Once the grid collapses to one column the activity bar becomes a horizontal
+   strip. Hiding it (as chrome.css does) would remove the only touch access to
+   search, source control, profile and settings; left as a column it rendered
+   as a tall empty block above the explorer. */
 @media (width <= 880px) {
   .activity-bar {
-    display: none;
+    display: flex;
+    flex-direction: row;
+    padding: 0 6px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
 }
 

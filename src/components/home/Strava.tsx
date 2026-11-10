@@ -76,6 +76,7 @@ export function Strava({ t }: Props) {
             </a>
             <div className="sv-latest-sub">
               <span data-sport></span>, <time></time>
+              <span className="sr-only" data-abs></span>
             </div>
           </div>
           <div className="sv-feat-stats sv-latest-stats">
