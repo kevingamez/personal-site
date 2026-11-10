@@ -110,6 +110,7 @@ export function fillStats(root: ParentNode, a: Activity): void {
 
 export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts: Activity[]): void {
   host.replaceChildren()
+  const lang = document.documentElement.lang || 'en'
   for (const a of acts) {
     const frag = tpl.content.cloneNode(true) as DocumentFragment
     const card = frag.querySelector('.sv-feat')
@@ -121,6 +122,13 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
     if (nameEl) {
       nameEl.textContent = a.name
       nameEl.href = a.url
+    }
+    // When the effort happened. These are all-time records, so the year matters.
+    const dateEl = frag.querySelector('[data-date]') as HTMLTimeElement | null
+    const when = new Date(a.startDate)
+    if (dateEl && !Number.isNaN(when.getTime())) {
+      dateEl.dateTime = a.startDate
+      dateEl.textContent = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(when)
     }
     mountRoute(frag.querySelector('[data-route]'), a, card)
     fillStats(frag, a)
