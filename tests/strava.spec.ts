@@ -16,6 +16,18 @@ test('latest activity block renders from the payload', async ({ page }) => {
   await expect(latest).toBeVisible()
   await expect(latest.locator('[data-name]')).toHaveAttribute('href', /strava\.com\/activities\//)
   await expect(latest.locator('time')).toHaveText(/.+/)
+  // A click anywhere on a card, including its map, lands on the activity link.
+  for (const sel of ['#sv-latest', '#sv-longest .sv-feat']) {
+    const card = page.locator(sel).first()
+    await card.scrollIntoViewIfNeeded()
+    const href = await card.locator('[data-name]').getAttribute('href')
+    const hit = await card.evaluate((el) => {
+      const r = el.getBoundingClientRect()
+      const at = document.elementFromPoint(r.left + r.width / 2, r.top + 24)
+      return at?.closest('a')?.getAttribute('href') ?? null
+    })
+    expect(hit).toBe(href)
+  }
   // Every longest-effort card carries its date.
   const dates = page.locator('#sv-longest .sv-feat-date')
   await expect(dates.first()).toHaveText(/\d{4}/)
