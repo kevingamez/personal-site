@@ -1,0 +1,160 @@
+/* Strava part 3: the "latest activity" strip between the totals band and the
+   longest-effort cards. Typography for the stats comes from .sv-feat-stats. */
+
+.sv-latest {
+  display: grid;
+  grid-template-areas: 'route meta stats';
+  grid-template-columns: 176px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 28px;
+  margin-bottom: 16px;
+  padding: 12px 24px 12px 12px;
+  border-radius: var(--r-lg);
+}
+
+.sv-latest[hidden] {
+  display: none;
+}
+
+/* Same out-of-flow map trick as .sv-feat-route: the drawn SVG cannot resize
+   the panel, so every route sits in the same 16/10 frame. */
+.sv-latest-route {
+  grid-area: route;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.sv-latest.sv-feat--noroute {
+  grid-template-areas: 'meta stats';
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-left: 24px;
+}
+
+.sv-latest.sv-feat--noroute .sv-latest-route {
+  display: none;
+}
+
+.sv-latest-meta {
+  grid-area: meta;
+  min-width: 0;
+}
+
+.sv-latest-label,
+.sv-latest-sub {
+  font-family: var(--font-sans);
+  font-size: var(--t-footnote);
+  font-weight: var(--w-medium);
+  color: var(--muted);
+}
+
+.sv-latest-name {
+  display: block;
+  margin: 6px 0 5px;
+  font-family: var(--font-sans);
+  font-size: var(--t-title-3);
+  font-weight: var(--w-semibold);
+  line-height: 1.15;
+  color: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sv-latest-name:hover {
+  color: var(--coral);
+}
+
+.sv-latest-sub time {
+  font-variant-numeric: tabular-nums;
+}
+
+.sv-latest-stats {
+  grid-area: stats;
+  grid-template-columns: repeat(4, auto);
+  gap: 10px 32px;
+  margin-top: 0;
+}
+
+/* Tablet: stats drop under the route and name, spread across the width. */
+@media (width <= 900px) {
+  .sv-latest,
+  .sv-latest.sv-feat--noroute {
+    grid-template-areas:
+      'route meta'
+      'stats stats';
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 0 18px;
+    padding: 12px 16px 16px 12px;
+  }
+
+  .sv-latest.sv-feat--noroute {
+    grid-template-areas: 'meta' 'stats';
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 16px;
+  }
+
+  .sv-latest-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px 16px;
+    margin-top: 14px;
+    padding: 0 0 0 4px;
+  }
+}
+
+/* Phones: a smaller route beside the name, stats in a two by two grid. */
+@media (width <= 560px) {
+  .sv-latest,
+  .sv-latest.sv-feat--noroute {
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 0 14px;
+    padding: 10px 14px 14px 10px;
+  }
+
+  .sv-latest.sv-feat--noroute {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 14px;
+  }
+
+  .sv-latest-name {
+    margin: 3px 0 2px;
+    font-size: var(--t-body);
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .sv-latest-label,
+  .sv-latest-sub {
+    font-size: var(--t-caption);
+  }
+
+  .sv-latest-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sv-latest {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease;
+  }
+
+  #strava.on .sv-latest {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (width >= 1180px) and (height <= 950px) {
+  .sv-latest {
+    margin-bottom: 12px;
+  }
+}

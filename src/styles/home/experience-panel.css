@@ -49,6 +49,14 @@
   color: var(--muted);
 }
 
+/* Touch: a 44px hit area around a 24px line, paid back by negative margin. */
+@media (pointer: coarse) {
+  .tl-backer-v {
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+}
+
 /* Logo well: the mark sits inside a pane of glass, never bleeding to its edge. */
 .tl-mark {
   width: 64px;

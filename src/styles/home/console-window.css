@@ -265,3 +265,13 @@
     height: clamp(240px, 34svh, 360px);
   }
 }
+
+/* While someone is typing into the console on a phone, the sticky contact bar
+   (mobile-cta.css) would sit right on top of the input and the on-screen
+   keyboard. Retract it until the field loses focus. */
+@media (width <= 899px) {
+  .mcta-on:has(#console-msg:focus) .mcta {
+    visibility: hidden;
+    transform: translateY(calc(100% + 8px));
+  }
+}

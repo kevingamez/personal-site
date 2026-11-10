@@ -169,6 +169,20 @@
   }
 }
 
+/* Phones: the three side figures share one row instead of orphaning the last. */
+@media (width <= 560px) {
+  .sv-hero {
+    padding: 22px 20px 20px;
+  }
+
+  .sv-hero-side {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+}
+
 .sv-tile-sub {
   font-family: var(--font-sans);
   font-size: var(--t-footnote);

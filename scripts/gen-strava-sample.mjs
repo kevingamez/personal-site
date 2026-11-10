@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 
 const EIFFEL_M = 330
 const ROUTE_PTS = 160
+const LATEST_ROUTE_PTS = 60
 const LONGEST_SPORTS = 3
 
 function decodePolyline(str) {
@@ -55,7 +56,7 @@ function extractRoute(poly, maxPts) {
   const span = Math.max(maxX - minX, maxY - minY)
   if (span === 0) return null
   const scale = 1000 / span
-  const step = Math.max(1, Math.floor(proj.length / maxPts))
+  const step = Math.max(1, Math.ceil(proj.length / maxPts))
   const points = []
   for (let i = 0; i < proj.length; i += step)
     points.push([Math.round((proj[i][0] - minX) * scale), Math.round((maxY - proj[i][1]) * scale)])
@@ -82,6 +83,12 @@ const toAct = (a) => ({
   route: extractRoute(a.map?.summary_polyline, ROUTE_PTS),
   polyline: a.map?.summary_polyline ?? null,
 })
+const showableAsLatest = (a) =>
+  !a.private &&
+  a.visibility !== 'only_me' &&
+  Number.isFinite(Date.parse(a.start_date)) &&
+  (a.distance || 0) > 0 &&
+  (a.moving_time || 0) > 0
 const toEffort = (a) => ({
   name: a.name,
   startDate: a.start_date,
@@ -101,7 +108,13 @@ function shape(raw) {
   const bySport = new Map()
   let climb = null
   let fast = null
+  let latest = null
   for (const a of raw) {
+    if (
+      showableAsLatest(a) &&
+      (!latest || Date.parse(a.start_date) > Date.parse(latest.start_date))
+    )
+      latest = a
     const dist = a.distance || 0
     distanceM += dist
     movingTime += a.moving_time || 0
@@ -140,6 +153,14 @@ function shape(raw) {
     generatedAt: new Date().toISOString(),
     totals: { distanceM, movingTime, elevationM, count: raw.length, activeDays: activeDays.size },
     longestBySport,
+    // Shape only, no raw polyline (mirrors strava-shape.ts).
+    latest: latest
+      ? {
+          ...toAct(latest),
+          route: extractRoute(latest.map?.summary_polyline, LATEST_ROUTE_PTS),
+          polyline: null,
+        }
+      : null,
     insights: {
       biggestWeekStart: bws,
       biggestWeekDistanceM: bwd,
@@ -191,8 +212,9 @@ for (let page = 1; page <= 10; page++) {
 const payload = shape(raw)
 const esc = JSON.stringify(payload).replace(/\\/g, '\\\\').replace(/'/g, "\\'")
 const out = `// AUTO-GENERATED dev snapshot of real Strava data (node scripts/gen-strava-sample.mjs).
-// Dev-only: shown under \`astro dev\`, which can't run /api/strava. The real, live
-// data flows through /api/strava in production. Stripped from prod builds.
+// Fallback snapshot rendered when /api/strava has no answer (missing Strava
+// credentials, or a failed request). The real, live data flows through
+// /api/strava. This module ships in the production bundle.
 export function devSample() {
   return JSON.parse(
     '${esc}'
@@ -204,5 +226,7 @@ console.log(
   'baked snapshot · activities:',
   Array.isArray(raw) ? raw.length : 0,
   '· sports:',
-  payload.longestBySport.map((a) => a.sportType).join(', ')
+  payload.longestBySport.map((a) => a.sportType).join(', '),
+  '· latest:',
+  payload.latest ? payload.latest.startDate : 'none'
 )

@@ -1,3 +1,17 @@
+/* Once the grid collapses to one column the activity bar becomes a horizontal
+   strip. Hiding it (as chrome.css does) would remove the only touch access to
+   search, source control, profile and settings; left as a column it rendered
+   as a tall empty block above the explorer. */
+@media (width <= 880px) {
+  .activity-bar {
+    display: flex;
+    flex-direction: row;
+    padding: 0 6px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
 /* Small screens: the IDE chrome is desktop-shaped. Hide the decorative bits
    so the top bar and status bar stop colliding, and let the tab strip scroll.
    The editor and cards below already stack correctly. */

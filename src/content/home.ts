@@ -186,6 +186,8 @@ export interface HomeStrings {
     statActivities: string
     weeklyTitle: string
     weeklyPeakLabel: string
+    // Eyebrow on the most-recent-activity block.
+    latestLabel: string
     featuredLabel: string
     featDist: string
     featElev: string

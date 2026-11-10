@@ -4,7 +4,11 @@
   background: var(--ink-surface);
   color: rgb(255 255 255 / 72%);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
-  padding: 56px 0 0;
+
+  /* The colophon is the slab's last line: without bottom padding it sat flush
+     against the viewport edge (and under the home indicator on notched
+     phones). */
+  padding: 56px 0 calc(32px + env(safe-area-inset-bottom));
   overflow: hidden;
 
   /* Same rim as the deck and the terminal. It only reads along the top edge
@@ -17,12 +21,6 @@
   grid-template-columns: 2fr 1fr 1fr;
   gap: 40px;
   margin-bottom: 40px;
-}
-
-@media (width <= 780px) {
-  .foot-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .foot-grid h3 {
@@ -78,6 +76,35 @@
   color: rgb(255 255 255 / 50%);
   flex-wrap: wrap;
   gap: 14px;
+}
+
+@media (width <= 780px) {
+  .foot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stacked, the link lists are a column of thumb targets: give each row the
+     full 44px instead of a 16px line with an 8px gap between. */
+  .foot-grid ul {
+    gap: 0;
+  }
+
+  .foot-grid ul a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .foot-grid h3 {
+    margin-bottom: 4px;
+  }
+
+  .colophon a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+  }
 }
 
 /* Oversized wordmark, clipped by the slab and drifting on a 28s loop. */

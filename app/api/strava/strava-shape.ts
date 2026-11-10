@@ -3,6 +3,8 @@
 
 const EIFFEL_M = 330
 const ROUTE_PTS = 160
+// The latest-activity thumbnail draws at ~100-180px wide: far fewer points.
+const LATEST_ROUTE_PTS = 60
 const LONGEST_SPORTS = 3
 
 export interface RawActivity {
@@ -16,6 +18,8 @@ export interface RawActivity {
   average_speed?: number
   start_date: string
   start_date_local?: string
+  private?: boolean
+  visibility?: string
   map?: { summary_polyline?: string }
 }
 interface Route {
@@ -55,6 +59,10 @@ export interface Payload {
     activeDays: number
   } | null
   longestBySport: Activity[]
+  // Most recent activity by start_date. Ships the pre-projected route shape
+  // only (no raw polyline): a fresh track is the one that could place the
+  // owner right now, and the compact thumbnail draws the line itself.
+  latest: Activity | null
   insights: {
     biggestWeekStart: string | null
     biggestWeekDistanceM: number
@@ -115,7 +123,7 @@ function extractRoute(poly: string | undefined, maxPts: number): Route | null {
   const span = Math.max(maxX - minX, maxY - minY)
   if (span === 0) return null
   const scale = 1000 / span
-  const step = Math.max(1, Math.floor(proj.length / maxPts))
+  const step = Math.max(1, Math.ceil(proj.length / maxPts))
   const points: number[][] = []
   for (let i = 0; i < proj.length; i += step) {
     points.push([Math.round((proj[i][0] - minX) * scale), Math.round((maxY - proj[i][1]) * scale)])
@@ -147,6 +155,15 @@ const toActivity = (a: RawActivity): Activity => ({
   route: extractRoute(a.map?.summary_polyline, ROUTE_PTS),
   polyline: a.map?.summary_polyline ?? null,
 })
+// Eligible for the "latest activity" block: public enough to show (the token
+// has activity:read_all, so private entries come back too), a parseable date,
+// and real movement (a gym or manual entry would render as a row of zeros).
+const showableAsLatest = (a: RawActivity): boolean =>
+  !a.private &&
+  a.visibility !== 'only_me' &&
+  Number.isFinite(Date.parse(a.start_date)) &&
+  (a.distance || 0) > 0 &&
+  (a.moving_time || 0) > 0
 const toEffort = (a: RawActivity): Effort => ({
   name: a.name,
   startDate: a.start_date,
@@ -166,8 +183,14 @@ export function shape(raw: RawActivity[]): Payload {
   const bySport = new Map<string, RawActivity>()
   let biggestClimb: RawActivity | null = null
   let fastest: RawActivity | null = null
+  let latest: RawActivity | null = null
 
   for (const a of raw) {
+    if (
+      showableAsLatest(a) &&
+      (!latest || Date.parse(a.start_date) > Date.parse(latest.start_date))
+    )
+      latest = a
     const dist = a.distance || 0
     distanceM += dist
     movingTime += a.moving_time || 0
@@ -215,6 +238,13 @@ export function shape(raw: RawActivity[]): Payload {
     generatedAt: new Date().toISOString(),
     totals: { distanceM, movingTime, elevationM, count: raw.length, activeDays: activeDays.size },
     longestBySport,
+    latest: latest
+      ? {
+          ...toActivity(latest),
+          route: extractRoute(latest.map?.summary_polyline, LATEST_ROUTE_PTS),
+          polyline: null,
+        }
+      : null,
     insights: {
       biggestWeekStart,
       biggestWeekDistanceM,
@@ -236,6 +266,7 @@ export function emptyPayload(extra: Partial<Payload>): Payload {
     generatedAt: new Date().toISOString(),
     totals: null,
     longestBySport: [],
+    latest: null,
     insights: {
       biggestWeekStart: null,
       biggestWeekDistanceM: 0,

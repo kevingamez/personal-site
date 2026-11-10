@@ -24,12 +24,20 @@
     system-ui,
     -apple-system,
     sans-serif;
+  box-sizing: border-box;
   min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 24px;
+}
+
+/* The root layout ships no reset, so the browser's 8px body margin framed the
+   page in white and pushed the 100svh slab into a scroll. Scoped with :has()
+   so it only applies on a document that is rendering this page. */
+body:has(.err500) {
+  margin: 0;
 }
 
 .err500 *,
