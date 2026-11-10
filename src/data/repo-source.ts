@@ -25,7 +25,13 @@ export function repoRef(): string {
   return sha && /^[0-9a-f]{7,40}$/i.test(sha) ? sha : 'main'
 }
 
-// Directories that are either build output, dependencies, or private scratch.
+// The walk starts from an explicit list of source roots rather than from the
+// project root. Anything else that happens to sit in the working directory
+// (agent settings, local caches, a prebuilt .vercel/output) is never listed,
+// so it can never be served, however the deployment was produced.
+const SOURCE_DIRS = ['.github', '.vscode', 'app', 'docs', 'public', 'scripts', 'src', 'tests']
+
+// Build output and dependencies, should one ever appear under a source root.
 const SKIP_DIRS = new Set([
   '.git',
   '.next',
@@ -45,6 +51,7 @@ const TEXT_EXT =
 
 const isTextPath = (rel: string): boolean => {
   if (rel === 'pnpm-lock.yaml') return false
+  if (/(^|\/)\.env/.test(rel)) return false
   // Dotfiles fall out of this correctly: the pattern anchors on a literal dot,
   // so `.gitignore` and `.editorconfig` match on their own names.
   return TEXT_EXT.test(rel.split('/').pop() || '')
@@ -63,15 +70,21 @@ export function langOf(name: string): string {
   return 'txt'
 }
 
-// Walks the project once at build time. Returns POSIX-style relative paths so
-// the client can use them as tree keys and as the `path` query for the API.
+// Lists the source roots plus the top-level config files. Returns POSIX-style
+// relative paths so the client can use them as tree keys and as the `path`
+// query for the API. The page calls this at build time; the API calls it once
+// per instance, over whatever next.config's outputFileTracingIncludes shipped.
+//
+// The `turbopackIgnore` comments matter: a filesystem call on a path built
+// from process.cwd() otherwise makes the bundler trace the WHOLE project into
+// every function that imports this module.
 export function listSourcePaths(max = 400): string[] {
   const out: string[] = []
   const walk = (dir: string): void => {
     if (out.length >= max) return
     let entries: string[]
     try {
-      entries = readdirSync(dir)
+      entries = readdirSync(/* turbopackIgnore: true */ dir)
     } catch {
       return
     }
@@ -81,7 +94,7 @@ export function listSourcePaths(max = 400): string[] {
       const abs = join(dir, name)
       let st
       try {
-        st = statSync(abs)
+        st = statSync(/* turbopackIgnore: true */ abs)
       } catch {
         continue
       }
@@ -93,7 +106,23 @@ export function listSourcePaths(max = 400): string[] {
       if (isTextPath(rel)) out.push(rel)
     }
   }
-  walk(projectRoot)
+  for (const d of SOURCE_DIRS) walk(join(/* turbopackIgnore: true */ projectRoot, d))
+  // Top-level files only: no descent, so no stray directory is ever entered.
+  let top: string[] = []
+  try {
+    top = readdirSync(/* turbopackIgnore: true */ projectRoot)
+  } catch {
+    // unreadable root: the source roots above are all there is
+  }
+  for (const name of top) {
+    if (out.length >= max) break
+    if (!isTextPath(name)) continue
+    try {
+      if (statSync(join(/* turbopackIgnore: true */ projectRoot, name)).isFile()) out.push(name)
+    } catch {
+      continue
+    }
+  }
   return out.sort()
 }
 
@@ -115,7 +144,8 @@ export async function readSourceFile(rel: string): Promise<{ body: string; from:
     // fall through to disk
   }
   try {
-    return { body: readFileSync(join(projectRoot, rel), 'utf-8'), from: 'disk' }
+    const abs = join(/* turbopackIgnore: true */ projectRoot, rel)
+    return { body: readFileSync(/* turbopackIgnore: true */ abs, 'utf-8'), from: 'disk' }
   } catch {
     return null
   }

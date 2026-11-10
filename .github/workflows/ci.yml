@@ -13,7 +13,7 @@ concurrency:
 jobs:
   check:
     name: typecheck + format + build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -31,7 +31,7 @@ jobs:
 
   audit:
     name: dependency audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -47,7 +47,7 @@ jobs:
 
   smoke:
     name: playwright smoke
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: check
     steps:
       - uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
 
   lighthouse:
     name: lighthouse
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: check
     steps:
       - uses: actions/checkout@v4

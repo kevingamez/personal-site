@@ -112,12 +112,17 @@ export async function POST(req: Request): Promise<Response> {
   //    is resolvable (e.g. local dev) we use a single per-instance in-memory
   //    bucket rather than keying on spoofable input.
   const ip = clientIp(req)
+  const unavailable = (): Response =>
+    jsonError(503, 'unavailable', 'The assistant is temporarily unavailable. Try again later.')
   const rl = await checkRateLimit(ip ?? 'local')
+  if (rl.unavailable) return unavailable()
   if (!rl.allowed) {
     return jsonError(429, 'rate_limit', 'Daily limit reached. Try again tomorrow.')
   }
   // Global backstop across all IPs (bounds total cost under IP rotation).
-  if (!(await checkGlobalLimit())) {
+  const global = await checkGlobalLimit()
+  if (global.unavailable) return unavailable()
+  if (!global.allowed) {
     return jsonError(429, 'busy', 'The assistant is busy right now. Try again later.')
   }
 
