@@ -124,14 +124,18 @@ export function Strava({ t }: Props) {
           }}
         />
 
-        {/* Metric tiles */}
+        {/* Metric tiles. None of these may restate a number shown above: the
+            totals band already has total climb, and the biggest climb is
+            usually one of the longest-effort cards. */}
         <div className="sv-insights">
           <div className="sv-tile glass">
-            <div className="sv-tile-lbl">{t.insightClimbLabel}</div>
-            <div className="sv-tile-val" id="sv-climb-val">
-              0
+            <div className="sv-tile-lbl">{t.insightBusiestLabel}</div>
+            <div className="sv-tile-val" id="sv-busiest-val">
+              -
             </div>
-            <div className="sv-tile-sub" id="sv-climb-sub"></div>
+            <div className="sv-tile-sub">
+              <span id="sv-busiest-count">0</span> {t.statActivities}
+            </div>
           </div>
           <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightFastLabel}</div>
@@ -148,8 +152,8 @@ export function Strava({ t }: Props) {
             <div className="sv-tile-sub" id="sv-biggest-sub"></div>
           </div>
           <div className="sv-tile glass">
-            <div className="sv-tile-lbl">{t.insightClimbedLabel}</div>
-            <div className="sv-tile-val" id="sv-climbed-val">
+            <div className="sv-tile-lbl">{t.insightActiveLabel}</div>
+            <div className="sv-tile-val" id="sv-active-val">
               0
             </div>
           </div>

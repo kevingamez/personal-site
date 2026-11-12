@@ -125,7 +125,7 @@ function shape(raw) {
     weekMap.set(mondayOf(ld), (weekMap.get(mondayOf(ld)) || 0) + dist)
     const sp = a.sport_type || a.type || 'Workout'
     const cur = bySport.get(sp)
-    if (!cur || (a.moving_time || 0) > (cur.moving_time || 0)) bySport.set(sp, a)
+    if (!cur || dist > (cur.distance || 0)) bySport.set(sp, a)
     if (!climb || (a.total_elevation_gain || 0) > (climb.total_elevation_gain || 0)) climb = a
     if (!fast || (a.average_speed || 0) > (fast.average_speed || 0)) fast = a
   }
@@ -144,7 +144,7 @@ function shape(raw) {
       bd = d
     }
   const longestBySport = [...bySport.values()]
-    .filter((a) => (a.moving_time || 0) > 0)
+    .filter((a) => (a.distance || 0) > 0 && (a.moving_time || 0) > 0)
     .sort((a, b) => (b.moving_time || 0) - (a.moving_time || 0))
     .slice(0, LONGEST_SPORTS)
     .map(toAct)
