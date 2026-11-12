@@ -93,7 +93,9 @@ export function fillStats(root: ParentNode, a: Activity): void {
   countUpEl(
     root.querySelector('[data-elev]'),
     elevVal(a.elevationM),
-    (n) => `${Math.round(n).toLocaleString()} ${EUNIT}`
+    // The page locale, not the browser's: the totals band formats with it too,
+    // and mixing them gave "29.820" beside "1,931 m" on /es/.
+    (n) => `${Math.round(n).toLocaleString(document.documentElement.lang || 'en')} ${EUNIT}`
   )
   countUpEl(root.querySelector('[data-time]'), a.movingTime, (n) => dur(n))
   // Runs/hikes report pace; rides report speed.
@@ -137,13 +139,13 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
 }
 
 export function fillInsights(ins: Insights, totals: Totals, lang: string): void {
-  if (ins.biggestClimb) {
-    countUp(
-      'sv-climb-val',
-      elevVal(ins.biggestClimb.elevationM),
-      (n) => `${Math.round(n).toLocaleString(lang)} ${EUNIT}`
+  // Busiest weekday. The index is Monday-based; 2024-01-01 was a Monday.
+  if (ins.busiestWeekday !== null && ins.busiestWeekday >= 0 && ins.busiestWeekday < 7) {
+    const day = new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(
+      new Date(Date.UTC(2024, 0, 1 + ins.busiestWeekday))
     )
-    setText('sv-climb-sub', ins.biggestClimb.name)
+    setText('sv-busiest-val', day.charAt(0).toLocaleUpperCase(lang) + day.slice(1))
+    countUp('sv-busiest-count', ins.busiestWeekdayCount, (n) => String(Math.round(n)))
   }
   if (ins.fastest) {
     countUp('sv-fast-val', spdVal(ins.fastest.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
@@ -152,9 +154,5 @@ export function fillInsights(ins: Insights, totals: Totals, lang: string): void 
   countUp('sv-biggest-val', distVal(ins.biggestWeekDistanceM), (n) => `${Math.round(n)} ${DUNIT}`)
   if (ins.biggestWeekStart)
     setText('sv-biggest-sub', `${WEEK_OF} ${shortDate(ins.biggestWeekStart, lang)}`)
-  countUp(
-    'sv-climbed-val',
-    elevVal(totals.elevationM),
-    (n) => `${Math.round(n).toLocaleString(lang)} ${EUNIT}`
-  )
+  countUp('sv-active-val', totals.activeDays, (n) => String(Math.round(n)))
 }

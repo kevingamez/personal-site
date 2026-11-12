@@ -201,9 +201,9 @@ export function shape(raw: RawActivity[]): Payload {
     weekMap.set(mondayOf(ld), (weekMap.get(mondayOf(ld)) || 0) + dist)
     const sp = a.sport_type || a.type || 'Workout'
     const cur = bySport.get(sp)
-    // "Most impressive" per sport = longest by moving time (a 7h ride / 4h trail
-    // run reads as a bigger effort than a flat, fast, longer-distance one).
-    if (!cur || (a.moving_time || 0) > (cur.moving_time || 0)) bySport.set(sp, a)
+    // "Longest" per sport = longest by distance, which is what the label says.
+    // (It used to be moving time, so a slow 5h44m ride outranked a longer one.)
+    if (!cur || dist > (cur.distance || 0)) bySport.set(sp, a)
     if (!biggestClimb || (a.total_elevation_gain || 0) > (biggestClimb.total_elevation_gain || 0))
       biggestClimb = a
     if (!fastest || (a.average_speed || 0) > (fastest.average_speed || 0)) fastest = a
@@ -228,7 +228,9 @@ export function shape(raw: RawActivity[]): Payload {
   }
 
   const longestBySport = [...bySport.values()]
-    .filter((a) => (a.moving_time || 0) > 0)
+    .filter((a) => (a.distance || 0) > 0 && (a.moving_time || 0) > 0)
+    // Which sports make the cut is still decided by time spent, so a sport
+    // that covers ground cheaply does not push out a harder one.
     .sort((a, b) => (b.moving_time || 0) - (a.moving_time || 0))
     .slice(0, LONGEST_SPORTS)
     .map(toActivity)

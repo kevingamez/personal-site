@@ -34,6 +34,19 @@ test('latest activity block renders from the payload', async ({ page }) => {
   expect(await dates.count()).toBe(await page.locator('#sv-longest .sv-feat').count())
 })
 
+test('no number is shown twice in the section', async ({ page }) => {
+  await openWith(page, devSample())
+  await page.locator('.sv-insights').scrollIntoViewIfNeeded()
+  // Count-ups settle on their final values.
+  await expect(page.locator('#sv-active-val')).not.toHaveText('0')
+  await page.waitForTimeout(2500)
+  const values = await page
+    .locator('#strava .sv-hero-side .sv-mini span, #strava .sv-hero-km span, #strava .sv-tile-val')
+    .allTextContents()
+  const seen = values.map((v) => v.replace(/[^\d]/g, '')).filter((v) => v.length > 1)
+  expect(new Set(seen).size).toBe(seen.length)
+})
+
 test('a payload without latest hides the block, not the section', async ({ page }) => {
   await openWith(page, { ...devSample(), latest: undefined })
   await expect(page.locator('#sv-latest')).toBeHidden()

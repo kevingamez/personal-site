@@ -194,10 +194,10 @@ export interface HomeStrings {
     featTime: string
     featSpeed: string
     featPace: string
-    insightClimbLabel: string
+    insightBusiestLabel: string
     insightFastLabel: string
     insightBiggestLabel: string
-    insightClimbedLabel: string
+    insightActiveLabel: string
     weekOf: string
     heatmapTitle: string
     heatLess: string
