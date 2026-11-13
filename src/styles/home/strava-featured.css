@@ -166,6 +166,33 @@
   }
 }
 
+/* Phones: three stacked route cards are two and a half screens of scrolling
+   for one idea. They become a swipeable row, with the next card peeking in
+   from the right so the row reads as scrollable. */
+@media (width <= 700px) {
+  .sv-longest {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .sv-longest::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sv-feat {
+    flex: 0 0 86%;
+    scroll-snap-align: start;
+  }
+
+  .sv-feat:only-child {
+    flex-basis: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sv-feat-map {
     clip-path: none;

@@ -79,8 +79,14 @@
 }
 
 @media (width <= 780px) {
+  /* The blurb takes the full width; the two link lists sit side by side
+     under it instead of running down one long column. */
   .foot-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .foot-grid > :first-child {
+    grid-column: 1 / -1;
   }
 
   /* Stacked, the link lists are a column of thumb targets: give each row the

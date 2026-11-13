@@ -143,6 +143,13 @@
     gap: 10px;
   }
 
+  /* The hero's own button and then the bottom bar carry the email ask on a
+     phone. A third copy here pushed the name onto a row of its own and made
+     the bar three rows tall. */
+  .say-hi {
+    display: none;
+  }
+
   .say-hi,
   .lang-switch {
     padding: 8px 14px;

@@ -141,13 +141,21 @@
 }
 
 @media (width <= 760px) {
+  /* Dates, then the role, with the toggle parked in the top right corner
+     where a thumb expects it instead of on a row of its own. */
   .tl-head {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) 28px;
+    gap: 8px 12px;
+    padding-block: 22px;
+  }
+
+  .tl-what {
+    grid-column: 1 / -1;
   }
 
   .tl-plus {
-    justify-self: start;
+    grid-area: 1 / 2;
+    align-self: center;
   }
 }
 

@@ -88,6 +88,22 @@
   }
 }
 
+/* Phones: a 4/5 frame is a whole screen of figure before the first section.
+   A landscape slot keeps the brain and gives most of that screen back. */
+@media (width <= 600px) {
+  .hero {
+    padding: 28px 0 44px;
+  }
+
+  .hero-grid {
+    gap: 24px;
+  }
+
+  .media-frame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 /* Rotated phones (844-900px wide, short): copy and portrait side by side
    instead of a single column that leaves half the screen empty. */
 @media (width <= 900px) and (width >= 700px) and (orientation: landscape) {

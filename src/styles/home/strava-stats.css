@@ -103,12 +103,6 @@
   }
 }
 
-@media (width <= 430px) {
-  .sv-insights {
-    grid-template-columns: 1fr;
-  }
-}
-
 .sv-tile {
   border-radius: var(--r-md);
   padding: 14px 16px 13px;
