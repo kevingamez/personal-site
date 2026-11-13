@@ -83,9 +83,9 @@ const toAct = (a) => ({
   route: extractRoute(a.map?.summary_polyline, ROUTE_PTS),
   polyline: a.map?.summary_polyline ?? null,
 })
+const isPublic = (a) => !a.private && a.visibility !== 'only_me'
 const showableAsLatest = (a) =>
-  !a.private &&
-  a.visibility !== 'only_me' &&
+  isPublic(a) &&
   Number.isFinite(Date.parse(a.start_date)) &&
   (a.distance || 0) > 0 &&
   (a.moving_time || 0) > 0
@@ -125,7 +125,8 @@ function shape(raw) {
     weekMap.set(mondayOf(ld), (weekMap.get(mondayOf(ld)) || 0) + dist)
     const sp = a.sport_type || a.type || 'Workout'
     const cur = bySport.get(sp)
-    if (!cur || dist > (cur.distance || 0)) bySport.set(sp, a)
+    // Featured efforts ship their GPS route, so private ones never qualify.
+    if (isPublic(a) && (!cur || dist > (cur.distance || 0))) bySport.set(sp, a)
     if (!climb || (a.total_elevation_gain || 0) > (climb.total_elevation_gain || 0)) climb = a
     if (!fast || (a.average_speed || 0) > (fast.average_speed || 0)) fast = a
   }

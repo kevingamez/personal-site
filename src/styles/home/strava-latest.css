@@ -63,8 +63,10 @@
   white-space: nowrap;
 }
 
-.sv-latest-name:hover {
-  color: var(--coral);
+@media (hover: hover) {
+  .sv-latest-name:hover {
+    color: var(--coral);
+  }
 }
 
 .sv-latest-sub time {

@@ -76,7 +76,7 @@
   --t-body: 17px;
   --t-subhead: 15px;
   --t-footnote: 13px;
-  --t-caption: 11px;
+  --t-caption: 12px;
 
   /* Tracking - display sizes tighten, text sizes sit at zero. SF is already
      optically tracked by the system at every size, so the old 0.14em label

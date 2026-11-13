@@ -1,7 +1,8 @@
 /* Strava part 1: section shell, hero stats band, and insight tiles (split from strava.css) */
 
 /* ─── Strava - movement (metrics only) ─── */
-#strava[hidden] {
+#strava[hidden],
+.sv-insights[hidden] {
   display: none;
 }
 
@@ -102,12 +103,6 @@
   }
 }
 
-@media (width <= 430px) {
-  .sv-insights {
-    grid-template-columns: 1fr;
-  }
-}
-
 .sv-tile {
   border-radius: var(--r-md);
   padding: 14px 16px 13px;
@@ -158,6 +153,10 @@
 @media (width <= 700px) {
   .sv-hero-km {
     font-size: var(--t-title-1);
+  }
+
+  .sv-hero-km i {
+    font-size: 12px;
   }
 
   .sv-mini span {

@@ -3,15 +3,46 @@
 // had: stalled streams, runaway history growth, and untrusted markup.
 
 import { type ChatMessage, type Refs, el, escape, printOut } from './console-dom'
+import { consoleStrings } from './console-i18n'
 import { createSteps } from './console-steps'
 
-// Cap the conversation the client keeps and sends. Mirrors MAX_HISTORY in
-// api/chat.ts so we never send more than the server accepts, and the array
-// can't grow without bound across a session.
-const MAX_CLIENT_HISTORY = 8
+// Request caps, mirrored from app/api/chat/chat-schema.ts (MAX_HISTORY,
+// MAX_MESSAGE_CHARS, MAX_ASSISTANT_CHARS, MAX_TOTAL_CHARS). The server rejects
+// the whole request if any one is exceeded, and the history persists across
+// turns, so one oversized reply used to break every later question. We fit the
+// history to these before sending instead.
+export const MAX_CLIENT_HISTORY = 8
+export const MAX_USER_CHARS = 2000
+export const MAX_ASSISTANT_CHARS = 4000
+export const MAX_TOTAL_CHARS = 12_000
 // Abort a stream that goes this long without any bytes, so a stalled connection
 // never leaves the input permanently disabled.
 const STALL_MS = 30_000
+
+// Clip a finished reply to the assistant cap before it becomes history. The
+// screen keeps the full text; only the context echoed back is shortened.
+export function clipReply(s: string): string {
+  if (s.length <= MAX_ASSISTANT_CHARS) return s
+  let end = MAX_ASSISTANT_CHARS - 1
+  // Never split a surrogate pair.
+  const code = s.charCodeAt(end - 1)
+  if (code >= 0xd800 && code <= 0xdbff) end--
+  return s.slice(0, end) + '…'
+}
+
+// The slice of history to send: at most MAX_CLIENT_HISTORY messages, oldest
+// dropped first until the total fits, always starting on a user turn.
+export function fitHistory(history: ChatMessage[]): ChatMessage[] {
+  const msgs = history
+    .slice(-MAX_CLIENT_HISTORY)
+    .map((m) => (m.role === 'assistant' ? { ...m, content: clipReply(m.content) } : m))
+  let total = msgs.reduce((s, m) => s + m.content.length, 0)
+  while (msgs.length > 1 && (total > MAX_TOTAL_CHARS || msgs[0].role !== 'user')) {
+    const dropped = msgs.shift()
+    if (dropped) total -= dropped.content.length
+  }
+  return msgs
+}
 
 export function mdLite(s: string): string {
   let out = escape(s)
@@ -47,17 +78,41 @@ async function describeError(res: Response): Promise<string> {
   } catch {
     /* non-JSON error body */
   }
-  if (res.status === 429) return message || 'rate limited, daily message cap reached. try tomorrow.'
-  if (res.status === 413) return 'this conversation got too long. reload the page to start fresh.'
-  if (res.status === 403) return 'this console only answers requests from kevingamez.co.'
-  if (res.status === 500 && code === 'no_key')
-    return 'the AI backend is not configured here. the shell still works - try `help`.'
-  return message || 'could not reach the AI backend. the shell still works - try `help`.'
+  // The server words its own messages in English, so they are only passed
+  // through on the English page.
+  const t = consoleStrings().chat
+  const english = !document.documentElement.lang.toLowerCase().startsWith('es')
+  if (res.status === 429 && code === 'busy') return t.busy
+  if (res.status === 429) return (english && message) || t.rateLimited
+  if (res.status === 413) return t.conversationTooLong
+  if (res.status === 403) return t.forbidden
+  if (res.status === 500 && code === 'no_key') return t.notConfigured
+  return (english && message) || t.unreachable
+}
+
+// Failures and usage hints go to the live status node too: the visible stream
+// is aria-live="off", so without this they would only ever be seen.
+function say(refs: Refs, text: string): void {
+  if (refs.status) refs.status.textContent = text
 }
 
 export async function runChat(refs: Refs, history: ChatMessage[], question: string): Promise<void> {
   if (!question) {
-    printOut(refs.stream, '<span class="muted">usage: kevin "your question"</span>', 'err')
+    printOut(
+      refs.stream,
+      `<span class="muted">${escape(consoleStrings().chat.usage)}</span>`,
+      'err'
+    )
+    say(refs, consoleStrings().chat.usage)
+    return
+  }
+  if (question.length > MAX_USER_CHARS) {
+    printOut(
+      refs.stream,
+      `<span class="muted">${escape(consoleStrings().chat.tooLong(MAX_USER_CHARS))}</span>`,
+      'err'
+    )
+    say(refs, consoleStrings().chat.tooLong(MAX_USER_CHARS))
     return
   }
 
@@ -100,13 +155,14 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
     const res = await fetch('/api/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history.slice(-MAX_CLIENT_HISTORY) }),
+      body: JSON.stringify({ messages: fitHistory(history) }),
       signal: controller.signal,
     })
 
     const ctype = res.headers.get('content-type') || ''
     if (!res.ok || !ctype.includes('text/event-stream')) {
       out.textContent = await describeError(res)
+      say(refs, out.textContent)
       return
     }
 
@@ -147,7 +203,7 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
           } else if (evt.type === 'error' && typeof evt.message === 'string') {
             // Server-side failure mid-stream. Render as plain text (never run an
             // error string through markdown) and don't keep the turn as context.
-            const errLine = el('div', 'cs-line cs-err', '[error: ' + evt.message + ']')
+            const errLine = el('div', 'cs-line cs-err', consoleStrings().chat.error(evt.message))
             out.parentElement?.insertBefore(errLine, out.nextSibling)
             failed = true
           }
@@ -160,10 +216,14 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
   } catch {
     if (controller.signal.aborted) {
       // Watchdog timeout, Ctrl-C, or superseded by a newer question.
-      if (!assistant) out.textContent = 'request interrupted - try again.'
+      if (!assistant) {
+        out.textContent = consoleStrings().chat.interrupted
+        say(refs, out.textContent)
+      }
       // else: leave the partial reply on screen.
     } else {
-      out.textContent = 'could not reach the AI backend. the shell still works - try `help`.'
+      out.textContent = consoleStrings().chat.unreachable
+      say(refs, out.textContent)
     }
   } finally {
     if (watchdog) clearTimeout(watchdog)
@@ -173,7 +233,7 @@ export async function runChat(refs: Refs, history: ChatMessage[], question: stri
       // Announce the complete reply once, as plain text, to the live status node
       // (the visible stream is aria-live="off" to avoid a per-token flood).
       if (refs.status) refs.status.textContent = assistant
-      history.push({ role: 'assistant', content: assistant })
+      history.push({ role: 'assistant', content: clipReply(assistant) })
       if (history.length > MAX_CLIENT_HISTORY) {
         history.splice(0, history.length - MAX_CLIENT_HISTORY)
       }

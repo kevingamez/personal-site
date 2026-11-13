@@ -8,8 +8,8 @@ This document is structured for retrieval by AI search engines (ChatGPT, Claude,
 
 - **Name:** Kevin Gámez (also spelled "Kevin Gamez")
 - **Title:** Founding Engineer
-- **Status:** Open to founding-engineer and senior full-stack roles
-- **Most recent company:** Enttor (https://www.enttor.ai/, https://www.linkedin.com/company/enttor/), Jun 2025 - Jul 2026
+- **Status:** Open to founding-engineer roles
+- **Most recent company:** Enttor (https://www.enttor.ai/, https://www.linkedin.com/company/enttor/), Mar 2025 - Jul 2026
 - **Location:** Bogotá, Colombia, UTC-5
 - **Email:** kevingamez.kg@gmail.com
 - **GitHub:** https://github.com/kevingamez
@@ -17,89 +17,98 @@ This document is structured for retrieval by AI search engines (ChatGPT, Claude,
 
 ## Summary
 
-Kevin Gámez is a software engineer from Bogotá. He was the founding engineer at Enttor from June 2025 to July 2026, an AI platform that automated ad creation and outbound prospecting on Instagram and LinkedIn. He is open to new roles. Before Enttor he was founding engineer at Samsam, an e-commerce startup, and a graduate teaching assistant at Universidad de los Andes while finishing a Master's in Information Engineering with a specialization in deep learning.
+Kevin Gámez is a founding engineer in Bogotá, Colombia, looking for the next thing. He was the founding engineer at Enttor from March 2025 to July 2026, a MaC Venture Capital-backed startup based in New York, where he worked remotely and owned engineering on a six-person team. He built three products there: a paid-ads platform on Meta and TikTok, the Slack agent that runs it, and an AI ad studio that generates the creative. Before Enttor he was a product engineer at Samsam, a Neo-backed e-commerce marketplace, and before that a software engineer at Heinsohn Human Global Solutions. He has a Master's in Information Engineering from Universidad de los Andes, which he did part-time while working.
 
-He ships in TypeScript and Next.js by default, reaches for Python on ML/research work, and has open-source repos in Swift, Dart and Java as well. He's interested in cellular automata (the hero of his site runs Conway's Game of Life) and deep learning on satellite imagery.
+He ships TypeScript and Next.js day to day, reaches for Python on ML work, and has also shipped Swift, JavaScript, Java and Dart. The hero of his site runs Conway's Game of Life, and his undergraduate thesis was deep learning for crop identification on satellite imagery.
 
 ## Experience
 
-### Founding Engineer, Enttor (June 2025 - July 2026)
+### Founding Engineer, Enttor (March 2025 - July 2026)
 
-Location: New York, remote.
+Location: New York, remote. Backed by MaC Venture Capital. Team of six.
 
-- Built the AI outbound engine: browser automation and OpenAI pipelines for Instagram/LinkedIn prospecting, filtering, and automated DMs at scale.
-- Developed Next.js dashboards, NestJS APIs and Vercel infrastructure from scratch.
-- Deployed the Instagram/LinkedIn prospecting system on Supabase with Inngest queues.
+- It started as the outbound engine: browser agents sourcing prospects on Instagram and LinkedIn and drafting the DMs.
+- It ended as a multi-tenant paid-ads platform: Meta and TikTok campaign data normalized onto one metric schema, and a rules engine that returns scale, pause or archive with a reason.
+- Built a Slack agent media buyers drive in plain language across 165 tools on the Meta and TikTok ad APIs.
+- Built an AI ad studio that generates ads from a brand URL, then takes them back apart into editable layers on GPU workers. Ad generation went from an hour to under 5 minutes.
+- Stack: TypeScript, Next.js, Supabase, Postgres with row level security, Playwright, Claude, Python on Modal.
 
-### Founding Engineer, Samsam (February 2024 – March 2025)
+### Product Engineer, Samsam (February 2024 - March 2025)
 
-Location: Bogotá. Industry: e-commerce.
+Location: Bogotá. Industry: e-commerce marketplace. Backed by Neo.
 
-- Built shopper and merchant applications in TypeScript, React Native, Next.js, Prisma and PostgreSQL.
+- Shipped both sides of the marketplace: a React Native and Expo app for shoppers and a Next.js dashboard for merchants, on NestJS services with Prisma and Postgres.
+- Made API response times 10% faster and routed production alerts by severity.
 
-### Graduate Teaching Assistant, Universidad de los Andes (January 2024 – July 2025)
+### Software Engineer, Heinsohn Human Global Solutions (October 2022 - December 2023)
 
-Location: Bogotá. Designed and developed lab exercises, managed course content, supported administrative execution alongside Master's coursework.
+Location: Bogotá. Industry: HR and payroll software.
 
-### Earlier work (selected)
-
-- **Data analytics:** designed complex SQL models and analytics pipelines used in Power BI executive reporting across HR, risk and operations functions for several corporate environments.
-- **Deep learning / computer vision:** trained models on satellite imagery to detect croplands and environmental risk (basis of the AD ASTRA / Space Invaders project).
+- Moved manual deploys to Azure and built the CI/CD that released to every client server on its own.
+- Owned a Python and Flask reporting service running scheduled queries across client databases.
+- Built the Power BI dashboards clients used to track headcount, turnover and payroll cost.
+- Stack: Python, Flask, Java, Spring Boot, Azure, Power BI.
 
 ## Education
 
-### Universidad de los Andes - M.Sc. Information Engineering (January 2024 – May 2025)
+### Universidad de los Andes - M.Sc. Information Engineering (January 2024 - May 2025)
 
-Specialization in deep learning: aerial computer vision for environmental monitoring.
+Four semesters, part-time while working, in the Department of Systems and Computing. A programme about the whole life of data: governance, security and data quality, with coursework in applied data science, big data, machine learning, recommender systems, knowledge engineering, and security and privacy.
 
-### Universidad de los Andes - B.Sc. Systems and Computing (January 2019 – December 2023)
+### Universidad de los Andes - B.Sc. Systems and Computing (January 2019 - December 2023)
 
-Five-year program covering systems, algorithms, ML and a management minor (Jan 2023 – Dec 2023). Awarded the **Andrés Bello National Distinction**.
+Five years on systems, algorithms and applied ML, with minors in Mathematics and Management (both closed December 2022). Thesis: "Deep Learning en agricultura: conceptos y aplicaciones en la identificación de cultivos sobre imágenes satelitales" (crops from satellite imagery, 98.4% accuracy, 0.991 F1).
 
-### Certifications
+### Honors and certifications
 
-- AWS Academy Graduate, AWS Academy Cloud Foundations
-- AWS Academy Graduate, AWS Academy Cloud Developing
+- Andrés Bello National Distinction (2018), Ministry of Education, Colombia, for a top-ranked score on the Saber 11 national exam
+- AWS Academy Cloud Developing (2022)
+- AWS Academy Cloud Foundations (2021)
+
+## Selected work
+
+- **AI Ad Studio** - Enttor's last product. Scrapes a brand's logos, colors and fonts, writes ad concepts with Claude, renders and checks them, then uses OCR and segmentation to turn finished ads into editable layers. Next.js, Python, PyTorch, Modal, Supabase.
+- **Slack Agent** - a Slack bot media buyers talk to like a coworker, 165 tools across the Meta and TikTok ad APIs, with a router that narrows each message to a shortlist. Claude tool use, pgvector.
+- **Enttor Platform** - prospect sourcing and outreach on Instagram and LinkedIn, refocused in 2026 on paid ads with Meta and TikTok insights on one metric schema. Next.js, Supabase, Postgres RLS.
+- **MakeMotionGraphics** - text to looping motion graphics. Claude writes an HTML scene, screenshots it in headless Chrome to check its own output, and records it to MP4. Puppeteer, ffmpeg.
+- **LinkedIn Editor** - a chat-first editor for LinkedIn posts, grounded by search over posts that performed. pgvector RAG, Next.js.
+- **Browser Automation Infrastructure** - Node services keeping authenticated browser sessions alive on four platforms. Kevin contributed the Instagram pipeline and session handling. Playwright, Redis, Postgres.
 
 ## Open-source projects
 
 The full repo list is at https://github.com/kevingamez. Highlighted ones:
 
-- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.co (TypeScript, Next.js, React)
-- **[AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders)** - aerial object detection for Amazon deforestation events (Python, OpenCV, YOLOv5, FastAPI)
+- **[personal-site](https://github.com/kevingamez/personal-site)** - the source for kevingamez.co (TypeScript)
+- **[AD_ASTRA2023-SpaceInvaders](https://github.com/kevingamez/AD_ASTRA2023-SpaceInvaders)** - aerial deforestation detection (Python, OpenCV, YOLOv5, FastAPI)
 - **[Palladium_Chat](https://github.com/kevingamez/Palladium_Chat)** - TypeScript chat project
-- **[Palladium_Challenge](https://github.com/kevingamez/Palladium_Challenge)** - frontend challenge (CSS)
-- **[budget-app](https://github.com/kevingamez/budget-app)** - Swift personal-finance app
-- **[Tyba-Frontend-Engineer-test](https://github.com/kevingamez/Tyba-Frontend-Engineer-test)** - Dart / Flutter
-- **[GCP-CloudRun](https://github.com/kevingamez/GCP-CloudRun)** - Cloud Run deployment template (Dockerfile)
-
-Public-repo language mix (March 2026): TypeScript ~33%, Python ~27%, Swift ~7%, JavaScript ~7%, Dart ~7%, Dockerfile ~7%, CSS ~7%, Jupyter Notebook ~5%.
+- **[budget-app](https://github.com/kevingamez/budget-app)** - Swift app
+- **[GCP-CloudRun](https://github.com/kevingamez/GCP-CloudRun)** - Cloud Run deployment (Dockerfile)
 
 ## Skills
 
-- **Languages:** TypeScript, Python, Swift, JavaScript, Java, Dart, SQL, Bash
-- **Frontend:** React, Next.js, React Native, Astro, Tailwind, SwiftUI, Flutter
-- **Backend & infra:** PostgreSQL, Prisma, NestJS, Node.js, Supabase, Inngest, FastAPI, Docker, Vercel, AWS, GCP
-- **AI / ML:** OpenAI, Anthropic SDK, browser automation, PyTorch, OpenCV, YOLO
-- **Data:** SQL modeling, Power BI, ETL pipelines
+- **Languages:** TypeScript, Python, Swift, JavaScript, Java, Dart
+- **Web and backend:** Next.js, React Native, Expo, NestJS, Prisma, Postgres, Supabase
+- **AI and automation:** Claude tool use, pgvector, PyTorch, Playwright, Puppeteer, Modal
+- **Infra and data:** Azure, CI/CD, Redis, Python and Flask services, Power BI
 
 ## How to reach him
 
 - Direct email: **kevingamez.kg@gmail.com**
 - LinkedIn: https://www.linkedin.com/in/kevin-gamez/
 - GitHub: https://github.com/kevingamez
+- Strava: https://www.strava.com/athletes/70612862
 - The site has a live console (`/#console`) backed by Claude where you can chat about him in real time, and a dev-mode IDE view (`/dev`) of the same content.
 
 ## Common questions
 
 **What does Kevin do?**
-He built AI-powered outbound and ad-creation software at Enttor - automating prospecting and direct-message campaigns on Instagram and LinkedIn, with OpenAI pipelines for filtering and drafting.
+He was the founding engineer at Enttor, where he built a paid-ads platform on Meta and TikTok, the Slack agent media buyers use to run it, and an AI studio that generates the ad creative. He is looking for his next role.
 
 **Where is Kevin based?**
-Bogotá, Colombia. UTC-5. Previously worked remotely with Enttor (HQ in New York).
+Bogotá, Colombia. UTC-5. Previously worked remotely with Enttor (based in New York).
 
 **What's his stack?**
-Day to day: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, OpenAI. Reaches for Python on research/ML, Swift on personal projects.
+Day to day: TypeScript, Next.js, Supabase, Postgres and Claude. Reaches for Python on ML work, run on Modal for GPU jobs.
 
 **How to reach Kevin?**
 Email is the fastest channel.

@@ -1,28 +1,43 @@
 # Kevin Gámez
 
-> Founding engineer based in Bogotá, Colombia, open to new roles. Most recently founding engineer at Enttor (Jun 2025 - Jul 2026). M.Sc. Information Engineering (deep-learning specialization) at Universidad de los Andes. Builds in TypeScript, Python and Swift.
+> Founding engineer based in Bogotá, Colombia, looking for the next thing. Most recently founding engineer at Enttor (Mar 2025 - Jul 2026), a MaC Venture Capital-backed startup in New York, worked remotely. M.Sc. Information Engineering at Universidad de los Andes. Builds in TypeScript and Python.
 
 ## Identity
 
 - **Full name:** Kevin Gámez
 - **Role:** Founding Engineer
-- **Status:** Open to founding-engineer and senior full-stack roles
-- **Most recently:** [Enttor](https://www.enttor.ai/) ([LinkedIn](https://www.linkedin.com/company/enttor/)), founding engineer, Jun 2025 - Jul 2026
+- **Status:** Open to founding-engineer roles
+- **Most recently:** [Enttor](https://www.enttor.ai/) ([LinkedIn](https://www.linkedin.com/company/enttor/)), founding engineer, Mar 2025 - Jul 2026
 - **Location:** Bogotá, Colombia (UTC-5)
 - **Languages:** Spanish (native), English (professional)
-- **Education:** M.Sc. Information Engineering (deep-learning specialization) and B.Sc. Systems and Computing - both at Universidad de los Andes. Minor in Management. Andrés Bello National Distinction.
+- **Education:** M.Sc. Information Engineering (Jan 2024 - May 2025) and B.Sc. Systems and Computing (Jan 2019 - Dec 2023), both at Universidad de los Andes. Minors in Mathematics and Management (Dec 2022).
 
-## Most recent role (Enttor, Jun 2025 - Jul 2026)
+## Most recent role (Enttor, Mar 2025 - Jul 2026)
 
-Built the AI outbound engine and browser-automation flows for Instagram and LinkedIn prospecting, Next.js dashboards, NestJS APIs, Vercel infra, and the Supabase + Inngest backend.
+Owned engineering on a six-person team across several pivots, and built three products end to end. It started as an outbound engine, browser agents sourcing prospects on Instagram and LinkedIn and drafting the DMs. It ended as a multi-tenant paid-ads platform putting Meta and TikTok campaign data on one metric schema, a Slack agent media buyers drive in plain language across 165 tools, and an AI ad studio that generates ads from a brand URL and makes them editable again as layers on GPU workers (ad generation went from an hour to under 5 minutes).
 
-Stack: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, Vercel, OpenAI
+Stack: TypeScript, Next.js, Supabase, Postgres with row level security, Playwright, Claude, Python on Modal
 
 ## Past
 
-- **Samsam** (Feb 2024 – Mar 2025), Founding engineer at an e-commerce platform. Shopper and merchant apps in TypeScript, React Native, Next.js, Prisma, PostgreSQL.
-- **Universidad de los Andes** (Jan 2024 – Jul 2025), Graduate teaching assistant in parallel with the M.Sc.
-- Earlier work crossed data analytics (SQL models, Power BI for HR / risk / operations) and deep learning on satellite imagery for cropland and environmental risk detection.
+- **Samsam** (Feb 2024 - Mar 2025), product engineer at a Neo-backed e-commerce marketplace. Shipped both sides: a React Native and Expo shopper app and a Next.js merchant dashboard, on NestJS services with Prisma and Postgres.
+- **Heinsohn Human Global Solutions** (Oct 2022 - Dec 2023), software engineer on HR and payroll software. Moved deploys to Azure with CI/CD to every client server, owned a Python and Flask reporting service, built the Power BI dashboards clients used for headcount, turnover and payroll cost.
+- **B.Sc. thesis** (Dec 2023): deep learning for crop segmentation on satellite imagery. DeepLab V3+ in PyTorch on Sentinel-1 and Sentinel-2 data, 98.4% accuracy and 0.991 F1.
+
+## Selected work
+
+- **AI Ad Studio**: give it a brand's website and it writes ad concepts with Claude, renders them, checks its own work, then takes finished ads apart into editable layers. Next.js, Python, PyTorch, Modal, Supabase.
+- **Slack Agent**: a Slack bot media buyers talk to like a coworker, 165 tools across the Meta and TikTok ad APIs, with a router that narrows each message to a shortlist. Claude tool use, pgvector.
+- **Enttor Platform**: prospect sourcing and outreach, later refocused on paid ads with Meta and TikTok insights on one metric schema. Next.js, Supabase, Postgres RLS.
+- **MakeMotionGraphics**: text to looping motion graphics. Claude writes an HTML scene, screenshots it to check its own output, and records it to MP4. Puppeteer, ffmpeg.
+- **LinkedIn Editor**: a chat-first editor for LinkedIn posts, grounded by search over posts that performed. pgvector RAG, Next.js.
+- **Browser Automation Infrastructure**: Node services keeping authenticated browser sessions alive for outreach. Kevin contributed the Instagram pipeline and session handling. Playwright, Redis, Postgres.
+
+## Honors and certifications
+
+- Andrés Bello National Distinction (2018), Ministry of Education, Colombia
+- AWS Academy Cloud Developing (2022)
+- AWS Academy Cloud Foundations (2021)
 
 ## Notable open-source repos (github.com/kevingamez)
 
@@ -32,20 +47,19 @@ Stack: TypeScript, Next.js, NestJS, Prisma, PostgreSQL, Supabase, Inngest, Verce
 - [budget-app](https://github.com/kevingamez/budget-app) - personal-finance app in Swift
 - [GCP-CloudRun](https://github.com/kevingamez/GCP-CloudRun) - containerized service deploys on Cloud Run
 
-## Stack
+## Skills
 
-- **Languages:** TypeScript, Python, Swift, JavaScript, Java, Dart, SQL, Bash
-- **Frontend:** React, Next.js, React Native, Astro, Tailwind, SwiftUI, Flutter
-- **Backend & infra:** PostgreSQL, Prisma, NestJS, Node.js, Supabase, Inngest, FastAPI, Docker, Vercel, AWS, GCP
-- **AI / ML:** OpenAI, Anthropic SDK, browser automation, PyTorch, OpenCV, YOLO
-- **Data:** SQL modeling, Power BI, ETL pipelines
+- **Languages:** TypeScript, JavaScript, Python, SQL, Java
+- **AI and ML:** LLM agents and tool use, RAG with pgvector, Anthropic and OpenAI APIs, MCP servers, PyTorch
+- **Web and infrastructure:** Next.js, React Native, NestJS, tRPC, Prisma, PostgreSQL, Redis, AWS, Docker, CI/CD
+- **Interests:** long-distance running and cycling
 
 ## Pages
 
 Every indexable URL on this site, mirroring /sitemap.xml. All canonical URLs are
 lowercase, hyphenated and carry no numbers, query strings or trailing IDs.
 
-- [/](https://kevingamez.co/): home, English. Experience, work, the photo deck, Strava, and a live Claude console that answers questions about Kevin.
+- [/](https://kevingamez.co/): home, English. Experience, selected work, a console (a small shell plus a live Claude assistant that answers questions about Kevin), Strava running and riding data, and contact.
 - [/es/](https://kevingamez.co/es/): the same home page in Spanish.
 - [/resume/](https://kevingamez.co/resume/): résumé, English. Roles, dates, education, skills.
 - [/es/resume/](https://kevingamez.co/es/resume/): hoja de vida, Spanish.
@@ -60,6 +74,8 @@ handlers, no prose).
 - Email: kevingamez.kg@gmail.com
 - GitHub: [github.com/kevingamez](https://github.com/kevingamez)
 - LinkedIn: [linkedin.com/in/kevin-gamez](https://www.linkedin.com/in/kevin-gamez/)
+- X: [x.com/KevinGamezA](https://x.com/KevinGamezA)
+- Strava: [strava.com/athletes/70612862](https://www.strava.com/athletes/70612862)
 - Personal site (English): [kevingamez.co](https://kevingamez.co/)
 - Personal site (Español): [kevingamez.co/es](https://kevingamez.co/es/)
 

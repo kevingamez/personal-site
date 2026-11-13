@@ -51,18 +51,30 @@
 
 /* Links are their own small capsules: on glass, a hover that only changes
    ink colour reads as a rendering artefact, while a lens forming under the
-   cursor reads as the surface responding. */
+   cursor reads as the surface responding.
+
+   The floor keeps a two-letter label (Spanish "CV") from collapsing into a
+   pill visibly narrower than its siblings; it sits just under the
+   width of the shortest English label ("Work"), so only the short ones grow
+   and the Spanish row still clears the contact button at 900px. An explicit
+   min-width replaces the flex min-content floor, so shrink is turned off or
+   the scrolling phone row would squash every label instead of scrolling. */
 .nav-links a {
-  padding: 7px 12px;
+  flex-shrink: 0;
+  min-width: 48px;
+  text-align: center;
+  padding: 10px 12px;
   border-radius: var(--r-xs);
   transition:
     color var(--dur-fast) var(--ease-out),
     background-color var(--dur-fast) var(--ease-out);
 }
 
-.nav-links a:hover {
-  color: var(--ink);
-  background: rgb(253 253 252 / 62%);
+@media (hover: hover) {
+  .nav-links a:hover {
+    color: var(--ink);
+    background: rgb(253 253 252 / 62%);
+  }
 }
 
 .nav-right {
@@ -89,12 +101,22 @@
   white-space: nowrap;
   color: var(--white);
   background: var(--ink-900);
-  transition: background-color var(--dur-fast) var(--ease-out);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.say-hi:hover,
-.lang-switch:hover {
-  background: #26262b;
+/* The press answers on the same frame, before the navigation does. */
+.say-hi:active,
+.lang-switch:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) {
+  .say-hi:hover,
+  .lang-switch:hover {
+    background: #26262b;
+  }
 }
 
 /* Mobile and small tablets: keep wayfinding instead of hiding it. The
@@ -133,9 +155,68 @@
     gap: 10px;
   }
 
+  /* The hero's own button and then the bottom bar carry the email ask on a
+     phone. A third copy here pushed the name onto a row of its own and made
+     the bar three rows tall. */
+  .say-hi {
+    display: none;
+  }
+
   .say-hi,
   .lang-switch {
     padding: 8px 14px;
+  }
+}
+
+/* Phones: the bar steps aside while you scroll down (src/scripts/home/share.ts
+   stamps .nav-away) and returns on the first scroll up. Keyboard focus inside
+   it always brings it back. */
+@media (width <= 899px) {
+  .nav-away .nav:not(:focus-within) {
+    transform: translateY(-110%);
+  }
+}
+
+/* Coming back is an entrance and gets the longer, softer landing; leaving is
+   shorter and quieter, because attention is already on the page. */
+@media (width <= 899px) and (prefers-reduced-motion: no-preference) {
+  .nav {
+    transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .nav-away .nav {
+    transition: transform 190ms cubic-bezier(0.55, 0, 1, 0.45);
+  }
+}
+
+/* Touch: every control in the bar gets a 44px target. The links grow into the
+   row's own padding, so the bar is only 2px taller; the name and the language
+   switch keep their size and extend an invisible zone instead. */
+@media (width <= 899px) and (pointer: coarse) {
+  .nav-links {
+    padding: 0;
+  }
+
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding-block: 0;
+  }
+
+  .brand,
+  .lang-switch {
+    position: relative;
+  }
+
+  .brand::after,
+  .lang-switch::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 44px;
+    translate: 0 -50%;
   }
 }
 

@@ -93,8 +93,10 @@
   text-decoration: none;
 }
 
-.sv-feat-name:hover {
-  color: var(--coral);
+@media (hover: hover) {
+  .sv-feat-name:hover {
+    color: var(--coral);
+  }
 }
 
 /* The whole card is the link: the name's hit area stretches over the card
@@ -163,6 +165,33 @@
 
   .sv-feat-stats span {
     font-size: var(--t-body);
+  }
+}
+
+/* Phones: three stacked route cards are two and a half screens of scrolling
+   for one idea. They become a swipeable row, with the next card peeking in
+   from the right so the row reads as scrollable. */
+@media (width <= 700px) {
+  .sv-longest {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .sv-longest::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sv-feat {
+    flex: 0 0 86%;
+    scroll-snap-align: start;
+  }
+
+  .sv-feat:only-child {
+    flex-basis: 100%;
   }
 }
 

@@ -43,7 +43,7 @@ export function Console({ t }: Props) {
           </div>
           <div id="console-status" className="sr-only" role="status" aria-live="polite"></div>
 
-          <div className="cs-suggest" id="console-suggest" aria-label="Quick commands">
+          <div className="cs-suggest" id="console-suggest" role="group" aria-label={t.suggestAria}>
             <button type="button" data-cmd={t.suggest1}>
               $ {t.suggest1}
             </button>
@@ -59,14 +59,21 @@ export function Console({ t }: Props) {
           </div>
 
           <form className="cs-input" id="console-form" autoComplete="off">
-            <span className="ci-host">kevin@gamez</span>
-            <span className="ci-sep">~</span>
-            <span className="ci-prompt">$</span>
+            {/* Prompt chrome; the input carries its own name. */}
+            <span className="ci-host" aria-hidden="true">
+              kevin@gamez
+            </span>
+            <span className="ci-sep" aria-hidden="true">
+              ~
+            </span>
+            <span className="ci-prompt" aria-hidden="true">
+              $
+            </span>
             <input
               id="console-msg"
               type="text"
               placeholder={t.placeholder}
-              aria-label="Console input"
+              aria-label={t.inputAria}
             />
           </form>
         </div>

@@ -47,7 +47,8 @@ function run(cmdLine: string): void {
   const [cmd, ...args] = tokenize(cmdLine)
   if (!cmd || !commands) return
   track<{ name: 'terminal_command'; props: { command: string } }>('terminal_command', {
-    command: cmd,
+    // Only known command names leave the page, never free text typed here.
+    command: commands[cmd] ? cmd : 'unknown',
   })
   if (commands[cmd]) {
     try {
@@ -81,8 +82,12 @@ export function submit(v: string): void {
   renderOutline()
 }
 
+// preventScroll is load-bearing: init() focuses the prompt on page load, and
+// below 880px the window stacks and the document scrolls (see base.css), so a
+// plain focus() dropped phones halfway down the page, at the terminal. On
+// desktop the window is fixed to the viewport, so nothing changes there.
 export function focusInput(): void {
-  setTimeout(() => input?.focus(), 0)
+  setTimeout(() => input?.focus({ preventScroll: true }), 0)
 }
 
 let buildLoop: { start(): void; stop(): void } | null = null

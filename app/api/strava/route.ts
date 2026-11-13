@@ -9,25 +9,20 @@
 // other methods get the framework's automatic 405); response shaping lives in
 // ./strava-shape, Strava I/O in ./strava-token, KV caching in ./strava-cache.
 //
-// Privacy: only the featured longest efforts carry a raw polyline (for the map
-// the user opted into). The latest activity ships its normalized route shape
-// only, never coordinates. Hard timeouts on every awaited call so it can't hang.
+// Privacy: the featured longest efforts and the latest activity carry a raw
+// polyline (for the maps the user opted into); private activities never
+// qualify for either. Hard timeouts on every awaited call so it can't hang.
 //
 // Required env: STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, STRAVA_REFRESH_TOKEN.
 // Optional env (shared with /api/chat): UPSTASH/KV REST url + token for caching.
 
-import { cacheGet, cacheSet } from './strava-cache'
-import { emptyPayload, shape } from './strava-shape'
+import { getSnapshot } from './strava-snapshot'
 import type { Payload } from './strava-shape'
-import { fetchActivities, refreshAccessToken } from './strava-token'
 import { limitRoute } from '@/lib/api-rate-limit'
 
 export const runtime = 'nodejs'
 // The original serverless function ran on every request; never prerender.
 export const dynamic = 'force-dynamic'
-
-const CACHE_TTL = 600
-const ERROR_TTL = 120
 
 function send(body: Payload, maxAge: number): Response {
   return new Response(JSON.stringify(body), {
@@ -45,27 +40,6 @@ export async function GET(req: Request): Promise<Response> {
   const limited = await limitRoute(req, 'strava', { limit: 30, window: '10 m' })
   if (limited) return limited
 
-  if (
-    !process.env.STRAVA_CLIENT_ID ||
-    !process.env.STRAVA_CLIENT_SECRET ||
-    !process.env.STRAVA_REFRESH_TOKEN
-  ) {
-    return send(emptyPayload({ configured: false }), 60)
-  }
-
-  const cached = await cacheGet()
-  if (cached) {
-    return send(cached, CACHE_TTL)
-  }
-
-  try {
-    const payload = shape(await fetchActivities(await refreshAccessToken()))
-    await cacheSet(payload, CACHE_TTL)
-    return send(payload, CACHE_TTL)
-  } catch (err) {
-    console.error('[api/strava]', err instanceof Error ? err.message : err)
-    const payload = emptyPayload({ error: true })
-    await cacheSet(payload, ERROR_TTL)
-    return send(payload, ERROR_TTL)
-  }
+  const { payload, ttl } = await getSnapshot()
+  return send(payload, ttl)
 }

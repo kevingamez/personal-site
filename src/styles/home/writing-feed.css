@@ -54,9 +54,11 @@
     color 0.15s;
 }
 
-.feed-nav:hover {
-  background: var(--ink);
-  color: var(--cream);
+@media (hover: hover) {
+  .feed-nav:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
 }
 
 .feed-nav.prev {
@@ -116,8 +118,10 @@
   border-radius: 4px;
 }
 
-.feed-dot:hover:not(.on) .feed-dot-shape {
-  background: var(--muted);
+@media (hover: hover) {
+  .feed-dot:hover:not(.on) .feed-dot-shape {
+    background: var(--muted);
+  }
 }
 
 /* Footer link - "see all on linkedin →" */
@@ -133,9 +137,11 @@
   transition: color 0.2s;
 }
 
-.writing-more:hover {
-  color: var(--coral-strong);
-  border-bottom-color: var(--coral-strong);
+@media (hover: hover) {
+  .writing-more:hover {
+    color: var(--coral-strong);
+    border-bottom-color: var(--coral-strong);
+  }
 }
 
 @media (width >= 1180px) and (height <= 950px) {

@@ -2,19 +2,14 @@
 // into the stream via the DOM helpers; `kevin` / `ask` hand off to the AI bridge.
 
 import { type CommandFn, escape, printLines, printOut } from './console-dom'
-import {
-  ABOUT_LINES,
-  CONTACT_LINES,
-  EXPERIENCE_LINES,
-  HELP_LINES,
-  MAN_PAGES,
-  NOW_LINES,
-  REPOS_LINES,
-  SOURCE_LINES,
-  STACK_LINES,
-} from './console-data'
+import { consoleStrings } from './console-i18n'
 import { runChat } from './console-chat'
 import { enterDevMode } from './dev-transition'
+
+// Resolved per call rather than once at import, so the module stays free of
+// DOM reads until a command actually runs.
+const S = consoleStrings
+const M = () => consoleStrings().msg
 
 function stripHead(raw: string, head: string): string {
   return raw
@@ -25,45 +20,42 @@ function stripHead(raw: string, head: string): string {
 
 export const COMMANDS: Record<string, CommandFn> = {
   help: (_a, r) => {
-    printLines(r.stream, HELP_LINES)
+    printLines(r.stream, S().help)
   },
   whoami: (_a, r) => {
-    printOut(
-      r.stream,
-      'kevin, founding engineer, most recently @ <span class="ac">enttor</span>, <span class="muted">bogotá / utc-5</span>'
-    )
+    printOut(r.stream, M().whoami)
   },
   about: (_a, r) => {
-    printLines(r.stream, ABOUT_LINES)
+    printLines(r.stream, S().about)
   },
   experience: (_a, r) => {
-    printLines(r.stream, EXPERIENCE_LINES)
+    printLines(r.stream, S().experience)
   },
   cv: (_a, r) => {
-    printLines(r.stream, EXPERIENCE_LINES)
+    printLines(r.stream, S().experience)
   },
   stack: (_a, r) => {
-    printLines(r.stream, STACK_LINES)
+    printLines(r.stream, S().stack)
   },
   repos: (_a, r) => {
-    printLines(r.stream, REPOS_LINES)
+    printLines(r.stream, S().repos)
   },
   now: (_a, r) => {
-    printLines(r.stream, NOW_LINES)
+    printLines(r.stream, S().now)
   },
   contact: (_a, r) => {
-    printLines(r.stream, CONTACT_LINES)
+    printLines(r.stream, S().contact)
   },
   source: (_a, r) => {
-    printLines(r.stream, SOURCE_LINES)
+    printLines(r.stream, S().source)
   },
   // The only way into dev mode - nothing on the page links to it anymore.
   dev: (_a, r) => {
-    printOut(r.stream, 'booting <span class="ac">/dev/</span>, the ide interface...')
+    printOut(r.stream, M().devBoot)
     enterDevMode()
   },
   date: (_a, r) => {
-    printOut(r.stream, escape(new Date().toString()))
+    printOut(r.stream, escape(M().date()))
   },
   clear: (_a, r) => {
     r.stream.innerHTML = ''
@@ -72,28 +64,26 @@ export const COMMANDS: Record<string, CommandFn> = {
     printOut(r.stream, escape(a.join(' ')))
   },
   ls: (_a, r) => {
-    printOut(
-      r.stream,
-      'about  experience  stack  repos  now  contact  <span class="muted">(try `cat about`)</span>'
-    )
+    printOut(r.stream, M().ls)
   },
   cat: (a, r) => {
     const f = (a[0] || '').toLowerCase()
+    const s = S()
     const map: Record<string, string[]> = {
-      about: ABOUT_LINES,
-      experience: EXPERIENCE_LINES,
-      stack: STACK_LINES,
-      repos: REPOS_LINES,
-      now: NOW_LINES,
-      contact: CONTACT_LINES,
+      about: s.about,
+      experience: s.experience,
+      stack: s.stack,
+      repos: s.repos,
+      now: s.now,
+      contact: s.contact,
     }
     if (!f) {
-      printOut(r.stream, 'cat: missing operand, try `cat about`', 'err')
+      printOut(r.stream, M().catMissing, 'err')
       return
     }
     const lines = map[f.replace(/\.txt$|\.md$/, '')]
     if (!lines) {
-      printOut(r.stream, `cat: ${escape(f)}: no such file`, 'err')
+      printOut(r.stream, M().catNoFile(escape(f)), 'err')
       return
     }
     printLines(r.stream, lines)
@@ -104,27 +94,23 @@ export const COMMANDS: Record<string, CommandFn> = {
   cd: (a, r) => {
     const target = (a[0] || '~').replace(/^~/, '/home/kevin')
     if (target === '/home/kevin' || target === '~' || target === '/' || target === '.') {
-      printOut(r.stream, '<span class="muted">already there.</span>')
+      printOut(r.stream, M().cdHere)
       return
     }
-    printOut(
-      r.stream,
-      `cd: <span class="muted">${escape(a[0] || '')}</span>, this site is mostly read-only. try <span class="ac">ls</span>.`,
-      'err'
-    )
+    printOut(r.stream, M().cdReadOnly(escape(a[0] || '')), 'err')
   },
   uname: (_a, r) => {
-    printOut(r.stream, 'kevingamez.co, next.js build')
+    printOut(r.stream, M().uname)
   },
   uptime: (_a, r) => {
     const ms = Date.now() - r.bootTime
     const m = Math.floor(ms / 60000)
     const s = Math.floor((ms % 60000) / 1000)
-    printOut(r.stream, `up ${m}m ${s}s`)
+    printOut(r.stream, M().uptime(m, s))
   },
   history: (_a, r) => {
     if (!r.cmdHistory.length) {
-      printOut(r.stream, '<span class="muted">(empty)</span>')
+      printOut(r.stream, M().historyEmpty)
       return
     }
     printLines(
@@ -135,24 +121,24 @@ export const COMMANDS: Record<string, CommandFn> = {
   which: (a, r) => {
     const c = (a[0] || '').toLowerCase()
     if (!c) {
-      printOut(r.stream, 'which: missing operand', 'err')
+      printOut(r.stream, M().whichMissing, 'err')
       return
     }
     if (COMMANDS[c]) {
       printOut(r.stream, `/usr/local/bin/${escape(c)}`)
     } else {
-      printOut(r.stream, `which: ${escape(c)}: not found`, 'err')
+      printOut(r.stream, M().whichNotFound(escape(c)), 'err')
     }
   },
   man: (a, r) => {
     const c = (a[0] || '').toLowerCase()
     if (!c) {
-      printOut(r.stream, 'man: missing operand, what page do you want?', 'err')
+      printOut(r.stream, M().manMissing, 'err')
       return
     }
-    const page = MAN_PAGES[c]
+    const page = S().man[c]
     if (!page) {
-      printOut(r.stream, `No manual entry for ${escape(c)}`, 'err')
+      printOut(r.stream, M().manNone(escape(c)), 'err')
       return
     }
     printLines(r.stream, page)
@@ -173,46 +159,34 @@ export const COMMANDS: Record<string, CommandFn> = {
   mkdir: (a, r) => {
     const name = a[0] || ''
     if (!name) {
-      printOut(r.stream, 'mkdir: missing operand', 'err')
+      printOut(r.stream, M().mkdirMissing, 'err')
       return
     }
-    printOut(
-      r.stream,
-      `mkdir: cannot create directory ‘${escape(name)}’: <span class="muted">read-only file system.</span>`,
-      'err'
-    )
+    printOut(r.stream, M().mkdir(escape(name)), 'err')
   },
   rmdir: (a, r) => {
-    printOut(r.stream, `rmdir: ‘${escape(a[0] || '')}’: read-only file system.`, 'err')
+    printOut(r.stream, M().rmdir(escape(a[0] || '')), 'err')
   },
   touch: (a, r) => {
-    printOut(
-      r.stream,
-      `touch: cannot touch ‘${escape(a[0] || '')}’: <span class="muted">read-only file system.</span>`,
-      'err'
-    )
+    printOut(r.stream, M().touch(escape(a[0] || '')), 'err')
   },
   rm: (a, r) => {
-    printOut(
-      r.stream,
-      `rm: cannot remove ‘${escape(a.slice(-1)[0] || '')}’: <span class="muted">read-only file system.</span>`,
-      'err'
-    )
+    printOut(r.stream, M().rm(escape(a.slice(-1)[0] || '')), 'err')
   },
   mv: (_a, r) => {
-    printOut(r.stream, 'mv: <span class="muted">read-only file system.</span>', 'err')
+    printOut(r.stream, M().mv, 'err')
   },
   cp: (_a, r) => {
-    printOut(r.stream, 'cp: <span class="muted">read-only file system.</span>', 'err')
+    printOut(r.stream, M().cp, 'err')
   },
   sudo: (_a, r) => {
-    printOut(r.stream, 'sudo: not available.', 'err')
+    printOut(r.stream, M().sudo, 'err')
   },
   exit: (_a, r) => {
-    printOut(r.stream, '<span class="muted">nothing to exit. this is a web page.</span>')
+    printOut(r.stream, M().exit)
   },
   logout: (_a, r) => {
-    printOut(r.stream, '<span class="muted">nothing to log out of. this is a web page.</span>')
+    printOut(r.stream, M().logout)
   },
   kevin: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'kevin')),
   ask: (a, r, h, raw) => runChat(r, h, a.join(' ').trim() || stripHead(raw, 'ask')),

@@ -140,26 +140,22 @@
   }
 }
 
-@media (width <= 900px) {
-  .tl-band {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-
 @media (width <= 760px) {
-  .tl-head,
-  .tl-panel-in {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  /* Dates, then the role, with the toggle parked in the top right corner
+     where a thumb expects it instead of on a row of its own. */
+  .tl-head {
+    grid-template-columns: minmax(0, 1fr) 28px;
+    gap: 8px 12px;
+    padding-block: 22px;
+  }
+
+  .tl-what {
+    grid-column: 1 / -1;
   }
 
   .tl-plus {
-    justify-self: start;
-  }
-
-  .tl-ledger {
-    grid-template-columns: 1fr;
+    grid-area: 1 / 2;
+    align-self: center;
   }
 }
 
@@ -170,9 +166,5 @@
 
   .tl-role {
     font-size: var(--t-title-3);
-  }
-
-  .tl-desc {
-    font-size: var(--t-footnote);
   }
 }

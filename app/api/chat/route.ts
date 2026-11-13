@@ -4,8 +4,9 @@
 // events. Hardened against:
 //   - Cross-origin abuse: only requests from kevingamez.co (or localhost
 //     during dev) are accepted; everything else gets 403.
-//   - Oversized inputs: each message capped at MAX_MESSAGE_CHARS, total
-//     conversation capped at MAX_TOTAL_CHARS, history capped at 8 messages.
+//   - Oversized inputs: each user message capped at MAX_MESSAGE_CHARS, echoed
+//     assistant history at MAX_ASSISTANT_CHARS, total conversation capped at
+//     MAX_TOTAL_CHARS, history capped at 8 messages.
 //   - Schema confusion: zod parses the request body and rejects malformed shapes.
 //   - Token cost: max_tokens 512 (was 1024), and we slice history to 8.
 //   - Bot abuse: per-IP daily rate limit + a global daily backstop, both keyed

@@ -65,6 +65,28 @@ function init(): void {
     }
   })
 
+  // The IDE chrome's tabs and tree rows are divs with role="button" and
+  // tabindex; Enter and Space activate them the way a real button would.
+  // Activating a tree row or an editor tab redraws its container, which would
+  // drop focus to <body>; the redrawn twin (same data-kbd) takes it back.
+  // Delete closes the focused editor tab, since its close mark is mouse-only.
+  document.addEventListener('keydown', (e) => {
+    const t = e.target
+    if (!(t instanceof HTMLElement) || t instanceof HTMLButtonElement) return
+    if (t.getAttribute('role') !== 'button') return
+    const closing = e.key === 'Delete' && t.classList.contains('et')
+    if (e.key !== 'Enter' && e.key !== ' ' && !closing) return
+    e.preventDefault()
+    const kbd = t.dataset.kbd
+    if (closing) t.querySelector<HTMLElement>('.x')?.click()
+    else t.click()
+    if (t.isConnected) return
+    const twin = kbd
+      ? [...document.querySelectorAll<HTMLElement>('[data-kbd]')].find((n) => n.dataset.kbd === kbd)
+      : null
+    ;(twin ?? document.querySelector<HTMLElement>('.et.on'))?.focus({ preventScroll: true })
+  })
+
   // Initial render + welcome lines.
   resetTerminal()
   updatePrompt()

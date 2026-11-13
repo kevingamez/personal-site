@@ -54,17 +54,23 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   font-size: var(--t-footnote);
 }
 
+/* The 8px that used to be a gap between rows is now padding inside them, so
+   the list looks the same and each link is a 24px target with no dead strip
+   between it and the next. */
 .foot-grid ul a {
+  display: block;
+  padding-block: 4px;
   color: rgb(255 255 255 / 72%);
   transition: color 0.2s;
 }
 
-.foot-grid ul a:hover {
-  color: var(--white);
+@media (hover: hover) {
+  .foot-grid ul a:hover {
+    color: var(--white);
+  }
 }
 
 .colophon {
@@ -79,8 +85,14 @@
 }
 
 @media (width <= 780px) {
+  /* The blurb takes the full width; the two link lists sit side by side
+     under it instead of running down one long column. */
   .foot-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .foot-grid > :first-child {
+    grid-column: 1 / -1;
   }
 
   /* Stacked, the link lists are a column of thumb targets: give each row the

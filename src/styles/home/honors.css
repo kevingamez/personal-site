@@ -17,6 +17,7 @@
   font-size: var(--t-title-2);
   letter-spacing: var(--ls-heading);
   margin: 0;
+  text-wrap: balance;
 }
 
 .achievements-blurb {

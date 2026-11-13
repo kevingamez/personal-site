@@ -11,7 +11,7 @@
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 180ms ease-out;
+  transition: opacity 180ms var(--ease-out);
 }
 
 .dev-transition.on {

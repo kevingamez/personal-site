@@ -58,8 +58,10 @@
   margin-left: 2px;
 }
 
-.gol-note a:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .gol-note a:hover {
+    border-color: var(--ink);
+  }
 }
 
 .gol-controls {
@@ -88,10 +90,12 @@
     border-color 0.15s;
 }
 
-.gol-btn:hover {
-  background: var(--ink);
-  color: var(--white);
-  border-color: var(--ink);
+@media (hover: hover) {
+  .gol-btn:hover {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
 }
 
 .gol-stamps {
@@ -118,8 +122,10 @@
     border-color 0.15s;
 }
 
-.gol-stamp:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .gol-stamp:hover {
+    border-color: var(--ink);
+  }
 }
 
 .gol-stamp.on {

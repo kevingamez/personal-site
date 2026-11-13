@@ -1,7 +1,10 @@
-// Static content for the home-page console: the canned command output, man
-// pages, and the file list used by tab-completion. Pure data, no logic.
+// English corpus for the home-page console: the canned command output, man
+// pages, and the one-line messages the built-ins print. Pure data; the page
+// language picks this or ./console-data-es (see ./console-i18n).
 
-export const HELP_LINES = [
+import type { ConsoleMessages, ConsoleStrings } from './console-i18n'
+
+const help = [
   '<b>info</b>',
   '  <span class="ac">whoami</span>          one-line bio',
   '  <span class="ac">about</span>           the long version',
@@ -36,11 +39,11 @@ export const HELP_LINES = [
   '<span class="muted">tip, <kbd>Tab</kbd> autocompletes, <kbd>↑</kbd>/<kbd>↓</kbd> for history, <kbd>Ctrl-W/U/K</kbd> to edit, <kbd>Ctrl-C</kbd> to cancel</span>',
 ]
 
-export const ABOUT_LINES = [
+const about = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
   '<b>last</b>, founding engineer at <span class="ac">enttor</span> - paid ads platform, a slack agent,',
-  '       an AI creative studio, on Next.js + Supabase + Postgres. looking for the next thing.',
+  '<span class="cs-pad cs-pad-s"></span>an AI creative studio, on Next.js + Supabase + Postgres. looking for the next thing.',
   '<b>before</b>, product engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
   '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes.',
   '',
@@ -48,30 +51,30 @@ export const ABOUT_LINES = [
   '<span class="ac">kevin "your question"</span> to chat with the AI.',
 ]
 
-export const EXPERIENCE_LINES = [
+const experience = [
   '<span class="muted">Mar 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
-  '                       Paid ads platform, slack agent, AI creative studio',
+  '<span class="cs-pad"></span>Paid ads platform, slack agent, AI creative studio',
   '',
   '<span class="muted">Feb 2024, Mar 2025</span> Product engineer <span class="at">@ Samsam</span>',
-  '                       E-commerce marketplace, React Native, Next.js',
+  '<span class="cs-pad"></span>E-commerce marketplace, React Native, Next.js',
   '',
   '<span class="muted">Oct 2022, Dec 2023</span> Software engineer <span class="at">@ Heinsohn</span>',
-  '                       Azure CI/CD, Python reporting service, Power BI',
+  '<span class="cs-pad"></span>Azure CI/CD, Python reporting service, Power BI',
   '',
   '<span class="muted">Jan 2024, May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
   '',
   '<span class="muted">Jan 2019, Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
-  '                       Andrés Bello National Distinction, AWS certs',
+  '<span class="cs-pad"></span>Andrés Bello National Distinction, AWS certs',
 ]
 
-export const STACK_LINES = [
+const stack = [
   '<b>frontend</b>   next.js, react, react native, expo, tailwind',
   '<b>backend </b>   nestjs, trpc, prisma, postgres, redis, supabase',
   '<b>ai / ml </b>   claude, openai, pgvector rag, mcp, pytorch',
   '<b>infra   </b>   vercel, aws, docker, modal, ci/cd',
 ]
 
-export const REPOS_LINES = [
+const repos = [
   'kevingamez/<span class="ac">personal-site</span>            <span class="muted">typescript, this page</span>',
   'kevingamez/<span class="ac">AD_ASTRA2023-SpaceInvaders</span>  <span class="muted">python, aerial deforestation, opencv + yolov5</span>',
   'kevingamez/<span class="ac">Palladium_Chat</span>           <span class="muted">typescript</span>',
@@ -81,20 +84,20 @@ export const REPOS_LINES = [
   '→ <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>, 28 public repos',
 ]
 
-export const NOW_LINES = [
-  'status    <b>between roles</b>, open to founding-engineer and senior full-stack work',
+const now = [
+  'status    <b>between roles</b>, open to founding-engineer roles',
   'last      <b>paid ads platform, slack agent, ad studio</b> at enttor, meta and tiktok',
   'tinkering <b>LLM agents</b> and browser automation, plus this site',
 ]
 
-export const CONTACT_LINES = [
+const contact = [
   '<b>email   </b>  <a href="mailto:kevingamez.kg@gmail.com">kevingamez.kg@gmail.com</a>',
   '<b>github  </b>  <a href="https://github.com/kevingamez" target="_blank" rel="noopener">github.com/kevingamez</a>',
   '<b>linkedin</b>  <a href="https://www.linkedin.com/in/kevin-gamez/" target="_blank" rel="noopener">linkedin.com/in/kevin-gamez</a>',
   '<b>x       </b>  <a href="https://x.com/KevinGamezA" target="_blank" rel="noopener">x.com/KevinGamezA</a>',
 ]
 
-export const SOURCE_LINES = [
+const source = [
   '<b>source map</b>',
   '  <a href="https://github.com/kevingamez/personal-site" target="_blank" rel="noopener">github.com/kevingamez/personal-site</a>',
   '  <a href="/humans.txt">/humans.txt</a>    credits and build notes',
@@ -102,9 +105,7 @@ export const SOURCE_LINES = [
   '  <a href="/dev/">/dev/</a>           alternate portfolio interface',
 ]
 
-export const CAT_FILES = ['about', 'experience', 'stack', 'repos', 'now', 'contact']
-
-export const MAN_PAGES: Record<string, string[]> = {
+const man: Record<string, string[]> = {
   help: ['<b>HELP</b>(1)', '  list every command this shell knows.'],
   whoami: ['<b>WHOAMI</b>(1)', '  print a one-line bio.'],
   about: ['<b>ABOUT</b>(1)', '  print the longer bio (~6 lines).'],
@@ -149,4 +150,68 @@ export const MAN_PAGES: Record<string, string[]> = {
     '  example: <span class="ac">kevin "what does enttor do?"</span>',
   ],
   ask: ['<b>ASK</b>(1)', '  alias for <span class="ac">kevin</span>.'],
+}
+
+const RO = '<span class="muted">read-only file system.</span>'
+
+const msg: ConsoleMessages = {
+  whoami:
+    'kevin, founding engineer, most recently @ <span class="ac">enttor</span>, <span class="muted">bogotá / utc-5</span>',
+  devBoot: 'booting <span class="ac">/dev/</span>, the ide interface...',
+  ls: 'about  experience  stack  repos  now  contact  <span class="muted">(try `cat about`)</span>',
+  notFound: (c) => `zsh: command not found: ${c}, try <span class="ac">help</span>`,
+  catMissing: 'cat: missing operand, try `cat about`',
+  catNoFile: (f) => `cat: ${f}: no such file`,
+  cdHere: '<span class="muted">already there.</span>',
+  cdReadOnly: (d) =>
+    `cd: <span class="muted">${d}</span>, this site is mostly read-only. try <span class="ac">ls</span>.`,
+  uname: 'kevingamez.co, next.js build',
+  uptime: (m, s) => `up ${m}m ${s}s`,
+  historyEmpty: '<span class="muted">(empty)</span>',
+  whichMissing: 'which: missing operand',
+  whichNotFound: (c) => `which: ${c}: not found`,
+  manMissing: 'man: missing operand, what page do you want?',
+  manNone: (c) => `No manual entry for ${c}`,
+  mkdirMissing: 'mkdir: missing operand',
+  mkdir: (n) => `mkdir: cannot create directory ‘${n}’: ${RO}`,
+  rmdir: (n) => `rmdir: ‘${n}’: read-only file system.`,
+  touch: (n) => `touch: cannot touch ‘${n}’: ${RO}`,
+  rm: (n) => `rm: cannot remove ‘${n}’: ${RO}`,
+  mv: `mv: ${RO}`,
+  cp: `cp: ${RO}`,
+  sudo: 'sudo: not available.',
+  exit: '<span class="muted">nothing to exit. this is a web page.</span>',
+  logout: '<span class="muted">nothing to log out of. this is a web page.</span>',
+  date: () => new Date().toString(),
+}
+
+export const EN: ConsoleStrings = {
+  help,
+  about,
+  experience,
+  stack,
+  repos,
+  now,
+  contact,
+  source,
+  man,
+  msg,
+  chat: {
+    usage: 'usage: kevin "your question"',
+    tooLong: (max) => `question too long, keep it under ${max} characters.`,
+    busy: 'the assistant is busy right now. try again later.',
+    rateLimited: 'rate limited, daily message cap reached. try tomorrow.',
+    conversationTooLong: 'this conversation got too long. reload the page to start fresh.',
+    forbidden: 'this console only answers requests from kevingamez.co.',
+    notConfigured: 'the AI backend is not configured here. the shell still works - try `help`.',
+    unreachable: 'could not reach the AI backend. the shell still works - try `help`.',
+    interrupted: 'request interrupted - try again.',
+    error: (detail) => `[error: ${detail}]`,
+  },
+  steps: {
+    thinking: 'thinking',
+    web_search: 'searching the web',
+    get_site_data: 'reading site data',
+    get_strava_stats: 'reading training stats',
+  },
 }

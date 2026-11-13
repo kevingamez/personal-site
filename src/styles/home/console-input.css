@@ -12,21 +12,28 @@
 }
 
 .cs-suggest button {
+  position: relative;
   background: transparent;
   border: 1px solid rgb(255 255 255 / 10%);
   color: rgb(232 232 236 / 70%);
   padding: 5px 10px;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    transform 0.15s;
 }
 
-.cs-suggest button:hover {
-  background: rgb(255 255 255 / 6%);
-  border-color: var(--coral-on-dark);
-  color: #fff;
+@media (hover: hover) {
+  .cs-suggest button:hover {
+    background: rgb(255 255 255 / 6%);
+    border-color: var(--coral-on-dark);
+    color: #fff;
+  }
 }
 
 .cs-suggest button:disabled {
@@ -39,7 +46,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 13px 16px;
+  padding: 4px 16px;
   background: rgb(0 0 0 / 22%);
   border-top: 1px solid rgb(255 255 255 / 8%);
   font-family: inherit;
@@ -51,7 +58,7 @@
 }
 
 .cs-input .ci-sep {
-  color: rgb(232 232 236 / 55%);
+  color: rgb(232 232 236 / 60%);
 }
 
 .cs-input .ci-prompt {
@@ -68,6 +75,7 @@
   font-size: 13px;
   outline: none;
   caret-color: var(--coral-on-dark);
+  min-height: 40px;
   padding: 2px 0;
 }
 
@@ -77,8 +85,9 @@
   border-radius: 3px;
 }
 
+/* 60% is the floor for 4.5:1 on the shell over the lightest patch of paper. */
 #console-msg::placeholder {
-  color: rgb(232 232 236 / 35%);
+  color: rgb(232 232 236 / 60%);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -94,6 +103,42 @@
   }
 
   .cs-input {
-    padding: 11px 12px;
+    padding: 4px 12px;
+  }
+}
+
+/* A mouse gets a 40px target on the chips without the shell growing: they
+   extend an invisible zone above and below. */
+.cs-suggest button::after {
+  content: '';
+  position: absolute;
+  inset: -8px 0;
+}
+
+.cs-suggest button:active {
+  transform: scale(0.96);
+}
+
+/* Touch: below 16px iOS zooms the whole page when the field takes focus, and
+   never zooms back out. The prompt and the suggestion chips also become full
+   44px targets. */
+@media (pointer: coarse) {
+  #console-msg {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .cs-input {
+    padding-block: 4px;
+  }
+
+  .cs-suggest button {
+    min-height: 44px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
+
+  .cs-suggest button::after {
+    content: none;
   }
 }

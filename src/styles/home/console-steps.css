@@ -8,7 +8,7 @@
   gap: 8px;
   padding: 2px 0;
   font-size: 12px;
-  color: rgb(232 232 236 / 55%);
+  color: rgb(232 232 236 / 70%);
 }
 
 .cs-step-mark {
@@ -29,7 +29,9 @@
 .cs-step-detail {
   min-width: 0;
   overflow: hidden;
-  color: rgb(232 232 236 / 40%);
+
+  /* 60% is the 4.5:1 floor on the shell; the label above sits a step brighter. */
+  color: rgb(232 232 236 / 60%);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
