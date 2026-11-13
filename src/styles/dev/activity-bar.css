@@ -29,8 +29,10 @@
   position: relative;
 }
 
-.activity-bar .ab-item:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  .activity-bar .ab-item:hover {
+    color: var(--ink);
+  }
 }
 
 .activity-bar .ab-item.on {
@@ -52,9 +54,11 @@
   pointer-events: none;
 }
 
-.activity-bar .ab-item:hover .material-symbols-outlined,
-.activity-bar .ab-item.on .material-symbols-outlined {
-  opacity: 1;
+@media (hover: hover) {
+  .activity-bar .ab-item:hover .material-symbols-outlined,
+  .activity-bar .ab-item.on .material-symbols-outlined {
+    opacity: 1;
+  }
 }
 
 .activity-bar .ab-item.on .material-symbols-outlined {

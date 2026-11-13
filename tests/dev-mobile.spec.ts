@@ -14,6 +14,39 @@ test.describe('phone viewport', () => {
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => r(null))))
     expect(await page.evaluate(() => window.scrollY)).toBe(0)
   })
+
+  // The side panel is a drawer on phones: closed on load so the editor leads,
+  // and every visible control is a full 44px target with no sideways scroll.
+  test('/dev leads with the editor and has thumb-sized targets', async ({ page }) => {
+    await page.goto('/dev')
+    await expect(page.locator('#cmd')).toBeFocused({ timeout: 10_000 })
+    await expect(page.locator('.explorer')).toBeHidden()
+    await expect(page.locator('.editor')).toBeInViewport()
+
+    await page.locator('[data-ab="explorer"]').tap()
+    await expect(page.locator('.explorer')).toBeVisible()
+
+    const report = await page.evaluate(() => {
+      const small = [...document.querySelectorAll('a, button, [role=button], input')].filter(
+        (el) => {
+          const r = el.getBoundingClientRect()
+          const shown = r.width > 0 && r.height > 0 && getComputedStyle(el).opacity !== '0'
+          return shown && (r.width < 44 || r.height < 44)
+        }
+      )
+      return {
+        small: small.map((el) => el.className || el.tagName),
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+        promptPx: parseFloat(getComputedStyle(document.getElementById('cmd')!).fontSize),
+      }
+    })
+    expect(report.small).toEqual([])
+    expect(report.overflow).toBe(0)
+    expect(report.promptPx).toBeGreaterThanOrEqual(16)
+
+    await page.locator('[data-ab="explorer"]').tap()
+    await expect(page.locator('.explorer')).toBeHidden()
+  })
 })
 
 test('/dev on desktop still focuses the prompt', async ({ page }) => {

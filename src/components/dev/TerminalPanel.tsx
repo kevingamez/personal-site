@@ -70,11 +70,7 @@ export function TerminalPanel() {
         <span className="pr" id="prompt">
           ~ $
         </span>
-        <input
-          id="cmd"
-          placeholder="try ls, cat src/about.ts, vim README.md, help…"
-          autoComplete="off"
-        />
+        <input id="cmd" placeholder="try ls, cat README.md, help" autoComplete="off" />
         <span className="hint">↵ run, ↑ history, ⌃L clear</span>
       </div>
       <div className="term-body term-stream" id="term-build" hidden></div>

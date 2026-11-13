@@ -85,28 +85,12 @@ export async function Sidebar() {
         <div className="flight-list">
           <a
             className="flight-row"
-            href="https://www.linkedin.com/company/enttor/"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Enttor - paid ads platform and agents"
-          >
-            <span className="fl-num">01</span>
-            <div className="fl-body">
-              <div className="fl-title">
-                paid ads + agents, <span className="fl-where">enttor</span>
-              </div>
-              <div className="fl-meta">meta + tiktok, slack agent, ad generation</div>
-            </div>
-            <span className="fl-status fl-live">live</span>
-          </a>
-          <a
-            className="flight-row"
             href="https://github.com/kevingamez/personal-site"
             target="_blank"
             rel="noopener noreferrer"
             title="kevingamez/personal-site"
           >
-            <span className="fl-num">02</span>
+            <span className="fl-num">01</span>
             <div className="fl-body">
               <div className="fl-title">
                 this site, <span className="fl-where">open source</span>
@@ -122,7 +106,7 @@ export async function Sidebar() {
             rel="noopener noreferrer"
             title="AD ASTRA, aerial deforestation detection"
           >
-            <span className="fl-num">03</span>
+            <span className="fl-num">02</span>
             <div className="fl-body">
               <div className="fl-title">
                 AD_ASTRA, <span className="fl-where">m.sc. thesis</span>
@@ -131,20 +115,32 @@ export async function Sidebar() {
             </div>
             <span className="fl-status fl-research">research</span>
           </a>
+          <a
+            className="flight-row"
+            href="https://www.linkedin.com/company/enttor/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Enttor - paid ads platform and agents"
+          >
+            <span className="fl-num">03</span>
+            <div className="fl-body">
+              <div className="fl-title">
+                paid ads + agents, <span className="fl-where">enttor</span>
+              </div>
+              <div className="fl-meta">2025 to 2026, meta + tiktok, slack agent, ad generation</div>
+            </div>
+            <span className="fl-status fl-shipped">shipped</span>
+          </a>
         </div>
       </div>
 
       <div className="panel">
         <div className="ph">
           <b>tail -f /var/log/commits</b>
-          <span className="pos">github, live</span>
+          <span className="pos">github</span>
         </div>
         <div className="reqs commit-tail" id="reqs">
-          {recentCommits.length === 0 && (
-            <div className="r" style={{ color: 'var(--mute-2)' }}>
-              no recent push events
-            </div>
-          )}
+          {recentCommits.length === 0 && <div className="commit-empty">no recent push events</div>}
           {recentCommits.map((c, i) => (
             <a
               key={i}
@@ -206,7 +202,7 @@ export async function Sidebar() {
         <div
           style={{
             fontFamily: "'IBM Plex Mono',monospace",
-            fontSize: '11.5px',
+            fontSize: '12px',
             lineHeight: 1.7,
             color: 'var(--ink-2)',
           }}

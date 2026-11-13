@@ -8,7 +8,6 @@ import { initBogotaClock } from '../clock'
 import { PROJECT_NAME, state } from './state'
 import { persistActive } from './persistence'
 import { initHeatmap } from './heatmap'
-import { initRequestLog } from './request-log'
 import { initEditor, openFile, renderEditor, setExplorerHooks, updateStatusPos } from './editor'
 import { initExplorer, renderExplorer, renderOutline } from './explorer'
 import { addLine, initTerminal, resetTerminal, setTerminal, updatePrompt } from './terminal'
@@ -37,7 +36,6 @@ function init(): void {
   // Independent widgets first (no shared state).
   initBogotaClock()
   initHeatmap()
-  initRequestLog()
   initToast()
 
   // Shell + editor + explorer (heavy shared-state cluster).

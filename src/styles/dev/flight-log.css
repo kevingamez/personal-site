@@ -1,7 +1,6 @@
-/* In-flight log - the three "what I'm shipping right now" rows in the dev
-   sidebar. Extracted from sidebar.css to keep each file under the 300-line cap.
-   The fl-pulse reduced-motion override lives in base.css (it targets
-   .fl-status.fl-live::before by selector, so it keeps working from here). */
+/* In-flight log - the three project rows in the dev sidebar. Extracted from
+   sidebar.css to keep each file under the 300-line cap. Titles and meta wrap
+   onto a second line rather than ellipsize. */
 .flight-list {
   display: flex;
   flex-direction: column;
@@ -10,9 +9,9 @@
 
 .flight-row {
   display: grid;
-  grid-template-columns: 22px 1fr auto;
+  grid-template-columns: 22px 1fr;
   align-items: start;
-  gap: 10px;
+  gap: 6px 10px;
   padding: 8px 10px;
   background: rgb(255 255 255 / 2%);
   border: 1px solid var(--line);
@@ -25,15 +24,17 @@
     transform 0.15s;
 }
 
-.flight-row:hover {
-  border-color: var(--coral);
-  background: rgb(217 105 68 / 6%);
-  transform: translateX(2px);
+@media (hover: hover) {
+  .flight-row:hover {
+    border-color: var(--coral);
+    background: rgb(217 105 68 / 6%);
+    transform: translateX(2px);
+  }
 }
 
 .fl-num {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--coral);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -50,9 +51,7 @@
   color: var(--ink);
   font-weight: 500;
   letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .fl-where {
@@ -62,50 +61,32 @@
 
 .fl-meta {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--mute);
   letter-spacing: 0.02em;
   margin-top: 3px;
   line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .fl-status {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 7px;
   border-radius: 999px;
-  align-self: center;
   white-space: nowrap;
+
+  /* Under the text rather than beside it, so the title keeps the row width. */
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 2px;
 }
 
-.fl-status.fl-live {
-  background: rgb(63 185 80 / 16%);
-  color: var(--green);
-  position: relative;
-}
-
-.fl-status.fl-live::before {
-  content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green);
-  margin-right: 5px;
-  vertical-align: 1px;
-  animation: fl-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes fl-pulse {
-  50% {
-    opacity: 0.4;
-  }
+.fl-status.fl-shipped {
+  background: rgb(255 255 255 / 6%);
+  color: var(--ink-2);
 }
 
 .fl-status.fl-ship {

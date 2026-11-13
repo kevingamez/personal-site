@@ -49,7 +49,9 @@ export const metadata: Metadata = {
   },
 }
 
-const buildId = 'a7f3c91'
+// Real commit of the deployment (Vercel sets it at build time). Empty locally,
+// in which case the titlebar shows no build id rather than an invented one.
+const buildId = (process.env.VERCEL_GIT_COMMIT_SHA ?? '').slice(0, 7)
 
 export default async function Page() {
   const devDataJson = serializeDevData(await buildDevData())
@@ -60,7 +62,7 @@ export default async function Page() {
         <div className="dev-window">
           <Titlebar buildId={buildId} />
 
-          <div className="app">
+          <div className="app side-closed">
             <ActivityBar />
             <Explorer />
             <SourceControl />
