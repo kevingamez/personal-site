@@ -117,7 +117,7 @@ export const esSections: Pick<
     body: 'Una llamada de 30 minutos, sin slides. Tráelo como esté, aunque esté desordenado. O solo saluda.',
     btnEmail: 'kevingamez.kg@gmail.com →',
     btnShare: 'Compartir esta página',
-    ctaLabel: 'Abierto a roles de founding engineer',
+    ctaLabel: '¿Tienes algo en mente?',
     ctaEmail: 'Escríbeme',
     shareAria: 'Compartir esta página',
     shareCopied: 'Enlace copiado',

@@ -149,6 +149,21 @@
   }
 }
 
+/* Phones: the bar steps aside while you scroll down (src/scripts/home/share.ts
+   stamps .nav-away) and returns on the first scroll up. Keyboard focus inside
+   it always brings it back. */
+@media (width <= 899px) {
+  .nav-away .nav:not(:focus-within) {
+    transform: translateY(-110%);
+  }
+}
+
+@media (width <= 899px) and (prefers-reduced-motion: no-preference) {
+  .nav {
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+}
+
 /* Tiny screens: the link row scrolls but nothing says so - fade the right
    edge as an affordance (Spanish labels overflow at ~320px). */
 @media (width <= 480px) {

@@ -1,7 +1,8 @@
 /* ─── Experience panel: the open row's mark, prose and evidence band ───
    Split out of experience.css, which had reached the 300-line cap. The
-   responsive rules for these selectors stay in experience.css, next to the
-   row rules they share a breakpoint with. */
+   responsive rules for these selectors must live at the end of this file:
+   it is imported after experience.css, so a media query over there loses
+   the cascade to the base rules here. */
 
 .tl-panel-in {
   display: grid;
@@ -158,4 +159,22 @@
 
 .tl-link-v:hover {
   color: var(--muted);
+}
+
+@media (width <= 900px) {
+  .tl-band {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+@media (width <= 760px) {
+  .tl-panel-in {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tl-ledger {
+    grid-template-columns: 1fr;
+  }
 }

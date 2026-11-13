@@ -8,6 +8,8 @@
 
 import { track } from '../lib/analytics'
 
+const NAV_SLOP = 8 // px of travel ignored, so a resting thumb does not flap the nav
+const NAV_KEEP_UNTIL = 160 // px from the top where the nav never retreats
 const REVEAL_AT = 0.6 // fraction of a viewport scrolled before the bar arrives
 const TOAST_MS = 1900
 
@@ -105,6 +107,28 @@ function initStickyBar(): void {
   window.addEventListener('resize', update, { passive: true })
 }
 
+/** On a phone the nav is two rows tall and the action bar sits opposite it, so
+    together they cover a quarter of the screen. The nav steps aside while you
+    read down the page and comes back the moment you scroll up. */
+function initNavRetreat(): void {
+  const root = document.documentElement
+  let last = window.scrollY
+  let away = false
+
+  const update = (): void => {
+    const y = window.scrollY
+    const delta = y - last
+    if (Math.abs(delta) < NAV_SLOP) return
+    last = y
+    const next = delta > 0 && y > NAV_KEEP_UNTIL
+    if (next === away) return
+    away = next
+    root.classList.toggle('nav-away', next)
+  }
+
+  window.addEventListener('scroll', update, { passive: true })
+}
+
 export function initShare(): void {
   for (const btn of document.querySelectorAll<HTMLElement>('[data-share]')) {
     btn.addEventListener('click', () => {
@@ -122,4 +146,5 @@ export function initShare(): void {
   }
 
   initStickyBar()
+  initNavRetreat()
 }

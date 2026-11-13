@@ -140,26 +140,14 @@
   }
 }
 
-@media (width <= 900px) {
-  .tl-band {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-}
-
 @media (width <= 760px) {
-  .tl-head,
-  .tl-panel-in {
+  .tl-head {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .tl-plus {
     justify-self: start;
-  }
-
-  .tl-ledger {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -170,9 +158,5 @@
 
   .tl-role {
     font-size: var(--t-title-3);
-  }
-
-  .tl-desc {
-    font-size: var(--t-footnote);
   }
 }
