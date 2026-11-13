@@ -111,5 +111,5 @@ test('a stale inline snapshot is refreshed from the API', async ({ page }) => {
   await page.locator('[data-strava-lazy-anchor]').scrollIntoViewIfNeeded()
   await expect(page.locator('#strava')).toBeVisible()
   await page.locator('#sv-acts').scrollIntoViewIfNeeded()
-  await expect(page.locator('#sv-acts')).toHaveText('4321')
+  await expect(page.locator('#sv-acts')).toHaveText('4,321')
 })
