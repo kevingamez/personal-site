@@ -38,6 +38,10 @@
    list. It names the investor, so it carries the weight of a subheading. */
 .tl-backer-v {
   display: inline-block;
+
+  /* A 44px hit area around a 24px line, paid back by negative margin. */
+  padding-block: 10px;
+  margin-block: -10px;
   font-size: var(--t-title-3);
   font-weight: var(--w-semibold);
   line-height: 1.2;
@@ -46,15 +50,9 @@
   transition: color var(--dur-fast) var(--ease-out);
 }
 
-.tl-backer-v:hover {
-  color: var(--muted);
-}
-
-/* Touch: a 44px hit area around a 24px line, paid back by negative margin. */
-@media (pointer: coarse) {
-  .tl-backer-v {
-    padding-block: 10px;
-    margin-block: -10px;
+@media (hover: hover) {
+  .tl-backer-v:hover {
+    color: var(--muted);
   }
 }
 
@@ -157,8 +155,10 @@
   transition: color var(--dur-fast) var(--ease-out);
 }
 
-.tl-link-v:hover {
-  color: var(--muted);
+@media (hover: hover) {
+  .tl-link-v:hover {
+    color: var(--muted);
+  }
 }
 
 @media (width <= 900px) {

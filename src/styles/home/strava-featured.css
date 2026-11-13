@@ -93,8 +93,10 @@
   text-decoration: none;
 }
 
-.sv-feat-name:hover {
-  color: var(--coral);
+@media (hover: hover) {
+  .sv-feat-name:hover {
+    color: var(--coral);
+  }
 }
 
 /* The whole card is the link: the name's hit area stretches over the card

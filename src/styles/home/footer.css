@@ -63,8 +63,10 @@
   transition: color 0.2s;
 }
 
-.foot-grid ul a:hover {
-  color: var(--white);
+@media (hover: hover) {
+  .foot-grid ul a:hover {
+    color: var(--white);
+  }
 }
 
 .colophon {

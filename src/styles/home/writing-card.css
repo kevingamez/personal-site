@@ -19,8 +19,10 @@
     transform 0.2s;
 }
 
-.post-card:hover {
-  box-shadow: 0 8px 24px rgb(0 0 0 / 45%);
+@media (hover: hover) {
+  .post-card:hover {
+    box-shadow: 0 8px 24px rgb(0 0 0 / 45%);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -131,9 +133,11 @@
     color 0.15s;
 }
 
-.pc-open:hover {
-  background: var(--cream-3);
-  color: var(--ink);
+@media (hover: hover) {
+  .pc-open:hover {
+    background: var(--cream-3);
+    color: var(--ink);
+  }
 }
 
 /* Body - char-clamped preview rendered as paragraphs.
@@ -170,9 +174,11 @@
   flex-shrink: 0;
 }
 
-.pc-more:hover {
-  color: #0a66c2;
-  text-decoration: underline;
+@media (hover: hover) {
+  .pc-more:hover {
+    color: #0a66c2;
+    text-decoration: underline;
+  }
 }
 
 /* Image grid - fixed height so all cards stay aligned. */

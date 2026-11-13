@@ -155,6 +155,10 @@
     font-size: var(--t-title-1);
   }
 
+  .sv-hero-km i {
+    font-size: 12px;
+  }
+
   .sv-mini span {
     font-size: var(--t-body);
   }

@@ -202,12 +202,16 @@
     transform var(--dur-slow) var(--ease-out);
 }
 
-.glass-lift:hover {
-  box-shadow: var(--glass-lift-hi);
+@media (hover: hover) {
+  .glass-lift:hover {
+    box-shadow: var(--glass-lift-hi);
+  }
 }
 
-.glass-lift:hover::before {
-  background-color: var(--glass-fill-strong);
+@media (hover: hover) {
+  .glass-lift:hover::before {
+    background-color: var(--glass-fill-strong);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

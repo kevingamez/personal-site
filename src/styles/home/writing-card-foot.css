@@ -105,9 +105,11 @@
   font-size: var(--t-caption);
 }
 
-.pc-reactions:hover .pc-reax-num {
-  color: #0073b1;
-  text-decoration: underline;
+@media (hover: hover) {
+  .pc-reactions:hover .pc-reax-num {
+    color: #0073b1;
+    text-decoration: underline;
+  }
 }
 
 @media (width >= 1180px) and (height <= 950px) {

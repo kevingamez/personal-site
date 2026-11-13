@@ -153,8 +153,10 @@ h1.hero-title {
   color: var(--white);
 }
 
-.btn-primary:hover {
-  background: #1f1f22;
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: #1f1f22;
+  }
 }
 
 .btn-ghost {
@@ -162,8 +164,10 @@ h1.hero-title {
   color: var(--ink);
 }
 
-.btn-ghost:hover {
-  border-color: var(--ink);
+@media (hover: hover) {
+  .btn-ghost:hover {
+    border-color: var(--ink);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
