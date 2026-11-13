@@ -23,6 +23,7 @@ import {
 } from './strava-units'
 
 const NOROUTE = 'sv-feat--noroute'
+const EVEREST_M = 8849
 
 // No Mapbox token (or the static map failed to load): draw the route line
 // itself as an inline SVG - an ink stroke on the card, in place of the map.
@@ -139,14 +140,12 @@ export function renderLongest(host: HTMLElement, tpl: HTMLTemplateElement, acts:
 }
 
 export function fillInsights(ins: Insights, totals: Totals, lang: string): void {
-  // Busiest weekday. The index is Monday-based; 2024-01-01 was a Monday.
-  if (ins.busiestWeekday !== null && ins.busiestWeekday >= 0 && ins.busiestWeekday < 7) {
-    const day = new Intl.DateTimeFormat(lang, { weekday: 'long', timeZone: 'UTC' }).format(
-      new Date(Date.UTC(2024, 0, 1 + ins.busiestWeekday))
-    )
-    setText('sv-busiest-val', day.charAt(0).toLocaleUpperCase(lang) + day.slice(1))
-    countUp('sv-busiest-count', ins.busiestWeekdayCount, (n) => String(Math.round(n)))
-  }
+  // Total climb read as Everests, so the tile never restates the metres above.
+  const everest = new Intl.NumberFormat(lang, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })
+  countUp('sv-everest-val', totals.elevationM / EVEREST_M, (n) => everest.format(n))
   if (ins.fastest) {
     countUp('sv-fast-val', spdVal(ins.fastest.avgSpeedMs), (n) => `${n.toFixed(1)} ${SUNIT}`)
     setText('sv-fast-sub', ins.fastest.name)

@@ -129,12 +129,9 @@ export function Strava({ t }: Props) {
             usually one of the longest-effort cards. */}
         <div className="sv-insights">
           <div className="sv-tile glass">
-            <div className="sv-tile-lbl">{t.insightBusiestLabel}</div>
-            <div className="sv-tile-val" id="sv-busiest-val">
-              -
-            </div>
-            <div className="sv-tile-sub">
-              <span id="sv-busiest-count">0</span> {t.statActivities}
+            <div className="sv-tile-lbl">{t.insightEverestLabel}</div>
+            <div className="sv-tile-val" id="sv-everest-val">
+              0
             </div>
           </div>
           <div className="sv-tile glass">
