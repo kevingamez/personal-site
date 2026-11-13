@@ -43,7 +43,7 @@ const about = [
   "I'm <b>Kevin Gámez</b>, a software engineer from Bogotá.",
   '',
   '<b>last</b>, founding engineer at <span class="ac">enttor</span> - paid ads platform, a slack agent,',
-  '       an AI creative studio, on Next.js + Supabase + Postgres. looking for the next thing.',
+  '<span class="cs-pad cs-pad-s"></span>an AI creative studio, on Next.js + Supabase + Postgres. looking for the next thing.',
   '<b>before</b>, product engineer at <span class="ac">samsam</span> (e-commerce marketplace).',
   '<b>school</b>, M.Sc. + B.Sc. at Universidad de los Andes.',
   '',
@@ -53,18 +53,18 @@ const about = [
 
 const experience = [
   '<span class="muted">Mar 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
-  '                       Paid ads platform, slack agent, AI creative studio',
+  '<span class="cs-pad"></span>Paid ads platform, slack agent, AI creative studio',
   '',
   '<span class="muted">Feb 2024, Mar 2025</span> Product engineer <span class="at">@ Samsam</span>',
-  '                       E-commerce marketplace, React Native, Next.js',
+  '<span class="cs-pad"></span>E-commerce marketplace, React Native, Next.js',
   '',
   '<span class="muted">Oct 2022, Dec 2023</span> Software engineer <span class="at">@ Heinsohn</span>',
-  '                       Azure CI/CD, Python reporting service, Power BI',
+  '<span class="cs-pad"></span>Azure CI/CD, Python reporting service, Power BI',
   '',
   '<span class="muted">Jan 2024, May 2025</span> M.Sc. Information Engineering <span class="at">@ Uniandes</span>',
   '',
   '<span class="muted">Jan 2019, Dec 2023</span> B.Sc. Systems and Computing <span class="at">@ Uniandes</span>',
-  '                       Andrés Bello National Distinction, AWS certs',
+  '<span class="cs-pad"></span>Andrés Bello National Distinction, AWS certs',
 ]
 
 const stack = [

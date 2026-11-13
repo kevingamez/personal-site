@@ -43,7 +43,7 @@ const about = [
   'Soy <b>Kevin Gámez</b>, ingeniero de software de Bogotá.',
   '',
   '<b>lo último</b>, founding engineer en <span class="ac">enttor</span>: plataforma de paid ads, un agente',
-  '       de slack y un estudio creativo con IA, sobre Next.js + Supabase + Postgres. buscando lo que sigue.',
+  '<span class="cs-pad cs-pad-s"></span>de slack y un estudio creativo con IA, sobre Next.js + Supabase + Postgres. buscando lo que sigue.',
   '<b>antes</b>, product engineer en <span class="ac">samsam</span> (marketplace de e-commerce).',
   '<b>estudios</b>, maestría y pregrado en la Universidad de los Andes.',
   '',
@@ -53,18 +53,18 @@ const about = [
 
 const experience = [
   '<span class="muted">Mar 2025, Jul 2026</span> Founding engineer <span class="at">@ Enttor</span>',
-  '                       Plataforma de paid ads, agente de slack, estudio creativo con IA',
+  '<span class="cs-pad"></span>Plataforma de paid ads, agente de slack, estudio creativo con IA',
   '',
   '<span class="muted">Feb 2024, Mar 2025</span> Product engineer <span class="at">@ Samsam</span>',
-  '                       Marketplace de e-commerce, React Native, Next.js',
+  '<span class="cs-pad"></span>Marketplace de e-commerce, React Native, Next.js',
   '',
   '<span class="muted">Oct 2022, Dic 2023</span> Software engineer <span class="at">@ Heinsohn</span>',
-  '                       CI/CD en Azure, servicio de reportes en Python, Power BI',
+  '<span class="cs-pad"></span>CI/CD en Azure, servicio de reportes en Python, Power BI',
   '',
   '<span class="muted">Ene 2024, May 2025</span> Maestría en Ingeniería de Información <span class="at">@ Uniandes</span>',
   '',
   '<span class="muted">Ene 2019, Dic 2023</span> Ingeniería de Sistemas y Computación <span class="at">@ Uniandes</span>',
-  '                       Distinción Nacional Andrés Bello, certificaciones de AWS',
+  '<span class="cs-pad"></span>Distinción Nacional Andrés Bello, certificaciones de AWS',
 ]
 
 const stack = [
