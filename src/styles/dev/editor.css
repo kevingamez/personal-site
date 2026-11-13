@@ -35,7 +35,7 @@
   border-bottom: 1px solid rgb(255 255 255 / 6%);
   display: flex;
   align-items: stretch;
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .ed-tabs .et {
@@ -57,7 +57,7 @@
 
 .ed-tabs .et .x {
   color: var(--mute-2);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -66,12 +66,14 @@
   font-size: 12px;
 }
 
-.ed-tabs .et.dirty:hover .x {
-  color: var(--ink-2);
-}
+@media (hover: hover) {
+  .ed-tabs .et.dirty:hover .x {
+    color: var(--ink-2);
+  }
 
-.ed-tabs .et:hover .x {
-  color: var(--ink-2);
+  .ed-tabs .et:hover .x {
+    color: var(--ink-2);
+  }
 }
 
 .ed-tabs .grow {
@@ -84,7 +86,7 @@
   align-items: center;
   gap: 6px;
   color: var(--mute-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ed-tabs .breadcrumb b {
@@ -201,4 +203,21 @@
 
 .ed-row .br {
   color: #8b949e;
+}
+
+/* Cursor preference hook - applied via document data-cursor attr. Set by the
+   settings panel. */
+:root[data-cursor='bar'] .cm-cursor {
+  border-left-width: 2px;
+}
+
+:root[data-cursor='block'] .cm-cursor {
+  border-left-width: 8px;
+  background: var(--coral);
+  opacity: 0.6;
+}
+
+:root[data-cursor='underline'] .cm-cursor {
+  border-left-width: 8px;
+  border-bottom: 2px solid var(--coral);
 }

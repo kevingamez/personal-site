@@ -12,7 +12,7 @@
   color: var(--mute);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -23,7 +23,7 @@
   color: var(--mute-2);
   letter-spacing: 0;
   font-weight: 400;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .explorer .it {
@@ -39,8 +39,10 @@
   position: relative;
 }
 
-.explorer .it:hover {
-  background: rgb(255 255 255 / 4%);
+@media (hover: hover) {
+  .explorer .it:hover {
+    background: rgb(255 255 255 / 4%);
+  }
 }
 
 /* Chevron - real vscode-style chevron (>), rotates to v when expanded */
@@ -60,8 +62,10 @@
   transform: rotate(0);
 }
 
-.explorer .it.fold:hover::before {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6 4l4 4-4 4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>");
+@media (hover: hover) {
+  .explorer .it.fold:hover::before {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M6 4l4 4-4 4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>");
+  }
 }
 
 /* Files reserve the chevron column so their icon aligns with folder icons. */
@@ -96,7 +100,7 @@
 
 .explorer .it .badge {
   margin-left: auto;
-  font-size: 9.5px;
+  font-size: 12px;
   padding: 1px 5px;
   border-radius: 8px;
   background: var(--coral-soft);
@@ -120,7 +124,7 @@
 /* Workspace root renders as a vscode-style section header */
 .explorer .it.workspace-root {
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -129,11 +133,13 @@
 }
 
 .explorer .it.workspace-root .lbl {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
-.explorer .it.workspace-root:hover {
-  background: rgb(255 255 255 / 4%);
+@media (hover: hover) {
+  .explorer .it.workspace-root:hover {
+    background: rgb(255 255 255 / 4%);
+  }
 }

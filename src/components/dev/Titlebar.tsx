@@ -19,9 +19,7 @@ export function Titlebar({ buildId }: Props) {
           </div>
         </div>
         <div className="r">
-          <span>
-            <span className="led"></span>live, build {buildId}
-          </span>
+          {buildId && <span className="build">build {buildId}</span>}
           <a className="back" href="/">
             ← exit dev mode
           </a>

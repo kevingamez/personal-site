@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 14px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--mute);
 }
 
@@ -41,7 +41,7 @@
 
 .titlebar .ttl {
   color: #aaa;
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .titlebar .ttl b {
@@ -53,22 +53,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  font-size: 11px;
-}
-
-.titlebar .led {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.4;
-  }
+  font-size: 12px;
 }
 
 .titlebar .back {
@@ -80,13 +65,15 @@
     border-color 0.15s,
     color 0.15s;
   font-family: 'Hanken Grotesk', sans-serif;
-  font-size: 11.5px;
+  font-size: 12px;
   text-decoration: none;
 }
 
-.titlebar .back:hover {
-  border-color: var(--coral);
-  color: var(--coral);
+@media (hover: hover) {
+  .titlebar .back:hover {
+    border-color: var(--coral);
+    color: var(--coral);
+  }
 }
 
 .tabsbar {
@@ -95,7 +82,7 @@
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: stretch;
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--mute);
 }
 
@@ -111,9 +98,11 @@
     background-color 0.15s;
 }
 
-.tabsbar .tab:hover {
-  color: var(--ink-2);
-  background: #11111a;
+@media (hover: hover) {
+  .tabsbar .tab:hover {
+    color: var(--ink-2);
+    background: #11111a;
+  }
 }
 
 .tabsbar .tab.on {
@@ -143,7 +132,7 @@
   align-items: center;
   gap: 8px;
   color: var(--mute);
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.06em;
 }
 
@@ -172,18 +161,9 @@
     height: auto;
   }
 
-  .activity-bar {
-    display: none;
-  }
-
   .explorer {
-    max-height: 320px;
     overflow: auto;
     border-bottom: 1px solid var(--line);
-  }
-
-  .center {
-    min-height: 60vh;
   }
 
   .sidebar {
