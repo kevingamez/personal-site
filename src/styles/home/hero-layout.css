@@ -58,10 +58,8 @@
    subject: this slot renders above the h1, so a label like "Backed by" with
    no company attached reads as a claim about Kevin. */
 .stat-k {
-  font-size: var(--t-caption);
-  font-weight: var(--w-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-medium);
   color: var(--muted);
   margin-bottom: 7px;
 }

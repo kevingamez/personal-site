@@ -8,6 +8,7 @@
    the fill is deliberately weak because the saturation boost, not the tint,
    is what makes the blurred backdrop read as a material with depth. */
 :root {
+  --sheet: #fbfbfa;
   --glass-fill: rgb(253 253 252 / 58%);
   --glass-fill-strong: rgb(253 253 252 / 76%);
   --glass-fill-thin: rgb(253 253 252 / 34%);
@@ -228,4 +229,18 @@
   .glass-thin::before {
     background-color: var(--white);
   }
+}
+
+/* ─── The sheet: paper on paper ───
+   Glass is for what floats over moving content: the nav and the phone action
+   bar. A card that sits in the page has nothing meaningful behind it to
+   refract, so it is an opaque sheet a shade lighter than the paper, held by a
+   single hairline and a short shadow. Nineteen blurred cards became two. */
+.sheet {
+  position: relative;
+  background-color: var(--sheet);
+  box-shadow:
+    0 0 0 1px rgb(11 11 12 / 6%),
+    0 1px 2px rgb(11 11 12 / 4%),
+    0 6px 18px rgb(11 11 12 / 4%);
 }

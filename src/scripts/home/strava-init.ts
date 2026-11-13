@@ -4,7 +4,6 @@ import type { Payload } from './strava-types'
 import { renderLatest } from './strava-latest'
 import { fillInsights, renderLongest } from './strava-render'
 import {
-  DUNIT,
   FEET_WORD,
   IMP,
   MILES_WORD,
@@ -95,16 +94,15 @@ export async function initStrava(): Promise<void> {
 
   // US (and other imperial-region) visitors see miles / feet.
   if (IMP) {
-    setText('sv-km-unit', DUNIT)
     setText('sv-km-label', MILES_WORD)
     setText('sv-elev-label', FEET_WORD)
   }
 
   const hero: [string, number, (n: number) => string][] = [
-    ['sv-km', distVal(t.distanceM), (n) => String(Math.round(n))],
+    ['sv-km', distVal(t.distanceM), (n) => Math.round(n).toLocaleString(lang)],
     ['sv-hours', t.movingTime / 3600, (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1))],
     ['sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang)],
-    ['sv-acts', t.count, (n) => String(Math.round(n))],
+    ['sv-acts', t.count, (n) => Math.round(n).toLocaleString(lang)],
   ]
   // The server printed these in metric and possibly from an older snapshot.
   // On screen they are corrected in place and stay put. Off screen they go

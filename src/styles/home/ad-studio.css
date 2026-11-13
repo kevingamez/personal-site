@@ -33,34 +33,6 @@
   font-family: var(--font-sans);
 }
 
-.as-auth {
-  position: absolute;
-  top: 18px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-.as-auth span {
-  height: 34px;
-  display: grid;
-  place-items: center;
-  padding: 0 18px;
-  border-radius: 999px;
-  font-size: var(--t-footnote);
-}
-
-.as-auth .as-login {
-  border: 1px solid var(--hair);
-  color: var(--fg);
-}
-
-.as-auth .as-signup {
-  background: var(--fg);
-  color: var(--bg);
-  font-weight: var(--w-medium);
-}
-
 .as-zoom {
   position: absolute;
   right: 20px;

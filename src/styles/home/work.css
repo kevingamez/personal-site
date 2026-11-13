@@ -70,15 +70,63 @@
   }
 }
 
-.work-grid {
+.work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.work-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: 240px minmax(0, 1fr) 220px;
+  gap: 8px 32px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.work-row h3 {
+  font-family: var(--font-display);
+  font-weight: var(--w-semibold);
+  font-size: var(--t-title-3);
+  line-height: 1.2;
+  letter-spacing: var(--ls-heading);
+  margin: 0;
+}
+
+.work-row h3 a {
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .work-row h3 a:hover {
+    color: var(--muted);
+  }
+}
+
+.work-row p {
+  color: var(--ink-2);
+  font-size: var(--t-subhead);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.work-stack {
+  color: var(--muted);
+  font-size: var(--t-footnote);
+  line-height: 1.5;
 }
 
 @media (width <= 980px) {
-  .work-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .work-row {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .work-stack {
+    grid-column: 2;
   }
 }
 
@@ -93,40 +141,17 @@
     aspect-ratio: 1 / 0.78;
   }
 
-  .work-grid {
+  .work-row {
     grid-template-columns: 1fr;
+    padding: 20px 0;
+  }
+
+  .work-stack {
+    grid-column: auto;
   }
 }
 
-/* Lift and hover fill come from .glass-lift; the card only sets its shape. */
-.work-card {
-  min-height: 210px;
-  border-radius: var(--r-lg);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.work-card h3 {
-  font-family: var(--font-display);
-  font-weight: var(--w-semibold);
-  font-size: var(--t-title-2);
-  line-height: 1.05;
-  letter-spacing: var(--ls-heading);
-  margin: 0 0 12px;
-}
-
-.work-card p {
-  color: var(--ink-2);
-  font-size: var(--t-footnote);
-  line-height: 1.55;
-  margin: 0;
-  text-wrap: pretty;
-}
-
-/* Translucent rule, not a paint colour: a solid hairline on glass sits on the
-   surface instead of inside it. */
+/* The feature card's stack line. */
 .wc-meta {
   border-top: 1px solid rgb(11 11 12 / 8%);
   margin-top: 24px;
@@ -170,15 +195,6 @@
   .wf-visual,
   .wf-visual img {
     min-height: 300px;
-  }
-
-  .work-card {
-    min-height: 160px;
-    padding: 16px;
-  }
-
-  .work-card h3 {
-    font-size: var(--t-title-3);
   }
 
   .work-more {

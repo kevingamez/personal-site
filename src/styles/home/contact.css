@@ -1,6 +1,8 @@
 /* ─── Contact (Vela invitation + the interactive Rubik's cube) ─── */
 .contact {
-  padding: clamp(96px, 12svh, 150px) 0;
+  /* Less below than above: the footer follows directly, and a full band of
+     empty paper between the last button and it read as a missing section. */
+  padding: clamp(96px, 12svh, 150px) 0 clamp(56px, 7svh, 88px);
 }
 
 .contact-grid {

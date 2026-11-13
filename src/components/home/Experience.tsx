@@ -16,10 +16,7 @@ export function Experience({ t }: Props) {
             <div className="sec-num">{t.secNum}</div>
             <h2 className="sec-title" dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
           </div>
-          <div>
-            <p className="sec-blurb">{t.blurb}</p>
-            <div className="tl-hint">{t.openHint}</div>
-          </div>
+          <p className="sec-blurb">{t.blurb}</p>
         </div>
 
         <div className="timeline" data-exp-rail>
@@ -127,11 +124,10 @@ export function Experience({ t }: Props) {
               className="achievements-title"
               dangerouslySetInnerHTML={{ __html: t.achievementsTitle }}
             />
-            <p className="achievements-blurb">{t.achievementsBlurb}</p>
           </div>
           <ul className="achievements-list">
             {t.achievements.map((a, i) => (
-              <li className="achievement glass glass-lift" key={i}>
+              <li className="achievement sheet" key={i}>
                 <div className="ach-top">
                   <span className="ach-mark">
                     {/* Decorative: the card title and meta already name the issuer. */}

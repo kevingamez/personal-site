@@ -73,7 +73,7 @@
   justify-content: center;
   width: 14px;
   height: 14px;
-  border-radius: 3px;
+  border-radius: var(--r-xs);
   background: #0a66c2;
   color: #fff;
   font-size: var(--t-caption);

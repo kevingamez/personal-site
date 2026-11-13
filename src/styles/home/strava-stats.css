@@ -46,14 +46,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.sv-hero-km i {
-  font-style: normal;
-  font-size: 0.34em;
-  font-weight: var(--w-medium);
-  color: var(--muted);
-  margin-left: 8px;
-}
-
 .sv-hero-kml {
   font-size: var(--t-footnote);
   font-weight: var(--w-medium);
@@ -90,64 +82,59 @@
   margin-top: 7px;
 }
 
-/* insight tiles */
+/* The four derived figures, as one ledger rather than four boxes: a label,
+   what it refers to, and the number against the right edge. Boxed, two of
+   them carried a caption and two an empty line where one would have been. */
 .sv-insights {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-@media (width <= 760px) {
-  .sv-insights {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 48px;
+  padding: 6px 24px;
+  border-radius: var(--r-lg);
 }
 
 .sv-tile {
-  border-radius: var(--r-md);
-  padding: 14px 16px 13px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 0.55s ease,
-    transform 0.55s ease;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
 }
 
-.sv-tile:nth-child(2) {
-  transition-delay: 0.08s;
-}
-
-.sv-tile:nth-child(3) {
-  transition-delay: 0.16s;
-}
-
-.sv-tile:nth-child(4) {
-  transition-delay: 0.24s;
-}
-
-#strava.on .sv-tile {
-  opacity: 1;
-  transform: none;
+.sv-tile:nth-last-child(-n + 2) {
+  border-bottom: 0;
 }
 
 .sv-tile-lbl {
-  font-family: var(--font-sans);
+  min-width: 0;
   font-size: var(--t-footnote);
-  font-style: normal;
-  font-weight: var(--w-medium);
-  letter-spacing: 0;
+  color: var(--ink-2);
+}
+
+.sv-tile-sub {
+  margin-left: 8px;
   color: var(--muted);
 }
 
 .sv-tile-val {
-  font-family: var(--font-sans);
-  font-size: var(--t-title-2);
-  font-style: normal;
+  flex-shrink: 0;
+  font-size: var(--t-title-3);
   font-weight: var(--w-semibold);
-  line-height: 1.05;
+  line-height: 1.2;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
-  margin-top: 7px;
+}
+
+@media (width <= 760px) {
+  .sv-insights {
+    grid-template-columns: 1fr;
+    padding: 4px 20px;
+  }
+
+  .sv-tile:nth-last-child(2) {
+    border-bottom: 1px solid var(--line);
+  }
 }
 
 @media (width <= 700px) {
@@ -155,16 +142,8 @@
     font-size: var(--t-title-1);
   }
 
-  .sv-hero-km i {
-    font-size: 12px;
-  }
-
   .sv-mini span {
     font-size: var(--t-body);
-  }
-
-  .sv-tile-val {
-    font-size: var(--t-title-2);
   }
 }
 
@@ -179,26 +158,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
-  }
-}
-
-.sv-tile-sub {
-  font-family: var(--font-sans);
-  font-size: var(--t-footnote);
-  font-style: normal;
-  font-weight: var(--w-medium);
-  color: var(--muted);
-  margin-top: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sv-tile {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
 
@@ -218,17 +177,5 @@
 
   .sv-hero-side {
     gap: 22px;
-  }
-
-  .sv-insights {
-    gap: 10px;
-  }
-
-  .sv-tile {
-    padding: 11px 13px;
-  }
-
-  .sv-tile-val {
-    font-size: var(--t-title-2);
   }
 }

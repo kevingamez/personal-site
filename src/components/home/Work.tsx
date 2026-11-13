@@ -15,7 +15,6 @@ export function Work({ t }: Props) {
             <div className="sec-num">{t.secNum}</div>
             <h2 className="sec-title" dangerouslySetInnerHTML={{ __html: t.titleHtml }} />
           </div>
-          <p className="sec-blurb">{t.blurb}</p>
         </div>
 
         <article className="work-feature">
@@ -26,7 +25,7 @@ export function Work({ t }: Props) {
               made the featured card the only one in the section with a
               different treatment - and kept its technologies out of the
               content files, so they never translated. */}
-          <div className="wf-copy glass-strong">
+          <div className="wf-copy sheet">
             <div>
               <h3 className="wf-title" dangerouslySetInnerHTML={{ __html: t.p1NameHtml }} />
               <p className="wf-desc">{t.p1Desc}</p>
@@ -45,28 +44,26 @@ export function Work({ t }: Props) {
           </a>
         </article>
 
-        <div className="work-grid">
-          {t.projects.map((p) => {
-            const body = (
-              <>
-                <div>
-                  <h3>{p.name}</h3>
-                  <p>{p.desc}</p>
-                </div>
-                <div className="wc-meta">{p.meta}</div>
-              </>
-            )
-            return p.href ? (
-              <a className="work-card glass glass-lift" href={p.href} key={p.name}>
-                {body}
-              </a>
-            ) : (
-              <div className="work-card glass glass-lift" key={p.name}>
-                {body}
-              </div>
-            )
-          })}
-        </div>
+        {/* An index, not a wall of cards: six equal boxes gave every project
+            the same weight as the one above them. Rows read like the timeline
+            does, name, then what it was, then what it ran on. */}
+        <ul className="work-list">
+          {t.projects.map((p) => (
+            <li className="work-row" key={p.name}>
+              <h3>
+                {p.href ? (
+                  <a href={p.href}>
+                    {p.name} <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  p.name
+                )}
+              </h3>
+              <p>{p.desc}</p>
+              <div className="work-stack">{p.meta}</div>
+            </li>
+          ))}
+        </ul>
 
         <div className="work-more">
           <a

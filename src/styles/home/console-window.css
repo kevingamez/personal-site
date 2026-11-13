@@ -234,7 +234,7 @@
   color: #ffb066;
   background: rgb(255 176 102 / 8%);
   padding: 1px 5px;
-  border-radius: 3px;
+  border-radius: var(--r-xs);
   font-family: inherit;
   font-size: 12.5px;
 }
