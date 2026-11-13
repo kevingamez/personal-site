@@ -14,18 +14,6 @@
   background: var(--ink-900);
 }
 
-/* The affordance only makes sense once the rows actually collapse. */
-.tl-hint {
-  font-size: var(--t-footnote);
-  color: var(--muted);
-  margin-top: 12px;
-  display: none;
-}
-
-.exp-on .tl-hint {
-  display: block;
-}
-
 .tl-row {
   border-bottom: 1px solid var(--line);
 }

@@ -8,11 +8,6 @@ export function AdStudioMock({ alt }: { alt: string }) {
   return (
     <div className="as" role="img" aria-label={alt}>
       <div className="as-stage" data-as-stage>
-        <div className="as-auth" aria-hidden="true">
-          <span className="as-login">Log in</span>
-          <span className="as-signup">Sign up</span>
-        </div>
-
         <div className="as-status" data-as-status aria-hidden="true"></div>
         <div className="as-board">
           <div className="as-grid" data-as-grid></div>

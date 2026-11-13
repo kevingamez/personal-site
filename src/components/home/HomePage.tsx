@@ -67,7 +67,12 @@ export function HomePage({ t, stats, strava = null }: Props) {
         <Strava t={t.strava} lang={t.meta.htmlLang} data={strava} />
         <Contact t={t.contact} />
       </main>
-      <Footer t={t.footer} buildId={buildId} />
+      <Footer
+        t={t.footer}
+        nav={t.nav}
+        resumeHref={t.meta.htmlLang === 'es' ? '/es/resume/' : '/resume/'}
+        buildId={buildId}
+      />
 
       {/* Outside <main>: it is a persistent chrome affordance, not page content,
           and it must not sit inside the region the skip link targets. */}

@@ -119,7 +119,28 @@ export function initAdStudio(): void {
     })
   }
 
+  // The rest frame. The loop used to open on an empty canvas and take eight
+  // seconds to put anything on it, so most visitors scrolled past a black
+  // box. It now opens on a finished batch and holds it before starting over.
+  function showDone(): void {
+    tiles.forEach((t) => t.classList.add('is-filled'))
+    brief!.className = 'as-brief'
+    brief!.textContent = BRIEF
+    grid!.innerHTML = ADS.map((a, i) => {
+      const keep = i !== 3
+      return `<div class="as-card is-in"><div class="as-shot is-forming is-landed${i === 0 ? ' is-layered' : ''}">${art(a)}<div class="as-skel"></div></div>
+        <div class="as-foot"><span>0${i + 1}</span><span class="as-j is-in ${keep ? 'is-keep' : 'is-drop'}">${keep ? 'kept' : 'reroll'}</span></div></div>`
+    }).join('')
+    setStatus('Layerized, ready to edit')
+  }
+  showDone()
+  let seeded = true
+
   async function cycle(): Promise<void> {
+    if (seeded) {
+      seeded = false
+      await wait(4200)
+    }
     grid!.innerHTML = ''
     setStatus('')
     create!.className = 'as-create is-off'
