@@ -46,7 +46,7 @@ export const enSections: Pick<
     featTime: 'moving time',
     featSpeed: 'avg speed',
     featPace: 'pace',
-    insightBusiestLabel: 'Busiest day',
+    insightEverestLabel: 'Everests climbed',
     insightFastLabel: 'Fastest',
     insightBiggestLabel: 'Biggest week',
     insightActiveLabel: 'Active days',
