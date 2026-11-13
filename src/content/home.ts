@@ -194,7 +194,7 @@ export interface HomeStrings {
     featTime: string
     featSpeed: string
     featPace: string
-    insightBusiestLabel: string
+    insightEverestLabel: string
     insightFastLabel: string
     insightBiggestLabel: string
     insightActiveLabel: string

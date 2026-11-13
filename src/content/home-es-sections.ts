@@ -46,7 +46,7 @@ export const esSections: Pick<
     featTime: 'en movimiento',
     featSpeed: 'vel. media',
     featPace: 'ritmo',
-    insightBusiestLabel: 'Día más activo',
+    insightEverestLabel: 'Everests escalados',
     insightFastLabel: 'Más rápida',
     insightBiggestLabel: 'Mejor semana',
     insightActiveLabel: 'Días activos',
