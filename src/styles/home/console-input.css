@@ -51,7 +51,7 @@
 }
 
 .cs-input .ci-sep {
-  color: rgb(232 232 236 / 55%);
+  color: rgb(232 232 236 / 60%);
 }
 
 .cs-input .ci-prompt {
@@ -77,8 +77,9 @@
   border-radius: 3px;
 }
 
+/* 60% is the floor for 4.5:1 on the shell over the lightest patch of paper. */
 #console-msg::placeholder {
-  color: rgb(232 232 236 / 35%);
+  color: rgb(232 232 236 / 60%);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

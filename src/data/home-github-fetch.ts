@@ -28,24 +28,35 @@ type RawProfile = {
   following: number
 }
 
+// The home pages now regenerate at runtime, where a hung call would stall the
+// regeneration; a timeout lands in the callers' existing fallback instead.
+const GH_TIMEOUT_MS = 8000
+
 export async function fetchAllRepos(): Promise<RawRepo[]> {
   // Owner type, public only, paginated. Personal-account ceiling is rarely past
   // 100 so we hit a single page; if needed, walk Link headers in the future.
   const url = `https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated&type=owner`
-  const res = await fetch(url, { headers: authHeaders() })
+  const res = await fetch(url, {
+    headers: authHeaders(),
+    signal: AbortSignal.timeout(GH_TIMEOUT_MS),
+  })
   if (!res.ok) throw new Error(`repos: ${res.status}`)
   const json = (await res.json()) as RawRepo[]
   if (!Array.isArray(json)) return []
   return json.filter((r) => !r.fork)
 }
 export async function fetchProfile(): Promise<RawProfile> {
-  const res = await fetch(`https://api.github.com/users/${GH_USER}`, { headers: authHeaders() })
+  const res = await fetch(`https://api.github.com/users/${GH_USER}`, {
+    headers: authHeaders(),
+    signal: AbortSignal.timeout(GH_TIMEOUT_MS),
+  })
   if (!res.ok) throw new Error(`profile: ${res.status}`)
   return (await res.json()) as RawProfile
 }
 export async function fetchRepoLanguages(fullName: string): Promise<Record<string, number>> {
   const res = await fetch(`https://api.github.com/repos/${fullName}/languages`, {
     headers: authHeaders(),
+    signal: AbortSignal.timeout(GH_TIMEOUT_MS),
   })
   if (!res.ok) return {}
   return (await res.json()) as Record<string, number>
@@ -92,6 +103,7 @@ export async function fetchAllAffiliationRepos(): Promise<RepoWithLangs[] | null
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: authHeaders({ 'Content-Type': 'application/json' }),
+    signal: AbortSignal.timeout(GH_TIMEOUT_MS),
     body: JSON.stringify({ query }),
   })
   if (!res.ok) return null

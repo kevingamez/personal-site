@@ -166,10 +166,16 @@ export function setText(id: string, value: string): void {
 }
 
 export const plays: (() => void)[] = []
+// Set when the section is already on screen with its numbers showing: the
+// count-ups then land on their values instead of restarting from zero.
+let INSTANT = false
+export const setInstant = (on: boolean): void => {
+  INSTANT = on
+}
 export function countUpEl(el: Element | null, target: number, fmt: (n: number) => string): void {
   if (!el) return
   plays.push(() => {
-    if (REDUCE) {
+    if (REDUCE || INSTANT) {
       el.textContent = fmt(target)
       return
     }

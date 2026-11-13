@@ -11,7 +11,7 @@ import {
   printOut,
   tokenize,
 } from './console-dom'
-import { CAT_FILES } from './console-data'
+import { CAT_FILES, consoleStrings } from './console-i18n'
 import { COMMANDS } from './console-commands'
 import { cancelChat } from './console-chat'
 import { initConsoleDemo } from './console-demo'
@@ -124,19 +124,39 @@ function moveToEnd(input: HTMLInputElement): void {
 
 // ───────── Dispatcher + history ─────────
 
-function dispatch(refs: Refs, history: ChatMessage[], raw: string): void | Promise<void> {
+// The stream itself is aria-live="off" (see Console.tsx), so a built-in's
+// output is read out once through the status node. The AI bridge returns a
+// promise and announces its own finished reply. The cleared-then-set dance
+// makes a repeated command (help, help) announce again.
+function announce(refs: Refs, from: number): void {
+  const { status, stream } = refs
+  if (!status) return
+  const lines = Array.from(stream.children).slice(from)
+  const text = lines.map((l) => (l.textContent ?? '').trim()).join('\n')
+  status.textContent = ''
+  if (text) setTimeout(() => (status.textContent = text), 60)
+}
+
+function dispatch(
+  refs: Refs,
+  history: ChatMessage[],
+  raw: string,
+  speak = true
+): void | Promise<void> {
   const trimmed = raw.trim()
   if (!trimmed) return
   appendCmdLine(refs.stream, trimmed)
+  const from = refs.stream.children.length
   const [head, ...args] = tokenize(trimmed)
   if (!head) return
   const fn = COMMANDS[head.toLowerCase()]
-  if (fn) return fn(args, refs, history, trimmed)
-  printOut(
-    refs.stream,
-    `zsh: command not found: ${escape(head)}, try <span class="ac">help</span>`,
-    'err'
-  )
+  if (fn) {
+    const result = fn(args, refs, history, trimmed)
+    if (result instanceof Promise) return result
+  } else {
+    printOut(refs.stream, consoleStrings().msg.notFound(escape(head)), 'err')
+  }
+  if (speak) announce(refs, from)
 }
 
 export function initConsole(): void {
@@ -256,7 +276,9 @@ export function initConsole(): void {
     initConsoleDemo({
       input: refs.input,
       section,
-      run: (command) => void dispatch(refs, history, command),
+      // The self-typing demo stays silent: it is decoration, and announcing it
+      // would talk over whatever the visitor was reading when it scrolled in.
+      run: (command) => void dispatch(refs, history, command, false),
     })
   }
 }

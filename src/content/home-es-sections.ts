@@ -109,6 +109,8 @@ export const esSections: Pick<
     suggest4: 'kevin ¿qué hace enttor?',
     rateLimitMsg: 'demasiadas peticiones, intenta en un minuto.',
     errorMsg: 'algo falló. intenta de nuevo o recarga.',
+    suggestAria: 'Comandos rápidos',
+    inputAria: 'Comando de la consola',
   },
   contact: {
     titleHtml: '¿Trabajamos juntos? <i>Hablemos</i>.',

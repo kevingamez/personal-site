@@ -257,6 +257,9 @@ export interface HomeStrings {
     suggest4: string
     rateLimitMsg: string
     errorMsg: string
+    // Accessible names for the quick-command row and the prompt input.
+    suggestAria: string
+    inputAria: string
   }
   contact: {
     titleHtml: string

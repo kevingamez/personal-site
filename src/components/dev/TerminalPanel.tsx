@@ -2,13 +2,13 @@ export function TerminalPanel() {
   return (
     <section className="terminal">
       <div className="term-tabs">
-        <div className="tt on" data-term="zsh">
+        <div className="tt on" data-term="zsh" role="button" tabIndex={0}>
           zsh
         </div>
-        <div className="tt" data-term="build">
+        <div className="tt" data-term="build" role="button" tabIndex={0}>
           build:watch
         </div>
-        <div className="tt" data-term="tail">
+        <div className="tt" data-term="tail" role="button" tabIndex={0}>
           tail -f demo.log
         </div>
         <div className="grow"></div>

@@ -158,9 +158,9 @@ const toActivity = (a: RawActivity): Activity => ({
 // Eligible for the "latest activity" block: public enough to show (the token
 // has activity:read_all, so private entries come back too), a parseable date,
 // and real movement (a gym or manual entry would render as a row of zeros).
+const isPublic = (a: RawActivity): boolean => !a.private && a.visibility !== 'only_me'
 const showableAsLatest = (a: RawActivity): boolean =>
-  !a.private &&
-  a.visibility !== 'only_me' &&
+  isPublic(a) &&
   Number.isFinite(Date.parse(a.start_date)) &&
   (a.distance || 0) > 0 &&
   (a.moving_time || 0) > 0
@@ -203,7 +203,8 @@ export function shape(raw: RawActivity[]): Payload {
     const cur = bySport.get(sp)
     // "Longest" per sport = longest by distance, which is what the label says.
     // (It used to be moving time, so a slow 5h44m ride outranked a longer one.)
-    if (!cur || dist > (cur.distance || 0)) bySport.set(sp, a)
+    // Featured efforts ship their GPS route, so private ones never qualify.
+    if (isPublic(a) && (!cur || dist > (cur.distance || 0))) bySport.set(sp, a)
     if (!biggestClimb || (a.total_elevation_gain || 0) > (biggestClimb.total_elevation_gain || 0))
       biggestClimb = a
     if (!fastest || (a.average_speed || 0) > (fastest.average_speed || 0)) fastest = a

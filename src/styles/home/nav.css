@@ -51,8 +51,18 @@
 
 /* Links are their own small capsules: on glass, a hover that only changes
    ink colour reads as a rendering artefact, while a lens forming under the
-   cursor reads as the surface responding. */
+   cursor reads as the surface responding.
+
+   The floor keeps a two-letter label (Spanish "CV") from collapsing into a
+   pill visibly narrower than its siblings; it sits just under the
+   width of the shortest English label ("Work"), so only the short ones grow
+   and the Spanish row still clears the contact button at 900px. An explicit
+   min-width replaces the flex min-content floor, so shrink is turned off or
+   the scrolling phone row would squash every label instead of scrolling. */
 .nav-links a {
+  flex-shrink: 0;
+  min-width: 48px;
+  text-align: center;
   padding: 7px 12px;
   border-radius: var(--r-xs);
   transition:

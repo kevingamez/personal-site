@@ -29,11 +29,15 @@ export function Profile() {
       <section className="pf-block">
         <div className="pf-block-label">Location</div>
         <div className="pf-row">
-          <span className="material-symbols-outlined pf-ico">location_on</span>
+          <span aria-hidden="true" className="material-symbols-outlined pf-ico">
+            location_on
+          </span>
           <span>Bogotá, CO</span>
         </div>
         <div className="pf-row">
-          <span className="material-symbols-outlined pf-ico">schedule</span>
+          <span aria-hidden="true" className="material-symbols-outlined pf-ico">
+            schedule
+          </span>
           <span id="pf-clock">--:--</span>
           <span className="pf-tz">UTC-5</span>
         </div>
@@ -58,7 +62,9 @@ export function Profile() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span className="material-symbols-outlined pf-ico">code</span>
+          <span aria-hidden="true" className="material-symbols-outlined pf-ico">
+            code
+          </span>
           <span>github.com/kevingamez</span>
         </a>
         <a
@@ -67,11 +73,15 @@ export function Profile() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span className="material-symbols-outlined pf-ico">badge</span>
+          <span aria-hidden="true" className="material-symbols-outlined pf-ico">
+            badge
+          </span>
           <span>linkedin/kevin-gamez</span>
         </a>
         <a className="pf-link" href="mailto:kevingamez.kg@gmail.com">
-          <span className="material-symbols-outlined pf-ico">mail</span>
+          <span aria-hidden="true" className="material-symbols-outlined pf-ico">
+            mail
+          </span>
           <span>kevingamez.kg@gmail.com</span>
         </a>
       </section>

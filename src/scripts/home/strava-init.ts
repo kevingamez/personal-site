@@ -16,8 +16,43 @@ import {
   plays,
   readI18n,
   resolveImperial,
+  setInstant,
   setText,
 } from './strava-units'
+
+// The server only regenerates the page when someone visits after the ISR
+// window, and that visitor still gets the old copy, so an inline snapshot can
+// be far older than the window. Past this age the client asks the API instead.
+const SEED_MAX_AGE_MS = 6 * 60 * 60 * 1000
+
+// Snapshot the server inlined during the page render, if it did.
+function readSeed(): Payload | null {
+  try {
+    const raw = document.getElementById('strava-data')?.textContent
+    const seed = raw ? (JSON.parse(raw) as Payload) : null
+    return seed && seed.configured && seed.totals ? seed : null
+  } catch {
+    return null
+  }
+}
+
+const isFresh = (p: Payload): boolean => {
+  const at = Date.parse(p.generatedAt ?? '')
+  // abs: a visitor clock running behind must not make an old seed look new.
+  return Number.isFinite(at) && Math.abs(Date.now() - at) < SEED_MAX_AGE_MS
+}
+
+async function fetchSnapshot(): Promise<Payload | null> {
+  try {
+    // Trailing slash matches next.config.ts `trailingSlash: true`; without it
+    // the request eats a 308 redirect before it reaches the handler.
+    const res = await fetch('/api/strava/', { headers: { Accept: 'application/json' } })
+    if (res.ok) return (await res.json()) as Payload
+  } catch {
+    /* ignore - the caller falls back */
+  }
+  return null
+}
 
 export async function initStrava(): Promise<void> {
   const section = document.getElementById('strava')
@@ -27,14 +62,13 @@ export async function initStrava(): Promise<void> {
   // round-trips). The promise can't reject - it resolves to null on failure.
   const countryP = fetchCountry()
 
-  let data: Payload | null = null
-  try {
-    // Trailing slash matches next.config.ts `trailingSlash: true`; without it
-    // the request eats a 308 redirect before it reaches the handler.
-    const res = await fetch('/api/strava/', { headers: { Accept: 'application/json' } })
-    if (res.ok) data = (await res.json()) as Payload
-  } catch {
-    /* ignore - may fall back to the dev sample below */
+  // A fresh inline snapshot needs no request at all. A stale one is still
+  // better than nothing if the API cannot answer.
+  const seed = readSeed()
+  let data: Payload | null = seed && isFresh(seed) ? seed : null
+  if (!data) {
+    const live = await fetchSnapshot()
+    data = live && live.configured && live.totals ? live : (seed ?? live)
   }
   // Local machines rarely have the Strava credentials, and since the Next
   // migration the local preview runs a production build, so a NODE_ENV guard
@@ -66,10 +100,23 @@ export async function initStrava(): Promise<void> {
     setText('sv-elev-label', FEET_WORD)
   }
 
-  countUp('sv-km', distVal(t.distanceM), (n) => String(Math.round(n)))
-  countUp('sv-hours', t.movingTime / 3600, (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1)))
-  countUp('sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang))
-  countUp('sv-acts', t.count, (n) => String(Math.round(n)))
+  const hero: [string, number, (n: number) => string][] = [
+    ['sv-km', distVal(t.distanceM), (n) => String(Math.round(n))],
+    ['sv-hours', t.movingTime / 3600, (n) => (n >= 10 ? String(Math.round(n)) : n.toFixed(1))],
+    ['sv-elev', elevVal(t.elevationM), (n) => Math.round(n).toLocaleString(lang)],
+    ['sv-acts', t.count, (n) => String(Math.round(n))],
+  ]
+  // The server printed these in metric and possibly from an older snapshot.
+  // On screen they are corrected in place and stay put. Off screen they go
+  // back to zero, where the count-up starts when the section scrolls in;
+  // otherwise the reader would watch real numbers drop to 0 and climb back.
+  const shipped = !section.hidden
+  const onScreen = shipped && section.getBoundingClientRect().top < window.innerHeight
+  if (onScreen) setInstant(true)
+  for (const [id, target, fmt] of hero) {
+    if (shipped) setText(id, fmt(onScreen ? target : 0))
+    countUp(id, target, fmt)
+  }
 
   // Optional block: a malformed `latest` must not blank the whole section.
   try {
@@ -83,6 +130,7 @@ export async function initStrava(): Promise<void> {
   if (host && tpl && data.longestBySport.length) renderLongest(host, tpl, data.longestBySport)
   fillInsights(data.insights, t, lang)
 
+  document.getElementById('sv-insights')?.removeAttribute('hidden')
   section.hidden = false
   const play = (): void => {
     plays.forEach((f) => f())

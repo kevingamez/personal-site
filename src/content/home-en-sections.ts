@@ -109,6 +109,8 @@ export const enSections: Pick<
     suggest4: 'kevin what does enttor do?',
     rateLimitMsg: 'rate limited, try again in a minute.',
     errorMsg: 'something broke. try again or refresh.',
+    suggestAria: 'Quick commands',
+    inputAria: 'Console command',
   },
   contact: {
     titleHtml: "Let's find out if we <i>should work together</i>.",

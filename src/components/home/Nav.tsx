@@ -32,7 +32,7 @@ export function Nav({ meta, t }: Props) {
             <a href="#console">{t.console}</a>
             {/* <a href="#writing">{t.writing}</a> */}
             <a href="#strava">{t.strava}</a>
-            <a href="/resume/">{t.resume}</a>
+            <a href={isEnglish ? '/resume/' : '/es/resume/'}>{t.resume}</a>
           </div>
           <div className="nav-right">
             <a className="say-hi" href="#contact">

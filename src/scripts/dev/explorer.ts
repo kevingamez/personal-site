@@ -30,6 +30,10 @@ function makeFolderItem(name: string, key: string, depth: number): HTMLElement {
   const isOpen = !state.folded.has(key)
   if (!isOpen) cls += ' closed'
   div.className = cls
+  div.setAttribute('role', 'button')
+  div.setAttribute('aria-expanded', String(isOpen))
+  div.dataset.kbd = 'fold:' + key
+  div.tabIndex = 0
   setIndent(div, depth)
   // The workspace root renders as a section header (uppercase, no folder icon,
   // just chevron + bold name) - matches the "KEVINGAMEZ" line in vscode.
@@ -68,6 +72,9 @@ function makeFileItem(name: string, pathParts: string[], depth: number): HTMLEle
   if (isDirty(rel)) cls += ' dirty'
   div.className = cls
   div.dataset.path = rel
+  div.dataset.kbd = 'file:' + rel
+  div.setAttribute('role', 'button')
+  div.tabIndex = 0
   setIndent(div, depth)
   div.appendChild(makeIcon(name, false))
   const lbl = document.createElement('span')

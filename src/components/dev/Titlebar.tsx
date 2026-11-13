@@ -29,13 +29,13 @@ export function Titlebar({ buildId }: Props) {
       </div>
 
       <div className="tabsbar">
-        <div className="tab on" data-ws="workspace">
+        <div className="tab on" data-ws="workspace" role="button" tabIndex={0}>
           <span className="num">1</span>workspace
         </div>
-        <div className="tab muted" data-ws="scratchpad">
+        <div className="tab muted" data-ws="scratchpad" role="button" tabIndex={0}>
           <span className="num">2</span>scratchpad
         </div>
-        <div className="tab muted" data-ws="changelog">
+        <div className="tab muted" data-ws="changelog" role="button" tabIndex={0}>
           <span className="num">3</span>changelog
         </div>
         <div className="grow"></div>

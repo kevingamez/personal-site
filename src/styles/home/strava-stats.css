@@ -1,7 +1,8 @@
 /* Strava part 1: section shell, hero stats band, and insight tiles (split from strava.css) */
 
 /* ─── Strava - movement (metrics only) ─── */
-#strava[hidden] {
+#strava[hidden],
+.sv-insights[hidden] {
   display: none;
 }
 

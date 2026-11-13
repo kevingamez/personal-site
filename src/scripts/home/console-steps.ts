@@ -9,12 +9,10 @@
 // already announced once through #console-status.
 
 import { el, escape } from './console-dom'
+import { consoleStrings } from './console-i18n'
 
-const LABELS: Record<string, string> = {
-  web_search: 'searching the web',
-  get_site_data: 'reading site data',
-  get_strava_stats: 'reading training stats',
-}
+// Step labels follow the page language; an unknown tool falls back to its name.
+const label = (key: string): string => consoleStrings().steps[key] || key
 
 // Only the arguments worth showing. A tool with nothing useful to display gets
 // its label alone rather than an empty pair of quotes.
@@ -73,14 +71,14 @@ export function createSteps(stream: HTMLElement, anchor: HTMLElement): Steps {
   return {
     thinking(): void {
       if (thinkingLine) return
-      thinkingLine = line('thinking', '')
+      thinkingLine = line(label('thinking'), '')
       insert(thinkingLine)
     },
     answered: dropThinking,
     toolUse(name, input): void {
       // The model committed to a call, so it is no longer merely thinking.
       dropThinking()
-      const node = line(LABELS[name] || name, detailFor(name, input))
+      const node = line(label(name), detailFor(name, input))
       insert(node)
       running.push({ name, node })
     },

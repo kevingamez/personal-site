@@ -1,23 +1,44 @@
 import type { HomeStrings } from '@/content/home'
+import type { Payload } from '@/scripts/home/strava-types'
 
 interface Props {
   t: HomeStrings['strava']
+  lang: string
+  // Snapshot fetched during the page render. With it the section ships
+  // visible, with its totals and the full payload inline, so the client fills
+  // the cards without a round-trip. Without it (no credentials, Strava down)
+  // the section ships hidden and the client fetches /api/strava as before.
+  data: Payload | null
 }
 
-export function Strava({ t }: Props) {
+const safeJson = (v: unknown): string => JSON.stringify(v).replace(/</g, '\\u003c')
+
+export function Strava({ t, lang, data }: Props) {
+  // Metric, like strava-init.ts before it resolves the visitor's units.
+  const tot = data?.totals
+  const hours = tot ? tot.movingTime / 3600 : 0
+  const seed = tot
+    ? {
+        km: String(Math.round(tot.distanceM / 1000)),
+        hours: hours >= 10 ? String(Math.round(hours)) : hours.toFixed(1),
+        elev: Math.round(tot.elevationM).toLocaleString(lang),
+        acts: String(tot.count),
+      }
+    : null
+
   // Inert JSON for the client renderer (labels it needs at runtime).
-  const i18n = JSON.stringify({
+  const i18n = safeJson({
     sports: t.sports,
     weekOf: t.weekOf,
     featSpeed: t.featSpeed,
     featPace: t.featPace,
     statMi: t.statMi,
     statFt: t.statElevationFt,
-  }).replace(/</g, '\\u003c')
+  })
 
   return (
-    // Hidden until the client confirms live activity.
-    <section id="strava" hidden>
+    // Without server data: hidden until the client confirms live activity.
+    <section id="strava" hidden={!seed}>
       <div className="wrap">
         <div className="sec-head">
           <div>
@@ -31,7 +52,7 @@ export function Strava({ t }: Props) {
           <div className="sv-hero-grid">
             <div className="sv-hero-lead">
               <div className="sv-hero-km">
-                <span id="sv-km">0</span>
+                <span id="sv-km">{seed?.km ?? '0'}</span>
                 <i id="sv-km-unit">km</i>
               </div>
               <div className="sv-hero-kml" id="sv-km-label">
@@ -40,15 +61,15 @@ export function Strava({ t }: Props) {
             </div>
             <div className="sv-hero-side">
               <div className="sv-mini">
-                <span id="sv-hours">0</span>
+                <span id="sv-hours">{seed?.hours ?? '0'}</span>
                 <em>{t.statHours}</em>
               </div>
               <div className="sv-mini">
-                <span id="sv-elev">0</span>
+                <span id="sv-elev">{seed?.elev ?? '0'}</span>
                 <em id="sv-elev-label">{t.statElevation}</em>
               </div>
               <div className="sv-mini">
-                <span id="sv-acts">0</span>
+                <span id="sv-acts">{seed?.acts ?? '0'}</span>
                 <em>{t.statActivities}</em>
               </div>
             </div>
@@ -126,8 +147,10 @@ export function Strava({ t }: Props) {
 
         {/* Metric tiles. None of these may restate a number shown above: the
             totals band already has total climb, and the biggest climb is
-            usually one of the longest-effort cards. */}
-        <div className="sv-insights">
+            usually one of the longest-effort cards. With server data they
+            stay hidden until the client has filled them, so a reader never
+            sees a row of zeros. */}
+        <div className="sv-insights" id="sv-insights" hidden={!!seed}>
           <div className="sv-tile glass">
             <div className="sv-tile-lbl">{t.insightEverestLabel}</div>
             <div className="sv-tile-val" id="sv-everest-val">
@@ -156,6 +179,13 @@ export function Strava({ t }: Props) {
           </div>
         </div>
 
+        {data && seed && (
+          <script
+            id="strava-data"
+            type="application/json"
+            dangerouslySetInnerHTML={{ __html: safeJson(data) }}
+          />
+        )}
         <script
           id="strava-i18n"
           type="application/json"

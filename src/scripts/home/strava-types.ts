@@ -47,6 +47,7 @@ export interface Insights {
 export interface Payload {
   configured: boolean
   error?: boolean
+  generatedAt?: string
   totals: Totals | null
   longestBySport: Activity[]
   // Absent from snapshots cached before kg-strava:v5; treat like null.

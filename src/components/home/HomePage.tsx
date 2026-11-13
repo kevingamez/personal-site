@@ -6,6 +6,7 @@ import '@/styles/home/index.css'
 
 import type { HomeStrings } from '@/content/home'
 import type { HomeStats } from '@/data/home-github'
+import type { Payload as StravaData } from '@/scripts/home/strava-types'
 import { JsonLd } from '@/components/site/JsonLd'
 import { Nav } from './Nav'
 import { GlassField } from './GlassField'
@@ -33,7 +34,14 @@ const buildId = 'a7f3c91'
 //
 // `stats` keeps flowing in for the same reason. Nothing renders it while the
 // GitHub section is out, hence the void.
-export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
+interface Props {
+  t: HomeStrings
+  stats: HomeStats
+  // Server-fetched Strava snapshot, or null when there is none to show.
+  strava?: StravaData | null
+}
+
+export function HomePage({ t, stats, strava = null }: Props) {
   void stats
 
   return (
@@ -56,7 +64,7 @@ export function HomePage({ t, stats }: { t: HomeStrings; stats: HomeStats }) {
         <Console t={t.console} />
         {/* <Writing t={t.writing} /> */}
         <div className="strava-lazy-anchor" data-strava-lazy-anchor aria-hidden="true"></div>
-        <Strava t={t.strava} />
+        <Strava t={t.strava} lang={t.meta.htmlLang} data={strava} />
         <Contact t={t.contact} />
       </main>
       <Footer t={t.footer} buildId={buildId} />

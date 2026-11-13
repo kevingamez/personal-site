@@ -97,6 +97,9 @@ export function renderEditor(): void {
     const div = document.createElement('div')
     const dirty = isDirty(t)
     div.className = 'et' + (t === state.activeTab ? ' on' : '') + (dirty ? ' dirty' : '')
+    div.setAttribute('role', 'button')
+    div.dataset.kbd = 'tab:' + t
+    div.tabIndex = 0
     const closer = dirty ? '●' : '×'
     // VS Code-style: file icon + name + close/dirty marker
     div.innerHTML =

@@ -26,10 +26,10 @@ export async function SourceControl() {
       <div className="sc-head">
         <span className="sc-title">SOURCE CONTROL</span>
         <span className="sc-actions">
-          <span className="material-symbols-outlined" title="Refresh">
+          <span aria-hidden="true" className="material-symbols-outlined" title="Refresh">
             refresh
           </span>
-          <span className="material-symbols-outlined" title="More">
+          <span aria-hidden="true" className="material-symbols-outlined" title="More">
             more_horiz
           </span>
         </span>
@@ -43,7 +43,9 @@ export async function SourceControl() {
       </div>
 
       <div className="sc-branch">
-        <span className="material-symbols-outlined">commit</span>
+        <span aria-hidden="true" className="material-symbols-outlined">
+          commit
+        </span>
         <span>
           <b>main</b>
         </span>

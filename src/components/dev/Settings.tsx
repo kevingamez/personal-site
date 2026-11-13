@@ -132,7 +132,9 @@ export function Settings() {
       </section>
 
       <button className="st-reset" id="st-reset" type="button">
-        <span className="material-symbols-outlined">refresh</span>
+        <span aria-hidden="true" className="material-symbols-outlined">
+          refresh
+        </span>
         <span>Reset to defaults</span>
       </button>
     </aside>
