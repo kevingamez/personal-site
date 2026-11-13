@@ -123,12 +123,8 @@
    never zooms back out. The prompt and the suggestion chips also become full
    44px targets. */
 @media (pointer: coarse) {
-  .cs-input,
   #console-msg {
     font-size: 16px;
-  }
-
-  #console-msg {
     min-height: 44px;
   }
 
