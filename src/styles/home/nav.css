@@ -106,6 +106,14 @@
     transform var(--dur-fast) var(--ease-out);
 }
 
+/* One filled control per bar. Switching language is wayfinding, not the ask,
+   so it is an outlined control that leaves "Email me" as the only solid one. */
+.lang-switch {
+  color: var(--ink);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(11 11 12 / 14%);
+}
+
 /* The press answers on the same frame, before the navigation does. */
 .say-hi:active,
 .lang-switch:active {
@@ -113,9 +121,12 @@
 }
 
 @media (hover: hover) {
-  .say-hi:hover,
-  .lang-switch:hover {
+  .say-hi:hover {
     background: #26262b;
+  }
+
+  .lang-switch:hover {
+    background: rgb(11 11 12 / 6%);
   }
 }
 

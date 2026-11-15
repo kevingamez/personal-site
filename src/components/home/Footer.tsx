@@ -2,10 +2,12 @@ import type { HomeStrings } from '@/content/home'
 
 interface Props {
   t: HomeStrings['footer']
+  nav: HomeStrings['nav']
+  resumeHref: string
   buildId: string
 }
 
-export function Footer({ t }: Props) {
+export function Footer({ t, nav, resumeHref }: Props) {
   return (
     <footer className="footer">
       <div className="wrap">
@@ -17,14 +19,22 @@ export function Footer({ t }: Props) {
           <div>
             <h3>{t.h4Sections}</h3>
             <ul>
-              {/* <li> <a href="#about">{t.sectionsAbout}</a> </li> */}
+              {/* The same five destinations as the nav, in the same order. */}
               <li>
-                <a href="#experience">{t.sectionsExperience}</a>
+                <a href="#experience">{nav.experience}</a>
               </li>
               <li>
-                <a href="#work">{t.sectionsWork}</a>
+                <a href="#work">{nav.work}</a>
               </li>
-              {/* <li> <a href="#github">{t.sectionsGithub}</a> </li> */}
+              <li>
+                <a href="#console">{nav.console}</a>
+              </li>
+              <li>
+                <a href="#strava">{nav.strava}</a>
+              </li>
+              <li>
+                <a href={resumeHref}>{nav.resume}</a>
+              </li>
             </ul>
           </div>
           <div>

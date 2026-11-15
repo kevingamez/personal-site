@@ -26,10 +26,8 @@
 
 .tl-backer-k {
   display: block;
-  font-size: var(--t-caption);
-  font-weight: var(--w-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: var(--t-footnote);
+  font-weight: var(--w-medium);
   color: var(--muted);
   margin-bottom: 7px;
 }
@@ -75,7 +73,7 @@
   width: 44px;
   height: 44px;
   object-fit: contain;
-  border-radius: 3px;
+  border-radius: var(--r-xs);
 }
 
 .tl-desc {

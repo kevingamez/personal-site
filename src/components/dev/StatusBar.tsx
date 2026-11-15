@@ -8,9 +8,6 @@ export function StatusBar() {
         <span>typescript, 5.4</span>
       </div>
       <div className="r">
-        <span className="synthetic" title="Decorative - not real production metrics">
-          p50 38ms, p95 142ms, err 0.02% <em>synthetic</em>
-        </span>
         <span id="status-pos">UTF-8, LF, Ln 6, Col 24</span>
       </div>
     </div>

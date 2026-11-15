@@ -32,7 +32,7 @@
 }
 
 .st-sub {
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--mute);
   letter-spacing: 0.08em;
   text-transform: lowercase;
@@ -45,7 +45,7 @@
 }
 
 .st-label {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--mute-2);
   text-transform: uppercase;
   letter-spacing: 0.16em;
@@ -70,16 +70,18 @@
   cursor: pointer;
   color: var(--ink-2);
   font-family: inherit;
-  font-size: 10.5px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   transition-property: border-color, background-color, color, box-shadow, transform;
   transition-duration: 0.15s;
   text-align: left;
 }
 
-.st-theme:hover {
-  border-color: var(--mute);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .st-theme:hover {
+    border-color: var(--mute);
+    transform: translateY(-1px);
+  }
 }
 
 .st-theme.on {
@@ -133,7 +135,7 @@
 }
 
 .st-row output {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
   min-width: 38px;
   text-align: right;
@@ -156,7 +158,7 @@
   border: none;
   color: var(--mute);
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   padding: 6px 4px;
   border-radius: 4px;
   cursor: pointer;
@@ -164,8 +166,10 @@
   transition-duration: 0.15s;
 }
 
-.st-seg:hover {
-  color: var(--ink-2);
+@media (hover: hover) {
+  .st-seg:hover {
+    color: var(--ink-2);
+  }
 }
 
 .st-seg.on {
@@ -236,13 +240,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
 }
 
 .st-kbd-row kbd {
   font-family: inherit;
-  font-size: 10px;
+  font-size: 12px;
   background: var(--panel-2);
   border: 1px solid var(--line);
   color: var(--ink-2);
@@ -263,35 +267,20 @@
   padding: 8px 12px;
   border-radius: 6px;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   cursor: pointer;
   transition-property: border-color, color;
   transition-duration: 0.15s;
 }
 
-.st-reset:hover {
-  border-color: var(--red);
-  color: var(--red);
+@media (hover: hover) {
+  .st-reset:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
 }
 
 .st-reset .material-symbols-outlined {
   font-size: 14px;
-}
-
-/* Cursor preference hook - applied via document data-cursor attr. Used by
-   the CodeMirror caret style override (see editor.css). */
-:root[data-cursor='bar'] .cm-cursor {
-  border-left-width: 2px;
-}
-
-:root[data-cursor='block'] .cm-cursor {
-  border-left-width: 8px;
-  background: var(--coral);
-  opacity: 0.6;
-}
-
-:root[data-cursor='underline'] .cm-cursor {
-  border-left-width: 8px;
-  border-bottom: 2px solid var(--coral);
 }

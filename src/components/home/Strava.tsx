@@ -19,10 +19,10 @@ export function Strava({ t, lang, data }: Props) {
   const hours = tot ? tot.movingTime / 3600 : 0
   const seed = tot
     ? {
-        km: String(Math.round(tot.distanceM / 1000)),
+        km: Math.round(tot.distanceM / 1000).toLocaleString(lang),
         hours: hours >= 10 ? String(Math.round(hours)) : hours.toFixed(1),
         elev: Math.round(tot.elevationM).toLocaleString(lang),
-        acts: String(tot.count),
+        acts: tot.count.toLocaleString(lang),
       }
     : null
 
@@ -48,12 +48,11 @@ export function Strava({ t, lang, data }: Props) {
         </div>
 
         {/* Hero band: yearly totals */}
-        <div className="sv-hero glass-strong">
+        <div className="sv-hero sheet">
           <div className="sv-hero-grid">
             <div className="sv-hero-lead">
               <div className="sv-hero-km">
                 <span id="sv-km">{seed?.km ?? '0'}</span>
-                <i id="sv-km-unit">km</i>
               </div>
               <div className="sv-hero-kml" id="sv-km-label">
                 {t.statKm}
@@ -80,7 +79,7 @@ export function Strava({ t, lang, data }: Props) {
             filled and unhidden by strava-latest.ts, so it stays out of the
             page when there is no activity. The date is relative, so it is
             computed on the client and the server ships the slot empty. */}
-        <article className="sv-latest glass" id="sv-latest" aria-labelledby="sv-latest-lbl" hidden>
+        <article className="sv-latest sheet" id="sv-latest" aria-labelledby="sv-latest-lbl" hidden>
           <div className="sv-latest-route" data-route aria-hidden="true"></div>
           <div className="sv-latest-meta">
             <div className="sv-latest-label" id="sv-latest-lbl">
@@ -130,7 +129,7 @@ export function Strava({ t, lang, data }: Props) {
           id="sv-feat-tpl"
           dangerouslySetInnerHTML={{
             __html:
-              '<article class="sv-feat glass">' +
+              '<article class="sv-feat sheet">' +
               '<div class="sv-feat-route" data-route aria-hidden="true"></div>' +
               '<div class="sv-feat-body">' +
               `<div class="sv-feat-label">${t.featuredLabel}, <span data-sport></span></div>` +
@@ -150,28 +149,32 @@ export function Strava({ t, lang, data }: Props) {
             usually one of the longest-effort cards. With server data they
             stay hidden until the client has filled them, so a reader never
             sees a row of zeros. */}
-        <div className="sv-insights" id="sv-insights" hidden={!!seed}>
-          <div className="sv-tile glass">
+        <div className="sv-insights sheet" id="sv-insights" hidden={!!seed}>
+          <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightEverestLabel}</div>
             <div className="sv-tile-val" id="sv-everest-val">
               0
             </div>
           </div>
-          <div className="sv-tile glass">
-            <div className="sv-tile-lbl">{t.insightFastLabel}</div>
+          <div className="sv-tile">
+            <div className="sv-tile-lbl">
+              {t.insightFastLabel}
+              <span className="sv-tile-sub" id="sv-fast-sub"></span>
+            </div>
             <div className="sv-tile-val" id="sv-fast-val">
               0
             </div>
-            <div className="sv-tile-sub" id="sv-fast-sub"></div>
           </div>
-          <div className="sv-tile glass">
-            <div className="sv-tile-lbl">{t.insightBiggestLabel}</div>
+          <div className="sv-tile">
+            <div className="sv-tile-lbl">
+              {t.insightBiggestLabel}
+              <span className="sv-tile-sub" id="sv-biggest-sub"></span>
+            </div>
             <div className="sv-tile-val" id="sv-biggest-val">
               0
             </div>
-            <div className="sv-tile-sub" id="sv-biggest-sub"></div>
           </div>
-          <div className="sv-tile glass">
+          <div className="sv-tile">
             <div className="sv-tile-lbl">{t.insightActiveLabel}</div>
             <div className="sv-tile-val" id="sv-active-val">
               0

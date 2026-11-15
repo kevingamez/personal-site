@@ -10,6 +10,90 @@
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
+
+  /* The strip is horizontal here, so the active mark sits under the icon. */
+  .activity-bar .ab-item {
+    border-left: 0;
+  }
+
+  .activity-bar .ab-item.on {
+    box-shadow: inset 0 -2px 0 var(--coral);
+  }
+
+  /* The side panel is a drawer on phones: closed on load so the editor and
+     terminal are the first screen, opened and closed from the activity bar
+     (activity-bar.ts toggles .side-closed; desktop ignores the class). */
+  .app.side-closed > .explorer,
+  .app.side-closed > .sc-panel,
+  .app.side-closed > .profile-panel,
+  .app.side-closed > .settings-panel {
+    display: none;
+  }
+
+  .app.side-closed .ab-item.on {
+    color: var(--mute);
+    box-shadow: none;
+  }
+
+  .app.side-closed .ab-item.on .material-symbols-outlined {
+    color: inherit;
+    opacity: 0.78;
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
+  /* Profile and settings pin themselves to desktop column 2, which would
+     conjure a second column in the stacked grid. */
+  .app > .profile-panel,
+  .app > .settings-panel,
+  .app > .sc-panel {
+    grid-column: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app > .explorer,
+  .app > .sc-panel {
+    max-height: 60vh;
+    max-height: 60svh;
+  }
+
+  /* Bounded panes that scroll inside, instead of a README-long editor that
+     pushes the terminal several screens down. */
+  .center {
+    min-height: 0;
+  }
+
+  .editor {
+    height: min(58vh, 520px);
+    height: min(58svh, 520px);
+  }
+
+  .term-body {
+    min-height: 96px;
+    max-height: 50vh;
+    max-height: 50svh;
+  }
+
+  .ed-tabs,
+  .term-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .ed-tabs::-webkit-scrollbar,
+  .term-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ed-tabs .et,
+  .term-tabs .tt {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 }
 
 /* Small screens: the IDE chrome is desktop-shaped. Hide the decorative bits
@@ -20,8 +104,8 @@
     display: none;
   }
 
-  /* "live - build" badge - decorative, collides with the exit link. */
-  .titlebar .r > span {
+  /* Build id - collides with the exit link. */
+  .titlebar .build {
     display: none;
   }
 
@@ -40,7 +124,7 @@
     display: none;
   }
 
-  /* Synthetic latency metrics - decorative, overlap on narrow bars. */
+  /* Cursor position - overlaps the left group on narrow bars. */
   .statusbar .r {
     display: none;
   }
@@ -48,5 +132,32 @@
   .statusbar .l {
     min-width: 0;
     overflow: hidden;
+  }
+
+  /* Duplicates the active tab, and the tab strip needs the width. */
+  .ed-tabs .breadcrumb,
+  .ed-tabs .grow,
+  .term-tabs .grow,
+  .term-tabs .actions,
+  .term-input .hint {
+    display: none;
+  }
+
+  .term-input input::placeholder {
+    font-size: 13px;
+  }
+
+  .changelog-body {
+    padding: 20px 16px 40px;
+  }
+
+  .palette {
+    padding-top: 24px;
+  }
+
+  .toast {
+    right: 16px;
+    left: 16px;
+    text-align: center;
   }
 }

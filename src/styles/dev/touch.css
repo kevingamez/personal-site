@@ -1,0 +1,101 @@
+/* Touch sizing. Every control a thumb uses gets a 44px target, by growing the
+   row itself so no two hit zones overlap. Scoped to coarse pointers and the
+   stacked (phone) layout, so desktop keeps its vscode density. Text inputs go
+   to 16px here because iOS zooms the page when a smaller one takes focus. */
+@media (pointer: coarse), (width <= 880px) {
+  .titlebar {
+    height: 52px;
+  }
+
+  .titlebar .back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .tabsbar,
+  .ed-tabs,
+  .term-tabs {
+    height: 46px;
+  }
+
+  .tabsbar .tab {
+    flex-shrink: 0;
+  }
+
+  .ed-tabs .et .x {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    min-width: 32px;
+    margin-right: -10px;
+    font-size: 16px;
+  }
+
+  .explorer .it[role='button'] {
+    height: 44px;
+  }
+
+  .term-input {
+    padding: 0 16px;
+  }
+
+  .term-input input {
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+    text-overflow: ellipsis;
+  }
+
+  .repos a,
+  .commit-r,
+  .pf-link,
+  .palette-item {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .commit-tail {
+    max-height: none;
+  }
+
+  .st-seg,
+  .st-reset,
+  .st-switch,
+  .sc-commit,
+  .sc-section > summary {
+    min-height: 44px;
+  }
+
+  .sc-commit-row {
+    min-height: 44px;
+    align-content: center;
+  }
+
+  /* The 4px track is drawn as a centered stripe so the input itself can be a
+     full-height target. */
+  .st-row input[type='range'] {
+    height: 44px;
+    background: linear-gradient(var(--line), var(--line)) center / 100% 4px no-repeat;
+    border-radius: 0;
+  }
+
+  .st-row input[type='range']::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .st-row input[type='range']::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .sc-msg,
+  .palette-input,
+  .scratch-area {
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
