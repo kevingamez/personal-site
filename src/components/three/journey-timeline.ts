@@ -29,13 +29,14 @@ interface KF extends Pose {
 // value also drains the fully formed brain the moment the page scrolls at all.
 // Parking the swarm at the right edge keeps its dense core off the prose - and
 // mostly off-screen - so it can hold its weight without costing legibility.
-// White cards already occlude it, and the two stops where the figure IS the
-// point (it half-condenses into the brain at Experience, again at the console)
-// were never the problem.
+// White cards already occlude it. Experience and Work are the exceptions: an
+// open role's stack list and the project index both sit on bare paper in the
+// right-hand column, exactly where the swarm parks, so those two stops sit
+// further out and fainter than the rest.
 const KFS: KF[] = [
   { sel: '#about', x: 0.92, y: 0.6, s: 0.5, a: 0.4, fB: 0, fC: 0, waves: 0 },
-  { sel: '#experience', x: 0.8, y: 0.55, s: 0.32, a: 0.85, fB: 0.55, fC: 0, waves: 0.25 },
-  { sel: '#work', x: 0.92, y: 0.58, s: 0.46, a: 0.35, fB: 0, fC: 0, waves: 0 },
+  { sel: '#experience', x: 0.93, y: 0.55, s: 0.32, a: 0.5, fB: 0.55, fC: 0, waves: 0.25 },
+  { sel: '#work', x: 0.96, y: 0.58, s: 0.4, a: 0.2, fB: 0, fC: 0, waves: 0 },
   { sel: '#github', x: 0.92, y: 0.66, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
   { sel: '#writing', x: 0.92, y: 0.6, s: 0.5, a: 0.35, fB: 0, fC: 0, waves: 0 },
   { sel: '#console', x: 0.82, y: 0.62, s: 0.42, a: 0.65, fB: 0.3, fC: 0, waves: 0.3 },

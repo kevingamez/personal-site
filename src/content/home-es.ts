@@ -48,7 +48,7 @@ export const es: HomeStrings = {
     metaPlace: 'Bogotá, Colombia',
     weatherLabels:
       '{"clear": "despejado", "partly cloudy": "parcialmente nublado", "cloudy": "nublado", "fog": "niebla", "drizzle": "llovizna", "rain": "lluvia", "showers": "aguaceros", "snow": "nieve", "storm": "tormenta"}',
-    titleHtml: 'Hola',
+    titleHtml: 'Kevin Gámez',
     lede: 'Soy founding engineer en Bogotá y estoy buscando lo que sigue. Tuve la ingeniería a cargo en\n            <b>Enttor</b>, donde armé la plataforma de paid ads sobre Meta y TikTok y el agente de Slack que la\n            maneja. Antes trabajé en un marketplace de e-commerce en <b>Samsam</b>. Tengo una maestría de la\n            Universidad de los Andes.',
     creds: [
       { k: 'Hasta hace poco', v: 'Founding engineer en Enttor' },

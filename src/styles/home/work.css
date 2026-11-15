@@ -210,3 +210,11 @@
   aspect-ratio: auto;
   min-height: 340px;
 }
+
+/* Phones: the mock is drawn larger there so its labels can be read, which
+   needs a taller box for the generated ads to clear the composer. */
+@media (width <= 620px) {
+  .wf-visual:has(.as) {
+    min-height: 500px;
+  }
+}

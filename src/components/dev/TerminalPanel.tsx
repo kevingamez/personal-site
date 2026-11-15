@@ -5,12 +5,6 @@ export function TerminalPanel() {
         <div className="tt on" data-term="zsh" role="button" tabIndex={0}>
           zsh
         </div>
-        <div className="tt" data-term="build" role="button" tabIndex={0}>
-          build:watch
-        </div>
-        <div className="tt" data-term="tail" role="button" tabIndex={0}>
-          tail -f demo.log
-        </div>
         <div className="grow"></div>
         <div className="actions">⎘ split ⊕ new ↗ pop-out</div>
       </div>
@@ -73,8 +67,6 @@ export function TerminalPanel() {
         <input id="cmd" placeholder="try ls, cat README.md, help" autoComplete="off" />
         <span className="hint">↵ run, ↑ history, ⌃L clear</span>
       </div>
-      <div className="term-body term-stream" id="term-build" hidden></div>
-      <div className="term-body term-stream" id="term-tail" hidden></div>
     </section>
   )
 }

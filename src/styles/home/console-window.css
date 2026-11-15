@@ -34,8 +34,8 @@
      so the ambient field moves through it. color-mix keeps the two in step:
      change the token and the terminal follows. */
   background: color-mix(in srgb, var(--ink-surface) 86%, transparent);
-  backdrop-filter: saturate(140%) blur(30px);
   -webkit-backdrop-filter: saturate(140%) blur(30px);
+  backdrop-filter: saturate(140%) blur(30px);
   border-radius: var(--r-lg);
   overflow: hidden;
   box-shadow:

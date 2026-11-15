@@ -20,8 +20,6 @@
      at 8:1 - enough of the backdrop bleeds through to keep it glass, and the
      blur and saturation do the rest. */
   --glass-fill-nav: rgb(253 253 252 / 88%);
-  --glass-backdrop: saturate(180%) blur(24px);
-  --glass-backdrop-thin: saturate(160%) blur(14px);
 
   /* Rim gradient: bright where light enters (top left), dark where the sheet
      meets the page, bright again on the edge the light exits. */
@@ -128,14 +126,19 @@
 .glass-thin {
   position: relative;
   background-color: transparent;
-  backdrop-filter: var(--glass-backdrop);
-  -webkit-backdrop-filter: var(--glass-backdrop);
+
+  /* Prefixed first, standard last. Written the other way round, the CSS
+     compiler kept only the -webkit- spelling, which Chrome ignores: the nav
+     shipped there with no blur at all, and page text read straight through
+     it. */
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
   box-shadow: var(--glass-lift);
 }
 
 .glass-thin {
-  backdrop-filter: var(--glass-backdrop-thin);
-  -webkit-backdrop-filter: var(--glass-backdrop-thin);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  backdrop-filter: saturate(160%) blur(14px);
   box-shadow: none;
 }
 

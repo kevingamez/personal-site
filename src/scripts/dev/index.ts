@@ -90,7 +90,7 @@ function init(): void {
   updatePrompt()
   renderExplorer()
   setWorkspace('workspace')
-  setTerminal('zsh')
+  setTerminal()
   updateStatusPos(6, 24)
   addLine(
     '<span class="gr">welcome to ~/' +
