@@ -39,6 +39,7 @@ export const es: HomeStrings = {
     resume: 'CV',
     sayHi: 'Escríbeme ↗',
     switchToSpanish: 'Ver en español',
+    menu: 'Menú',
     switchToEnglish: 'Ver en inglés',
     switchToSpanishAria: 'Ver este sitio en español',
     switchToEnglishAria: 'Ver este sitio en inglés',

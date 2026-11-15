@@ -141,7 +141,7 @@ html {
 
 @media (width <= 899px) {
   html {
-    scroll-padding-top: 112px;
+    scroll-padding-top: 24px;
   }
 }
 

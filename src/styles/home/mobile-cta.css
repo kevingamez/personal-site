@@ -1,7 +1,7 @@
 /* ─── Sticky mobile action bar ───
-   A glass capsule pinned to the bottom of a phone screen, carrying the one ask
-   the page is built around. Desktop already has "Email me" parked in the nav,
-   so this exists only below the 899px breakpoint the nav itself switches at.
+   A glass capsule pinned to the bottom of a phone screen: the menu on the
+   left, the one ask the page is built around on the right. Desktop has room
+   for both in the nav, so this exists only below the 899px breakpoint.
 
    It is display:none above that width rather than merely translated away: an
    off-screen but rendered element still runs its backdrop-filter, and this one
@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 8px 8px 14px;
+    padding: 6px 6px 6px 8px;
     border-radius: var(--r-md);
     pointer-events: auto;
   }
@@ -39,25 +39,69 @@
     background-color: var(--glass-fill-nav);
   }
 
-  .mcta-label {
-    font-size: var(--t-caption);
-    font-weight: var(--w-medium);
-    line-height: 1.3;
-    color: var(--ink-2);
+  /* The left half: where you are, and the way to everywhere else. */
+  .mnav-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     min-width: 0;
+    min-height: 44px;
+    padding: 0 12px 0 4px;
+    border: 0;
+    border-radius: var(--r-xs);
+    font: inherit;
+    font-size: var(--t-subhead);
+    font-weight: var(--w-semibold);
+    color: var(--ink);
+    background: none;
   }
 
-  .mcta-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .mnav-toggle [data-mnav-label] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Two bars that cross into a close mark, so the control says what a second
+     tap will do. */
+  .mnav-ico {
+    position: relative;
     flex-shrink: 0;
+    width: 18px;
+    height: 12px;
+  }
+
+  .mnav-ico i {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentcolor;
+  }
+
+  .mnav-ico i:first-child {
+    top: 2px;
+  }
+
+  .mnav-ico i:last-child {
+    bottom: 2px;
+  }
+
+  .mnav-open .mnav-ico i:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+
+  .mnav-open .mnav-ico i:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
   }
 
   .mcta-email {
     display: inline-flex;
     align-items: center;
-    padding: 10px 16px;
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 0 18px;
     border-radius: var(--r-xs);
     font-size: var(--t-footnote);
     font-weight: var(--w-semibold);
@@ -66,63 +110,86 @@
     background: var(--ink-900);
   }
 
-  .mcta-share {
+  /* The sheet grows out of the bar it belongs to. */
+  .mnav-sheet {
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: var(--r-md);
+
+    /* Opaque, unlike the bar: a list you read cannot have the page's own
+       text showing through it. */
+    background: var(--sheet);
+    box-shadow:
+      0 0 0 1px rgb(11 11 12 / 8%),
+      0 12px 32px rgb(11 11 12 / 14%);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    transform-origin: 24px 100%;
+  }
+
+  .mnav-open .mnav-sheet {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .mnav-links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mnav-links a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 12px;
+    border-radius: var(--r-xs);
+    font-size: var(--t-body);
+    font-weight: var(--w-medium);
+    color: var(--ink);
+  }
+
+  .mnav-links a:active,
+  .mnav-links a[aria-current] {
+    background: rgb(11 11 12 / 6%);
+  }
+
+  .mnav-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+
+  .mnav-foot a,
+  .mnav-foot button {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-
-    /* Anchor for the [data-toast] confirmation bubble below. */
-    position: relative;
-
-    /* 44px is the floor for a thumb target; the icon inside is 17px. */
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--line);
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
     border-radius: var(--r-xs);
-    color: var(--ink);
-    background: rgb(253 253 252 / 62%);
-  }
-
-  .mcta-share:active,
-  .mcta-share.is-shared {
-    border-color: var(--ink);
-  }
-
-  /* Confirmation for the icon-only button: it has no label to swap, so the
-     copied/failed message surfaces as a small tag above the capsule. */
-  .mcta-share[data-toast]::after {
-    content: attr(data-toast);
-    position: absolute;
-    right: 16px;
-    bottom: calc(100% + 8px);
-    padding: 6px 10px;
-    border-radius: var(--r-xs);
-    font-size: var(--t-caption);
+    font: inherit;
+    font-size: var(--t-footnote);
     font-weight: var(--w-medium);
-    white-space: nowrap;
-    color: var(--white);
-    background: var(--ink-900);
+    color: var(--ink-2);
+    background: none;
   }
 
   /* Keeps the page's last line of text clear of the bar. */
   .footer {
     padding-bottom: 96px;
   }
-
-  /* Handoff, not duplication: the nav carries "Email me" until the bar takes
-     over, and exactly one of them is on screen at a time. Two copies of the
-     same ask on a 390px viewport reads as a layout mistake, and dropping the
-     nav's copy gives the section links the width they were already scrolling
-     for. */
-  .mcta-on .say-hi {
-    display: none;
-  }
 }
 
 /* ─── Arrival ───
-   The bar is stamped on by src/scripts/home/share.ts once the hero has
-   scrolled past, and stamped off again when #contact comes into view - the
-   page's own closing CTA makes a floating copy of it redundant.
+   The bar is stamped on by src/scripts/home/mobile-nav.ts as soon as it can
+   drive the menu.
 
    The default is off-screen, so a visitor with JS disabled never gets a bar
    pinned over the page with nothing driving it. */
@@ -139,6 +206,30 @@
 }
 
 @media (width <= 899px) and (prefers-reduced-motion: no-preference) {
+  /* Opening is an entrance; closing is shorter and quieter. */
+  .mnav-sheet {
+    transition:
+      opacity 150ms cubic-bezier(0.55, 0, 1, 0.45),
+      transform 150ms cubic-bezier(0.55, 0, 1, 0.45),
+      visibility 150ms step-end;
+  }
+
+  .mnav-open .mnav-sheet {
+    transition:
+      opacity 210ms cubic-bezier(0.32, 0.72, 0, 1),
+      transform 210ms cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0s;
+  }
+
+  .mnav-ico i {
+    transition: transform 210ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .mnav-toggle:active,
+  .mcta-email:active {
+    transform: scale(0.97);
+  }
+
   .mcta {
     transition:
       transform var(--dur-slow) var(--ease-out-soft),

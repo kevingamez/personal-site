@@ -38,19 +38,42 @@ test('an open experience row is one column on a phone', async ({ page }) => {
   expect(clash).toBe(false)
 })
 
-test('the nav steps aside on the way down and returns on the way up', async ({ page }) => {
+test('the bottom bar is the phone navigation', async ({ page }) => {
   await page.goto('/')
-  const root = page.locator('html')
+  const bar = page.locator('#mobile-cta')
+  const toggle = bar.locator('[data-mnav-toggle]')
+  const sheet = bar.locator('[data-mnav-sheet]')
 
-  // The scroll listener is attached after hydration, so retry until it is.
-  await expect(async () => {
-    await page.evaluate(() => window.scrollTo(0, 600))
-    await page.evaluate(() => window.scrollTo(0, 1200))
-    await expect(root).toHaveClass(/nav-away/, { timeout: 500 })
-  }).toPass()
-  const hidden = await page.locator('.nav').boundingBox()
-  expect(hidden!.y + hidden!.height).toBeLessThanOrEqual(0)
+  // Present from the first screen, and the top bar no longer follows the page.
+  await expect(toggle).toBeVisible()
+  await expect(toggle).toHaveText('Menu')
+  await expect(page.locator('.nav-links')).toBeHidden()
+  await expect(sheet).toBeHidden()
 
-  await page.evaluate(() => window.scrollTo(0, 1100))
-  await expect(root).not.toHaveClass(/nav-away/)
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  await expect(sheet.locator('a')).toHaveCount(6)
+  await expect(sheet.getByRole('link', { name: 'Work' })).toBeVisible()
+
+  // Escape closes it and hands focus back to the toggle.
+  await page.keyboard.press('Escape')
+  await expect(sheet).toBeHidden()
+  await expect(toggle).toBeFocused()
+
+  // Picking a section closes the sheet, goes there, and the bar names it.
+  await toggle.click()
+  await sheet.getByRole('link', { name: 'Work' }).click()
+  await expect(sheet).toBeHidden()
+  await expect(toggle).toHaveText('Work')
+  const top = await page.locator('#work').evaluate((el) => el.getBoundingClientRect().top)
+  expect(Math.abs(top)).toBeLessThan(80)
+})
+
+test('every control in the phone navigation is a 44px target', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-mnav-toggle]').click()
+  const small = await page
+    .locator('#mobile-cta a, #mobile-cta button')
+    .evaluateAll((els) => els.filter((e) => e.getBoundingClientRect().height < 43.5).length)
+  expect(small).toBe(0)
 })
