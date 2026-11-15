@@ -76,7 +76,7 @@ export function HomePage({ t, stats, strava = null }: Props) {
 
       {/* Outside <main>: it is a persistent chrome affordance, not page content,
           and it must not sit inside the region the skip link targets. */}
-      <MobileCta t={t.contact} />
+      <MobileCta t={t.contact} nav={t.nav} meta={t.meta} />
 
       <HomeScripts />
     </>

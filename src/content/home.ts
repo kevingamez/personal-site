@@ -67,6 +67,7 @@ export interface HomeStrings {
     resume: string
     sayHi: string
     switchToSpanish: string
+    menu: string
     switchToEnglish: string
     switchToSpanishAria: string
     switchToEnglishAria: string

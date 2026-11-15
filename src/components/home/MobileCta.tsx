@@ -3,41 +3,79 @@ import { ShareIcon } from './ShareIcon'
 
 interface Props {
   t: HomeStrings['contact']
+  nav: HomeStrings['nav']
+  meta: HomeStrings['meta']
 }
 
-// The one action bar that follows you on a phone. The page's real CTA lives in
-// #contact, at the very bottom of a long scroll - on a 390px screen that is
-// several minutes of thumb work away, so the ask is repeated here and pinned.
+// The phone's navigation, where a thumb already is. One bar at the bottom: the
+// left half says which section you are in and opens the menu, the right half
+// is the page's one ask. It replaced a two-row bar at the top whose links ran
+// off the right edge (the last one was never visible without a sideways
+// swipe) and a second bar down here that only carried the email button.
 //
-// Hidden above 899px (the same breakpoint the nav uses) because the desktop nav
-// already carries "Email me" in the corner at all times. It is also hidden
-// until the hero has scrolled past: `mcta-on` is stamped on <html> by
-// src/scripts/home/share.ts, so the bar never covers the first screen.
-//
-// aria-hidden is NOT set when it is off-screen - it is translated out of view
-// but stays in the tab order for keyboard users on small viewports, which is
-// where a hidden-but-focusable control would otherwise trap focus.
-export function MobileCta({ t }: Props) {
+// Hidden above 899px, where the desktop nav has room for everything. The
+// sheet stays mounted so it can animate out, and is `inert` while closed so
+// it cannot take focus or a tap; src/scripts/home/mobile-nav.ts drives both.
+export function MobileCta({ t, nav, meta }: Props) {
+  const isEnglish = meta.htmlLang === 'en'
+
   return (
     <div className="mcta" id="mobile-cta" data-mobile-cta>
-      <div className="mcta-in glass">
-        <span className="mcta-label">{t.ctaLabel}</span>
-        <div className="mcta-actions">
-          <a className="mcta-email" href="mailto:kevingamez.kg@gmail.com" data-cta="mobile-email">
-            {t.ctaEmail}
+      <div className="mnav-sheet" id="mnav-sheet" data-mnav-sheet inert>
+        <nav className="mnav-links" aria-label={nav.menu}>
+          <a href="#experience" data-mnav-link="experience">
+            {nav.experience}
+          </a>
+          <a href="#work" data-mnav-link="work">
+            {nav.work}
+          </a>
+          <a href="#console" data-mnav-link="console">
+            {nav.console}
+          </a>
+          <a href="#strava" data-mnav-link="strava">
+            {nav.strava}
+          </a>
+          <a href={isEnglish ? '/resume/' : '/es/resume/'}>{nav.resume}</a>
+        </nav>
+        <div className="mnav-foot">
+          <a
+            href={isEnglish ? '/?lang=es' : '/?lang=en'}
+            hrefLang={isEnglish ? 'es' : 'en'}
+            aria-label={isEnglish ? nav.switchToSpanishAria : nav.switchToEnglishAria}
+          >
+            {isEnglish ? nav.switchToSpanish : nav.switchToEnglish}
           </a>
           <button
-            className="mcta-share"
             type="button"
             data-share
             data-share-text={t.shareText}
             data-share-copied={t.shareCopied}
             data-share-failed={t.shareFailed}
-            aria-label={t.shareAria}
           >
             <ShareIcon />
+            <span data-share-label>{t.btnShare}</span>
           </button>
         </div>
+      </div>
+
+      <div className="mcta-in glass">
+        <button
+          className="mnav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mnav-sheet"
+          data-mnav-toggle
+          data-mnav-default={nav.menu}
+        >
+          <span className="mnav-ico" aria-hidden="true">
+            <i />
+            <i />
+          </span>
+          <span data-mnav-label>{nav.menu}</span>
+        </button>
+        <a className="mcta-email" href="mailto:kevingamez.kg@gmail.com" data-cta="mobile-email">
+          {t.ctaEmail}
+        </a>
       </div>
     </div>
   )
