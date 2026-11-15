@@ -72,7 +72,7 @@ Every animation must respect `prefers-reduced-motion` (gate rAF loops on the med
 
 ### SEO assets
 
-- Metadata comes from `src/lib/seo.ts` (`buildMetadata`) + `JsonLd.tsx`; OG image `public/og-dev-preview.png` (1200×630).
+- Metadata comes from `src/lib/seo.ts` (`buildMetadata`) + `JsonLd.tsx`; OG image `public/og-kevin.jpg` (1200×630); `/dev` keeps its own `public/og-dev-preview.png`.
 - `app/sitemap.ts` lists indexable routes only. `public/robots.txt` and `public/.well-known/security.txt` are committed and should not be deleted.
 
 ### Tests

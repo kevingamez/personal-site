@@ -120,6 +120,7 @@ export const enSections: Pick<
     ctaLabel: 'Got something in mind?',
     ctaEmail: 'Email me',
     shareAria: 'Share this page',
+    emailCopied: 'Address copied',
     shareCopied: 'Link copied',
     shareFailed: 'Copy failed',
     shareText: 'Kevin Gámez, founding engineer in Bogotá.',

@@ -273,6 +273,7 @@ export interface HomeStrings {
     ctaLabel: string
     ctaEmail: string
     shareAria: string
+    emailCopied: string
     shareCopied: string
     shareFailed: string
     shareText: string

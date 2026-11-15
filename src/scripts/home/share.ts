@@ -86,6 +86,17 @@ export function initShare(): void {
     })
   }
 
+  // The contact button opens the mail app, and many desktops have none set
+  // up. It also puts the address on the clipboard and says so, so the click
+  // always ends with something in hand.
+  for (const link of document.querySelectorAll<HTMLElement>('[data-copy-email]')) {
+    link.addEventListener('click', () => {
+      void copyLink(link.dataset.copyEmail || '').then((ok) => {
+        if (ok) toast(link, link.dataset.shareCopied || 'Address copied')
+      })
+    })
+  }
+
   for (const cta of document.querySelectorAll<HTMLElement>('[data-cta]')) {
     cta.addEventListener('click', () => {
       track<{ name: 'cta_click'; props: { id: string; href?: string } }>('cta_click', {

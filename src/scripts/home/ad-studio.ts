@@ -54,7 +54,7 @@ export function initAdStudio(): void {
   // exactly that much design space, so the layout reflows instead of shrinking.
   const DESIGN_W = 1053
   const DESIGN_H = 620
-  const MIN_SCALE = 0.6
+  const MIN_SCALE = 0.78
   const fit = (): void => {
     if (!stage) return
     const s = Math.max(MIN_SCALE, root.clientWidth / DESIGN_W, root.clientHeight / DESIGN_H)

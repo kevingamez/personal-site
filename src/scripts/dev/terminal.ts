@@ -1,11 +1,10 @@
-// Terminal: line output, input handling, and terminal tab switcher.
+// Terminal: line output and input handling.
 // Owns the addLine/err/clear primitives the command map writes through.
 
 import { pathDisplay, state } from './state'
 import { esc } from './highlight'
 import { buildCommands, tokenize, type CommandMap } from './commands'
 import { renderExplorer, renderOutline } from './explorer'
-import { makeBuildLoop, makeTailLoop } from './build-stream'
 import { track } from '../lib/analytics'
 
 let term: HTMLElement | null = null
@@ -90,24 +89,14 @@ export function focusInput(): void {
   setTimeout(() => input?.focus({ preventScroll: true }), 0)
 }
 
-let buildLoop: { start(): void; stop(): void } | null = null
-let tailLoop: { start(): void; stop(): void } | null = null
-let termBuildEl: HTMLElement | null = null
-let termTailEl: HTMLElement | null = null
 let termInputEl: HTMLElement | null = null
 
-export function setTerminal(name: 'zsh' | 'build' | 'tail'): void {
-  const termTabs = document.querySelectorAll<HTMLElement>('.term-tabs .tt[data-term]')
-  termTabs.forEach((t) => t.classList.toggle('on', t.dataset.term === name))
-  if (term) term.hidden = name !== 'zsh'
-  if (termInputEl) termInputEl.hidden = name !== 'zsh'
-  if (termBuildEl) termBuildEl.hidden = name !== 'build'
-  if (termTailEl) termTailEl.hidden = name !== 'tail'
-  if (name === 'build') buildLoop?.start()
-  else buildLoop?.stop()
-  if (name === 'tail') tailLoop?.start()
-  else tailLoop?.stop()
-  if (name === 'zsh') focusInput()
+/** One real shell. The synthetic build and log tabs that used to sit beside
+    it are gone, so this only has to bring the prompt back into focus. */
+export function setTerminal(): void {
+  if (term) term.hidden = false
+  if (termInputEl) termInputEl.hidden = false
+  focusInput()
 }
 
 export function initTerminal(): CommandMap {
@@ -115,14 +104,9 @@ export function initTerminal(): CommandMap {
   input = document.getElementById('cmd') as HTMLInputElement | null
   promptEl = document.getElementById('prompt')
   terminalEl = document.querySelector('.terminal')
-  termBuildEl = document.getElementById('term-build')
-  termTailEl = document.getElementById('term-tail')
   termInputEl = document.querySelector('.term-input')
 
   commands = buildCommands(addLine, err, clearTerm)
-
-  if (termBuildEl) buildLoop = makeBuildLoop(termBuildEl)
-  if (termTailEl) tailLoop = makeTailLoop(termTailEl)
 
   if (input) {
     input.addEventListener('keydown', (e) => {
@@ -163,13 +147,6 @@ export function initTerminal(): CommandMap {
       else if (t.dataset.cat) submit('cat ' + t.dataset.cat)
     })
   }
-
-  const termTabs = document.querySelectorAll<HTMLElement>('.term-tabs .tt[data-term]')
-  termTabs.forEach((t) =>
-    t.addEventListener('click', () =>
-      setTerminal((t.dataset.term as 'zsh' | 'build' | 'tail') || 'zsh')
-    )
-  )
 
   return commands
 }

@@ -8,7 +8,15 @@
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
   gap: 24px;
-  padding-bottom: 30px;
+}
+
+/* The space under an open panel. It is a last grid row rather than padding,
+   because padding on a collapsing box cannot shrink to nothing: a closed row
+   would keep 30px of it. 6px plus the 24px gap makes the 30. */
+.tl-panel-in::after {
+  content: '';
+  grid-column: 1 / -1;
+  height: 6px;
 }
 
 /* Left column: the company mark, and under it whoever backed the company. */
@@ -170,6 +178,10 @@
   .tl-panel-in {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+
+  .tl-panel-in::after {
+    height: 14px;
   }
 
   .tl-ledger {

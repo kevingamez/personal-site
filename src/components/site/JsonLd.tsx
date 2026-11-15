@@ -15,7 +15,7 @@ export function JsonLd({ meta }: { meta: HomeStrings['meta'] }) {
         familyName: 'Gámez',
         alternateName: 'Kevin Gamez',
         url: 'https://kevingamez.co',
-        image: 'https://kevingamez.co/og-dev-preview.png',
+        image: 'https://kevingamez.co/og-kevin.jpg',
         jobTitle: 'Founding Engineer',
         description:
           'Founding engineer in Bogotá, Colombia, open to new roles. Previously founding engineer at Enttor and product engineer at Samsam. M.Sc. Information Engineering, Universidad de los Andes.',

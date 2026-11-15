@@ -57,37 +57,3 @@
 .term-tabs .tt[data-term] {
   cursor: pointer;
 }
-
-.term-stream {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.term-stream .ln .ts {
-  color: var(--mute-2);
-}
-
-.term-stream .ln .lvl-info {
-  color: var(--green);
-}
-
-.term-stream .ln .lvl-warn {
-  color: var(--yellow);
-}
-
-.term-stream .ln .lvl-err {
-  color: var(--red);
-}
-
-.term-stream .ln .key {
-  color: var(--blue);
-}
-
-.term-stream .ln .vite {
-  color: #c47ad9;
-}
-
-.term-stream .ln .arrow {
-  color: var(--coral);
-}

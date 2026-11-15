@@ -16,7 +16,7 @@
 
 .reveal-on .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(10px);
   transition:
     opacity var(--dur-reveal) var(--ease-out-soft),
     transform var(--dur-reveal) var(--ease-out-soft);

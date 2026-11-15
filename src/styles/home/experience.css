@@ -109,18 +109,41 @@
 }
 
 /* Collapsing only applies once the script has run, so the content stays
-   readable without JS. */
+   readable without JS. The row opens by growing a grid track from 0fr to 1fr:
+   the panel takes exactly its content's height with nothing measured, and a
+   click halfway turns it around from where it is. Closed panels are also
+   visibility: hidden, so the links inside cannot take focus. */
 .exp-on .tl-panel {
-  overflow: hidden;
-  max-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
+  visibility: hidden;
+}
+
+.exp-on .tl-panel > .tl-panel-in {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.exp-on .tl-row[data-exp-open] .tl-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .exp-on .tl-panel {
     transition:
-      max-height var(--dur-slow) var(--ease-out),
-      opacity var(--dur-slow) var(--ease-out);
+      grid-template-rows 280ms cubic-bezier(0.77, 0, 0.175, 1),
+      opacity 200ms var(--ease-out),
+      visibility 280ms step-end;
+  }
+
+  .exp-on .tl-row[data-exp-open] .tl-panel {
+    transition:
+      grid-template-rows 280ms cubic-bezier(0.77, 0, 0.175, 1),
+      opacity 280ms var(--ease-out),
+      visibility 0s;
   }
 
   .tl-plus {
