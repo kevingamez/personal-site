@@ -85,7 +85,11 @@ export function submit(v: string): void {
 // below 880px the window stacks and the document scrolls (see base.css), so a
 // plain focus() dropped phones halfway down the page, at the terminal. On
 // desktop the window is fixed to the viewport, so nothing changes there.
+// Focusing the prompt on its own is right with a keyboard attached. On a
+// phone it summons the on-screen keyboard over half the page before anyone
+// has asked to type, so there the prompt waits for a tap.
 export function focusInput(): void {
+  if (window.matchMedia('(pointer: coarse)').matches) return
   setTimeout(() => input?.focus({ preventScroll: true }), 0)
 }
 

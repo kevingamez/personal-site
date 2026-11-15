@@ -21,6 +21,9 @@
 
 .hero-copy {
   align-self: center;
+
+  /* Lets the headline size itself against this column (cqi below). */
+  container-type: inline-size;
 }
 
 /* Desktop: the copy column owns the full hero height, Finox-style - stats
@@ -84,8 +87,13 @@ h1.hero-title {
      of the screen given to one word. Taking the smaller of a width and a
      height term keeps it at 10-12% of the viewport height everywhere, which
      is what makes the scale read as deliberate instead of accidental. */
-  font-size: var(--t-display);
+  font-size: min(var(--t-display), 17cqi);
   line-height: 0.94;
+
+  /* One line at every width. The name is about 5.8em wide, so capping the
+     size at 17% of the column it sits in keeps it whole: it used to break
+     into two lines at 1024, 1180 and 1920 and stay on one at 1366 and 1440. */
+  white-space: nowrap;
   letter-spacing: var(--ls-display);
   margin: 0 0 24px;
   text-wrap: balance;
