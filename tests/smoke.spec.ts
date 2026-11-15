@@ -103,22 +103,18 @@ test('share button copies the page URL when there is no share sheet', async ({ p
   await expect(page.locator('#contact [data-share]')).toHaveClass(/is-shared/)
 })
 
-test('the sticky CTA stays off the hero and arrives once it is scrolled past', async ({ page }) => {
+test('the phone bar carries the menu, the email ask and share', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
 
   const bar = page.locator('#mobile-cta')
   await expect(bar).toHaveCount(1)
-  // Nothing floats over the first screen.
-  await expect(bar).toBeHidden()
-
-  await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2))
-  await expect(bar).toBeVisible()
+  await expect(bar.locator('[data-mnav-toggle]')).toBeVisible()
+  await expect(bar.locator('a[href^="mailto:"]')).toBeVisible()
   await expect(bar.locator('[data-share]')).toHaveCount(1)
-  await expect(bar.locator('a[href^="mailto:"]')).toHaveCount(1)
 })
 
-test('the sticky CTA is desktop-suppressed, where the nav already carries it', async ({ page }) => {
+test('the phone bar is desktop-suppressed, where the nav already carries it', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
   await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2))

@@ -6,6 +6,7 @@ import { initBogotaClock } from '../clock'
 import { initConway } from './conway'
 import { initExperience } from './experience'
 import { initIntro } from './intro'
+import { initMobileNav } from './mobile-nav'
 import { initShare } from './share'
 
 bootstrapClient()
@@ -22,6 +23,7 @@ initExperience()
 // to show from the current scroll position, so it has to be listening before
 // the visitor has scrolled anywhere. It is a handful of listeners, no chunk.
 initShare()
+initMobileNav()
 
 function runWhenIdle(fn: () => void, timeout = 2000): void {
   if ('requestIdleCallback' in window) {
