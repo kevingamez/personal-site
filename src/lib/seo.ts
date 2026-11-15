@@ -4,8 +4,9 @@
 import type { Metadata } from 'next'
 import type { HomeStrings } from '@/content/home'
 
-const OG_IMAGE = 'https://kevingamez.co/og-dev-preview.png'
-const OG_IMAGE_ALT = 'Kevin Gámez, founding engineer at Enttor'
+const OG_IMAGE = 'https://kevingamez.co/og-kevin.jpg'
+const OG_IMAGE_ALT =
+  'Kevin Gámez, founding engineer. The name set large beside a brain built from black and violet beads.'
 
 // Google Search Console ownership token. Emitted as
 // <meta name="google-site-verification"> on every page built through here.
@@ -56,7 +57,7 @@ export function buildMetadata(meta: HomeStrings['meta']): Metadata {
       siteName: 'Kevin Gámez',
       locale: meta.ogLocale,
       ...(hasAlternate ? { alternateLocale: [meta.ogLocaleAlternate] } : {}),
-      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: 'image/png' }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: OG_IMAGE_ALT, type: 'image/jpeg' }],
     },
     twitter: {
       card: 'summary_large_image',
