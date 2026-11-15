@@ -4,39 +4,22 @@
 // Progressive enhancement: the collapsing is gated on the `exp-on` class this
 // script adds, so with no JS every panel stays open and readable.
 
-function openRow(row: HTMLElement, panel: HTMLElement, open: boolean): void {
-  panel.style.maxHeight = open ? `${panel.scrollHeight}px` : '0px'
-  panel.style.opacity = open ? '1' : '0'
+// The height itself is animated in CSS, through a grid row that goes from 0fr
+// to 1fr. The script used to measure each panel and write a max-height in
+// pixels, which meant re-measuring on every resize and a panel that could clip
+// if its text reflowed mid-transition. Now it only says which row is open.
+function openRow(row: HTMLElement, open: boolean): void {
   if (open) row.setAttribute('data-exp-open', '')
   else row.removeAttribute('data-exp-open')
   row.querySelector('[data-exp-toggle]')?.setAttribute('aria-expanded', String(open))
 }
 
 function initRows(rail: HTMLElement): void {
-  const rows = Array.from(rail.querySelectorAll<HTMLElement>('[data-exp-row]'))
-
-  for (const row of rows) {
-    const panel = row.querySelector<HTMLElement>('[data-exp-panel]')
+  for (const row of rail.querySelectorAll<HTMLElement>('[data-exp-row]')) {
     const toggle = row.querySelector<HTMLElement>('[data-exp-toggle]')
-    if (!panel || !toggle) continue
-
-    openRow(row, panel, row.hasAttribute('data-exp-open'))
-    toggle.addEventListener('click', () => {
-      openRow(row, panel, !row.hasAttribute('data-exp-open'))
-    })
+    if (!toggle) continue
+    toggle.addEventListener('click', () => openRow(row, !row.hasAttribute('data-exp-open')))
   }
-
-  // Keep an open panel's height correct when the text reflows.
-  if (typeof ResizeObserver === 'undefined') return
-  const ro = new ResizeObserver(() => {
-    for (const row of rows) {
-      const panel = row.querySelector<HTMLElement>('[data-exp-panel]')
-      if (panel && row.hasAttribute('data-exp-open')) {
-        panel.style.maxHeight = `${panel.scrollHeight}px`
-      }
-    }
-  })
-  ro.observe(rail)
 }
 
 function initProgress(rail: HTMLElement): void {
